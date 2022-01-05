@@ -1,7 +1,7 @@
-name: "logistic-susie-gsea"
+name: logistic-susie-gsea
 output_dir: ../docs
 navbar:
-  title: "logistic-susie-gsea"
+  title: logistic-susie-gsea
   left:
   - text: Home
     href: index.html
@@ -9,6 +9,10 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fab fa-github
+    text: Source code
+    href: https://github.com/karltayeb/logistic-susie-gsea
 output:
   workflowr::wflow_html:
     toc: yes
