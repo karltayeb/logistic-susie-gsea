@@ -1,5 +1,3 @@
 # logistic-susie-gsea
 
-A [workflowr][] project.
-
-[workflowr]: https://github.com/workflowr/workflowr
+Simulations and analysis exploring using logistic SuSiE for Gene set Enrichment Analysis (GSEA)
