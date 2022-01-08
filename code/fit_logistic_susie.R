@@ -1,5 +1,5 @@
 library(VEB.Boost)
-source("~/Research/susieR_logistic_wflow/code/logistic_susie_VB_functions.R")
+#source("~/Research/susieR_logistic_wflow/code/logistic_susie_VB_functions.R")
 
 # Logistic SuSiE
 get.logistic.susie.alpha <- function(veb.fit) {

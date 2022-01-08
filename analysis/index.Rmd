@@ -9,3 +9,6 @@ editor_options:
 ---
 
 Welcome to my research website.
+
+
+Packages managed with `renv`
