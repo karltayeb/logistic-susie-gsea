@@ -1,21 +1,22 @@
-## renv
+## Activate the renv package to manage the project's package library
 source("renv/activate.R")
 
-## This makes sure that R loads the workflowr package
-## automatically, everytime the project is loaded
-if (requireNamespace("workflowr", quietly = TRUE)) {
-  message("Loading .Rprofile for the current workflowr project")
-  library("workflowr")
-} else {
-  message("workflowr package not installed, please run install.packages(\"workflowr\") to use the workflowr functions")
-}
+## clustermq
+library(clustermq)
+options(
+  clustermq.scheduler = "slurm",
+  clustermq.template = "/path/to/file/below" # if using your own template
+)
 
+## Attach the libraries we will always need to work in the console
+if(interactive())
+  suppressPackageStartupMessages(
+    {
+      library(targets)
+      library(workflowr)
+    }
+  )
 
-## Manage naming conflicts for the benefit of targets
-library(targets)
-library(conflicted)
-conflict_prefer("select", "dplyr", "AnnotationDbi")
-conflict_prefer("filter", "dplyr")
-conflict_prefer("rename", "dplyr")
-conflict_prefer("lag", "dplyr")
-conflict_prefer("desc", "dplyr")
+# Check the project build status when opening the project
+if(interactive())
+  message("Run 'wflow_build(\"analysis/m_00_status.Rmd\")' to see the project status")
