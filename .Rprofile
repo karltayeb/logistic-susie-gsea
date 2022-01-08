@@ -1,6 +1,12 @@
 ## renv
 source("renv/activate.R")
 
+## clustermq setup
+options(
+    clustermq.scheduler = "slurm",
+    clustermq.template = "/path/to/file/below" # if using your own template
+)
+
 ## This makes sure that R loads the workflowr package
 ## automatically, everytime the project is loaded
 if (requireNamespace("workflowr", quietly = TRUE)) {
