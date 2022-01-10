@@ -1,5 +1,5 @@
 library(VEB.Boost)
-source("~/Research/susieR_logistic_wflow/code/logistic_susie_VB_functions.R")
+#source("~/Research/susieR_logistic_wflow/code/logistic_susie_VB_functions.R")
 
 # Logistic SuSiE
 get.logistic.susie.alpha <- function(veb.fit) {
@@ -17,8 +17,12 @@ get.logistic.susie.pip <- function(veb.fit){
 }
 
 get.logistic.coef <- function(veb.fit){
-  alpha <- get.logistic.susie.alpha(veb.fit)
-  return(apply(alpha, 2, function (x) 1 - exp(sum(log(1 - x + 1e-10)))))
+  ALPHAS <- do.call(
+    cbind, lapply(veb.fit$leaves, function(x) x$currentFit$alpha))
+  MUS <- do.call(
+    cbind, lapply(veb.fit$leaves, function(x) x$currentFit$mu))
+  coef <- rowSums(ALPHAS * MUS)
+  return(coef)
 }
 
 get.pip <- function(alpha){
@@ -34,5 +38,11 @@ fit.logistic.susie.veb.boost <- function(X, y, ...) {
   colnames(alpha) <- colnames(X)
   pip <- get.pip(alpha)
   cs <- alpha2cs(alpha)
-  return(tibble(model=list(veb.fit), alpha=list(alpha), cs=list(cs), pip=list(pip)))
+  coef <- get.logistic.coef(veb.fit)
+  return(tibble(
+    model=list(veb.fit),
+    alpha=list(alpha),
+    cs=list(cs),
+    pip=list(pip),
+    coef=list(coef)))
 }

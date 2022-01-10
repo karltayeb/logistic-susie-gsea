@@ -2,7 +2,8 @@
 title: "Comparing linear and logistic SuSiE for GSEA"
 author: "karltayeb"
 date: "2022-01-06"
-output: workflowr::wflow_html
+output:
+  workflowr::wflow_html
 editor_options:
   chunk_output_type: console
 ---
@@ -18,7 +19,7 @@ Linear SuSiE successfully select the true active gene set. However, when the act
 - Fully observed gene sets are not susceptible to this pitfall in linear SuSiE. At what rate do active genes need to be included in the list to avoid this pitfall? It is probably a function of the gene set size, the background inclusion rate, and the degree of overlap between the active gene set and other gene sets.
 - We observe this result using GO-BP no-redundant gene set, thus there is substantially less overlap among gene sets considered by the model. How do linear and logistic SuSiE compare when gene sets are more/less correlated?
 
-```{r, linear.v.logistic.simulation}
+```{r, linear.v.logistic.simulation, class.source = 'fold-hide'}
 library(tidyverse)
 source('code/load_gene_sets.R')
 source('code/simulate_gene_lists.R')
@@ -52,8 +53,7 @@ susie.2 <- fit.susie(X, sim2$Y[, 1], L=10)
 logistic.susie.2 <- fit.logistic.susie.veb.boost(X, sim2$Y[, 1], k=10)
 ```
 
-
-```{r, linear.v.logistic.pips, out.width='75%', fig.align='center'}
+```{r, linear.v.logistic.pips, out.width='75%', fig.align='center', class.source = 'fold-hide'}
 plot.pip <- function(sim, model, ...){
   plot(model$pip[[1]], ...)
   points(which(sim$active !=0), model$pip[[1]][sim$active != 0], col='red')
@@ -94,15 +94,7 @@ We can contrast the behavior with the case where the active gene set is fully ob
 
 
 ```{r, linear.v.logistic.simulation2}
-library(tidyverse)
-source('code/load_gene_sets.R')
-source('code/simulate_gene_lists.R')
-source('code/fit_susie.R')
-source('code/fit_logistic_susie.R')
-
-X <- load.webGestalt.X()
-
-set.seed(0)
+set.seed(1)
 sim10 <- simulate.constant.sim(
       X, L=1,
       background.logit=-10,

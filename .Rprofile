@@ -2,7 +2,6 @@
 source("renv/activate.R")
 
 ## clustermq
-library(clustermq)
 options(
   clustermq.scheduler = "slurm",
   clustermq.template = "/path/to/file/below" # if using your own template
