@@ -1,0 +1,3 @@
+simulation_targets:
+  script: _simulation_targets.R
+  store: simulation_targets
