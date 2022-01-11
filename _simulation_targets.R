@@ -51,7 +51,8 @@ get_l1.sim.methods <- function(){
     method.name %in% c(
       'fet',
       'susie.10',
-      'logistic.susie.veb.boost.10'
+      'logistic.susie.veb.boost.10',
+      'lasso', 'elastic.net'
     )
   )
 }
@@ -89,9 +90,9 @@ l1.sim.tar <- list(
         X.gonr, L=1, background.logit = -1, active.logit = 1))) %>%
       unnest_wider(sim),
     batches=1,
-    reps=1
+    reps=20
   ),
-  tar_group_by(l1.sim, l1.sim.rep, tar_batch),
+  tar_group_size(l1.sim, l1.sim.rep, 20),
   tar_map(
     values=l1.sim.methods, names=method.name,
     tar_target(
