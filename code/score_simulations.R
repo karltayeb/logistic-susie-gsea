@@ -81,3 +81,5 @@ active.pip.batch <- function(sim, fit, method='susie', col='pip'){
     select(sim.name, rep, batch, active, value, metric, batch, rep, method)
   return(score)
 }
+
+

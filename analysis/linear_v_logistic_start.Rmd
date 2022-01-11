@@ -18,6 +18,7 @@ Linear SuSiE successfully select the true active gene set. However, when the act
 - Broadly, when is linear regression a good approximation to logistic regression. Does intuition in the univariate setting hold in the multivariate setting? In a multivariate setting with correlated covariates?
 - Fully observed gene sets are not susceptible to this pitfall in linear SuSiE. At what rate do active genes need to be included in the list to avoid this pitfall? It is probably a function of the gene set size, the background inclusion rate, and the degree of overlap between the active gene set and other gene sets.
 - We observe this result using GO-BP no-redundant gene set, thus there is substantially less overlap among gene sets considered by the model. How do linear and logistic SuSiE compare when gene sets are more/less correlated?
+- If the linear model is robust when background inclusion is high, can we just inject random background genes to stabilize performance?
 
 ```{r, linear.v.logistic.simulation, class.source = 'fold-hide'}
 library(tidyverse)
