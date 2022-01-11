@@ -25,6 +25,15 @@ get.logistic.coef <- function(veb.fit){
   return(coef)
 }
 
+logistic.susie.component.coef <- function(veb.fit){
+  ALPHAS <- do.call(
+    cbind, lapply(veb.fit$leaves, function(x) x$currentFit$alpha))
+  MUS <- do.call(
+    cbind, lapply(veb.fit$leaves, function(x) x$currentFit$mu))
+  coef <- colSums(ALPHAS * MUS)
+  return(coef)
+}
+
 get.pip <- function(alpha){
   return(apply(alpha, 2, function (x) 1 - exp(sum(log(1 - x + 1e-10)))))
 }
@@ -39,10 +48,13 @@ fit.logistic.susie.veb.boost <- function(X, y, ...) {
   pip <- get.pip(alpha)
   cs <- alpha2cs(alpha)
   coef <- get.logistic.coef(veb.fit)
+  component.coef <- logistic.susie.component.coef(veb.fit)
   return(tibble(
     model=list(veb.fit),
     alpha=list(alpha),
     cs=list(cs),
     pip=list(pip),
-    coef=list(coef)))
+    coef=list(coef),
+    component.coef=list(component.coef)
+  ))
 }

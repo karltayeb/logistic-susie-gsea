@@ -51,7 +51,8 @@ get_l1.sim.methods <- function(){
     method.name %in% c(
       'fet',
       'susie.10',
-      'logistic.susie.veb.boost.10'
+      'logistic.susie.veb.boost.10',
+      'lasso', 'elastic.net'
     )
   )
 }
