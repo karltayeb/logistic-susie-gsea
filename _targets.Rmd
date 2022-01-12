@@ -1,6 +1,8 @@
 ---
 title: "Target Markdown"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include = FALSE}
@@ -10,8 +12,8 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```{r}
 library(targets)
 tar_unscript()
+options(clustermq.scheduler = "multiprocess")
 ```
-
 
 ```{targets globals, tar_globals=TRUE}
 library(tidyverse)
@@ -39,6 +41,7 @@ source('code/load_gene_sets.R')
 source('code/simulate_gene_lists.R')
 source('code/score_simulations.R')
 source('target_components/methods.R')
+source('target_components/factories.R')
 
 options(clustermq.scheduler = "multiprocess")
 tar_option_set(workspace_on_error = TRUE)
@@ -77,6 +80,9 @@ get.methods <- function(){
 }
 methods <- get.methods()
 
+
+REP <- 1
+BATCH <- tar_toggle(1, 10)
 ```
 
 Near the top of the document, you may also wish to remove the `_targets_r` directory previously written by non-interactive runs of the report. Otherwise, your pipeline may contain superfluous targets.
@@ -90,101 +96,6 @@ tar_target(X.gonr, load.webGestalt.X())
 
 ## Simulations
 
-```{targets factories, tar_globals = TRUE}
-## old
-sim_factory_single <- function(name, FUN, params, batches=1, reps=1){
-  # replicate simulation
-  list(
-    tar_rep_raw(
-      name,
-      expr(lift_dl(match.fun(!!FUN))(params)),
-      batches = batches,
-      reps = reps,
-      iteration='group'
-    ) %>%
-    tar_hook_outer(
-      matches(name),
-      hook = as.tibble(.x)
-    )
-  )
-}
-
-## Simulation Factory
-sim_factory <- function(prefix, X, params, batches=1, reps=1){
-  X <- enexpr(X)
-  target_name <- paste0(prefix, '.sim')
-  tar_rep_raw(
-    target_name,
-    expr(
-      !!params %>%
-        rowwise() %>%
-        mutate(sim = list(lift_dl(match.fun(sim_function))(c(list(X=!!X), params))))),
-    batches = batches,
-    reps = reps,
-    iteration='group') %>%
-    tar_hook_outer(
-      matches(target_name),
-      hook = as.tibble(.x)
-    )
-}
-
-list2namedlist <- function(l1, l2){
-  names(l1) <- l2
-  return(l1)
-}
-
-## Model fitting factory
-fit_factory <- function(prefix, X, target_sim, method_spec) {
-  ts <- enexpr(target_sim)
-  XX <- enexpr(X)
-  f <- expr(
-    lift(match.fun(method_function))(sym(X), sim$Y[,1])
-  )
-  target_name <- paste0(prefix, '.fit')
-  tar_map(
-    values = method_spec, names = method.name,
-    tar_target_raw(
-      target_name,
-      expr(
-        !!ts %>% rowwise() %>% mutate(
-          pf = list(force(purrr::partial(match.fun(method_function), X=!!XX, y=sim$Y[,1]))),
-          fit = list(lift_dl(pf)(list2namedlist(method_args, ma_names)))
-        ) %>% select(!pf)
-      ),
-      pattern = expr(map(!!ts))
-    )
-  )
-}
-
-## Model scoring factory
-generate_score_target <- function(prefix, method.name, prediction_col){
-  target_score_name <- paste0(prefix, '.score_', method.name)
-  target_score_name <- expr(!!target_score_name)
-  
-  target_fit <-sym(paste0(prefix, '.fit_', method.name))
-  target_fit <- expr(!!target_fit)
-  
-  prediction_col <- expr(!!prediction_col)
-  method_name <- expr(!!method.name)
-  
-  target_pattern = expr(map(!!target_fit))
-  
-  score_expression <- expr(
-    tar_target_raw(
-      !!target_score_name,
-      expr(!!target_fit %>% rowwise() %>% mutate(
-        scores = list(get.score(fit[[!!prediction_col]][[1]], sim$active)),
-        score.cs = if(grepl('susie', !!method_name)) {list(score.credible.set(fit, sim$active))} else {list(NULL)}
-      )), pattern=expr(!!target_pattern)
-    )
-  )
-  return(score_expression)
-}
-score_factory <- function(prefix, methods){
-  return(lapply(tar_eval(generate_score_target(prefix, method.name, prediction_col), values = methods), eval))
-}
-```
-
 ## L1 Sim
 
 Simulate a single active gene set from `GO-BP no redundnant`
@@ -193,7 +104,7 @@ Simulate a single active gene set from `GO-BP no redundnant`
 ## set simulation parameters
 get.l1.sim.params <- function(){
   params <- crossing(
-    background.logit=c(-6, -5, -4, -3, -2),
+    background.logit=c(-8, -6, -4, -2),
     active.logit=c(-2, -1, 0, 1, 2),
     sim_function = c('simulate.constant.sim'),
     X='X.gonr')
@@ -217,18 +128,94 @@ l1.gonr.methods <- method_bank %>% dplyr::filter(
 
 
 list(
-  sim_factory('l1.gonr', X.gonr, l1.gonr.sim.params, tar_toggle(1, 5), tar_toggle(1, 5)),
+  sim_factory('l1.gonr', X.gonr, l1.gonr.sim.params, BATCH, REP),
   fit_factory('l1.gonr', X.gonr, l1.gonr.sim, l1.gonr.methods),
   score_factory('l1.gonr', l1.gonr.methods)
 )
 ```
 
+
+```{targets constant.sim}
+## set simulation parameters
+get.constant.sim.params <- function(){
+  params <- crossing(
+    background.logit=c(-8, -6, -4, -2),
+    active.logit=c(-2, -1, 0, 1, 2),
+    sim_function = c('simulate.constant.sim'),
+    L = c(5, 10, 20),
+    X='X.gonr')
+  params <- params %>% mutate(
+    param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
+  ) %>% rowwise() %>% mutate(
+    params = list(setNames(c_across(!c(X, sim_function, param_names)), param_names))
+  )
+}
+constant.gonr.sim.params <- get.constant.sim.params()
+
+## pick methods to include in this sim
+constant.gonr.methods <- method_bank %>% dplyr::filter(
+  method.name %in% c(
+    'fet',
+    'susie.10', 'susie.30',
+    'logistic.susie.veb.boost.10', 'logistic.susie.veb.boost.30'
+  )) %>%
+  mutate(ma_names = map(method_args, names))
+
+
+list(
+  sim_factory('constant.gonr', X.gonr, constant.gonr.sim.params,  BATCH, REP),
+  fit_factory('constant.gonr', X.gonr, constant.gonr.sim, constant.gonr.methods),
+  score_factory('constant.gonr', constant.gonr.methods)
+)
+```
+
+## Constant Additive Sim
+
+Fixed background rate, fixed beta across $L$ active gene sets.
+The point of this simulation is to explore the relative performance of
+SuSiE and logistic SuSiE across a range of enrichment/background levels
+
+```{targets constant.additive.sim}
+## set simulation parameters
+get.constant.additive.sim.params <- function(){
+  params <- crossing(
+    background.logit=seq(-10, -2, 2),
+    active.logit=(0:10),
+    sim_function = c('simulate.constant.additive.sim'),
+    L = c(1, 5, 10, 20),
+    X='X.gonr') %>%
+    filter(((background.logit + active.logit) >= 0)) %>%
+    filter((background.logit + active.logit <= 5))
+
+  params <- params %>% mutate(
+    param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
+  ) %>% rowwise() %>% mutate(
+    params = list(setNames(c_across(!c(X, sim_function, param_names)), param_names))
+  )
+}
+constant.additive.gonr.sim.params <- get.constant.additive.sim.params()
+
+## pick methods to include in this sim
+constant.additive.gonr.methods <- method_bank %>% dplyr::filter(
+  method.name %in% c(
+    'fet',
+    'susie.10', 'susie.30',
+    'logistic.susie.veb.boost.10', 'logistic.susie.veb.boost.30'
+  )) %>%
+  mutate(ma_names = map(method_args, names))
+
+list(
+  sim_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.sim.params,  BATCH, REP),
+  fit_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.sim, constant.additive.gonr.methods),
+  score_factory('constant.additive.gonr', constant.additive.gonr.methods)
+)
+```
 ## Pipeline
 
 If you ran all the `{targets}` chunks in non-interactive mode, then your R scripts are set up to run the pipeline.
 
 ```{r}
-tar_make()
+#tar_make()
 ```
 
 The `targets` dependency graph helps your readers understand the steps of your pipeline at a high level.
