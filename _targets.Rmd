@@ -82,7 +82,7 @@ methods <- get.methods()
 
 
 REP <- 1
-BATCH <- tar_toggle(1, 10)
+BATCH <- 10 # tar_toggle(1, 10)
 ```
 
 Near the top of the document, you may also wish to remove the `_targets_r` directory previously written by non-interactive runs of the report. Otherwise, your pipeline may contain superfluous targets.
