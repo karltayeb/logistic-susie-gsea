@@ -80,7 +80,6 @@ get.methods <- function(){
 }
 methods <- get.methods()
 
-
 REP <- 1
 BATCH <- 10 # tar_toggle(1, 10)
 ```
@@ -208,11 +207,19 @@ constant.additive.gonr.methods <- method_bank %>% dplyr::filter(
   mutate(ma_names = map(method_args, names))
 
 list(
-  sim_factory('constant.additive.gonr', X.gonr, head(constant.additive.gonr.sim.params),  BATCH, REP)
-  #fit_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.sim, constant.additive.gonr.methods),
-  #score_factory('constant.additive.gonr', constant.additive.gonr.methods)
+  sim_factory('constant.additive.gonr', X.gonr, head(constant.additive.gonr.sim.params),  BATCH, REP),
+  fit_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.sim, constant.additive.gonr.methods),
+  score_factory('constant.additive.gonr', constant.additive.gonr.methods)
 )
 ```
+
+
+## Summarise
+
+```{r}
+
+```
+
 ## Pipeline
 
 If you ran all the `{targets}` chunks in non-interactive mode, then your R scripts are set up to run the pipeline.
