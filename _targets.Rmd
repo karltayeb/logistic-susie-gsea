@@ -90,8 +90,10 @@ Near the top of the document, you may also wish to remove the `_targets_r` direc
 
 ## Get gene sets
 ```{targets load-genesets}
-tar_target(X.gonr, load.webGestalt.X())
-tar_target(X.gobp, load.gobp())
+list(
+  tar_target(X.gonr, load.webGestalt.X()),
+  tar_target(X.gobp, load.gobp())
+)
 ```
 
 
