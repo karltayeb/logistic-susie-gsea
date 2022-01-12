@@ -91,6 +91,7 @@ Near the top of the document, you may also wish to remove the `_targets_r` direc
 ## Get gene sets
 ```{targets load-genesets}
 tar_target(X.gonr, load.webGestalt.X())
+tar_target(X.gobp, load.gobp())
 ```
 
 
@@ -180,9 +181,9 @@ SuSiE and logistic SuSiE across a range of enrichment/background levels
 get.constant.additive.sim.params <- function(){
   params <- crossing(
     background.logit=seq(-10, -2, 2),
-    active.logit=(0:10),
-    sim_function = c('simulate.constant.additive.sim'),
-    L = c(1, 5, 10, 20),
+    active.logit=c(0:10),
+    sim_function = 'simulate.constant.additive.sim',
+    L = c(5, 10, 20),
     X='X.gonr') %>%
     filter(((background.logit + active.logit) >= 0)) %>%
     filter((background.logit + active.logit <= 5))
@@ -205,9 +206,9 @@ constant.additive.gonr.methods <- method_bank %>% dplyr::filter(
   mutate(ma_names = map(method_args, names))
 
 list(
-  sim_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.sim.params,  BATCH, REP),
-  fit_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.sim, constant.additive.gonr.methods),
-  score_factory('constant.additive.gonr', constant.additive.gonr.methods)
+  sim_factory('constant.additive.gonr', X.gonr, head(constant.additive.gonr.sim.params),  BATCH, REP)
+  #fit_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.sim, constant.additive.gonr.methods),
+  #score_factory('constant.additive.gonr', constant.additive.gonr.methods)
 )
 ```
 ## Pipeline
