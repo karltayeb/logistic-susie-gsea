@@ -47,7 +47,11 @@ simulate.constant.additive.sim <- function(X, L=1, background.logit=-10, active.
   active_gene_sets <- sample(seq(1:p), L, replace = F)
   effect_sizes <- rep(1, L) * active.logit
 
-  logit <- as.vector(background.logit + X[, active_gene_sets] %*% effect_sizes)
+  if (L > 1){
+    logit <- as.vector(background.logit + X[, active_gene_sets] %*% effect_sizes)
+  } else{
+    logit <- as.vector(background.logit + X[, active_gene_sets] * effect_sizes)
+  }
 
   active = rep(0, p)
   active[active_gene_sets] <- effect_sizes
@@ -93,95 +97,6 @@ simulate.normal.additive.sim <- function(X, L=1, background.logit=-10, sigma2=1.
   rownames(Y) <- rownames(X)
 
   sim <- list(active=active, logit=logit, Y=Y)
-  return(sim)
-}
-
-simulate.constant.sim.old <- function(X, L=1, background.logit=-10, active.logit=10, nsim=1, rep=1, annotations=list()){
-  # X is a gene x gene_set matrix indicating membership in gene set  n x p
-  # L is the number of gene sets to have active
-  # background_logit, active_logit logodds of observing gene in our gene list
-  # reps number of replicates to simulate
-
-  n <- dim(X)[1]
-  p <- dim(X)[2]
-
-  logits <- c()
-  Ys <- c()
-  actives <- c()
-
-  for (i in seq(nsim)){
-    logit <- rep(background.logit, n)
-    active_gene_sets <- sample(seq(1:p), L, replace = F)
-    for (a in active_gene_sets){
-      logit[X[, a] == 1] <- active.logit
-    }
-    active = rep(0, p)
-    active[active_gene_sets] <- 1
-
-    for (j in seq(rep)){
-      Y <- rbinom(n, 1, logit2prob(logit))
-      logits <- cbind(logits, logit)
-      Ys <- cbind(Ys, Y)
-      actives <- cbind(actives, active)
-    }
-  }
-
-  actives <- as.matrix(actives)
-  rownames(actives) <- colnames(X)
-
-  logits <- as.matrix(logits)
-  rownames(logits) <- rownames(X)
-
-  rownames(Ys) <- rownames(X)
-
-  sim <- list(
-    active=Matrix(actives, sparse = T), logit=logits,
-    Y=Matrix(Ys, sparse = T), X=Matrix(X, sparse = T), rep=nsim*rep,
-    background.logit=background.logit,
-    active.logit=active.logit)
-  return(sim)
-}
-
-simulate.constant.sim.old2 <- function(X, L=1, background.logit=-10, active.logit=10, rep=1, annotations=list()){
-  # X is a gene x gene_set matrix indicating membership in gene set  n x p
-  # L is the number of gene sets to have active
-  # background_logit, active_logit logodds of observing gene in our gene list
-  # reps number of replicates to simulate
-
-  n <- dim(X)[1]
-  p <- dim(X)[2]
-
-  logit <- rep(background.logit, n)
-  active_gene_sets <- sample(seq(1:p), L, replace = F)
-  for (a in active_gene_sets){
-    logit[X[, a] == 1] <- active.logit
-  }
-
-  Y <- matrix(rbinom(n*rep, 1, logit2prob(logit)), nrow = n, byrow = FALSE)
-  sim <- list(active=active_gene_sets, logit=logit, Y=Y, X=X, rep=rep, background.logit=background.logit, active.logit=active.logit)
-  sim <- c(sim, annotations)
-  return(sim)
-}
-
-simulate.additive.sim2 <- function(X, L=1, background.logit=-10, effectFn, rep=1, annotations=list()){
-  # X is a gene x gene_set matrix indicating membership in gene set  n x p
-  # L is the number of gene sets to have active
-  # background_logit = background log odds of observing gene in our list (intercept)
-  # effectFn = function for generating effect sizes
-  # reps number of replicates to simulate
-
-  n <- dim(X)[1]
-  p <- dim(X)[2]
-
-  logit <- rep(background.logit, n)
-  active_gene_sets <- sample(seq(1:p), L, replace = F)
-  for (a in active_gene_sets){
-    logit[X[, a] == 1] <- effectFn()
-  }
-
-  Y <- matrix(rbinom(n*rep, 1, logit2prob(logit)), nrow = n, byrow = FALSE)
-  sim <- list(active=active_gene_sets, logit=logit, Y=Y, X=X, rep=rep, background.logit=background.logit)
-  sim <- c(sim, annotations)
   return(sim)
 }
 

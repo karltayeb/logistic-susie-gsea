@@ -32,11 +32,11 @@ method_bank <- tribble(
   'fet', 'fit.fishers.exact.test', NULL, 'one_minus_bh_p',
   'susie.1', 'fit.susie', list(L=1, estimate_residual_variance = T), 'pip',
   'susie.10', 'fit.susie', list(L=10, estimate_residual_variance = T), 'pip',
-  'susie.20', 'fit.susie', list(L=20, estimate_residual_variance = T), 'pip',
+  'susie.30', 'fit.susie', list(L=30, estimate_residual_variance = T), 'pip',
 
   'logistic.susie.veb.boost.1', 'fit.logistic.susie.veb.boost', list(k=1), 'pip',
   'logistic.susie.veb.boost.10', 'fit.logistic.susie.veb.boost', list(k=10), 'pip',
-  'logistic.susie.veb.boost.20', 'fit.logistic.susie.veb.boost', list(k=20), 'pip',
+  'logistic.susie.veb.boost.30', 'fit.logistic.susie.veb.boost', list(k=30), 'pip',
 
   'susie.veb.boost.1', 'fit.susie.veb.boost', list(k=1), 'pip',
   'susie.veb.boost.10', 'fit.susie.veb.boost', list(k=10), 'pip',
