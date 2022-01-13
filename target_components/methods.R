@@ -32,10 +32,12 @@ method_bank <- tribble(
   'fet', 'fit.fishers.exact.test', NULL, 'one_minus_bh_p',
   'susie.1', 'fit.susie', list(L=1, estimate_residual_variance = T), 'pip',
   'susie.10', 'fit.susie', list(L=10, estimate_residual_variance = T), 'pip',
+  'susie.20', 'fit.susie', list(L=20, estimate_residual_variance = T), 'pip',
   'susie.30', 'fit.susie', list(L=30, estimate_residual_variance = T), 'pip',
 
   'logistic.susie.veb.boost.1', 'fit.logistic.susie.veb.boost', list(k=1), 'pip',
   'logistic.susie.veb.boost.10', 'fit.logistic.susie.veb.boost', list(k=10), 'pip',
+  'logistic.susie.veb.boost.20', 'fit.logistic.susie.veb.boost', list(k=20), 'pip',
   'logistic.susie.veb.boost.30', 'fit.logistic.susie.veb.boost', list(k=30), 'pip',
 
   'susie.veb.boost.1', 'fit.susie.veb.boost', list(k=1), 'pip',
@@ -44,9 +46,9 @@ method_bank <- tribble(
 
   'mr.ash.lasso', 'fit.mr.ash.lasso', mr.ash.args, 'pip',
 
-  'lasso', 'fit.lasso', NULL, 'selected',
-  'elastic.net', 'fit.elastic.net', NULL, 'selected',
+  'lasso.gaussian', 'fit.lasso', NULL, 'selected',
+  'elastic.net.gaussian', 'fit.elastic.net', NULL, 'selected',
 
-  'lasso.binomial', 'fit.lasso.binomial', list(family='binomial'), 'selected',
-  'elastic.net.binomial', 'fit.elastic.net.binomial', list(family='binomial'), 'selected')
+  'lasso.binomial', 'fit.lasso.binomial', NULL, 'selected',
+  'elastic.net.binomial', 'fit.elastic.net.binomial', NULL, 'selected')
   #mutate(method_function = rlang::syms(method_function))
