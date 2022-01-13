@@ -120,7 +120,7 @@ get.constant.sim.params <- function(){
     background.logit=c(-8, -6, -4, -2),
     active.logit=c(-2, -1, 0, 1, 2),
     sim_function = c('simulate.constant.sim'),
-    L = c(5, 10, 20),
+    L = c(1, 5, 10, 20),
     X='X.gonr')
   params <- params %>% mutate(
     param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
