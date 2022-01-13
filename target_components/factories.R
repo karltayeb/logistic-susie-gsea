@@ -82,7 +82,7 @@ generate_score_target <- function(prefix, method.name, prediction_col){
       expr(!!target_fit %>% rowwise() %>% mutate(
         scores = list(get.score(fit[[!!prediction_col]][[1]], sim$active)),
         score.cs = if(grepl('susie', !!method_name)) {list(score.credible.set(fit, sim$active))} else {list(NULL)},
-        method=method_name
+        method = !!method_name
       )), pattern=expr(!!target_pattern)
     )
   )
