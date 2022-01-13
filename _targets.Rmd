@@ -108,8 +108,7 @@ l1.gonr.methods <- method_bank %>% dplyr::filter(
 list(
   sim_factory('l1.gonr', X.gonr, l1.gonr.sim.params, BATCH, REP),
   fit_factory('l1.gonr', X.gonr, l1.gonr.sim, l1.gonr.methods),
-  score_factory('l1.gonr', l1.gonr.methods),
-  tar_target(summarise)
+  score_factory('l1.gonr', l1.gonr.methods)
 )
 ```
 
