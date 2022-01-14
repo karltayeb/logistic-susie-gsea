@@ -17,7 +17,7 @@ sim_factory_single <- function(name, FUN, params, batches=1, reps=1){
 }
 
 ## Simulation Factory
-sim_factory <- function(prefix, X, params, batches=1, reps=1){
+sim_factory_old <- function(prefix, X, params, batches=1, reps=1){
   X <- enexpr(X)
   target_name <- paste0(prefix, '.sim')
   tar_rep_raw(
@@ -33,6 +33,36 @@ sim_factory <- function(prefix, X, params, batches=1, reps=1){
       matches(target_name),
       hook = as.tibble(.x)
     )
+}
+
+## Simulation Factory
+# group by param setting so we don't need to repeat computation everytime
+# we add to the simulation
+make_sim_spec <- function(prefix, params, batches=1, reps=1){
+  target_spec_name <- paste0(prefix, '.spec')
+  target_spec_sym <- sym(target_spec_name)
+
+  spec <- tidyr::crossing(params, expand.grid(tar_rep=c(1:reps), tar_batch=c(1:batches)))
+  spec <- enexpr(spec)
+
+  target_expr <- expr(tar_group_by(!!target_spec_sym, as.data.frame(!!spec), background.logit, active.logit, sim_function, tar_batch))
+  eval(target_expr)
+}
+
+sim_factory <- function(prefix, X, spec){
+  X <- enexpr(X)
+  target_spec_name <- paste0(prefix, '.spec')
+  target_spec_sym <- sym(target_spec_name)
+  target_spec <- expr(target_spec_sym)
+  spec <- enexpr(spec)
+  target_name <- paste0(prefix, '.sim')
+
+  tar_target_raw(
+    target_name,
+    expr(!!spec %>%rowwise() %>% mutate(
+      sim = list(lift_dl(match.fun(sim_function))(c(list(X=!!X), params))))),
+    pattern = expr(map(!!spec))
+  )
 }
 
 list2namedlist <- function(l1, l2){
@@ -54,6 +84,7 @@ fit_factory <- function(prefix, X, target_sim, method_spec) {
       target_name,
       expr(
         !!ts %>% rowwise() %>% mutate(
+          method = method.name,
           pf = list(force(purrr::partial(match.fun(method_function), X=!!XX, y=sim$Y[,1]))),
           fit = list(lift_dl(pf)(list2namedlist(method_args, ma_names)))
         ) %>% select(!pf)

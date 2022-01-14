@@ -52,8 +52,7 @@ tar_option_set(packages = c(
   "mr.ash.alpha", "VEB.Boost", "fastglm"))
 tar_option_set(memory='transient', garbage_collection = T, error='workspace')
 
-
-REP <- 1
+REP <- tar_toggle(1, 20)
 BATCH <- 1 #tar_toggle(1, 10)
 ```
 
@@ -63,8 +62,8 @@ Near the top of the document, you may also wish to remove the `_targets_r` direc
 ## Get gene sets
 ```{targets load-genesets}
 list(
-  tar_target(X.gonr, load.webGestalt.X()),
-  tar_target(X.gobp, load.gobp())
+  tar_target(X.gonr, load.webGestalt.X())
+  #tar_target(X.gobp, load.gobp())
 )
 ```
 
@@ -80,7 +79,8 @@ Simulate a single active gene set from `GO-BP no redundnant`
 get.l1.sim.params <- function(){
   params <- crossing(
     background.logit=c(-8, -6, -4, -2),
-    active.logit=c(-2, -1, 0, 1, 2),
+    active.logit=c(-2, -1, 0),
+    #active.logit=c(-2, -1, 0, 1, 2),
     sim_function = c('simulate.constant.sim'),
     X='X.gonr')
 
@@ -97,59 +97,22 @@ l1.gonr.methods <- method_bank %>% dplyr::filter(
   method.name %in% c(
     'fet',
     'susie.10',
-    'logistic.susie.veb.boost.10',
-    'lasso.gaussian',
-    'elastic.net.gaussian',
-    'lasso.binomial',
-    'elastic.net.binomial'
+    'logistic.susie.veb.boost.10'
+    # 'lasso.gaussian',
+    # 'elastic.net.gaussian',
+    # 'lasso.binomial',
+    # 'elastic.net.binomial'
   )) %>%
   mutate(ma_names = map(method_args, names))
 
-
 list(
-  sim_factory('l1.gonr', X.gonr, l1.gonr.sim.params, BATCH, REP),
+  make_sim_spec('l1.gonr', l1.gonr.sim.params, BATCH, REP),
+  sim_factory('l1.gonr', X.gonr, l1.gonr.spec),
   fit_factory('l1.gonr', X.gonr, l1.gonr.sim, l1.gonr.methods),
   score_factory('l1.gonr', l1.gonr.methods)
 )
 ```
 
-```{targets l1.sim2}
-## set simulation parameters
-get.l1.sim.params <- function(){
-  params <- crossing(
-    background.logit=c(-8, -6, -4, -2),
-    active.logit=c(-2, -1, 0, 1, 2),
-    sim_function = c('simulate.constant.sim'),
-    X='X.gonr')
-
-  params <- params %>% mutate(
-    param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
-  ) %>% rowwise() %>% mutate(
-    params = list(setNames(c_across(!c(X, sim_function, param_names)), param_names))
-  )
-}
-l1.gonr.sim.params <- get.l1.sim.params()
-
-## pick methods to include in this sim
-l1.gonr.methods <- method_bank %>% dplyr::filter(
-  method.name %in% c(
-    'fet',
-    'susie.10',
-    'logistic.susie.veb.boost.10',
-    'lasso.gaussian',
-    'elastic.net.gaussian',
-    'lasso.binomial',
-    'elastic.net.binomial'
-  )) %>%
-  mutate(ma_names = map(method_args, names))
-
-
-list(
-  sim_factory('l1.gonr', X.gonr, l1.gonr.sim.params, BATCH, REP),
-  fit_factory('l1.gonr', X.gonr, l1.gonr.sim, l1.gonr.methods),
-  score_factory('l1.gonr', l1.gonr.methods)
-)
-```
 
 
 ```{targets constant.sim}
@@ -159,7 +122,7 @@ get.constant.sim.params <- function(){
     background.logit=c(-8, -6, -4, -2),
     active.logit=c(-2, -1, 0, 1, 2),
     sim_function = c('simulate.constant.sim'),
-    L = c(1, 5, 10, 20),
+    L = c(5, 10, 20),
     X='X.gonr')
   params <- params %>% mutate(
     param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
@@ -186,7 +149,8 @@ constant.gonr.methods <- method_bank %>% dplyr::filter(
 
 
 list(
-  sim_factory('constant.gonr', X.gonr, constant.gonr.sim.params,  BATCH, REP),
+  make_sim_spec('constant.gonr', constant.gonr.sim.params, BATCH, REP),
+  sim_factory('constant.gonr', X.gonr, constant.gonr.spec),
   fit_factory('constant.gonr', X.gonr, constant.gonr.sim, constant.gonr.methods),
   score_factory('constant.gonr', constant.gonr.methods)
 )
@@ -235,7 +199,8 @@ constant.additive.gonr.methods <- method_bank %>% dplyr::filter(
   mutate(ma_names = map(method_args, names))
 
 list(
-  sim_factory('constant.additive.gonr', X.gonr, head(constant.additive.gonr.sim.params),  BATCH, REP),
+  make_sim_spec('constant.additive.gonr', constant.additive.gonr.sim.params, BATCH, REP),
+  sim_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.spec),
   fit_factory('constant.additive.gonr', X.gonr, constant.additive.gonr.sim, constant.additive.gonr.methods),
   score_factory('constant.additive.gonr', constant.additive.gonr.methods)
 )
