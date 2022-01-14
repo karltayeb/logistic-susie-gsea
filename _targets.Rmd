@@ -113,6 +113,44 @@ list(
 )
 ```
 
+```{targets l1.sim2}
+## set simulation parameters
+get.l1.sim.params <- function(){
+  params <- crossing(
+    background.logit=c(-8, -6, -4, -2),
+    active.logit=c(-2, -1, 0, 1, 2),
+    sim_function = c('simulate.constant.sim'),
+    X='X.gonr')
+
+  params <- params %>% mutate(
+    param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
+  ) %>% rowwise() %>% mutate(
+    params = list(setNames(c_across(!c(X, sim_function, param_names)), param_names))
+  )
+}
+l1.gonr.sim.params <- get.l1.sim.params()
+
+## pick methods to include in this sim
+l1.gonr.methods <- method_bank %>% dplyr::filter(
+  method.name %in% c(
+    'fet',
+    'susie.10',
+    'logistic.susie.veb.boost.10',
+    'lasso.gaussian',
+    'elastic.net.gaussian',
+    'lasso.binomial',
+    'elastic.net.binomial'
+  )) %>%
+  mutate(ma_names = map(method_args, names))
+
+
+list(
+  sim_factory('l1.gonr', X.gonr, l1.gonr.sim.params, BATCH, REP),
+  fit_factory('l1.gonr', X.gonr, l1.gonr.sim, l1.gonr.methods),
+  score_factory('l1.gonr', l1.gonr.methods)
+)
+```
+
 
 ```{targets constant.sim}
 ## set simulation parameters
