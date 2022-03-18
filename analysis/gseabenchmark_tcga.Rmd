@@ -1,0 +1,170 @@
+---
+title: "gseabenchmark_tcga"
+author: "karltayeb"
+date: "2022-03-16"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Our goals here are to run Logistic SuSiE on differential expression results from TCGA.
+We want to assess:
+1. If the resulting enrichment results look good/interpretable across multiple/concatenated gene sets
+2. Assess sensitivity to a range of p-value thresholds
+3. Evaluate the potential of the summary stat latent model
+
+```{r}
+library(GSEABenchmarkeR)
+library(EnrichmentBrowser)
+library(tidyverse)
+source('code/load_gene_sets.R')
+```
+
+
+#### Load Gene Sets
+
+`loadGeneSetX` uniformly formats gene sets and generates the $X$ matrix
+We can source any gene set from `WebGestaltR::listGeneSet()`
+
+```{r}
+gs_list <- WebGestaltR::listGeneSet()
+
+gobp <- loadGeneSetX('geneontology_Biological_Process', min.size=50)  # just huge number of gene sets
+gobp_nr <- loadGeneSetX('geneontology_Biological_Process_noRedundant', min.size=1)
+gomf <- loadGeneSetX('geneontology_Molecular_Function', min.size=1)
+kegg <- loadGeneSetX('pathway_KEGG', min.size=1)
+reactome <- loadGeneSetX('pathway_Reactome', min.size=1)
+wikipathway_cancer <- loadGeneSetX('pathway_Wikipathway_cancer', min.size=1)
+wikipathway <- loadGeneSetX('pathway_Wikipathway', min.size=1)
+
+gobp <- load.webGestalt.geneSet('geneontology_Biological_Process')
+X.gobp <- gobp %>% convertGeneSet(min.size=50) %>% geneSet2X
+
+gobp <- load.webGestalt.geneSet('geneontology_Biological_Process')
+X.gobp <- gobp %>% convertGeneSet(min.size=50) %>% geneSet2X
+```
+
+
+#### Load TCGA Data
+```{r}
+# get z scores
+tcga <- loadEData("tcga", nr.datasets=2)
+tcga <- runDE(tcga, de.method='limma', padj.method="none")
+```
+
+#### Get P
+```{r}
+df <- rowData(tcga$BRCA)
+rowData(tcga$BRCA)$z <- -1 * qnorm(rowData(tcga$BRCA)$PVAL) * sign(rowData(tcga$BRCA)$FC)
+z <- df$z %>% `names<-`(rownames(df))
+pvals <- df$PVALUE %>% `names<-`(rownames(df))
+```
+
+
+```{r}
+# get z scores
+tcga <- loadEData("tcga", nr.datasets=2)
+tcga <- runDE(tcga, de.method='limma', padj.method="none")
+rowData(tcga$BRCA)$z <- -1 * qnorm(rowData(tcga$BRCA)$PVAL) * sign(rowData(tcga$BRCA)$FC)
+df <- rowData(tcga$BRCA)
+z <- df$z %>% `names<-`(rownames(df))
+
+# load gene sets
+gs2X <- function(gs){
+  unique.genes <- unique(unlist(gs))
+  X <- purrr::map(gs, ~ Matrix::Matrix(unique.genes %in% .x %>% as.integer, sparse = T)) %>%
+    Reduce(cbind2, .) %>%
+    `rownames<-`(unique.genes) %>%
+    `colnames<-`(names(gs))
+  return(X)
+}
+kegg.gs <- getGenesets(org="hsa", db="kegg")
+kegg.gs.info <- getGenesets(org="hsa", db="kegg", return.type = 'GeneSetCollection')
+
+X.kegg <- gs2X(kegg.gs)
+```
+
+```{r}
+source('code/utils.R')
+source('code/logistic_susie_vb.R')
+source('code/logistic_susie_veb_boost.R')
+source('code/latent_logistic_susie.R')
+library(susieR)
+
+u <- process_input(X.kegg, z)
+X <- u$X
+z <- u$y
+y3 <- as.integer(abs(z) > 3) %>% `names<-`(names(z))
+y10 <- as.integer(abs(z) > 10) %>% `names<-`(names(z))
+
+y.susie.fit <- susie(X, y10)
+z.susie.fit <- susie(X, z)
+veb.fit <- logistic.susie.veb.boost(X, y10, L=10)
+vb.fit <- logistic.susie(X, y10, L=10)
+
+source('code/latent_logistic_susie.R')
+f0 <- function(x){dnorm(x, mean=0, sd=1, log=T)}
+f1 <- function(x){dnorm(x, mean=0, sd=10, log=T)}
+z.vb.fit <- latent.logistic.susie(X, z, f0, f1, maxit=10, verbose=1)
+
+par(mfrow=c(2,3))
+susie_plot(y.susie.fit, "PIP", main='susie z score')
+susie_plot(z.susie.fit, "PIP", main='susie binary')
+plot.new()
+
+susie_plot(veb.fit, "PIP", main='veb.boost')
+susie_plot(vb.fit, "PIP", main='logistic SuSiE')
+susie_plot(z.vb.fit, "PIP", main = 'latent logistic SuSiE')
+```
+
+```{r}
+source('code/logistic_susie_vb.R')
+vb.fit <- logistic.susie(X, y10, L=10, init.intercept=0, intercept = T, maxit=10)
+vb.fit$intercept
+
+vb.fit <- logistic.susie(X, y10, L=50, init.intercept=-5, intercept=F, maxit=100)
+susie_plot(vb.fit, 'PIP')
+```
+
+## Vary z-score/ p-value threshold
+
+```{r}
+thresh <- c(2, 4, 6, 8, 10, 12)
+names(thresh) <- paste0('z', thresh)
+
+veb.thresh <- lapply(thresh, function(t){logistic.susie.veb.boost(X, as.integer(abs(z) > t), L=10)})
+vb.thresh <- lapply(thresh, function(t){logistic.susie(X, as.integer(abs(z) > t), L=10, maxit=100)})
+
+par(mfrow=c(2,3))
+for(t in names(thresh)){
+  susie_plot(vb.thresh[[t]], "PIP", main=t)
+}
+```
+
+
+### Vary f0, f1
+
+```{r}
+hist(-log10(df$PVAL))
+hist(df$PVAL)
+hist()
+
+```
+
+
+```{r}
+z.vb.fit$intercept
+
+mean(y3)
+```
+
+
+
+### getting z score model to work
+
+```{r}
+
+```
+
