@@ -1,0 +1,468 @@
+---
+title: "marginal_summary_stat_exploration"
+author: "karltayeb"
+date: "2022-03-23"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+bibliography: references.bib
+---
+
+## Introduction
+
+Peter has been thinking about the marginal/single-gene set enrichment problem. (<https://www.overleaf.com/project/623485e71fafe7302e4b34f1>)
+
+We've talked about modelling gene level summary statistics with a two-component mixture model (null and non-null component) and then have the prior probability of being in the non-null component dependent on gene-set membership. Here's the model:
+
+$$
+\begin{align}
+\hat \beta_i \sim N(\beta_i, s_i^2) \\
+\beta_i \sim (1 - \pi_i)\delta_0 + \pi_iN(0,\sigma^2_i) \\
+\ln \frac{\pi_i}{1-\pi_i} = \theta_0 + \theta_1x_i
+\end{align}
+$$
+
+The detail that Peter's expressed intest in is how we model $\sigma_i^2$. Most treatments of GSEA use just z-scores or p-values. If we were to just model z-scores here with a model like
+
+$$ 
+\hat z_i = \frac{\hat\beta}{s_i} \sim N(z_i, 1) \\
+z_i \sim (1-\pi_i) \delta_0 + \pi_i N(0, \sigma^2_0)
+$$
+
+Translating this to the summary stat model we can see it's equivalent to choosing $\sigma_i = \sigma_0 s_i$. That is, genes with larger standard error are expected to have larger effect sizes on average. This assumption may not hold in single cell DE expression analysis and other single cell analysis which might be upstream of GSEA.
+
+We can learn the relationship between standard errors and effect sizes. The ASH paper proposed $\sigma_i = s_i^{\alpha} \sigma_0$, for $\alpha \in [0 ,1]$. $\alpha=1$ recovers the z-score model, while $\alpha=0$ recovers basic ash prior.
+
+-   The basic question are: - can we learn $\alpha$?
+
+-   how does it impact our GSEA results?
+
+I'm curious how it relates to other GSEA approaches. In particular methods like GORILLA [@eden2007] [@eden2009] consider the **minimum** hypergeometic tail probability across all possible cutoffs.
+
+The two component model, with z-scores, won't give a different gene ranking (3.2.1 of [@stepehsn2017]), but might be thought of loosely as a "soft" thresholding approach.
+
+The beta + standard errors model may reorder genes, and also provides this "soft" thresholding behavior.
+
+## Implimentation
+
+
+```{r setup, results=FALSE}
+library(tidyverse)
+library(latex2exp)
+source('code/marginal_sumstat_gsea.R')
+```
+
+I've implimented a simple EM optimization procedure in `code/marginal_sumstat_gsea.R`. Where we iteratively compute responsibilities, update the regression parameters, and update the variance parameters.
+
+The regression parameters $\theta = (\theta_0, \theta_1)$ are optimized jointly.
+The variance parameters $(\alpha, \sigma_0)$ we optimized cooardinate-wise.
+
+To not get bogged down in deriving updates, everything is optimized with calls to `optim` or `optimize`. But we should not that the gradient and hessian of the $Q$ function (the EM bound) look just like normal logistic regression. And it shouldn't be too hard to compute gradients for the variance parameters. So we can probably make things much faster with a bit more thought and effort!
+
+Also, it seems standard to approximation the sampling distribution of the regression coefficients as $\hat\theta \sim \mathcal N(\theta, -\nabla^2l(\hat \theta))$ where $l$ is for likelihood. It's not obvious to me that this works now that the logistic regression is a layer down in the model, and I'm sure this is motivated by asymptotic results that aren't too valid especially for small gene sets (something like hessian @ MLE looks like Fisher information + estimate is unbiased and efficient)
+
+## Check implimentation
+
+### Gene list simulation
+```{r simulations}
+#' simulate summary statistics from two component enrichment model
+#' params is a list with elements theta, sigma0, alpha
+#' r.se is a function for sampleing standard errors runif(1e-3, 5) by default
+simulate.gene.list = function(params, x = NULL, gene.set.prop=0.01, n.genes=10000, r.se=NULL) {
+  theta0 = params$theta[1]
+  theta1 = params$theta[2]
+  sigma0 = params$sigma0
+  alpha = params$alpha
+  # simulate x if not provided
+  if(is.null(x)){
+    x <- rbinom(n.genes, 1, gene.set.prop)  # gene set
+  } else{
+    n.genes <- length(x)
+  }
+  
+  if(is.null(r.se)){
+    se <- runif(n.genes, 1e-3, 5)  # simulate standard errors, reasonable?
+  } else {
+    se <- r.se(n.genes)
+  }
+  sigma <- se ^ alpha * sigma0
+  gamma <- rbinom(n.genes, 1, sigmoid(theta0 + theta1 * x))  # null/non-null
+  beta <- rnorm(n.genes, mean = 0, sd = se)
+  beta <- beta + (rnorm(n.genes, mean=0, sd=sigma) * gamma)
+  return(list(x=x, beta=beta, se=se, gamma=gamma, params=params))
+}
+```
+
+### Quick check
+
+Here's a quick example to check that optimization is working. And it seems to!
+We can optimize all of the parameters and the estimates looks close to the true values.
+
+```{r test.opt}
+source('code/marginal_sumstat_gsea.R')
+
+params = list(
+  theta = c(-2, 4),
+  alpha = 0.5,
+  sigma0 = 10
+)
+sim <- simulate.gene.list(params, gene.set.prop = 0.1, n.genes = 10000)
+gsea <- summary.stat.gsea(sim$x, sim$beta, sim$se)
+
+# fit just theta
+params.init = list(
+  theta = c(-4, 10),
+  alpha = 0.5,
+  sigma0 = 10
+)
+params.fit = gsea$expectation.maximiztion(
+  params.init, n.iter=20, update.alpha = F, update.sigma0 = F)
+params.fit$responsibilities <- NULL
+params.fit$theta
+
+# fit alpha too
+params.init = list(
+  theta = c(-4, 10),
+  alpha = 1.0,
+  sigma0 = 10
+)
+params.fit = gsea$expectation.maximiztion(
+  params.init, n.iter=20, update.alpha = T, update.sigma0 = F)
+params.fit$theta
+params.fit$alpha
+
+# fit sigma too
+params.init = list(
+  theta = c(-4, 10),
+  alpha = 0.5,
+  sigma0 = 1
+)
+params.fit = gsea$expectation.maximiztion(
+  params.init, n.iter=20, update.alpha = F, update.sigma0 = T)
+params.fit$theta
+params.fit$sigma0
+
+# fit all
+params.init = list(
+  theta = c(-4, 10),
+  alpha = 1.0,
+  sigma0 = 1
+)
+params.fit = gsea$expectation.maximiztion(
+  params.init, n.iter=50, update.alpha = T, update.sigma0 = T)
+params.fit$theta
+params.fit$alpha
+params.fit$sigma0
+```
+
+
+And here's a look at the likelihood surfaces for the enrichment parameters and variance parameters.
+These maps are a bit coarse, but you can see the strong dependence between the variance parameters.
+I guess since the target geneset only has a small fraction of the genes, there's less information to estimate $\theta_1$ compared to $\theta_0$. 
+
+```{r alpha.sigma0.density.2d}
+params = list(
+  theta = c(-2, 4),
+  alpha = 0.5,
+  sigma0 = 10
+)
+sim <- simulate.gene.list(params, gene.set.prop = 0.1, n.genes = 10000)
+gsea <- summary.stat.gsea(sim$x, sim$beta, sim$se)
+
+lik.grid <- xfun::cache_rds({
+  purrr::cross_df(list(alpha=seq(0, 1, by=0.05), sigma0=seq(5, 15, by=0.1))) %>%
+  mutate(lik = map2_dbl(alpha, sigma0, ~ gsea$likelihood(params, alpha=.x, sigma0=.y)))
+})
+ggplot(lik.grid, aes(x=alpha, y=sigma0, z=lik)) + geom_contour_filled()
+```
+
+
+```{r theta.density.2d}
+params = list(
+  theta = c(-2, 4),
+  alpha = 0.5,
+  sigma0 = 10
+)
+sim <- simulate.gene.list(params, gene.set.prop = 0.1, n.genes = 10000)
+gsea <- summary.stat.gsea(sim$x, sim$beta, sim$se)
+
+lik.grid <- xfun::cache_rds({
+  purrr::cross_df(list(theta0=seq(-4, 0, by=0.1), theta1=seq(2, 6, by=0.1))) %>%
+  mutate(lik = map2_dbl(theta0, theta1, ~ gsea$likelihood(params, theta=c(.x, .y))))
+})
+
+ggplot(lik.grid, aes(x=theta0, y=theta1, z=lik)) + geom_contour_filled()
+```
+
+## Simulations
+
+The main questions we're interested in is "does having alpha right matter"? From the likelihood surface plotted above we can see some dependence on $\alpha$ and $\sigma_0$, and these will jointly influence our estimated enrichment parameters. To what extent does having $\alpha$ set incorrectly
+- bias our effect estimates
+- change the way we would prioritize gene sets?
+
+We'll work with simulated gene sets with varying size and overlap with the target gene set.
+
+### Set-up
+
+```{r simulate.X}
+roll = function(v, n=1){
+  if(n==0){
+    return(v)
+  } else{
+    return(c(tail(v, n), head(v, -n)))
+  }
+}
+
+#' make sequence of simulated gene sets of fixed size
+#' and decreasing overlap with first gene set
+#' gene.set.size = size of gene set
+#' by = how much to overlap incriment
+sim.X.base = function(n.genes=1e4, gene.set.size=1e2, from=0, to=NULL, by=5){
+  to <- ifelse(is.null(to), gene.set.size, to)
+  x = c(rep(1, gene.set.size), rep(0, n.genes-gene.set.size))
+  u <- map(seq(from, to, by=by), ~roll(x, n=.x))
+  X <- matrix(unlist(u), nrow = n.genes)
+  return(X)
+}
+
+#' make sequence of gene sets overlapping base gene set
+sim.X.other = function(gene.set.size, other.size, by=5){
+  sim.X.base(
+    gene.set.size=other.size,
+    from=max(0, gene.set.size - other.size), to=gene.set.size, by=by
+  )
+}
+
+#' put it all together
+#' returns matrix X
+#' first columns is the gene set of interest
+#' other columns are gene sets of varying sizes that overlap the first
+sim.X = function(gene.set.size=50, set.sizes = NULL, by=5){
+  X <- sim.X.base(gene.set.size = gene.set.size, by=by)
+  if(!is.null(set.sizes)){
+    Xs <- do.call('cbind', map(set.sizes, ~sim.X.other(gene.set.size, .x, by=by)))
+    X <- cbind(X, Xs)
+  }
+  return(X)
+}
+```
+
+
+```{r sim.driver}
+#' fit the model and return parameter list
+#' ... arguments to pass to to EM
+fit.sumstat.gsea = function(beta, se, x, params.init=NULL, theta=NULL, alpha=NULL, sigma0=NULL, ...){
+  gsea <- summary.stat.gsea(x, beta, se)
+  # TODO: figure out how to initialize parameters
+  if(is.null(params.init)){
+    params.init = list(
+      theta = c(-3, 0),
+      alpha = 1.0,
+      sigma0 = 1
+    )
+  }
+  if(!is.null(theta)){
+    params.init$theta = theta
+  }
+  if(!is.null(alpha)){
+    params.init$alpha = alpha
+  }
+  if(!is.null(sigma0)){
+    params.init$sigma0 = sigma0
+  }
+  params.fit = gsea$expectation.maximiztion(params.init, ...)
+  return(params.fit)
+}
+
+#' driver function for simulations
+#' fit model for all gene sets
+#' assume first column of X is the gene is sim$x
+sim.driver = function(X, params, params.init=NULL, update.alpha=T, update.sigma0=T){
+  sim <- simulate.gene.list(params, x=X[,1])
+
+  # fit model for each gene set
+  res <- map(1:dim(X)[2], ~fit.sumstat.gsea(
+    sim$beta, sim$se, X[,.x],
+    params.init=params.init,
+    update.alpha=update.alpha, update.sigma0=update.sigma0
+  ))
+  
+  # clean up data
+  for (i in 1:length(res)){
+    res[[i]]$responsibilities <- NULL
+    names(res[[i]]$theta) <- paste0('theta', c(0, 1))
+  }
+  # dump into table with some useful stats
+  res_tbl <- tibble(
+      overlap=(X[,1] %*% X)[1,],
+      active = 1:dim(X)[2] == 1,
+      set.size=colSums(X),
+      p.overlap = overlap/set.size,
+      res=res,
+      theta0.true = params$theta[1],
+      theta1.true = params$theta[2],
+      alpha.true = params$alpha,
+      sigma0.true = params$sigma0
+    ) %>% 
+    unnest_wider(res) %>%
+    unnest_wider(theta) %>%
+    mutate(likelihood = map_dbl(lik.history, ~tail(.x, 1)))
+
+  return(res_tbl)
+}
+```
+
+### First simulation
+
+We simulate a target gene set with 50 genes, and gene sets with 5, 10, 15, ..., 45 overlapping genes with the target gene set. We set $\theta = (-2, 2)$, $\alpha = 0.5$ and $\sigma_0 = 4$. That is background genes are non-null with $\text{log-odds}=-2$ and genes in the target gene set are non-null with $\text{log-odds}=0$. We simulate summary statistics for 10,000 genes, with standard errors distributed $\text{Unif}[1e-3, 5]$
+
+We estimate the parameters of the model where $\alpha$ is estimated, fixed to $\alpha=0$, or fixed to $\alpha = 1$, where the latter two cases represent the ash and z-score models respectively. We want to evaluate how this effects the parameter estimates, and more importantly the enrichment results.
+
+```{r sim.X50}
+res <- xfun::cache_rds({
+  params = list(
+    theta = c(-2, 2),
+    alpha = 0.5,
+    sigma0 = 4
+  )
+  X <- sim.X(50, by=10)
+  n.rep <- 10
+  # fix alpha = 0 
+  params.init = list(
+    theta = c(0, 0),
+    alpha = 0.,
+    sigma0 = 1
+  )
+  res <- list()
+  res[['alpha=0']] <- rerun(
+      n.rep, sim.driver(X, params, params.init=params.init, update.alpha = F)) %>%
+      do.call(rbind, .)
+  
+  # fix alpha = 1
+  params.init$alpha = 1.0
+  res[['alpha=1']] <- rerun(
+      n.rep, sim.driver(X, params, params.init=params.init, update.alpha = F)) %>%
+      do.call(rbind, .)
+  
+  # estimate alpha
+  res[['learn.alpha']] <- rerun(
+      n.rep, sim.driver(X, params, params.init=params.init, update.alpha = T)) %>%
+      do.call(rbind, .)
+  res
+})
+
+# add rep column
+for (name in names(res)){
+  res[[eval(name)]] <- res[[eval(name)]] %>%
+    mutate(rep = cumsum(active)) %>% ungroup()
+}
+
+res <- do.call(rbind, res)
+res <- res %>% mutate(
+  fit.alpha = case_when(
+    alpha == 0 ~ 'alpha=0',
+    alpha == 1 ~ 'alpha=1',
+    TRUE ~ 'estimate'
+  ),
+  alpha.rel = (alpha - alpha.true) / alpha.true,
+  theta0.rel = (theta0 - theta0.true) / abs(theta0.true),
+  theta1.rel = (theta1 - theta1.true) / abs(theta1.true),
+  sigma0.rel = (sigma0 - sigma0.true) / abs(sigma0.true),
+)
+```
+
+First we can restrict our attention to the parameter estimates of the active gene set.
+We can see that at $\alpha=1$ we tend to underestimate both the intercept and enrichment parameter. For $\alpha=0$ the regression parameters seem approximately unbiased at these simulation settings.
+
+Unsurprisingly, our estimates of $\sigma_0$ are quite biased for fixed $\alpha$ values.But, at least for these simulation settings, it does not seem to bias our estimates of $\theta_0$.
+
+```{r}
+library(latex2exp)
+res %>% filter(active) %>% group_by(fit.alpha) %>%
+  reshape2::melt(measure.vars=c('theta0.rel', 'theta1.rel', 'alpha.rel', 'sigma0.rel')) %>%
+  ggplot(aes(x=variable, y=value, color=fit.alpha)) +
+  geom_boxplot() +
+  labs(title=TeX("$\\frac{\\hat{\\theta} - \\theta}{\\theta}$"))
+```
+
+
+We can also look at what we estimate for the off-target gene sets, as a function of overlap.
+We might expect, when we fit the model for gene sets with less and less overlap, that our estimate of $\theta_0$ would increase (as the tested gene set is not relevant, and non-null genes are abosrbed into "background") and a decrease in $\theta_1$ (gene sets with no or very little overlap are actually depleted relative to "background")
+
+Indeed, this is what we see. We'd expect the effect to be more extreme as the number of non-null genes in the target gene set increase.
+
+Do we want to consider "depletion" an interesting enrichment? I think we're often tempted to think of depletion as something like "expression of these genes is tightly regulated/not easily perturbed and maybe that's because we're not tolerant to perturbations of this process".
+
+But if that depletion is an artifact of the intercept term absorbing large enriched gene sets, then that seems less interesting. Depletion may be more interpretable in the joint model.
+
+```{r}
+res %>% 
+  filter(!active & (fit.alpha=='estimate')) %>%
+  group_by(fit.alpha) %>%
+  reshape2::melt(measure.vars=c('theta0', 'theta1', 'alpha', 'sigma0')) %>%
+  ggplot(aes(x=factor(overlap), y=value, color=fit.alpha)) +
+  geom_boxplot() + facet_wrap(vars(variable),scales = 'free_y')
+  labs(title=TeX("$\\frac{\\hat{\\theta} - \\theta}{\\theta}$"))
+  
+res %>% 
+  filter(!active ) %>%
+  group_by(fit.alpha) %>%
+  reshape2::melt(measure.vars=c('theta0', 'theta1', 'alpha', 'sigma0')) %>%
+  ggplot(aes(x=factor(overlap), y=value, color=fit.alpha)) +
+  geom_boxplot() + facet_grid(vars(variable), vars(fit.alpha), scales = 'free_y')
+  labs(title=TeX("$\\frac{\\hat{\\theta} - \\theta}{\\theta}$"))
+```
+
+
+Do the parameter estimates under the fixed $\alpha$ models ever cause us to prioritize other overlapping gene sets over the true gene set? How should we compare/rank enrichment results across gene-sets?
+
+For now I'm just using $z_i = \hat\theta_{1i} / \hat s_{1i}$.
+These will tend to be inflated, as I think we tend to underestimate the standard errors.
+But hopefully they are inflated uniformly across gene sets so their comparison/ranking is meaningful?
+
+Most of the time the target gene set is also the most strongly enriched. I'm sure we can find simulations settings where that is not the case. I should think about what distribution of standard errors would best highlight the weakness of ignoring $\alpha$.
+
+```{r}
+# add "z-scores"
+res <- res %>% mutate(
+  theta1.se = map_dbl(theta.se, ~ .x[2]),
+  theta1.z = theta1 / theta1.se
+  )
+
+library(ggbeeswarm)
+res %>% 
+  arrange(desc(abs(theta1.z))) %>% 
+  group_by(fit.alpha, rep) %>% 
+  mutate(rank = order(likelihood, decreasing = TRUE)) %>%
+  filter(active) %>%
+  ggplot(aes(x=fit.alpha, y=rank)) + geom_beeswarm() + 
+  labs(title='Rank of target gene-set')
+  
+res %>% 
+  arrange(desc(likelihood)) %>% 
+  group_by(fit.alpha, rep) %>% 
+  mutate(
+    rank = order(likelihood, decreasing = TRUE),
+    wrong.rank = rank < rank[which(active)]
+  ) %>% 
+  ggplot(aes(x=p.overlap, y=theta1, color=wrong.rank)) + 
+  geom_jitter(width=0.02, height = 0.02) + facet_wrap(vars(fit.alpha))
+
+res %>% 
+  arrange(desc(likelihood)) %>% 
+  group_by(fit.alpha, rep) %>% 
+  mutate(
+    rank = order(likelihood, decreasing = TRUE),
+    wrong.rank = rank < rank[which(active)]
+  ) %>% 
+  ggplot(aes(x=p.overlap, y=theta1, color=factor(rank))) + 
+  geom_jitter(width=0.02, height = 0.02) + facet_wrap(vars(fit.alpha))
+  labs(title='a')
+```
+
+## Questions
+- What's a reasonable distribution of standard errors for single cell DE?
+- How do we evaluate significance of enrichment parameter $\theta_1$/compare enrichment results across gene sets? Right now we're just optimizing the marginal likelihood to get point estimates of $\theta_1$, and hoping that the the usual approximate standard error for logistic regression is good here also. Putting a prior on the parameters and estimating the posterior of $\theta_1$ may get us closer to where we need to be.
+
+## Other things to try 
+- how does the marginal model behave for gene sets with hierarchical structure (simulation where the target gene set is a super set and subset of off-target gene sets).
