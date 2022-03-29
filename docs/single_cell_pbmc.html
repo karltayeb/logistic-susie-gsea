@@ -480,16 +480,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree54209afb933b39ba8a596f008997341e6723c294targetblank54209afa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/54209afb933b39ba8a596f008997341e6723c294" target="_blank">54209af</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree524d94bb830b7a4561e034403f6c0ce4d6504f42targetblank524d94ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/524d94bb830b7a4561e034403f6c0ce4d6504f42" target="_blank">524d94b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree54209afb933b39ba8a596f008997341e6723c294targetblank54209afa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree524d94bb830b7a4561e034403f6c0ce4d6504f42targetblank524d94ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/54209afb933b39ba8a596f008997341e6723c294" target="_blank">54209af</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/524d94bb830b7a4561e034403f6c0ce4d6504f42" target="_blank">524d94b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -500,6 +500,7 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
     Ignored:    library/
     Ignored:    renv/library/
     Ignored:    renv/staging/
@@ -590,6 +591,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/524d94bb830b7a4561e034403f6c0ce4d6504f42/analysis/single_cell_pbmc.Rmd" target="_blank">524d94b</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-29
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/61540e829d6e70c4f89762147d29689fd1bf2d3b/docs/single_cell_pbmc.html" target="_blank">61540e8</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1050,8 +1085,268 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<p>Lets take a look at what enrichment we’re getting across cell-types. ### Overview</p>
+<p>Lets take a look at what enrichment we’re getting across cell-types.</p>
+<div id="cd19-b" class="section level3">
+<h3>CD19+ B</h3>
 <pre class="r"><code>pbmc_res_set_summary %&gt;%
+  filter(celltype == &#39;CD19+ B&#39;) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
+  group_by(db, celltype, top_component) %&gt;%
+  arrange(db, celltype, top_component, desc(pip)) %&gt;%
+  select(geneSet, description, pip) %&gt;% chop(c(geneSet, description, pip)) %&gt;%
+  knitr::kable()</code></pre>
+<pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="11%" />
+<col width="77%" />
+<col width="10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">db</th>
+<th align="left">celltype</th>
+<th align="left">top_component</th>
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">pip</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD19+ B</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a></td>
+<td align="left">immune system process</td>
+<td align="left">0.9999575</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD19+ B</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0006613" class="uri">GO:0006613</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0006614" class="uri">GO:0006614</a></td>
+<td align="left">protein targeting to ER , cotranslational protein targeting to membrane , establishment of protein localization to endoplasmic reticulum, SRP-dependent cotranslational protein targeting to membrane</td>
+<td align="left">0.96205208, 0.02165616, 0.01453688, 0.00410197</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD19+ B</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a>, <a href="GO:0006119" class="uri">GO:0006119</a></td>
+<td align="left">ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport, oxidative phosphorylation</td>
+<td align="left">0.62449631, 0.36002221, 0.01752387</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD19+ B</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a>, <a href="GO:0045321" class="uri">GO:0045321</a>, <a href="GO:0002366" class="uri">GO:0002366</a>, <a href="GO:0002263" class="uri">GO:0002263</a></td>
+<td align="left">cell activation , leukocyte activation , leukocyte activation involved in immune response, cell activation involved in immune response</td>
+<td align="left">0.9780541751, 0.0218972721, 0.0005957131, 0.0005770067</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD19+ B</td>
+<td align="left">L6</td>
+<td align="left"><a href="GO:0008380" class="uri">GO:0008380</a>, <a href="GO:0000377" class="uri">GO:0000377</a>, <a href="GO:0000398" class="uri">GO:0000398</a>, <a href="GO:0000375" class="uri">GO:0000375</a>, <a href="GO:0006397" class="uri">GO:0006397</a>, <a href="GO:0050684" class="uri">GO:0050684</a>, <a href="GO:0043484" class="uri">GO:0043484</a>, <a href="GO:0000380" class="uri">GO:0000380</a>, <a href="GO:0048024" class="uri">GO:0048024</a>, <a href="GO:0016071" class="uri">GO:0016071</a></td>
+<td align="left">RNA splicing , RNA splicing, via transesterification reactions with bulged adenosine as nucleophile, mRNA splicing, via spliceosome , RNA splicing, via transesterification reactions , mRNA processing , regulation of mRNA processing , regulation of RNA splicing , alternative mRNA splicing, via spliceosome , regulation of mRNA splicing, via spliceosome , mRNA metabolic process</td>
+<td align="left">0.822736133, 0.049644134, 0.049644134, 0.033005117, 0.017234053, 0.009417204, 0.007220671, 0.002939483, 0.001834918, 0.001051637</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">CD19+ B</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0002446" class="uri">GO:0002446</a>, <a href="GO:0036230" class="uri">GO:0036230</a></td>
+<td align="left">neutrophil mediated immunity, granulocyte activation</td>
+<td align="left">0.5151440, 0.4857358</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD19+ B</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0070972" class="uri">GO:0070972</a></td>
+<td align="left">protein localization to endoplasmic reticulum</td>
+<td align="left">0.999958</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">CD19+ B</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0009141" class="uri">GO:0009141</a></td>
+<td align="left">nucleoside monophosphate metabolic process, nucleoside triphosphate metabolic process</td>
+<td align="left">0.98449756, 0.01648675</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD19+ B</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0002764" class="uri">GO:0002764</a></td>
+<td align="left">immune response-regulating signaling pathway</td>
+<td align="left">0.9961853</td>
+</tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD19+ B</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0003723" class="uri">GO:0003723</a></td>
+<td align="left">RNA binding</td>
+<td align="left">0.999744</td>
+</tr>
+<tr class="odd">
+<td align="left">gomf</td>
+<td align="left">CD19+ B</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a>, <a href="GO:0003700" class="uri">GO:0003700</a></td>
+<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific, DNA-binding transcription factor activity</td>
+<td align="left">0.995003783, 0.005058241</td>
+</tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD19+ B</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0000977" class="uri">GO:0000977</a>, <a href="GO:0001012" class="uri">GO:0001012</a>, <a href="GO:0000987" class="uri">GO:0000987</a>, <a href="GO:0000978" class="uri">GO:0000978</a>, <a href="GO:0000976" class="uri">GO:0000976</a>, <a href="GO:0003690" class="uri">GO:0003690</a>, <a href="GO:1990837" class="uri">GO:1990837</a>, <a href="GO:0001067" class="uri">GO:0001067</a>, <a href="GO:0044212" class="uri">GO:0044212</a></td>
+<td align="left">RNA polymerase II regulatory region sequence-specific DNA binding, RNA polymerase II regulatory region DNA binding , proximal promoter sequence-specific DNA binding , RNA polymerase II proximal promoter sequence-specific DNA binding, transcription regulatory region sequence-specific DNA binding , double-stranded DNA binding , sequence-specific double-stranded DNA binding , regulatory region nucleic acid binding , transcription regulatory region DNA binding</td>
+<td align="left">0.4872513913, 0.4313993168, 0.0365953412, 0.0243679373, 0.0132413813, 0.0059278956, 0.0013679037, 0.0004652721, 0.0003557059</td>
+</tr>
+<tr class="odd">
+<td align="left">gomf</td>
+<td align="left">CD19+ B</td>
+<td align="left">L6</td>
+<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
+<td align="left">structural constituent of ribosome</td>
+<td align="left">0.9953441</td>
+</tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD19+ B</td>
+<td align="left">L7</td>
+<td align="left"><a href="GO:0003954" class="uri">GO:0003954</a>, <a href="GO:0008137" class="uri">GO:0008137</a>, <a href="GO:0050136" class="uri">GO:0050136</a>, <a href="GO:0016655" class="uri">GO:0016655</a>, <a href="GO:0016651" class="uri">GO:0016651</a></td>
+<td align="left">NADH dehydrogenase activity , NADH dehydrogenase (ubiquinone) activity , NADH dehydrogenase (quinone) activity , oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor, oxidoreductase activity, acting on NAD(P)H</td>
+<td align="left">0.32595362, 0.21858318, 0.21858318, 0.17726552, 0.03879761</td>
+</tr>
+<tr class="odd">
+<td align="left">kegg</td>
+<td align="left">CD19+ B</td>
+<td align="left">L1</td>
+<td align="left">hsa00190, hsa05012</td>
+<td align="left">Oxidative phosphorylation, Parkinson disease</td>
+<td align="left">0.9979902, 0.0125303</td>
+</tr>
+<tr class="even">
+<td align="left">kegg</td>
+<td align="left">CD19+ B</td>
+<td align="left">L2</td>
+<td align="left">hsa04640</td>
+<td align="left">Hematopoietic cell lineage</td>
+<td align="left">0.9997951</td>
+</tr>
+<tr class="odd">
+<td align="left">kegg</td>
+<td align="left">CD19+ B</td>
+<td align="left">L3</td>
+<td align="left">hsa03010</td>
+<td align="left">Ribosome</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L1</td>
+<td align="left">R-HSA-168256</td>
+<td align="left">Immune System</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L2</td>
+<td align="left">R-HSA-156842 , R-HSA-156902 , R-HSA-192823 , R-HSA-2408557, R-HSA-72764 , R-HSA-72689 , R-HSA-1799339, R-HSA-72706 , R-HSA-156827</td>
+<td align="left">Eukaryotic Translation Elongation , Peptide chain elongation , Viral mRNA Translation , Selenocysteine synthesis , Eukaryotic Translation Termination , Formation of a pool of free 40S subunits , SRP-dependent cotranslational protein targeting to membrane , GTP hydrolysis and joining of the 60S ribosomal subunit , L13a-mediated translational silencing of Ceruloplasmin expression</td>
+<td align="left">0.760651464, 0.124389740, 0.067132923, 0.026006681, 0.017267678, 0.003305376, 0.003131980, 0.001226762, 0.001000830</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L3</td>
+<td align="left">R-HSA-74160 , R-HSA-212436, R-HSA-73857</td>
+<td align="left">Gene expression (Transcription), Generic Transcription Pathway , RNA Polymerase II Transcription</td>
+<td align="left">0.88567935, 0.07266257, 0.04183476</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L4</td>
+<td align="left">R-HSA-163200 , R-HSA-1428517, R-HSA-611105</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., The citric acid (TCA) cycle and respiratory electron transport , Respiratory electron transport</td>
+<td align="left">0.845323000, 0.149383366, 0.005965744</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L5</td>
+<td align="left">R-HSA-983168, R-HSA-983169</td>
+<td align="left">Antigen processing: Ubiquitination &amp; Proteasome degradation, Class I MHC mediated antigen processing &amp; presentation</td>
+<td align="left">0.997049696, 0.003118792</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L6</td>
+<td align="left">R-HSA-180585 , R-HSA-1234176, R-HSA-211733 , R-HSA-69601 , R-HSA-69610 , R-HSA-69613 , R-HSA-69541 , R-HSA-69229 , R-HSA-75815 , R-HSA-180534 , R-HSA-169911 , R-HSA-349425 , R-HSA-9604323, R-HSA-8854050, R-HSA-1236978, R-HSA-174154 , R-HSA-1169091, R-HSA-174084 , R-HSA-1234174, R-HSA-2262749, R-HSA-983705 , R-HSA-174113 , R-HSA-450408 , R-HSA-69563 , R-HSA-69580 , R-HSA-174184 , R-HSA-351202 , R-HSA-68867 , R-HSA-176409 , R-HSA-350562 , R-HSA-69615 , R-HSA-5362768, R-HSA-174178 , R-HSA-179419 , R-HSA-5610780</td>
+<td align="left">Vif-mediated degradation of APOBEC3G , Oxygen-dependent proline hydroxylation of Hypoxia-inducible Factor Alpha , Regulation of activated PAK-2p34 by proteasome mediated degradation , Ubiquitin Mediated Degradation of Phosphorylated Cdc25A , p53-Independent DNA Damage Response , p53-Independent G1/S DNA damage checkpoint , Stabilization of p53 , Ubiquitin-dependent degradation of Cyclin D1 , Ubiquitin-dependent degradation of Cyclin D , Vpu mediated degradation of CD4 , Regulation of Apoptosis , Autodegradation of the E3 ubiquitin ligase COP1 , Negative regulation of NOTCH4 signaling , FBXL7 down-regulates AURKA during mitotic entry and in early mitosis , Cross-presentation of soluble exogenous antigens (endosomes) , APC/C:Cdc20 mediated degradation of Securin , Activation of NF-kappaB in B cells , Autodegradation of Cdh1 by Cdh1:APC/C , Regulation of Hypoxia-inducible Factor (HIF) by oxygen , Cellular response to hypoxia , Signaling by the B Cell Receptor (BCR) , SCF-beta-TrCP mediated degradation of Emi1 , AUF1 (hnRNP D0) binds and destabilizes mRNA , p53-Dependent G1 DNA Damage Response , p53-Dependent G1/S DNA damage checkpoint , Cdc20:Phospho-APC/C mediated degradation of Cyclin A , Metabolism of polyamines , Assembly of the pre-replicative complex , APC/C:Cdc20 mediated degradation of mitotic proteins , Regulation of ornithine decarboxylase (ODC) , G1/S DNA Damage Checkpoints , Hh mutants that don’t undergo autocatalytic processing are degraded by ERAD , APC/C:Cdh1 mediated degradation of Cdc20 and other APC/C:Cdh1 targeted proteins in late mitosis/early G1, APC:Cdc20 mediated degradation of cell cycle proteins prior to satisfation of the cell cycle checkpoint , Degradation of GLI1 by the proteasome</td>
+<td align="left">0.7490393108, 0.0319137209, 0.0256472437, 0.0242873384, 0.0242873384, 0.0242873384, 0.0225422403, 0.0120133659, 0.0120133659, 0.0119846233, 0.0108046763, 0.0101911528, 0.0071579856, 0.0070377887, 0.0040655484, 0.0038589122, 0.0037679238, 0.0036141487, 0.0030579708, 0.0030579708, 0.0028683640, 0.0024109404, 0.0017126798, 0.0015009738, 0.0015009738, 0.0013319088, 0.0013173159, 0.0012105047, 0.0011649631, 0.0010246799, 0.0009578296, 0.0009514080, 0.0008622334, 0.0007207196, 0.0006610228</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L7</td>
+<td align="left">R-HSA-72163 , R-HSA-72172 , R-HSA-109688, R-HSA-73856 , R-HSA-72203</td>
+<td align="left">mRNA Splicing - Major Pathway , mRNA Splicing , Cleavage of Growing Transcript in the Termination Region, RNA Polymerase II Transcription Termination , Processing of Capped Intron-Containing Pre-mRNA</td>
+<td align="left">0.5457887505, 0.4439546364, 0.0021482288, 0.0021482288, 0.0006461411</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L8</td>
+<td align="left">R-HSA-76005 , R-HSA-114608, R-HSA-76002 , R-HSA-109582</td>
+<td align="left">Response to elevated platelet cytosolic Ca2+ , Platelet degranulation , Platelet activation, signaling and aggregation, Hemostasis</td>
+<td align="left">0.7063848487, 0.2314322026, 0.0252623002, 0.0004075344</td>
+</tr>
+<tr class="even">
+<td align="left">wikipathway</td>
+<td align="left">CD19+ B</td>
+<td align="left">L1</td>
+<td align="left">WP477</td>
+<td align="left">Cytoplasmic Ribosomal Proteins</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">wikipathway</td>
+<td align="left">CD19+ B</td>
+<td align="left">L2</td>
+<td align="left">WP111</td>
+<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
+<td align="left">0.9999189</td>
+</tr>
+<tr class="even">
+<td align="left">wikipathway_cancer</td>
+<td align="left">CD19+ B</td>
+<td align="left">L1</td>
+<td align="left">WP619</td>
+<td align="left">Type II interferon signaling (IFNG)</td>
+<td align="left">0.9998636</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="cd56-nk" class="section level3">
+<h3>CD56+ NK</h3>
+<pre class="r"><code>pbmc_res_set_summary %&gt;%
+  filter(celltype == &#39;CD56+ NK&#39;) %&gt;%
   filter(active_set, thresh==1e-4) %&gt;%
   group_by(db, celltype, top_component) %&gt;%
   arrange(db, celltype, top_component, desc(pip)) %&gt;%
@@ -1060,12 +1355,358 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 <pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
 <table style="width:100%;">
 <colgroup>
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="13%" />
+<col width="66%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">db</th>
+<th align="left">celltype</th>
+<th align="left">top_component</th>
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">pip</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a></td>
+<td align="left">immune system process</td>
+<td align="left">0.9999984</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0006613" class="uri">GO:0006613</a></td>
+<td align="left">protein targeting to ER , establishment of protein localization to endoplasmic reticulum, SRP-dependent cotranslational protein targeting to membrane , cotranslational protein targeting to membrane</td>
+<td align="left">0.68278614, 0.20978513, 0.07123053, 0.03822676</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a>, <a href="GO:0009161" class="uri">GO:0009161</a>, <a href="GO:0009126" class="uri">GO:0009126</a>, <a href="GO:0009167" class="uri">GO:0009167</a>, <a href="GO:0022900" class="uri">GO:0022900</a>, <a href="GO:0022904" class="uri">GO:0022904</a>, <a href="GO:0046034" class="uri">GO:0046034</a></td>
+<td align="left">oxidative phosphorylation , nucleoside monophosphate metabolic process , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport, ribonucleoside monophosphate metabolic process , purine nucleoside monophosphate metabolic process , purine ribonucleoside monophosphate metabolic process , electron transport chain , respiratory electron transport chain , ATP metabolic process</td>
+<td align="left">0.9815754083, 0.0075172568, 0.0050461669, 0.0035658370, 0.0031462719, 0.0018470112, 0.0018470112, 0.0017166414, 0.0015391764, 0.0009472366</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0008380" class="uri">GO:0008380</a>, <a href="GO:0006397" class="uri">GO:0006397</a>, <a href="GO:0000375" class="uri">GO:0000375</a>, <a href="GO:0000377" class="uri">GO:0000377</a>, <a href="GO:0000398" class="uri">GO:0000398</a>, <a href="GO:0016071" class="uri">GO:0016071</a></td>
+<td align="left">RNA splicing , mRNA processing , RNA splicing, via transesterification reactions , RNA splicing, via transesterification reactions with bulged adenosine as nucleophile, mRNA splicing, via spliceosome , mRNA metabolic process</td>
+<td align="left">0.59074452, 0.22252471, 0.05825611, 0.05441422, 0.05441422, 0.01452235</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a>, <a href="GO:0002446" class="uri">GO:0002446</a></td>
+<td align="left">granulocyte activation , neutrophil mediated immunity</td>
+<td align="left">0.6655074, 0.3354429</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0006413" class="uri">GO:0006413</a></td>
+<td align="left">translational initiation</td>
+<td align="left">0.9954877</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0042110" class="uri">GO:0042110</a>, <a href="GO:0007159" class="uri">GO:0007159</a></td>
+<td align="left">T cell activation , leukocyte cell-cell adhesion</td>
+<td align="left">0.985660130, 0.008171918</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0009141" class="uri">GO:0009141</a>, <a href="GO:0009259" class="uri">GO:0009259</a></td>
+<td align="left">nucleoside monophosphate metabolic process, nucleoside triphosphate metabolic process , ribonucleotide metabolic process</td>
+<td align="left">0.981592710, 0.015904774, 0.001372449</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0042113" class="uri">GO:0042113</a></td>
+<td align="left">B cell activation</td>
+<td align="left">0.9972725</td>
+</tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
+<td align="left">structural constituent of ribosome</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">gomf</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a>, <a href="GO:0003700" class="uri">GO:0003700</a></td>
+<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific, DNA-binding transcription factor activity</td>
+<td align="left">0.996770584, 0.003356549</td>
+</tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0000977" class="uri">GO:0000977</a>, <a href="GO:0000976" class="uri">GO:0000976</a>, <a href="GO:0001012" class="uri">GO:0001012</a>, <a href="GO:1990837" class="uri">GO:1990837</a>, <a href="GO:0003690" class="uri">GO:0003690</a>, <a href="GO:0043565" class="uri">GO:0043565</a>, <a href="GO:0000987" class="uri">GO:0000987</a>, <a href="GO:0001067" class="uri">GO:0001067</a>, <a href="GO:0044212" class="uri">GO:0044212</a></td>
+<td align="left">RNA polymerase II regulatory region sequence-specific DNA binding, transcription regulatory region sequence-specific DNA binding , RNA polymerase II regulatory region DNA binding , sequence-specific double-stranded DNA binding , double-stranded DNA binding , sequence-specific DNA binding , proximal promoter sequence-specific DNA binding , regulatory region nucleic acid binding , transcription regulatory region DNA binding</td>
+<td align="left">0.5246638008, 0.2816905881, 0.1760785081, 0.0110809288, 0.0067171732, 0.0006260858, 0.0003679068, 0.0002517074, 0.0002268130</td>
+</tr>
+<tr class="odd">
+<td align="left">kegg</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L1</td>
+<td align="left">hsa03010</td>
+<td align="left">Ribosome</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">kegg</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L2</td>
+<td align="left">hsa05012</td>
+<td align="left">Parkinson disease</td>
+<td align="left">0.9999978</td>
+</tr>
+<tr class="odd">
+<td align="left">kegg</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L3</td>
+<td align="left">hsa04640</td>
+<td align="left">Hematopoietic cell lineage</td>
+<td align="left">0.9978541</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L1</td>
+<td align="left">R-HSA-168256</td>
+<td align="left">Immune System</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L2</td>
+<td align="left">R-HSA-156842, R-HSA-156902, R-HSA-192823, R-HSA-72764 , R-HSA-72689</td>
+<td align="left">Eukaryotic Translation Elongation , Peptide chain elongation , Viral mRNA Translation , Eukaryotic Translation Termination , Formation of a pool of free 40S subunits</td>
+<td align="left">0.864742537, 0.106897566, 0.027158260, 0.002413175, 0.001418708</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L3</td>
+<td align="left">R-HSA-212436, R-HSA-74160 , R-HSA-73857</td>
+<td align="left">Generic Transcription Pathway , Gene expression (Transcription), RNA Polymerase II Transcription</td>
+<td align="left">0.68127740, 0.29679295, 0.02222635</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L4</td>
+<td align="left">R-HSA-163200 , R-HSA-1428517, R-HSA-611105</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., The citric acid (TCA) cycle and respiratory electron transport , Respiratory electron transport</td>
+<td align="left">0.993324533, 0.006034017, 0.001575567</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L5</td>
+<td align="left">R-HSA-8878171, R-HSA-157118 , R-HSA-8939236</td>
+<td align="left">Transcriptional regulation by RUNX1 , Signaling by NOTCH , RUNX1 regulates transcription of genes involved in differentiation of HSCs</td>
+<td align="left">0.97128181, 0.04393861, 0.01998012</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L6</td>
+<td align="left">R-HSA-983168 , R-HSA-983169 , R-HSA-8951664</td>
+<td align="left">Antigen processing: Ubiquitination &amp; Proteasome degradation, Class I MHC mediated antigen processing &amp; presentation , Neddylation</td>
+<td align="left">0.8808248324, 0.1189949639, 0.0009720837</td>
+</tr>
+<tr class="even">
+<td align="left">wikipathway</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L1</td>
+<td align="left">WP477</td>
+<td align="left">Cytoplasmic Ribosomal Proteins</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">wikipathway</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L2</td>
+<td align="left">WP111, WP623</td>
+<td align="left">Electron Transport Chain (OXPHOS system in mitochondria), Oxidative phosphorylation</td>
+<td align="left">0.99086202, 0.01897664</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="t-cell" class="section level3">
+<h3>T cell</h3>
+<pre class="r"><code>pbmc_res_set_summary %&gt;%
+  filter(celltype == &#39;T cell&#39;) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
+  group_by(db, celltype, top_component) %&gt;%
+  arrange(db, celltype, top_component, desc(pip)) %&gt;%
+  select(geneSet, description, pip) %&gt;% chop(c(geneSet, description, pip)) %&gt;%
+  knitr::kable()</code></pre>
+<pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="16%" />
+<col width="62%" />
+<col width="17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">db</th>
+<th align="left">celltype</th>
+<th align="left">top_component</th>
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">pip</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">T cell</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a>, <a href="GO:0045321" class="uri">GO:0045321</a></td>
+<td align="left">cell activation , leukocyte activation</td>
+<td align="left">0.998243491, 0.002864201</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">T cell</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a></td>
+<td align="left">oxidative phosphorylation , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport</td>
+<td align="left">0.998867321, 0.002306692, 0.002090733</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">T cell</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0010941" class="uri">GO:0010941</a>, <a href="GO:0008219" class="uri">GO:0008219</a>, <a href="GO:0043067" class="uri">GO:0043067</a>, <a href="GO:0042981" class="uri">GO:0042981</a>, <a href="GO:0012501" class="uri">GO:0012501</a>, <a href="GO:0006915" class="uri">GO:0006915</a>, <a href="GO:0097190" class="uri">GO:0097190</a>, <a href="GO:0048518" class="uri">GO:0048518</a>, <a href="GO:0010942" class="uri">GO:0010942</a>, <a href="GO:0048522" class="uri">GO:0048522</a>, <a href="GO:0048519" class="uri">GO:0048519</a>, <a href="GO:0043068" class="uri">GO:0043068</a>, <a href="GO:0043065" class="uri">GO:0043065</a></td>
+<td align="left">regulation of cell death , cell death , regulation of programmed cell death , regulation of apoptotic process , programmed cell death , apoptotic process , apoptotic signaling pathway , positive regulation of biological process , positive regulation of cell death , positive regulation of cellular process , negative regulation of biological process , positive regulation of programmed cell death, positive regulation of apoptotic process</td>
+<td align="left">0.404035437, 0.367067203, 0.059812581, 0.059590178, 0.042848010, 0.038547811, 0.020693460, 0.009702335, 0.006246010, 0.006037632, 0.005468877, 0.002090144, 0.001933994</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">T cell</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0070972" class="uri">GO:0070972</a>, <a href="GO:0006613" class="uri">GO:0006613</a></td>
+<td align="left">protein targeting to ER , SRP-dependent cotranslational protein targeting to membrane , establishment of protein localization to endoplasmic reticulum, protein localization to endoplasmic reticulum , cotranslational protein targeting to membrane</td>
+<td align="left">0.42251775, 0.37005939, 0.13809458, 0.04385614, 0.03174252</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">T cell</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a>, <a href="GO:0006955" class="uri">GO:0006955</a></td>
+<td align="left">immune system process, immune response</td>
+<td align="left">0.998468901, 0.002881243</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">T cell</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a>, <a href="GO:0002446" class="uri">GO:0002446</a></td>
+<td align="left">granulocyte activation , neutrophil mediated immunity</td>
+<td align="left">0.7324297, 0.2703360</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">T cell</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0042110" class="uri">GO:0042110</a></td>
+<td align="left">T cell activation</td>
+<td align="left">0.9999906</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">T cell</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0070972" class="uri">GO:0070972</a></td>
+<td align="left">protein localization to endoplasmic reticulum</td>
+<td align="left">0.9998559</td>
+</tr>
+<tr class="odd">
+<td align="left">gomf</td>
+<td align="left">T cell</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0005515" class="uri">GO:0005515</a></td>
+<td align="left">protein binding</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">kegg</td>
+<td align="left">T cell</td>
+<td align="left">L1</td>
+<td align="left">hsa05010</td>
+<td align="left">Alzheimer disease</td>
+<td align="left">0.9999993</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">T cell</td>
+<td align="left">L1</td>
+<td align="left">R-HSA-6798695</td>
+<td align="left">Neutrophil degranulation</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">T cell</td>
+<td align="left">L2</td>
+<td align="left">R-HSA-72706 , R-HSA-156827, R-HSA-72689 , R-HSA-72613 , R-HSA-72737 , R-HSA-192823, R-HSA-156902</td>
+<td align="left">GTP hydrolysis and joining of the 60S ribosomal subunit , L13a-mediated translational silencing of Ceruloplasmin expression, Formation of a pool of free 40S subunits , Eukaryotic Translation Initiation , Cap-dependent Translation Initiation , Viral mRNA Translation , Peptide chain elongation</td>
+<td align="left">0.586005479, 0.400596683, 0.009180040, 0.004668524, 0.004668524, 0.003496445, 0.003174071</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="cd14-monocyte" class="section level3">
+<h3>CD14+ Monocyte</h3>
+<pre class="r"><code>pbmc_res_set_summary %&gt;%
+  filter(celltype == &#39;CD14+ Monocyte&#39;) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
+  group_by(db, celltype, top_component) %&gt;%
+  arrange(db, celltype, top_component, desc(pip)) %&gt;%
+  select(geneSet, description, pip) %&gt;% chop(c(geneSet, description, pip)) %&gt;%
+  knitr::kable()</code></pre>
+<pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
+<table>
+<colgroup>
 <col width="0%" />
 <col width="0%" />
 <col width="0%" />
-<col width="11%" />
-<col width="77%" />
-<col width="10%" />
+<col width="16%" />
+<col width="62%" />
+<col width="19%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1135,150 +1776,6 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 <td align="left">0.422448316, 0.196794593, 0.178759471, 0.178759471, 0.021244858, 0.001609996</td>
 </tr>
 <tr class="even">
-<td align="left">gobp</td>
-<td align="left">CD19+ B</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a></td>
-<td align="left">immune system process</td>
-<td align="left">0.9999575</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">CD19+ B</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0006613" class="uri">GO:0006613</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0006614" class="uri">GO:0006614</a></td>
-<td align="left">protein targeting to ER , cotranslational protein targeting to membrane , establishment of protein localization to endoplasmic reticulum, SRP-dependent cotranslational protein targeting to membrane</td>
-<td align="left">0.96205208, 0.02165616, 0.01453688, 0.00410197</td>
-</tr>
-<tr class="even">
-<td align="left">gobp</td>
-<td align="left">CD19+ B</td>
-<td align="left">L3</td>
-<td align="left"><a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a>, <a href="GO:0006119" class="uri">GO:0006119</a></td>
-<td align="left">ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport, oxidative phosphorylation</td>
-<td align="left">0.62449631, 0.36002221, 0.01752387</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">CD19+ B</td>
-<td align="left">L5</td>
-<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a>, <a href="GO:0045321" class="uri">GO:0045321</a>, <a href="GO:0002366" class="uri">GO:0002366</a>, <a href="GO:0002263" class="uri">GO:0002263</a></td>
-<td align="left">cell activation , leukocyte activation , leukocyte activation involved in immune response, cell activation involved in immune response</td>
-<td align="left">0.9780541751, 0.0218972721, 0.0005957131, 0.0005770067</td>
-</tr>
-<tr class="even">
-<td align="left">gobp</td>
-<td align="left">CD19+ B</td>
-<td align="left">L6</td>
-<td align="left"><a href="GO:0008380" class="uri">GO:0008380</a>, <a href="GO:0000377" class="uri">GO:0000377</a>, <a href="GO:0000398" class="uri">GO:0000398</a>, <a href="GO:0000375" class="uri">GO:0000375</a>, <a href="GO:0006397" class="uri">GO:0006397</a>, <a href="GO:0050684" class="uri">GO:0050684</a>, <a href="GO:0043484" class="uri">GO:0043484</a>, <a href="GO:0000380" class="uri">GO:0000380</a>, <a href="GO:0048024" class="uri">GO:0048024</a>, <a href="GO:0016071" class="uri">GO:0016071</a></td>
-<td align="left">RNA splicing , RNA splicing, via transesterification reactions with bulged adenosine as nucleophile, mRNA splicing, via spliceosome , RNA splicing, via transesterification reactions , mRNA processing , regulation of mRNA processing , regulation of RNA splicing , alternative mRNA splicing, via spliceosome , regulation of mRNA splicing, via spliceosome , mRNA metabolic process</td>
-<td align="left">0.822736133, 0.049644134, 0.049644134, 0.033005117, 0.017234053, 0.009417204, 0.007220671, 0.002939483, 0.001834918, 0.001051637</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">CD34+</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a>, <a href="GO:0045321" class="uri">GO:0045321</a></td>
-<td align="left">cell activation , leukocyte activation</td>
-<td align="left">0.9870540, 0.0137773</td>
-</tr>
-<tr class="even">
-<td align="left">gobp</td>
-<td align="left">CD34+</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0006613" class="uri">GO:0006613</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0072599" class="uri">GO:0072599</a></td>
-<td align="left">cotranslational protein targeting to membrane , SRP-dependent cotranslational protein targeting to membrane , protein targeting to ER , establishment of protein localization to endoplasmic reticulum</td>
-<td align="left">0.813781011, 0.153626340, 0.029062966, 0.008527809</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">CD34+</td>
-<td align="left">L3</td>
-<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a></td>
-<td align="left">oxidative phosphorylation , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport</td>
-<td align="left">0.998941297, 0.002197687, 0.002040038</td>
-</tr>
-<tr class="even">
-<td align="left">gobp</td>
-<td align="left">CD34+</td>
-<td align="left">L4</td>
-<td align="left"><a href="GO:0044419" class="uri">GO:0044419</a>, <a href="GO:0016032" class="uri">GO:0016032</a>, <a href="GO:0044403" class="uri">GO:0044403</a></td>
-<td align="left">interspecies interaction between organisms, viral process , symbiont process</td>
-<td align="left">0.4203517, 0.3833143, 0.1952495</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a></td>
-<td align="left">immune system process</td>
-<td align="left">0.9999984</td>
-</tr>
-<tr class="even">
-<td align="left">gobp</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0006613" class="uri">GO:0006613</a></td>
-<td align="left">protein targeting to ER , establishment of protein localization to endoplasmic reticulum, SRP-dependent cotranslational protein targeting to membrane , cotranslational protein targeting to membrane</td>
-<td align="left">0.68278614, 0.20978513, 0.07123053, 0.03822676</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L4</td>
-<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a>, <a href="GO:0009161" class="uri">GO:0009161</a>, <a href="GO:0009126" class="uri">GO:0009126</a>, <a href="GO:0009167" class="uri">GO:0009167</a>, <a href="GO:0022900" class="uri">GO:0022900</a>, <a href="GO:0022904" class="uri">GO:0022904</a>, <a href="GO:0046034" class="uri">GO:0046034</a></td>
-<td align="left">oxidative phosphorylation , nucleoside monophosphate metabolic process , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport, ribonucleoside monophosphate metabolic process , purine nucleoside monophosphate metabolic process , purine ribonucleoside monophosphate metabolic process , electron transport chain , respiratory electron transport chain , ATP metabolic process</td>
-<td align="left">0.9815754083, 0.0075172568, 0.0050461669, 0.0035658370, 0.0031462719, 0.0018470112, 0.0018470112, 0.0017166414, 0.0015391764, 0.0009472366</td>
-</tr>
-<tr class="even">
-<td align="left">gobp</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L5</td>
-<td align="left"><a href="GO:0008380" class="uri">GO:0008380</a>, <a href="GO:0006397" class="uri">GO:0006397</a>, <a href="GO:0000375" class="uri">GO:0000375</a>, <a href="GO:0000377" class="uri">GO:0000377</a>, <a href="GO:0000398" class="uri">GO:0000398</a>, <a href="GO:0016071" class="uri">GO:0016071</a></td>
-<td align="left">RNA splicing , mRNA processing , RNA splicing, via transesterification reactions , RNA splicing, via transesterification reactions with bulged adenosine as nucleophile, mRNA splicing, via spliceosome , mRNA metabolic process</td>
-<td align="left">0.59074452, 0.22252471, 0.05825611, 0.05441422, 0.05441422, 0.01452235</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">T cell</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a>, <a href="GO:0045321" class="uri">GO:0045321</a></td>
-<td align="left">cell activation , leukocyte activation</td>
-<td align="left">0.998243491, 0.002864201</td>
-</tr>
-<tr class="even">
-<td align="left">gobp</td>
-<td align="left">T cell</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a></td>
-<td align="left">oxidative phosphorylation , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport</td>
-<td align="left">0.998867321, 0.002306692, 0.002090733</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">T cell</td>
-<td align="left">L3</td>
-<td align="left"><a href="GO:0010941" class="uri">GO:0010941</a>, <a href="GO:0008219" class="uri">GO:0008219</a>, <a href="GO:0043067" class="uri">GO:0043067</a>, <a href="GO:0042981" class="uri">GO:0042981</a>, <a href="GO:0012501" class="uri">GO:0012501</a>, <a href="GO:0006915" class="uri">GO:0006915</a>, <a href="GO:0097190" class="uri">GO:0097190</a>, <a href="GO:0048518" class="uri">GO:0048518</a>, <a href="GO:0010942" class="uri">GO:0010942</a>, <a href="GO:0048522" class="uri">GO:0048522</a>, <a href="GO:0048519" class="uri">GO:0048519</a>, <a href="GO:0043068" class="uri">GO:0043068</a>, <a href="GO:0043065" class="uri">GO:0043065</a></td>
-<td align="left">regulation of cell death , cell death , regulation of programmed cell death , regulation of apoptotic process , programmed cell death , apoptotic process , apoptotic signaling pathway , positive regulation of biological process , positive regulation of cell death , positive regulation of cellular process , negative regulation of biological process , positive regulation of programmed cell death, positive regulation of apoptotic process</td>
-<td align="left">0.404035437, 0.367067203, 0.059812581, 0.059590178, 0.042848010, 0.038547811, 0.020693460, 0.009702335, 0.006246010, 0.006037632, 0.005468877, 0.002090144, 0.001933994</td>
-</tr>
-<tr class="even">
-<td align="left">gobp</td>
-<td align="left">T cell</td>
-<td align="left">L4</td>
-<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0070972" class="uri">GO:0070972</a>, <a href="GO:0006613" class="uri">GO:0006613</a></td>
-<td align="left">protein targeting to ER , SRP-dependent cotranslational protein targeting to membrane , establishment of protein localization to endoplasmic reticulum, protein localization to endoplasmic reticulum , cotranslational protein targeting to membrane</td>
-<td align="left">0.42251775, 0.37005939, 0.13809458, 0.04385614, 0.03174252</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp</td>
-<td align="left">T cell</td>
-<td align="left">L5</td>
-<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a>, <a href="GO:0006955" class="uri">GO:0006955</a></td>
-<td align="left">immune system process, immune response</td>
-<td align="left">0.998468901, 0.002881243</td>
-</tr>
-<tr class="even">
 <td align="left">gobp_nr</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L1</td>
@@ -1325,118 +1822,6 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 <td align="left"><a href="GO:0090150" class="uri">GO:0090150</a>, <a href="GO:0070972" class="uri">GO:0070972</a>, <a href="GO:0006605" class="uri">GO:0006605</a></td>
 <td align="left">establishment of protein localization to membrane, protein localization to endoplasmic reticulum , protein targeting</td>
 <td align="left">0.756201036, 0.243465201, 0.004950252</td>
-</tr>
-<tr class="even">
-<td align="left">gobp_nr</td>
-<td align="left">CD19+ B</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0002446" class="uri">GO:0002446</a>, <a href="GO:0036230" class="uri">GO:0036230</a></td>
-<td align="left">neutrophil mediated immunity, granulocyte activation</td>
-<td align="left">0.5151440, 0.4857358</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp_nr</td>
-<td align="left">CD19+ B</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0070972" class="uri">GO:0070972</a></td>
-<td align="left">protein localization to endoplasmic reticulum</td>
-<td align="left">0.999958</td>
-</tr>
-<tr class="even">
-<td align="left">gobp_nr</td>
-<td align="left">CD19+ B</td>
-<td align="left">L4</td>
-<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0009141" class="uri">GO:0009141</a></td>
-<td align="left">nucleoside monophosphate metabolic process, nucleoside triphosphate metabolic process</td>
-<td align="left">0.98449756, 0.01648675</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp_nr</td>
-<td align="left">CD19+ B</td>
-<td align="left">L5</td>
-<td align="left"><a href="GO:0002764" class="uri">GO:0002764</a></td>
-<td align="left">immune response-regulating signaling pathway</td>
-<td align="left">0.9961853</td>
-</tr>
-<tr class="even">
-<td align="left">gobp_nr</td>
-<td align="left">CD34+</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0002446" class="uri">GO:0002446</a>, <a href="GO:0036230" class="uri">GO:0036230</a></td>
-<td align="left">neutrophil mediated immunity, granulocyte activation</td>
-<td align="left">0.6078439, 0.3946596</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp_nr</td>
-<td align="left">CD34+</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0006413" class="uri">GO:0006413</a></td>
-<td align="left">translational initiation</td>
-<td align="left">0.9996608</td>
-</tr>
-<tr class="even">
-<td align="left">gobp_nr</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a>, <a href="GO:0002446" class="uri">GO:0002446</a></td>
-<td align="left">granulocyte activation , neutrophil mediated immunity</td>
-<td align="left">0.6655074, 0.3354429</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp_nr</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0006413" class="uri">GO:0006413</a></td>
-<td align="left">translational initiation</td>
-<td align="left">0.9954877</td>
-</tr>
-<tr class="even">
-<td align="left">gobp_nr</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L3</td>
-<td align="left"><a href="GO:0042110" class="uri">GO:0042110</a>, <a href="GO:0007159" class="uri">GO:0007159</a></td>
-<td align="left">T cell activation , leukocyte cell-cell adhesion</td>
-<td align="left">0.985660130, 0.008171918</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp_nr</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L4</td>
-<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0009141" class="uri">GO:0009141</a>, <a href="GO:0009259" class="uri">GO:0009259</a></td>
-<td align="left">nucleoside monophosphate metabolic process, nucleoside triphosphate metabolic process , ribonucleotide metabolic process</td>
-<td align="left">0.981592710, 0.015904774, 0.001372449</td>
-</tr>
-<tr class="even">
-<td align="left">gobp_nr</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L5</td>
-<td align="left"><a href="GO:0042113" class="uri">GO:0042113</a></td>
-<td align="left">B cell activation</td>
-<td align="left">0.9972725</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp_nr</td>
-<td align="left">T cell</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a>, <a href="GO:0002446" class="uri">GO:0002446</a></td>
-<td align="left">granulocyte activation , neutrophil mediated immunity</td>
-<td align="left">0.7324297, 0.2703360</td>
-</tr>
-<tr class="even">
-<td align="left">gobp_nr</td>
-<td align="left">T cell</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0042110" class="uri">GO:0042110</a></td>
-<td align="left">T cell activation</td>
-<td align="left">0.9999906</td>
-</tr>
-<tr class="odd">
-<td align="left">gobp_nr</td>
-<td align="left">T cell</td>
-<td align="left">L3</td>
-<td align="left"><a href="GO:0070972" class="uri">GO:0070972</a></td>
-<td align="left">protein localization to endoplasmic reticulum</td>
-<td align="left">0.9998559</td>
 </tr>
 <tr class="even">
 <td align="left">gomf</td>
@@ -1487,94 +1872,6 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 <td align="left">0.7890801, 0.1881604</td>
 </tr>
 <tr class="even">
-<td align="left">gomf</td>
-<td align="left">CD19+ B</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0003723" class="uri">GO:0003723</a></td>
-<td align="left">RNA binding</td>
-<td align="left">0.999744</td>
-</tr>
-<tr class="odd">
-<td align="left">gomf</td>
-<td align="left">CD19+ B</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a>, <a href="GO:0003700" class="uri">GO:0003700</a></td>
-<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific, DNA-binding transcription factor activity</td>
-<td align="left">0.995003783, 0.005058241</td>
-</tr>
-<tr class="even">
-<td align="left">gomf</td>
-<td align="left">CD19+ B</td>
-<td align="left">L3</td>
-<td align="left"><a href="GO:0000977" class="uri">GO:0000977</a>, <a href="GO:0001012" class="uri">GO:0001012</a>, <a href="GO:0000987" class="uri">GO:0000987</a>, <a href="GO:0000978" class="uri">GO:0000978</a>, <a href="GO:0000976" class="uri">GO:0000976</a>, <a href="GO:0003690" class="uri">GO:0003690</a>, <a href="GO:1990837" class="uri">GO:1990837</a>, <a href="GO:0001067" class="uri">GO:0001067</a>, <a href="GO:0044212" class="uri">GO:0044212</a></td>
-<td align="left">RNA polymerase II regulatory region sequence-specific DNA binding, RNA polymerase II regulatory region DNA binding , proximal promoter sequence-specific DNA binding , RNA polymerase II proximal promoter sequence-specific DNA binding, transcription regulatory region sequence-specific DNA binding , double-stranded DNA binding , sequence-specific double-stranded DNA binding , regulatory region nucleic acid binding , transcription regulatory region DNA binding</td>
-<td align="left">0.4872513913, 0.4313993168, 0.0365953412, 0.0243679373, 0.0132413813, 0.0059278956, 0.0013679037, 0.0004652721, 0.0003557059</td>
-</tr>
-<tr class="odd">
-<td align="left">gomf</td>
-<td align="left">CD19+ B</td>
-<td align="left">L6</td>
-<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
-<td align="left">structural constituent of ribosome</td>
-<td align="left">0.9953441</td>
-</tr>
-<tr class="even">
-<td align="left">gomf</td>
-<td align="left">CD19+ B</td>
-<td align="left">L7</td>
-<td align="left"><a href="GO:0003954" class="uri">GO:0003954</a>, <a href="GO:0008137" class="uri">GO:0008137</a>, <a href="GO:0050136" class="uri">GO:0050136</a>, <a href="GO:0016655" class="uri">GO:0016655</a>, <a href="GO:0016651" class="uri">GO:0016651</a></td>
-<td align="left">NADH dehydrogenase activity , NADH dehydrogenase (ubiquinone) activity , NADH dehydrogenase (quinone) activity , oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor, oxidoreductase activity, acting on NAD(P)H</td>
-<td align="left">0.32595362, 0.21858318, 0.21858318, 0.17726552, 0.03879761</td>
-</tr>
-<tr class="odd">
-<td align="left">gomf</td>
-<td align="left">CD34+</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
-<td align="left">structural constituent of ribosome</td>
-<td align="left">1</td>
-</tr>
-<tr class="even">
-<td align="left">gomf</td>
-<td align="left">CD34+</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0005515" class="uri">GO:0005515</a></td>
-<td align="left">protein binding</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
-<td align="left">gomf</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
-<td align="left">structural constituent of ribosome</td>
-<td align="left">1</td>
-</tr>
-<tr class="even">
-<td align="left">gomf</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L2</td>
-<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a>, <a href="GO:0003700" class="uri">GO:0003700</a></td>
-<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific, DNA-binding transcription factor activity</td>
-<td align="left">0.996770584, 0.003356549</td>
-</tr>
-<tr class="odd">
-<td align="left">gomf</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L3</td>
-<td align="left"><a href="GO:0000977" class="uri">GO:0000977</a>, <a href="GO:0000976" class="uri">GO:0000976</a>, <a href="GO:0001012" class="uri">GO:0001012</a>, <a href="GO:1990837" class="uri">GO:1990837</a>, <a href="GO:0003690" class="uri">GO:0003690</a>, <a href="GO:0043565" class="uri">GO:0043565</a>, <a href="GO:0000987" class="uri">GO:0000987</a>, <a href="GO:0001067" class="uri">GO:0001067</a>, <a href="GO:0044212" class="uri">GO:0044212</a></td>
-<td align="left">RNA polymerase II regulatory region sequence-specific DNA binding, transcription regulatory region sequence-specific DNA binding , RNA polymerase II regulatory region DNA binding , sequence-specific double-stranded DNA binding , double-stranded DNA binding , sequence-specific DNA binding , proximal promoter sequence-specific DNA binding , regulatory region nucleic acid binding , transcription regulatory region DNA binding</td>
-<td align="left">0.5246638008, 0.2816905881, 0.1760785081, 0.0110809288, 0.0067171732, 0.0006260858, 0.0003679068, 0.0002517074, 0.0002268130</td>
-</tr>
-<tr class="even">
-<td align="left">gomf</td>
-<td align="left">T cell</td>
-<td align="left">L1</td>
-<td align="left"><a href="GO:0005515" class="uri">GO:0005515</a></td>
-<td align="left">protein binding</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
 <td align="left">kegg</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L1</td>
@@ -1582,85 +1879,13 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 <td align="left">Ribosome</td>
 <td align="left">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">kegg</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L2</td>
 <td align="left">hsa05012</td>
 <td align="left">Parkinson disease</td>
 <td align="left">0.9999021</td>
-</tr>
-<tr class="odd">
-<td align="left">kegg</td>
-<td align="left">CD19+ B</td>
-<td align="left">L1</td>
-<td align="left">hsa00190, hsa05012</td>
-<td align="left">Oxidative phosphorylation, Parkinson disease</td>
-<td align="left">0.9979902, 0.0125303</td>
-</tr>
-<tr class="even">
-<td align="left">kegg</td>
-<td align="left">CD19+ B</td>
-<td align="left">L2</td>
-<td align="left">hsa04640</td>
-<td align="left">Hematopoietic cell lineage</td>
-<td align="left">0.9997951</td>
-</tr>
-<tr class="odd">
-<td align="left">kegg</td>
-<td align="left">CD19+ B</td>
-<td align="left">L3</td>
-<td align="left">hsa03010</td>
-<td align="left">Ribosome</td>
-<td align="left">1</td>
-</tr>
-<tr class="even">
-<td align="left">kegg</td>
-<td align="left">CD34+</td>
-<td align="left">L1</td>
-<td align="left">hsa00190, hsa05012</td>
-<td align="left">Oxidative phosphorylation, Parkinson disease</td>
-<td align="left">0.9921759, 0.0333608</td>
-</tr>
-<tr class="odd">
-<td align="left">kegg</td>
-<td align="left">CD34+</td>
-<td align="left">L2</td>
-<td align="left">hsa03010</td>
-<td align="left">Ribosome</td>
-<td align="left">1</td>
-</tr>
-<tr class="even">
-<td align="left">kegg</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L1</td>
-<td align="left">hsa03010</td>
-<td align="left">Ribosome</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
-<td align="left">kegg</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L2</td>
-<td align="left">hsa05012</td>
-<td align="left">Parkinson disease</td>
-<td align="left">0.9999978</td>
-</tr>
-<tr class="even">
-<td align="left">kegg</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L3</td>
-<td align="left">hsa04640</td>
-<td align="left">Hematopoietic cell lineage</td>
-<td align="left">0.9978541</td>
-</tr>
-<tr class="odd">
-<td align="left">kegg</td>
-<td align="left">T cell</td>
-<td align="left">L1</td>
-<td align="left">hsa05010</td>
-<td align="left">Alzheimer disease</td>
-<td align="left">0.9999993</td>
 </tr>
 <tr class="even">
 <td align="left">reactome</td>
@@ -1711,166 +1936,6 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 <td align="left">0.9972986</td>
 </tr>
 <tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD19+ B</td>
-<td align="left">L1</td>
-<td align="left">R-HSA-168256</td>
-<td align="left">Immune System</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD19+ B</td>
-<td align="left">L2</td>
-<td align="left">R-HSA-156842 , R-HSA-156902 , R-HSA-192823 , R-HSA-2408557, R-HSA-72764 , R-HSA-72689 , R-HSA-1799339, R-HSA-72706 , R-HSA-156827</td>
-<td align="left">Eukaryotic Translation Elongation , Peptide chain elongation , Viral mRNA Translation , Selenocysteine synthesis , Eukaryotic Translation Termination , Formation of a pool of free 40S subunits , SRP-dependent cotranslational protein targeting to membrane , GTP hydrolysis and joining of the 60S ribosomal subunit , L13a-mediated translational silencing of Ceruloplasmin expression</td>
-<td align="left">0.760651464, 0.124389740, 0.067132923, 0.026006681, 0.017267678, 0.003305376, 0.003131980, 0.001226762, 0.001000830</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD19+ B</td>
-<td align="left">L3</td>
-<td align="left">R-HSA-74160 , R-HSA-212436, R-HSA-73857</td>
-<td align="left">Gene expression (Transcription), Generic Transcription Pathway , RNA Polymerase II Transcription</td>
-<td align="left">0.88567935, 0.07266257, 0.04183476</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD19+ B</td>
-<td align="left">L4</td>
-<td align="left">R-HSA-163200 , R-HSA-1428517, R-HSA-611105</td>
-<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., The citric acid (TCA) cycle and respiratory electron transport , Respiratory electron transport</td>
-<td align="left">0.845323000, 0.149383366, 0.005965744</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD19+ B</td>
-<td align="left">L5</td>
-<td align="left">R-HSA-983168, R-HSA-983169</td>
-<td align="left">Antigen processing: Ubiquitination &amp; Proteasome degradation, Class I MHC mediated antigen processing &amp; presentation</td>
-<td align="left">0.997049696, 0.003118792</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD19+ B</td>
-<td align="left">L6</td>
-<td align="left">R-HSA-180585 , R-HSA-1234176, R-HSA-211733 , R-HSA-69601 , R-HSA-69610 , R-HSA-69613 , R-HSA-69541 , R-HSA-69229 , R-HSA-75815 , R-HSA-180534 , R-HSA-169911 , R-HSA-349425 , R-HSA-9604323, R-HSA-8854050, R-HSA-1236978, R-HSA-174154 , R-HSA-1169091, R-HSA-174084 , R-HSA-1234174, R-HSA-2262749, R-HSA-983705 , R-HSA-174113 , R-HSA-450408 , R-HSA-69563 , R-HSA-69580 , R-HSA-174184 , R-HSA-351202 , R-HSA-68867 , R-HSA-176409 , R-HSA-350562 , R-HSA-69615 , R-HSA-5362768, R-HSA-174178 , R-HSA-179419 , R-HSA-5610780</td>
-<td align="left">Vif-mediated degradation of APOBEC3G , Oxygen-dependent proline hydroxylation of Hypoxia-inducible Factor Alpha , Regulation of activated PAK-2p34 by proteasome mediated degradation , Ubiquitin Mediated Degradation of Phosphorylated Cdc25A , p53-Independent DNA Damage Response , p53-Independent G1/S DNA damage checkpoint , Stabilization of p53 , Ubiquitin-dependent degradation of Cyclin D1 , Ubiquitin-dependent degradation of Cyclin D , Vpu mediated degradation of CD4 , Regulation of Apoptosis , Autodegradation of the E3 ubiquitin ligase COP1 , Negative regulation of NOTCH4 signaling , FBXL7 down-regulates AURKA during mitotic entry and in early mitosis , Cross-presentation of soluble exogenous antigens (endosomes) , APC/C:Cdc20 mediated degradation of Securin , Activation of NF-kappaB in B cells , Autodegradation of Cdh1 by Cdh1:APC/C , Regulation of Hypoxia-inducible Factor (HIF) by oxygen , Cellular response to hypoxia , Signaling by the B Cell Receptor (BCR) , SCF-beta-TrCP mediated degradation of Emi1 , AUF1 (hnRNP D0) binds and destabilizes mRNA , p53-Dependent G1 DNA Damage Response , p53-Dependent G1/S DNA damage checkpoint , Cdc20:Phospho-APC/C mediated degradation of Cyclin A , Metabolism of polyamines , Assembly of the pre-replicative complex , APC/C:Cdc20 mediated degradation of mitotic proteins , Regulation of ornithine decarboxylase (ODC) , G1/S DNA Damage Checkpoints , Hh mutants that don’t undergo autocatalytic processing are degraded by ERAD , APC/C:Cdh1 mediated degradation of Cdc20 and other APC/C:Cdh1 targeted proteins in late mitosis/early G1, APC:Cdc20 mediated degradation of cell cycle proteins prior to satisfation of the cell cycle checkpoint , Degradation of GLI1 by the proteasome</td>
-<td align="left">0.7490393108, 0.0319137209, 0.0256472437, 0.0242873384, 0.0242873384, 0.0242873384, 0.0225422403, 0.0120133659, 0.0120133659, 0.0119846233, 0.0108046763, 0.0101911528, 0.0071579856, 0.0070377887, 0.0040655484, 0.0038589122, 0.0037679238, 0.0036141487, 0.0030579708, 0.0030579708, 0.0028683640, 0.0024109404, 0.0017126798, 0.0015009738, 0.0015009738, 0.0013319088, 0.0013173159, 0.0012105047, 0.0011649631, 0.0010246799, 0.0009578296, 0.0009514080, 0.0008622334, 0.0007207196, 0.0006610228</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD19+ B</td>
-<td align="left">L7</td>
-<td align="left">R-HSA-72163 , R-HSA-72172 , R-HSA-109688, R-HSA-73856 , R-HSA-72203</td>
-<td align="left">mRNA Splicing - Major Pathway , mRNA Splicing , Cleavage of Growing Transcript in the Termination Region, RNA Polymerase II Transcription Termination , Processing of Capped Intron-Containing Pre-mRNA</td>
-<td align="left">0.5457887505, 0.4439546364, 0.0021482288, 0.0021482288, 0.0006461411</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD19+ B</td>
-<td align="left">L8</td>
-<td align="left">R-HSA-76005 , R-HSA-114608, R-HSA-76002 , R-HSA-109582</td>
-<td align="left">Response to elevated platelet cytosolic Ca2+ , Platelet degranulation , Platelet activation, signaling and aggregation, Hemostasis</td>
-<td align="left">0.7063848487, 0.2314322026, 0.0252623002, 0.0004075344</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD34+</td>
-<td align="left">L1</td>
-<td align="left">R-HSA-72764 , R-HSA-156902, R-HSA-156842</td>
-<td align="left">Eukaryotic Translation Termination, Peptide chain elongation , Eukaryotic Translation Elongation</td>
-<td align="left">0.993056233, 0.006377217, 0.004060368</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD34+</td>
-<td align="left">L2</td>
-<td align="left">R-HSA-6798695, R-HSA-168249</td>
-<td align="left">Neutrophil degranulation, Innate Immune System</td>
-<td align="left">0.98627161, 0.01669373</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD34+</td>
-<td align="left">L3</td>
-<td align="left">R-HSA-163200, R-HSA-611105</td>
-<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., Respiratory electron transport</td>
-<td align="left">0.997732525, 0.003758523</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD34+</td>
-<td align="left">L4</td>
-<td align="left">R-HSA-198933</td>
-<td align="left">Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell</td>
-<td align="left">0.9999503</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L1</td>
-<td align="left">R-HSA-168256</td>
-<td align="left">Immune System</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L2</td>
-<td align="left">R-HSA-156842, R-HSA-156902, R-HSA-192823, R-HSA-72764 , R-HSA-72689</td>
-<td align="left">Eukaryotic Translation Elongation , Peptide chain elongation , Viral mRNA Translation , Eukaryotic Translation Termination , Formation of a pool of free 40S subunits</td>
-<td align="left">0.864742537, 0.106897566, 0.027158260, 0.002413175, 0.001418708</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L3</td>
-<td align="left">R-HSA-212436, R-HSA-74160 , R-HSA-73857</td>
-<td align="left">Generic Transcription Pathway , Gene expression (Transcription), RNA Polymerase II Transcription</td>
-<td align="left">0.68127740, 0.29679295, 0.02222635</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L4</td>
-<td align="left">R-HSA-163200 , R-HSA-1428517, R-HSA-611105</td>
-<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., The citric acid (TCA) cycle and respiratory electron transport , Respiratory electron transport</td>
-<td align="left">0.993324533, 0.006034017, 0.001575567</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L5</td>
-<td align="left">R-HSA-8878171, R-HSA-157118 , R-HSA-8939236</td>
-<td align="left">Transcriptional regulation by RUNX1 , Signaling by NOTCH , RUNX1 regulates transcription of genes involved in differentiation of HSCs</td>
-<td align="left">0.97128181, 0.04393861, 0.01998012</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L6</td>
-<td align="left">R-HSA-983168 , R-HSA-983169 , R-HSA-8951664</td>
-<td align="left">Antigen processing: Ubiquitination &amp; Proteasome degradation, Class I MHC mediated antigen processing &amp; presentation , Neddylation</td>
-<td align="left">0.8808248324, 0.1189949639, 0.0009720837</td>
-</tr>
-<tr class="even">
-<td align="left">reactome</td>
-<td align="left">T cell</td>
-<td align="left">L1</td>
-<td align="left">R-HSA-6798695</td>
-<td align="left">Neutrophil degranulation</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
-<td align="left">reactome</td>
-<td align="left">T cell</td>
-<td align="left">L2</td>
-<td align="left">R-HSA-72706 , R-HSA-156827, R-HSA-72689 , R-HSA-72613 , R-HSA-72737 , R-HSA-192823, R-HSA-156902</td>
-<td align="left">GTP hydrolysis and joining of the 60S ribosomal subunit , L13a-mediated translational silencing of Ceruloplasmin expression, Formation of a pool of free 40S subunits , Eukaryotic Translation Initiation , Cap-dependent Translation Initiation , Viral mRNA Translation , Peptide chain elongation</td>
-<td align="left">0.586005479, 0.400596683, 0.009180040, 0.004668524, 0.004668524, 0.003496445, 0.003174071</td>
-</tr>
-<tr class="even">
 <td align="left">wikipathway</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L1</td>
@@ -1886,65 +1951,35 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 <td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
 <td align="left">0.9998312</td>
 </tr>
-<tr class="even">
-<td align="left">wikipathway</td>
-<td align="left">CD19+ B</td>
-<td align="left">L1</td>
-<td align="left">WP477</td>
-<td align="left">Cytoplasmic Ribosomal Proteins</td>
-<td align="left">1</td>
+</tbody>
+</table>
+</div>
+<div id="cd34" class="section level3">
+<h3>CD34+</h3>
+<pre class="r"><code>pbmc_res_set_summary %&gt;%
+  filter(celltype == &#39;CD14+&#39;) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
+  group_by(db, celltype, top_component) %&gt;%
+  arrange(db, celltype, top_component, desc(pip)) %&gt;%
+  select(geneSet, description, pip) %&gt;% chop(c(geneSet, description, pip)) %&gt;%
+  knitr::kable()</code></pre>
+<pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">db</th>
+<th align="left">celltype</th>
+<th align="left">top_component</th>
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">pip</th>
 </tr>
-<tr class="odd">
-<td align="left">wikipathway</td>
-<td align="left">CD19+ B</td>
-<td align="left">L2</td>
-<td align="left">WP111</td>
-<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
-<td align="left">0.9999189</td>
-</tr>
-<tr class="even">
-<td align="left">wikipathway</td>
-<td align="left">CD34+</td>
-<td align="left">L1</td>
-<td align="left">WP477</td>
-<td align="left">Cytoplasmic Ribosomal Proteins</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
-<td align="left">wikipathway</td>
-<td align="left">CD34+</td>
-<td align="left">L2</td>
-<td align="left">WP111</td>
-<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
-<td align="left">0.9999971</td>
-</tr>
-<tr class="even">
-<td align="left">wikipathway</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L1</td>
-<td align="left">WP477</td>
-<td align="left">Cytoplasmic Ribosomal Proteins</td>
-<td align="left">1</td>
-</tr>
-<tr class="odd">
-<td align="left">wikipathway</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L2</td>
-<td align="left">WP111, WP623</td>
-<td align="left">Electron Transport Chain (OXPHOS system in mitochondria), Oxidative phosphorylation</td>
-<td align="left">0.99086202, 0.01897664</td>
-</tr>
-<tr class="even">
-<td align="left">wikipathway_cancer</td>
-<td align="left">CD19+ B</td>
-<td align="left">L1</td>
-<td align="left">WP619</td>
-<td align="left">Type II interferon signaling (IFNG)</td>
-<td align="left">0.9998636</td>
-</tr>
+</thead>
+<tbody>
 </tbody>
 </table>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
+</div>
 </div>
 
 
