@@ -1,5 +1,5 @@
 ---
-title: "marginal_summary_stat_exploration"
+title: "(Univariate) GSEA with gene level summary statistics"
 author: "karltayeb"
 date: "2022-03-23"
 output: workflowr::wflow_html

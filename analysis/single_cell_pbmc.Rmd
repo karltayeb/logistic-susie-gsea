@@ -1,0 +1,473 @@
+---
+title: "Single-cell PBMC Example"
+author: "karltayeb"
+date: "2022-03-16"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Our goals here are to run Logistic SuSiE on differential expression results from TCGA.
+We want to assess:
+1. If the resulting enrichment results look good/interpretable across multiple/concatenated gene sets
+2. Assess sensitivity to a range of p-value thresholds
+3. Evaluate the potential of the summary stat latent model
+
+```{r message=FALSE, results='hide'}
+library(GSEABenchmarkeR)
+library(EnrichmentBrowser)
+library(tidyverse)
+library(susieR)
+library(DT)
+source('code/load_gene_sets.R')
+source('code/utils.R')
+
+source('code/logistic_susie_vb.R')
+source('code/logistic_susie_veb_boost.R')
+source('code/latent_logistic_susie.R')
+```
+
+
+#### Load Gene Sets
+
+`loadGeneSetX` uniformly formats gene sets and generates the $X$ matrix
+We can source any gene set from `WebGestaltR::listGeneSet()`
+
+```{r geneset.setup, message=FALSE, results='hide'}
+gs_list <- WebGestaltR::listGeneSet()
+gobp <- loadGeneSetX('geneontology_Biological_Process', min.size=50)  # just huge number of gene sets
+gobp_nr <- loadGeneSetX('geneontology_Biological_Process_noRedundant', min.size=1)
+gomf <- loadGeneSetX('geneontology_Molecular_Function', min.size=1)
+kegg <- loadGeneSetX('pathway_KEGG', min.size=1)
+reactome <- loadGeneSetX('pathway_Reactome', min.size=1)
+wikipathway_cancer <- loadGeneSetX('pathway_Wikipathway_cancer', min.size=1)
+wikipathway <- loadGeneSetX('pathway_Wikipathway', min.size=1)
+
+genesets <- list(
+  gobp=gobp,
+  gobp_nr=gobp_nr,
+  gomf=gomf,
+  kegg=kegg,
+  reactome=reactome,
+  wikipathway_cancer=wikipathway_cancer,
+  wikipathway=wikipathway
+)
+```
+
+```{r data.setup}
+load('data/pbmc-purified/deseq2-pbmc-purified.RData')
+
+convert_labels <- function(y, from='SYMBOL', to='ENTREZID'){
+  hs <- org.Hs.eg.db::org.Hs.eg.db
+  gene_symbols <- names(y)
+  symbol2entrez <- AnnotationDbi::select(hs, keys=gene_symbols, columns=c(to, from), keytype = from)
+  symbol2entrez <- symbol2entrez[!duplicated(symbol2entrez[[from]]),]
+  symbol2entrez <- symbol2entrez[!is.na(symbol2entrez[[to]]),]
+  symbol2entrez <- symbol2entrez[!is.na(symbol2entrez[[from]]),]
+  rownames(symbol2entrez) <- symbol2entrez[[from]]
+  ysub <- y[names(y) %in% symbol2entrez[[from]]]
+  names(ysub) <- symbol2entrez[names(ysub),][[to]]
+  return(ysub)
+}
+
+
+par(mfrow=c(1,1))
+deseq$`CD19+ B` %>% .$padj %>% hist(main='CD19+B p-values')
+```
+
+```{r driver}
+logistic_susie_driver = function(db, celltype, thresh){
+  gs <- genesets[[db]]
+  data <- deseq[[celltype]]
+  
+  # set up binary y
+  y <- data %>%
+    as.data.frame %>%
+    rownames_to_column('gene') %>%
+    dplyr::select(gene, padj) %>%
+    filter(!is.na(padj)) %>%
+    mutate(y = as.integer(padj < thresh)) %>%
+    select(gene, y) %>%
+    tibble2namedlist %>%
+    convert_labels('ENSEMBL')
+  
+  u <- process_input(gs$X, y)  # subset to common genes
+  vb.fit <- logistic.susie(  # fit model
+    u$X, u$y, L=10, init.intercept = 0, verbose=1, maxit=100)
+
+  # summarise results
+  set.summary <- vb.fit$pip %>% 
+    as_tibble(rownames='geneSet') %>%
+    rename(pip=value) %>%
+    mutate(
+      top_component = apply(vb.fit$alpha, 2, which.max),
+      active_set = top_component %in% vb.fit$sets$cs_index,
+      top_component = paste0('L', top_component),
+      cs = purrr::map(top_component, ~tryCatch(
+        colnames(gs$X)[get(.x, vb.fit$sets$cs)], error = function(e) list())),
+      in_cs = geneSet %in% cs,
+      beta = colSums(vb.fit$mu * vb.fit$alpha),
+      geneListSize = sum(u$y),
+      geneSetSize = colSums(u$X),
+      overlap = (u$y %*% u$X)[1,],
+      nGenes = length(u$y),
+      propSetInList = overlap / geneSetSize,
+      oddsRatio = (overlap / (geneListSize - overlap)) / (
+        (geneSetSize - overlap) / (nGenes - geneSetSize + overlap)),
+    pValueHypergeometric = phyper(
+      overlap-1, geneListSize, nGenes, geneSetSize, lower.tail= FALSE),
+    db = db,
+    celltype = celltype,
+    thresh = thresh
+    ) %>% left_join(gs$geneSet$geneSetDes)
+  return(list(fit = vb.fit, set.summary=set.summary))
+}
+```
+
+## Fit logistic SuSiE
+
+For each celltype, we fit logistic SuSiE using multiple gene set sources at various threshold of `padj`.
+Our goal is to assess
+1. The quality of the gene set enrichments we get from each celltype
+  - do reported gene set enrichments seem celltype specific/celltype relevant?
+  - how much "interesting" marginal enrichment do we fail to capture in the multivariate model
+  - how sensitive are we to the choice of pvalue threshold
+
+```{r run.all, results='hide', message=FALSE}
+celltypes <- names(deseq)
+pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
+db_name <- names(genesets)
+crossed <- cross3(db_name, celltypes, pthresh)
+
+pbmc_res <- xfun::cache_rds({
+  res <- purrr::map(crossed, purrr::lift_dl(logistic_susie_driver))
+  for (i in 1:length(res)){  # save some space
+    res[[i]]$fit$dat <- NULL
+  }
+  res
+  }, file = 'logistic_susie_pbmc_genesets_pthresh.rds'
+)
+
+pbmc_res_set_summary <- dplyr::bind_rows(purrr::map(pbmc_res, ~ pluck(.x, 'set.summary')))
+```
+
+## Explore enrichments
+
+### Summary functions
+
+```{r report.result.functions}
+pval_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL, top.n=50){
+  pbmc_res_set_summary %>%
+  filter(
+    case_when(
+      is.null(filter_db) ~ TRUE,
+      !is.null(filter_db) ~ db %in% filter_db
+    ) &
+    thresh == thresh &
+    case_when(
+      is.null(filter_celltype) ~ TRUE,
+      !is.null(filter_celltype) ~ celltype %in% filter_celltype
+    )
+  )  %>%
+  dplyr::arrange(celltype, db, pValueHypergeometric) %>%
+  group_by(celltype, db) %>% slice(1:top.n) %>%
+  select(celltype, db, geneSet, description, pip, top_component, oddsRatio, propSetInList, pValueHypergeometric) %>%
+  mutate_at(vars(celltype, db), factor) %>%
+  datatable(filter = 'top')
+}
+
+set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL){
+  pbmc_res_set_summary %>%
+  filter(
+    case_when(
+      is.null(filter_db) ~ TRUE,
+      !is.null(filter_db) ~ db %in% filter_db
+    ) &
+    thresh == 1e-3 &
+    in_cs & active_set &
+    case_when(
+      is.null(filter_celltype) ~ TRUE,
+      !is.null(filter_celltype) ~ celltype %in% filter_celltype
+    )
+  )  %>%
+  dplyr::arrange(celltype, db, desc(pip)) %>%
+  select(celltype, db, geneSet, description, pip, top_component, oddsRatio, propSetInList, pValueHypergeometric) %>%
+  mutate_at(vars(celltype, geneSet, db), factor) %>%
+  datatable(filter = 'top')
+}
+```
+
+## Results
+
+### `padj < 1e-2`
+
+```{r}
+set_focussed_table(1e-2)
+```
+
+### `padj < 1e-3`
+
+```{r}
+set_focussed_table(1e-3)
+```
+
+### `padj < 1e-4`
+
+```{r}
+set_focussed_table(1e-4)
+```
+
+### `padj < 1e-5`
+
+```{r}
+set_focussed_table(1e-5)
+```
+
+```{r}
+knitr::knit_exit()
+```
+
+
+
+```{r}
+pbmc_res_set_summary %>%
+  filter(
+    db == 'kegg' &
+    thresh == 1e-3 &
+    in_cs & active_set
+  )  %>%
+  dplyr::arrange(celltype, desc(pip)) %>%
+  select(celltype, geneSet, description, pip, top_component, oddsRatio, pValueHypergeometric)
+  select(celltype, pip, description)
+```
+
+```{r}
+pbmc_res_set_summary %>%
+  filter(
+    db == 'gobp' &
+    thresh == 1e-3 &
+    in_cs & active_set
+  )  %>%
+  dplyr::arrange(celltype, desc(pip)) %>%
+  select(celltype, geneSet, description, pip, top_component, oddsRatio, pValueHypergeometric)
+  select(celltype, pip, description)
+```
+
+```{r}
+pbmc_res_set_summary %>%
+  filter(
+    db == 'gobp_nr' &
+    thresh == 1e-3 &
+    in_cs & active_set
+  )  %>%
+  dplyr::arrange(celltype, desc(pip)) %>%
+  select(celltype, geneSet, description, pip, top_component, oddsRatio, pValueHypergeometric)
+  select(celltype, pip, description)
+```
+
+```{r}
+
+```
+
+## CD19+B
+
+### Sensitivity to pvalue threshold
+
+```{r}
+data <- deseq$`CD19+ B`
+pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
+pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
+
+par(mfrow=c(2,3))
+for (i in 1:length(pthresh)){
+  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
+}
+```
+
+```{r}
+t <- dplyr::bind_rows(purrr::map(pthresh_res, ~ pluck(.x, 'set.summary')))
+t %>%
+  filter(active_set, in_cs) %>%
+  group_by(thresh, db) %>%
+  select(top_component, geneSet, pip, beta, description) %>%
+  chop(c(geneSet, pip, beta, description)) %>%
+  mutate_at(vars(thresh, top_component, db), factor) %>%
+  datatable(filter = 'top')
+
+```
+
+
+### Multiple gene set sources
+
+```{r}
+genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
+
+par(mfrow=c(1, 1))
+for (gs in names(genesets)){
+  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
+}
+```
+
+```{r}
+t <- dplyr::bind_rows(purrr::map(genesets_res, ~ pluck(.x, 'set.summary')))
+
+t %>%
+  filter(active_set) %>%
+  group_by(thresh, db) %>%
+  select(top_component, geneSet, pip, beta, description) %>%
+  chop(c(geneSet, pip, beta, description)) %>%
+  mutate_at(vars(thresh, top_component, db), factor) %>%
+  datatable(filter = 'top')
+```
+
+```{r}
+datatable(t %>% mutate_at(vars(thresh, top_component, db), factor), filter = 'top')
+```
+
+
+```{r}
+knitr::knit_exit()
+```
+
+## CD56+NK
+
+### Sensitivity to pvalue threshold
+
+```{r}
+data <- deseq$`CD56+ NK`
+pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
+pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
+
+par(mfrow=c(2,3))
+for (i in 1:length(pthresh)){
+  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
+}
+```
+
+```{r}
+for (i in 1:length(pthresh)){
+  reactable(pthresh_res[[i]]$set.summary %>% filter(active_set) %>% arrange(top_component))
+}
+```
+
+
+### Multiple gene set sources
+
+```{r}
+genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
+
+par(mfrow=c(1, 1))
+for (gs in names(genesets)){
+  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
+  reactable(genesets_res[[gs]]$set.summary %>% filter(active_set) %>% arrange(top_component))
+}
+```
+
+
+## T-Cells
+
+### Sensitivity to pvalue threshold
+
+```{r}
+data <- deseq$`T cell`
+pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
+pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
+
+par(mfrow=c(2,3))
+for (i in 1:length(pthresh)){
+  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
+}
+```
+
+```{r}
+for (i in 1:length(pthresh)){
+  reactable(pthresh_res[[i]]$set.summary %>% filter(active_set) %>% arrange(top_component))
+}
+```
+
+
+### Multiple gene set sources
+
+```{r}
+genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
+
+par(mfrow=c(1, 1))
+for (gs in names(genesets)){
+  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
+  reactable(genesets_res[[gs]]$set.summary %>% filter(active_set) %>% arrange(top_component))
+}
+```
+
+## CD14+ Monoctye
+
+### Sensitivity to pvalue threshold
+
+```{r}
+data <- deseq$`CD14+ Monocyte`
+pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
+pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
+
+par(mfrow=c(2,3))
+for (i in 1:length(pthresh)){
+  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
+}
+```
+
+```{r}
+for (i in 1:length(pthresh)){
+  reactable(pthresh_res[[i]]$set.summary %>% filter(active_set) %>% arrange(top_component))
+}
+```
+
+
+### Multiple gene set sources
+
+```{r}
+genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
+
+par(mfrow=c(1, 1))
+for (gs in names(genesets)){
+  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
+  reactable(genesets_res[[gs]]$set.summary %>% filter(active_set) %>% arrange(top_component))
+}
+```
+
+
+## CD34+
+
+### Sensitivity to pvalue threshold
+
+```{r}
+data <- deseq$`CD34+`
+pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
+pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
+
+par(mfrow=c(2,3))
+for (i in 1:length(pthresh)){
+  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
+}
+```
+
+```{r}
+for (i in 1:length(pthresh)){
+  reactable(pthresh_res[[i]]$set.summary %>% filter(active_set) %>% arrange(top_component))
+}
+```
+
+
+### Multiple gene set sources
+
+```{r}
+genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
+
+par(mfrow=c(1, 1))
+for (gs in names(genesets)){
+  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
+  reactable(genesets_res[[gs]]$set.summary %>% filter(active_set) %>% arrange(top_component))
+}
+```
+
+
+
