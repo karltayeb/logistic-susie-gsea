@@ -207,10 +207,60 @@ Our goal is to assess
 ## Results
 
 Lets take a look at what enrichment we're getting across cell-types.
-### Overview
 
-```{r}
+### CD19+ B 
+
+```{r cd19sets}
 pbmc_res_set_summary %>%
+  filter(celltype == 'CD19+ B') %>%
+  filter(active_set, thresh==1e-4) %>%
+  group_by(db, celltype, top_component) %>%
+  arrange(db, celltype, top_component, desc(pip)) %>%
+  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
+  knitr::kable()
+```
+
+### CD56+ NK
+
+```{r cd56sets}
+pbmc_res_set_summary %>%
+  filter(celltype == 'CD56+ NK') %>%
+  filter(active_set, thresh==1e-4) %>%
+  group_by(db, celltype, top_component) %>%
+  arrange(db, celltype, top_component, desc(pip)) %>%
+  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
+  knitr::kable()
+```
+
+### T cell
+
+```{r tsets}
+pbmc_res_set_summary %>%
+  filter(celltype == 'T cell') %>%
+  filter(active_set, thresh==1e-4) %>%
+  group_by(db, celltype, top_component) %>%
+  arrange(db, celltype, top_component, desc(pip)) %>%
+  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
+  knitr::kable()
+```
+
+### CD14+ Monocyte
+
+```{r cd14sets}
+pbmc_res_set_summary %>%
+  filter(celltype == 'CD14+ Monocyte') %>%
+  filter(active_set, thresh==1e-4) %>%
+  group_by(db, celltype, top_component) %>%
+  arrange(db, celltype, top_component, desc(pip)) %>%
+  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
+  knitr::kable()
+```
+
+### CD34+
+
+```{r cd34sets}
+pbmc_res_set_summary %>%
+  filter(celltype == 'CD14+') %>%
   filter(active_set, thresh==1e-4) %>%
   group_by(db, celltype, top_component) %>%
   arrange(db, celltype, top_component, desc(pip)) %>%
@@ -222,45 +272,6 @@ pbmc_res_set_summary %>%
 knitr::knit_exit()
 ```
 
-### CD19+ B 
-```{r}
-pbmc_res_set_summary %>%
-  filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD19+ B') %>%
-  select(
-    geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
-  knitr::kable()
-```
-
-### CD56+ NK
-```{r}
-pbmc_res_set_summary %>%
-  filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD56+ NK') %>%
-  select(
-    geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
-  knitr::kable()
-```
-
-### T cell
-```{r}
-pbmc_res_set_summary %>%
-  filter(active_set, in_cs, thresh == 1e-4, celltype == 'T cell') %>%
-  select(
-    geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
-  knitr::kable()
-```
-
-### CD14+ Monocyte
-```{r}
-pbmc_res_set_summary %>%
-  filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD14+ Monocyte') %>%
-  select(
-    geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
-  knitr::kable()
-```
 
 ### CD34+
 ```{r}
