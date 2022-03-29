@@ -214,7 +214,8 @@ pbmc_res_set_summary %>%
   filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD19+ B') %>%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
+  knitr::kable()
 ```
 
 ### CD56+ NK
@@ -223,7 +224,8 @@ pbmc_res_set_summary %>%
   filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD56+ NK') %>%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
+  knitr::kable()
 ```
 
 ### T cell
@@ -232,7 +234,8 @@ pbmc_res_set_summary %>%
   filter(active_set, in_cs, thresh == 1e-4, celltype == 'T cell') %>%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
+  knitr::kable()
 ```
 
 ### CD14+ Monocyte
@@ -241,7 +244,8 @@ pbmc_res_set_summary %>%
   filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD14+ Monocyte') %>%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
+  knitr::kable()
 ```
 
 ### CD34+
@@ -250,7 +254,8 @@ pbmc_res_set_summary %>%
   filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD34+') %>%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
+  knitr::kable()
 ```
 
 
