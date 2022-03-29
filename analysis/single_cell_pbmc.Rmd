@@ -212,7 +212,8 @@ Lets take a look at what enrichment we're getting across cell-types.
 ```{r}
 pbmc_res_set_summary %>%
   filter(active_set, thresh==1e-4) %>%
-  group_by(celltype, thresh, db, top_component) %>%
+  group_by(db, celltype, top_component) %>%
+  arrange(db, celltype, top_component) %>%
   select(geneSet, description) %>% chop(c(geneSet, description)) %>%
   knitr::kable()
 ```
