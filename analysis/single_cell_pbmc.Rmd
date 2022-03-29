@@ -228,7 +228,7 @@ Lets take a look at what enrichment we're getting across cell-types.
 ```{r cd19sets}
 pbmc_res_set_summary %>%
   filter(celltype == 'CD19+ B') %>%
-  filter(active_set, in_cs, thresh==1e-4) %>%
+  filter(active_set, thresh==1e-4) %>%
   db_component_kable
 ```
 
@@ -237,7 +237,7 @@ pbmc_res_set_summary %>%
 ```{r cd56sets}
 pbmc_res_set_summary %>%
   filter(celltype == 'CD56+ NK') %>%
-  filter(active_set, in_cs, thresh==1e-4) %>%
+  filter(active_set, thresh==1e-4) %>%
   db_component_kable
 ```
 
@@ -246,7 +246,7 @@ pbmc_res_set_summary %>%
 ```{r tsets}
 pbmc_res_set_summary %>%
   filter(celltype == 'T cell') %>%
-  filter(active_set, in_cs, thresh==1e-4) %>%
+  filter(active_set, thresh==1e-4) %>%
   db_component_kable
 ```
 
@@ -255,7 +255,7 @@ pbmc_res_set_summary %>%
 ```{r cd14sets}
 pbmc_res_set_summary %>%
   filter(celltype == 'CD14+ Monocyte') %>%
-  filter(active_set, in_cs, thresh==1e-4) %>%
+  filter(active_set, thresh==1e-4) %>%
   db_component_kable
 ```
 
@@ -263,8 +263,8 @@ pbmc_res_set_summary %>%
 
 ```{r cd34sets}
 pbmc_res_set_summary %>%
-  filter(celltype == 'CD14+') %>%
-  filter(active_set, in_cs, thresh==1e-4) %>%
+  filter(celltype == 'CD34+') %>%
+  filter(active_set, thresh==1e-4) %>%
   db_component_kable
 ```
 
