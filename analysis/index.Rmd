@@ -13,3 +13,6 @@ Welcome to my research website.
 [GSEA should be done jointly, not marginally]
 
 [Why logistic may be better for GSEA](linear_v_logistic_start.html)
+
+## GSEA from summary statistics
+[Two component model, initial exploration](summary_stat_gsea_exploration.html)
