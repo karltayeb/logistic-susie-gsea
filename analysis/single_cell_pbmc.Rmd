@@ -193,6 +193,21 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
   mutate_at(vars(celltype, geneSet, db), factor) %>%
   datatable(filter = 'top')
 }
+
+#' takes a tibble
+#' organize by database and component
+#' report credible set, descriptions, pips, and hypergeometric pvalue
+#' in one row, with cs ordered by pip
+db_component_kable = function(tbl){
+  tbl %>%
+  filter(active_set, thresh==1e-4) %>%
+  group_by(db, celltype, top_component) %>%
+  arrange(db, celltype, top_component, desc(pip)) %>%
+  select(geneSet, description, pip, pValueHypergeometric) %>%
+  chop(c(geneSet, description, pip, pValueHypergeometric)) %>%
+  knitr::kable()
+}
+
 ```
 
 ## Results/Explore enrichments
@@ -213,11 +228,8 @@ Lets take a look at what enrichment we're getting across cell-types.
 ```{r cd19sets}
 pbmc_res_set_summary %>%
   filter(celltype == 'CD19+ B') %>%
-  filter(active_set, thresh==1e-4) %>%
-  group_by(db, celltype, top_component) %>%
-  arrange(db, celltype, top_component, desc(pip)) %>%
-  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
-  knitr::kable()
+  filter(active_set, in_cs, thresh==1e-4) %>%
+  db_component_kable
 ```
 
 ### CD56+ NK
@@ -225,11 +237,8 @@ pbmc_res_set_summary %>%
 ```{r cd56sets}
 pbmc_res_set_summary %>%
   filter(celltype == 'CD56+ NK') %>%
-  filter(active_set, thresh==1e-4) %>%
-  group_by(db, celltype, top_component) %>%
-  arrange(db, celltype, top_component, desc(pip)) %>%
-  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
-  knitr::kable()
+  filter(active_set, in_cs, thresh==1e-4) %>%
+  db_component_kable
 ```
 
 ### T cell
@@ -237,11 +246,8 @@ pbmc_res_set_summary %>%
 ```{r tsets}
 pbmc_res_set_summary %>%
   filter(celltype == 'T cell') %>%
-  filter(active_set, thresh==1e-4) %>%
-  group_by(db, celltype, top_component) %>%
-  arrange(db, celltype, top_component, desc(pip)) %>%
-  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
-  knitr::kable()
+  filter(active_set, in_cs, thresh==1e-4) %>%
+  db_component_kable
 ```
 
 ### CD14+ Monocyte
@@ -249,11 +255,8 @@ pbmc_res_set_summary %>%
 ```{r cd14sets}
 pbmc_res_set_summary %>%
   filter(celltype == 'CD14+ Monocyte') %>%
-  filter(active_set, thresh==1e-4) %>%
-  group_by(db, celltype, top_component) %>%
-  arrange(db, celltype, top_component, desc(pip)) %>%
-  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
-  knitr::kable()
+  filter(active_set, in_cs, thresh==1e-4) %>%
+  db_component_kable
 ```
 
 ### CD34+
@@ -261,11 +264,8 @@ pbmc_res_set_summary %>%
 ```{r cd34sets}
 pbmc_res_set_summary %>%
   filter(celltype == 'CD14+') %>%
-  filter(active_set, thresh==1e-4) %>%
-  group_by(db, celltype, top_component) %>%
-  arrange(db, celltype, top_component, desc(pip)) %>%
-  select(geneSet, description, pip) %>% chop(c(geneSet, description, pip)) %>%
-  knitr::kable()
+  filter(active_set, in_cs, thresh==1e-4) %>%
+  db_component_kable
 ```
 
 ```{r}
