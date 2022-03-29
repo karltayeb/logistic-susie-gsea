@@ -205,11 +205,26 @@ db_component_kable = function(tbl){
   filter(active_set, thresh==1e-4) %>%
   group_by(db, celltype, top_component) %>%
   arrange(db, celltype, top_component, desc(pip)) %>%
-  mutate(pip = cell_spec(pip, color=ifelse(in_cs, 'green', 'red'))) %>%
   select(geneSet, description, pip, pValueHypergeometric) %>%
   chop(c(geneSet, description, pip, pValueHypergeometric)) %>%
   knitr::kable()
 }
+
+#' takes a tibble
+#' organize by database and component
+#' report credible set, descriptions, pips, and hypergeometric pvalue
+#' in one row, with cs ordered by pip
+db_component_kable = function(tbl){
+  tbl %>%
+  filter(active_set, thresh==1e-4) %>%
+  group_by(db, celltype, top_component) %>%
+  arrange(db, celltype, top_component, desc(pip)) %>%
+  mutate(pip = cell_spec(pip, color=ifelse(in_cs, 'green', 'red'))) %>%
+  select(geneSet, description, pip, pValueHypergeometric) %>%
+  #chop(c(geneSet, description, pip, pValueHypergeometric)) %>%
+  knitr::kable()
+}
+
 
 ```
 
