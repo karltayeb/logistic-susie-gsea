@@ -207,6 +207,20 @@ Our goal is to assess
 ## Results
 
 Lets take a look at what enrichment we're getting across cell-types.
+### Overview
+
+```{r}
+pbmc_res_set_summary %>%
+  filter(active_set, thresh==1e-4) %>%
+  group_by(celltype, thresh, db, top_component) %>%
+  chop(description) %>%
+  select(celltype, db, thresh, cs, description) %>%
+  knitr::kable()
+```
+
+```{r}
+knitr::knit_exit()
+```
 
 ### CD19+ B 
 ```{r}
@@ -256,6 +270,14 @@ pbmc_res_set_summary %>%
     geneSet, description, top_component, pip,
     beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
   knitr::kable()
+```
+
+```{r}
+pbmc_res_set_summary %>% 
+  filter(active_set, in_cs, thresh==1e-4) %>%
+  group_by(celltype) %>%
+  chop(c(geneSet, description)) %>%
+  
 ```
 
 
