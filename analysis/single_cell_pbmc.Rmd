@@ -11,6 +11,7 @@ editor_options:
 
 Our goals here are to run Logistic SuSiE on differential expression results from TCGA.
 We want to assess:
+
 1. If the resulting enrichment results look good/interpretable across multiple/concatenated gene sets
 2. Assess sensitivity to a range of p-value thresholds
 3. Evaluate the potential of the summary stat latent model
@@ -23,15 +24,14 @@ library(susieR)
 library(DT)
 source('code/load_gene_sets.R')
 source('code/utils.R')
-
 source('code/logistic_susie_vb.R')
 source('code/logistic_susie_veb_boost.R')
 source('code/latent_logistic_susie.R')
 ```
 
+## Setup
 
-#### Load Gene Sets
-
+### Load Gene Sets
 `loadGeneSetX` uniformly formats gene sets and generates the $X$ matrix
 We can source any gene set from `WebGestaltR::listGeneSet()`
 
@@ -76,6 +76,9 @@ convert_labels <- function(y, from='SYMBOL', to='ENTREZID'){
 par(mfrow=c(1,1))
 deseq$`CD19+ B` %>% .$padj %>% hist(main='CD19+B p-values')
 ```
+
+
+### Fit logistic SuSiE
 
 ```{r driver}
 logistic_susie_driver = function(db, celltype, thresh){
@@ -126,14 +129,7 @@ logistic_susie_driver = function(db, celltype, thresh){
 }
 ```
 
-## Fit logistic SuSiE
-
 For each celltype, we fit logistic SuSiE using multiple gene set sources at various threshold of `padj`.
-Our goal is to assess
-1. The quality of the gene set enrichments we get from each celltype
-  - do reported gene set enrichments seem celltype specific/celltype relevant?
-  - how much "interesting" marginal enrichment do we fail to capture in the multivariate model
-  - how sensitive are we to the choice of pvalue threshold
 
 ```{r run.all, results='hide', message=FALSE}
 celltypes <- names(deseq)
@@ -153,9 +149,9 @@ pbmc_res <- xfun::cache_rds({
 pbmc_res_set_summary <- dplyr::bind_rows(purrr::map(pbmc_res, ~ pluck(.x, 'set.summary')))
 ```
 
-## Explore enrichments
-
 ### Summary functions
+
+Just a few functions to help streamline looking at output
 
 ```{r report.result.functions}
 pval_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL, top.n=50){
@@ -199,31 +195,64 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
 }
 ```
 
+## Results/Explore enrichments
+
+Our goal is to assess
+1. The quality of the gene set enrichments we get from each celltype
+  - do reported gene set enrichments seem celltype specific/celltype relevant?
+  - how much "interesting" marginal enrichment do we fail to capture in the multivariate model
+  - how sensitive are we to the choice of pvalue threshold
+  
+
 ## Results
 
-### `padj < 1e-2`
+Lets take a look at what enrichment we're getting across cell-types.
 
+### CD19+ B 
 ```{r}
-set_focussed_table(1e-2)
+pbmc_res_set_summary %>%
+  filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD19+ B') %>%
+  select(
+    geneSet, description, top_component, pip,
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
 ```
 
-### `padj < 1e-3`
-
+### CD56+ NK
 ```{r}
-set_focussed_table(1e-3)
+pbmc_res_set_summary %>%
+  filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD56+ NK') %>%
+  select(
+    geneSet, description, top_component, pip,
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
 ```
 
-### `padj < 1e-4`
-
+### T cell
 ```{r}
-set_focussed_table(1e-4)
+pbmc_res_set_summary %>%
+  filter(active_set, in_cs, thresh == 1e-4, celltype == 'T cell') %>%
+  select(
+    geneSet, description, top_component, pip,
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
 ```
 
-### `padj < 1e-5`
-
+### CD14+ Monocyte
 ```{r}
-set_focussed_table(1e-5)
+pbmc_res_set_summary %>%
+  filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD14+ Monocyte') %>%
+  select(
+    geneSet, description, top_component, pip,
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
 ```
+
+### CD34+
+```{r}
+pbmc_res_set_summary %>%
+  filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD34+') %>%
+  select(
+    geneSet, description, top_component, pip,
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)
+```
+
 
 ```{r}
 knitr::knit_exit()
