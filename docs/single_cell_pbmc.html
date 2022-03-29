@@ -480,16 +480,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6143c4434f0e139fa367ece633d114fd392c0ec4targetblank6143c44a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6143c4434f0e139fa367ece633d114fd392c0ec4" target="_blank">6143c44</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreefc1f3c1d433ec35d805a712a30e006a116027e5atargetblankfc1f3c1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/fc1f3c1d433ec35d805a712a30e006a116027e5a" target="_blank">fc1f3c1</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6143c4434f0e139fa367ece633d114fd392c0ec4targetblank6143c44a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreefc1f3c1d433ec35d805a712a30e006a116027e5atargetblankfc1f3c1a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6143c4434f0e139fa367ece633d114fd392c0ec4" target="_blank">6143c44</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/fc1f3c1d433ec35d805a712a30e006a116027e5a" target="_blank">fc1f3c1</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -590,6 +590,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/fc1f3c1d433ec35d805a712a30e006a116027e5a/analysis/single_cell_pbmc.Rmd" target="_blank">fc1f3c1</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-29
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/8646723be9a94fab6ea656001b458271b64bcb67/docs/single_cell_pbmc.html" target="_blank">8646723</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -887,28 +921,223 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
   filter(active_set, in_cs, thresh == 1e-4, celltype == &#39;CD19+ B&#39;) %&gt;%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)</code></pre>
-<pre><code># A tibble: 17 × 9
-   geneSet      description  top_component   pip   beta geneListSize geneSetSize
-   &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;        &lt;int&gt;       &lt;dbl&gt;
- 1 GO:0001775   cell activa… L5            0.978  0.467         6911        1128
- 2 GO:0002376   immune syst… L1            1.00   0.508         6911        2228
- 3 GO:0045047   protein tar… L2            0.962  2.46          6911         105
- 4 GO:0002764   immune resp… L5            0.996  0.565         6327         411
- 5 GO:0009123   nucleoside … L4            0.984  0.742         6327         286
- 6 GO:0070972   protein loc… L2            1.00   1.63          6327         132
- 7 GO:0003723   RNA binding  L1            1.00   0.353         6975        1483
- 8 GO:0000981   DNA-binding… L2            0.995 -0.657         6975        1161
- 9 GO:0003735   structural … L6            0.995  0.964         6975         152
-10 hsa00190     Oxidative p… L1            0.998  1.46          3273         120
-11 hsa03010     Ribosome     L3            1.00   1.41          3273         129
-12 hsa04640     Hematopoiet… L2            1.00   1.50          3273          80
-13 R-HSA-168256 Immune Syst… L1            1      0.749         4620        1627
-14 R-HSA-983168 Antigen pro… L5            0.997 -1.07          4620         280
-15 WP619        Type II int… L1            1.00   2.49           966          30
-16 WP111        Electron Tr… L2            1.00   1.64          3220         101
-17 WP477        Cytoplasmic… L1            1.00   2.40          3220          85
-# … with 2 more variables: propSetInList &lt;dbl&gt;, pValueHypergeometric &lt;dbl&gt;</code></pre>
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="7%" />
+<col width="39%" />
+<col width="7%" />
+<col width="5%" />
+<col width="6%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">top_component</th>
+<th align="right">pip</th>
+<th align="right">beta</th>
+<th align="right">geneListSize</th>
+<th align="right">geneSetSize</th>
+<th align="right">propSetInList</th>
+<th align="right">pValueHypergeometric</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a></td>
+<td align="left">cell activation</td>
+<td align="left">L5</td>
+<td align="right">0.9780542</td>
+<td align="right">0.4672903</td>
+<td align="right">6911</td>
+<td align="right">1128</td>
+<td align="right">0.7517730</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a></td>
+<td align="left">immune system process</td>
+<td align="left">L1</td>
+<td align="right">0.9999575</td>
+<td align="right">0.5078753</td>
+<td align="right">6911</td>
+<td align="right">2228</td>
+<td align="right">0.7064632</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a></td>
+<td align="left">protein targeting to ER</td>
+<td align="left">L2</td>
+<td align="right">0.9620521</td>
+<td align="right">2.4624775</td>
+<td align="right">6911</td>
+<td align="right">105</td>
+<td align="right">0.9428571</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0002764" class="uri">GO:0002764</a></td>
+<td align="left">immune response-regulating signaling pathway</td>
+<td align="left">L5</td>
+<td align="right">0.9961853</td>
+<td align="right">0.5645340</td>
+<td align="right">6327</td>
+<td align="right">411</td>
+<td align="right">0.7445255</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a></td>
+<td align="left">nucleoside monophosphate metabolic process</td>
+<td align="left">L4</td>
+<td align="right">0.9844976</td>
+<td align="right">0.7415436</td>
+<td align="right">6327</td>
+<td align="right">286</td>
+<td align="right">0.7517483</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0070972" class="uri">GO:0070972</a></td>
+<td align="left">protein localization to endoplasmic reticulum</td>
+<td align="left">L2</td>
+<td align="right">0.9999580</td>
+<td align="right">1.6294991</td>
+<td align="right">6327</td>
+<td align="right">132</td>
+<td align="right">0.8712121</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0003723" class="uri">GO:0003723</a></td>
+<td align="left">RNA binding</td>
+<td align="left">L1</td>
+<td align="right">0.9997440</td>
+<td align="right">0.3528854</td>
+<td align="right">6975</td>
+<td align="right">1483</td>
+<td align="right">0.6581254</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a></td>
+<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific</td>
+<td align="left">L2</td>
+<td align="right">0.9950038</td>
+<td align="right">-0.6568235</td>
+<td align="right">6975</td>
+<td align="right">1161</td>
+<td align="right">0.4771748</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
+<td align="left">structural constituent of ribosome</td>
+<td align="left">L6</td>
+<td align="right">0.9953441</td>
+<td align="right">0.9638753</td>
+<td align="right">6975</td>
+<td align="right">152</td>
+<td align="right">0.8289474</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">hsa00190</td>
+<td align="left">Oxidative phosphorylation</td>
+<td align="left">L1</td>
+<td align="right">0.9979902</td>
+<td align="right">1.4574888</td>
+<td align="right">3273</td>
+<td align="right">120</td>
+<td align="right">0.8750000</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">hsa03010</td>
+<td align="left">Ribosome</td>
+<td align="left">L3</td>
+<td align="right">1.0000000</td>
+<td align="right">1.4064281</td>
+<td align="right">3273</td>
+<td align="right">129</td>
+<td align="right">0.8682171</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">hsa04640</td>
+<td align="left">Hematopoietic cell lineage</td>
+<td align="left">L2</td>
+<td align="right">0.9997951</td>
+<td align="right">1.4990711</td>
+<td align="right">3273</td>
+<td align="right">80</td>
+<td align="right">0.8875000</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">R-HSA-168256</td>
+<td align="left">Immune System</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7492562</td>
+<td align="right">4620</td>
+<td align="right">1627</td>
+<td align="right">0.6969883</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">R-HSA-983168</td>
+<td align="left">Antigen processing: Ubiquitination &amp; Proteasome degradation</td>
+<td align="left">L5</td>
+<td align="right">0.9970497</td>
+<td align="right">-1.0658222</td>
+<td align="right">4620</td>
+<td align="right">280</td>
+<td align="right">0.5392857</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">WP619</td>
+<td align="left">Type II interferon signaling (IFNG)</td>
+<td align="left">L1</td>
+<td align="right">0.9998636</td>
+<td align="right">2.4876068</td>
+<td align="right">966</td>
+<td align="right">30</td>
+<td align="right">0.9666667</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">WP111</td>
+<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
+<td align="left">L2</td>
+<td align="right">0.9999189</td>
+<td align="right">1.6369406</td>
+<td align="right">3220</td>
+<td align="right">101</td>
+<td align="right">0.9009901</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">WP477</td>
+<td align="left">Cytoplasmic Ribosomal Proteins</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">2.4011250</td>
+<td align="right">3220</td>
+<td align="right">85</td>
+<td align="right">0.9529412</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="cd56-nk" class="section level3">
 <h3>CD56+ NK</h3>
@@ -916,27 +1145,212 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
   filter(active_set, in_cs, thresh == 1e-4, celltype == &#39;CD56+ NK&#39;) %&gt;%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)</code></pre>
-<pre><code># A tibble: 16 × 9
-   geneSet       description top_component   pip   beta geneListSize geneSetSize
-   &lt;chr&gt;         &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;        &lt;int&gt;       &lt;dbl&gt;
- 1 GO:0002376    immune sys… L1            1.00   0.653         7231        2228
- 2 GO:0006119    oxidative … L4            0.982  1.32          7231         118
- 3 GO:0006413    translatio… L2            0.995  1.16          6598         182
- 4 GO:0009123    nucleoside… L4            0.982  0.674         6598         286
- 5 GO:0042110    T cell act… L3            0.986  0.591         6598         389
- 6 GO:0042113    B cell act… L5            0.997  0.842         6598         198
- 7 GO:0000981    DNA-bindin… L2            0.997 -0.734         7305        1161
- 8 GO:0003735    structural… L1            1.00   1.90          7305         152
- 9 hsa03010      Ribosome    L1            1.00   1.78          3406         129
-10 hsa04640      Hematopoie… L3            0.998  1.31          3406          80
-11 hsa05012      Parkinson … L2            1.00   1.56          3406         126
-12 R-HSA-168256  Immune Sys… L1            1.00   0.689         4855        1627
-13 R-HSA-8878171 Transcript… L5            0.971  0.966         4855         189
-14 R-HSA-163200  Respirator… L4            0.993  1.32          4855         121
-15 WP111         Electron T… L2            0.991  1.32          3316         101
-16 WP477         Cytoplasmi… L1            1      2.97          3316          85
-# … with 2 more variables: propSetInList &lt;dbl&gt;, pValueHypergeometric &lt;dbl&gt;</code></pre>
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %&gt;%
+  knitr::kable()</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="6%" />
+<col width="51%" />
+<col width="6%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="6%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">top_component</th>
+<th align="right">pip</th>
+<th align="right">beta</th>
+<th align="right">geneListSize</th>
+<th align="right">geneSetSize</th>
+<th align="right">propSetInList</th>
+<th align="right">pValueHypergeometric</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a></td>
+<td align="left">immune system process</td>
+<td align="left">L1</td>
+<td align="right">0.9999984</td>
+<td align="right">0.6534004</td>
+<td align="right">7231</td>
+<td align="right">2228</td>
+<td align="right">0.7221724</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a></td>
+<td align="left">oxidative phosphorylation</td>
+<td align="left">L4</td>
+<td align="right">0.9815754</td>
+<td align="right">1.3155955</td>
+<td align="right">7231</td>
+<td align="right">118</td>
+<td align="right">0.8474576</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0006413" class="uri">GO:0006413</a></td>
+<td align="left">translational initiation</td>
+<td align="left">L2</td>
+<td align="right">0.9954877</td>
+<td align="right">1.1585848</td>
+<td align="right">6598</td>
+<td align="right">182</td>
+<td align="right">0.8351648</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a></td>
+<td align="left">nucleoside monophosphate metabolic process</td>
+<td align="left">L4</td>
+<td align="right">0.9815927</td>
+<td align="right">0.6736545</td>
+<td align="right">6598</td>
+<td align="right">286</td>
+<td align="right">0.7622378</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0042110" class="uri">GO:0042110</a></td>
+<td align="left">T cell activation</td>
+<td align="left">L3</td>
+<td align="right">0.9856601</td>
+<td align="right">0.5907739</td>
+<td align="right">6598</td>
+<td align="right">389</td>
+<td align="right">0.7763496</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0042113" class="uri">GO:0042113</a></td>
+<td align="left">B cell activation</td>
+<td align="left">L5</td>
+<td align="right">0.9972725</td>
+<td align="right">0.8422029</td>
+<td align="right">6598</td>
+<td align="right">198</td>
+<td align="right">0.8232323</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a></td>
+<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific</td>
+<td align="left">L2</td>
+<td align="right">0.9967706</td>
+<td align="right">-0.7338417</td>
+<td align="right">7305</td>
+<td align="right">1161</td>
+<td align="right">0.4952627</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
+<td align="left">structural constituent of ribosome</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">1.9030114</td>
+<td align="right">7305</td>
+<td align="right">152</td>
+<td align="right">0.9144737</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">hsa03010</td>
+<td align="left">Ribosome</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">1.7794168</td>
+<td align="right">3406</td>
+<td align="right">129</td>
+<td align="right">0.9147287</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">hsa04640</td>
+<td align="left">Hematopoietic cell lineage</td>
+<td align="left">L3</td>
+<td align="right">0.9978541</td>
+<td align="right">1.3141833</td>
+<td align="right">3406</td>
+<td align="right">80</td>
+<td align="right">0.8750000</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">hsa05012</td>
+<td align="left">Parkinson disease</td>
+<td align="left">L2</td>
+<td align="right">0.9999978</td>
+<td align="right">1.5611100</td>
+<td align="right">3406</td>
+<td align="right">126</td>
+<td align="right">0.8968254</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">R-HSA-168256</td>
+<td align="left">Immune System</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">0.6885907</td>
+<td align="right">4855</td>
+<td align="right">1627</td>
+<td align="right">0.7209588</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">R-HSA-8878171</td>
+<td align="left">Transcriptional regulation by RUNX1</td>
+<td align="left">L5</td>
+<td align="right">0.9712818</td>
+<td align="right">0.9657802</td>
+<td align="right">4855</td>
+<td align="right">189</td>
+<td align="right">0.7513228</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">R-HSA-163200</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins.</td>
+<td align="left">L4</td>
+<td align="right">0.9933245</td>
+<td align="right">1.3233274</td>
+<td align="right">4855</td>
+<td align="right">121</td>
+<td align="right">0.8429752</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">WP111</td>
+<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
+<td align="left">L2</td>
+<td align="right">0.9908620</td>
+<td align="right">1.3218233</td>
+<td align="right">3316</td>
+<td align="right">101</td>
+<td align="right">0.8811881</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">WP477</td>
+<td align="left">Cytoplasmic Ribosomal Proteins</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">2.9682233</td>
+<td align="right">3316</td>
+<td align="right">85</td>
+<td align="right">0.9764706</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="t-cell" class="section level3">
 <h3>T cell</h3>
@@ -944,19 +1358,124 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
   filter(active_set, in_cs, thresh == 1e-4, celltype == &#39;T cell&#39;) %&gt;%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)</code></pre>
-<pre><code># A tibble: 8 × 9
-  geneSet       description   top_component   pip  beta geneListSize geneSetSize
-  &lt;chr&gt;         &lt;chr&gt;         &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;        &lt;int&gt;       &lt;dbl&gt;
-1 GO:0001775    cell activat… L1            0.998 0.753         8802        1127
-2 GO:0002376    immune syste… L5            0.998 0.424         8802        2227
-3 GO:0006119    oxidative ph… L2            0.999 1.79          8802         118
-4 GO:0042110    T cell activ… L2            1.00  0.921         7959         389
-5 GO:0070972    protein loca… L3            1.00  1.33          7959         132
-6 GO:0005515    protein bind… L1            1.00  0.370         8880        9033
-7 hsa05010      Alzheimer di… L1            1.00  1.68          3983         154
-8 R-HSA-6798695 Neutrophil d… L1            1.00  1.37          5790         431
-# … with 2 more variables: propSetInList &lt;dbl&gt;, pValueHypergeometric &lt;dbl&gt;</code></pre>
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="9%" />
+<col width="29%" />
+<col width="9%" />
+<col width="6%" />
+<col width="6%" />
+<col width="8%" />
+<col width="7%" />
+<col width="9%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">top_component</th>
+<th align="right">pip</th>
+<th align="right">beta</th>
+<th align="right">geneListSize</th>
+<th align="right">geneSetSize</th>
+<th align="right">propSetInList</th>
+<th align="right">pValueHypergeometric</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a></td>
+<td align="left">cell activation</td>
+<td align="left">L1</td>
+<td align="right">0.9982435</td>
+<td align="right">0.7533519</td>
+<td align="right">8802</td>
+<td align="right">1127</td>
+<td align="right">0.8881988</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a></td>
+<td align="left">immune system process</td>
+<td align="left">L5</td>
+<td align="right">0.9984689</td>
+<td align="right">0.4243072</td>
+<td align="right">8802</td>
+<td align="right">2227</td>
+<td align="right">0.8378985</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a></td>
+<td align="left">oxidative phosphorylation</td>
+<td align="left">L2</td>
+<td align="right">0.9988673</td>
+<td align="right">1.7903483</td>
+<td align="right">8802</td>
+<td align="right">118</td>
+<td align="right">0.9406780</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0042110" class="uri">GO:0042110</a></td>
+<td align="left">T cell activation</td>
+<td align="left">L2</td>
+<td align="right">0.9999906</td>
+<td align="right">0.9206753</td>
+<td align="right">7959</td>
+<td align="right">389</td>
+<td align="right">0.8868895</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0070972" class="uri">GO:0070972</a></td>
+<td align="left">protein localization to endoplasmic reticulum</td>
+<td align="left">L3</td>
+<td align="right">0.9998559</td>
+<td align="right">1.3305778</td>
+<td align="right">7959</td>
+<td align="right">132</td>
+<td align="right">0.9166667</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0005515" class="uri">GO:0005515</a></td>
+<td align="left">protein binding</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">0.3704248</td>
+<td align="right">8880</td>
+<td align="right">9033</td>
+<td align="right">0.7474815</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">hsa05010</td>
+<td align="left">Alzheimer disease</td>
+<td align="left">L1</td>
+<td align="right">0.9999993</td>
+<td align="right">1.6786291</td>
+<td align="right">3983</td>
+<td align="right">154</td>
+<td align="right">0.9480519</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">R-HSA-6798695</td>
+<td align="left">Neutrophil degranulation</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">1.3714212</td>
+<td align="right">5790</td>
+<td align="right">431</td>
+<td align="right">0.9164733</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="cd14-monocyte" class="section level3">
 <h3>CD14+ Monocyte</h3>
@@ -964,28 +1483,223 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
   filter(active_set, in_cs, thresh == 1e-4, celltype == &#39;CD14+ Monocyte&#39;) %&gt;%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)</code></pre>
-<pre><code># A tibble: 17 × 9
-   geneSet       description top_component   pip   beta geneListSize geneSetSize
-   &lt;chr&gt;         &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;        &lt;int&gt;       &lt;dbl&gt;
- 1 GO:0016192    vesicle-me… L4            0.985  0.324         6633        1605
- 2 GO:0006119    oxidative … L3            0.999  1.79          6633         118
- 3 GO:0006413    translatio… L2            1.00   1.21          6073         182
- 4 GO:0009123    nucleoside… L3            0.988  0.905         6073         286
- 5 GO:0036230    granulocyt… L1            0.976  1.17          6073         450
- 6 GO:0003723    RNA binding L1            1.00   0.416         6697        1480
- 7 GO:0000981    DNA-bindin… L2            1.00  -0.633         6697        1160
- 8 GO:0003735    structural… L4            1.00   1.61          6697         152
- 9 hsa03010      Ribosome    L1            1.00   1.75          3110         129
-10 hsa05012      Parkinson … L2            1.00   1.70          3110         125
-11 R-HSA-6798695 Neutrophil… L1            1.00   1.21          4451         431
-12 R-HSA-198933  Immunoregu… L6            0.997  1.19          4451         103
-13 R-HSA-72766   Translation L2            1.00   1.66          4451         286
-14 R-HSA-163200  Respirator… L3            1.00   1.71          4451         121
-15 R-HSA-379726  Mitochondr… L7            0.997 -2.40          4451          21
-16 WP111         Electron T… L2            1.00   1.76          3062         100
-17 WP477         Cytoplasmi… L1            1.00   2.53          3062          85
-# … with 2 more variables: propSetInList &lt;dbl&gt;, pValueHypergeometric &lt;dbl&gt;</code></pre>
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %&gt;%
+  knitr::kable()</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="6%" />
+<col width="51%" />
+<col width="6%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="6%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">top_component</th>
+<th align="right">pip</th>
+<th align="right">beta</th>
+<th align="right">geneListSize</th>
+<th align="right">geneSetSize</th>
+<th align="right">propSetInList</th>
+<th align="right">pValueHypergeometric</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="GO:0016192" class="uri">GO:0016192</a></td>
+<td align="left">vesicle-mediated transport</td>
+<td align="left">L4</td>
+<td align="right">0.9851434</td>
+<td align="right">0.3239679</td>
+<td align="right">6633</td>
+<td align="right">1605</td>
+<td align="right">0.6560748</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a></td>
+<td align="left">oxidative phosphorylation</td>
+<td align="left">L3</td>
+<td align="right">0.9990485</td>
+<td align="right">1.7896878</td>
+<td align="right">6633</td>
+<td align="right">118</td>
+<td align="right">0.8728814</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0006413" class="uri">GO:0006413</a></td>
+<td align="left">translational initiation</td>
+<td align="left">L2</td>
+<td align="right">0.9999940</td>
+<td align="right">1.2066226</td>
+<td align="right">6073</td>
+<td align="right">182</td>
+<td align="right">0.8461538</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a></td>
+<td align="left">nucleoside monophosphate metabolic process</td>
+<td align="left">L3</td>
+<td align="right">0.9883528</td>
+<td align="right">0.9050661</td>
+<td align="right">6073</td>
+<td align="right">286</td>
+<td align="right">0.7622378</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a></td>
+<td align="left">granulocyte activation</td>
+<td align="left">L1</td>
+<td align="right">0.9759280</td>
+<td align="right">1.1699222</td>
+<td align="right">6073</td>
+<td align="right">450</td>
+<td align="right">0.8088889</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0003723" class="uri">GO:0003723</a></td>
+<td align="left">RNA binding</td>
+<td align="left">L1</td>
+<td align="right">0.9999998</td>
+<td align="right">0.4163546</td>
+<td align="right">6697</td>
+<td align="right">1480</td>
+<td align="right">0.6655405</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a></td>
+<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific</td>
+<td align="left">L2</td>
+<td align="right">0.9998275</td>
+<td align="right">-0.6329681</td>
+<td align="right">6697</td>
+<td align="right">1160</td>
+<td align="right">0.4646552</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
+<td align="left">structural constituent of ribosome</td>
+<td align="left">L4</td>
+<td align="right">1.0000000</td>
+<td align="right">1.6077468</td>
+<td align="right">6697</td>
+<td align="right">152</td>
+<td align="right">0.8947368</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">hsa03010</td>
+<td align="left">Ribosome</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">1.7470056</td>
+<td align="right">3110</td>
+<td align="right">129</td>
+<td align="right">0.8914729</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">hsa05012</td>
+<td align="left">Parkinson disease</td>
+<td align="left">L2</td>
+<td align="right">0.9999021</td>
+<td align="right">1.6964808</td>
+<td align="right">3110</td>
+<td align="right">125</td>
+<td align="right">0.8880000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">R-HSA-6798695</td>
+<td align="left">Neutrophil degranulation</td>
+<td align="left">L1</td>
+<td align="right">0.9999954</td>
+<td align="right">1.2111808</td>
+<td align="right">4451</td>
+<td align="right">431</td>
+<td align="right">0.8051044</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">R-HSA-198933</td>
+<td align="left">Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell</td>
+<td align="left">L6</td>
+<td align="right">0.9974877</td>
+<td align="right">1.1921499</td>
+<td align="right">4451</td>
+<td align="right">103</td>
+<td align="right">0.8155340</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">R-HSA-72766</td>
+<td align="left">Translation</td>
+<td align="left">L2</td>
+<td align="right">1.0000000</td>
+<td align="right">1.6620629</td>
+<td align="right">4451</td>
+<td align="right">286</td>
+<td align="right">0.8251748</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">R-HSA-163200</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins.</td>
+<td align="left">L3</td>
+<td align="right">0.9996111</td>
+<td align="right">1.7113805</td>
+<td align="right">4451</td>
+<td align="right">121</td>
+<td align="right">0.8677686</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">R-HSA-379726</td>
+<td align="left">Mitochondrial tRNA aminoacylation</td>
+<td align="left">L7</td>
+<td align="right">0.9972986</td>
+<td align="right">-2.4026838</td>
+<td align="right">4451</td>
+<td align="right">21</td>
+<td align="right">0.3333333</td>
+<td align="right">0.6931782</td>
+</tr>
+<tr class="even">
+<td align="left">WP111</td>
+<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
+<td align="left">L2</td>
+<td align="right">0.9998312</td>
+<td align="right">1.7563572</td>
+<td align="right">3062</td>
+<td align="right">100</td>
+<td align="right">0.9000000</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">WP477</td>
+<td align="left">Cytoplasmic Ribosomal Proteins</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">2.5280541</td>
+<td align="right">3062</td>
+<td align="right">85</td>
+<td align="right">0.9529412</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="cd34" class="section level3">
 <h3>CD34+</h3>
@@ -993,24 +1707,179 @@ set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL)
   filter(active_set, in_cs, thresh == 1e-4, celltype == &#39;CD34+&#39;) %&gt;%
   select(
     geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric)</code></pre>
-<pre><code># A tibble: 13 × 9
-   geneSet       description  top_component   pip  beta geneListSize geneSetSize
-   &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;        &lt;int&gt;       &lt;dbl&gt;
- 1 GO:0001775    cell activa… L1            0.987 0.731         8363        1128
- 2 GO:0006119    oxidative p… L3            0.999 1.56          8363         118
- 3 GO:0006413    translation… L2            1.00  1.07          7544         182
- 4 GO:0005515    protein bin… L2            1.00  0.337         8421        9031
- 5 GO:0003735    structural … L1            1.00  1.76          8421         152
- 6 hsa00190      Oxidative p… L1            0.992 1.51          3772         120
- 7 hsa03010      Ribosome     L2            1.00  1.52          3772         129
- 8 R-HSA-6798695 Neutrophil … L2            0.986 0.779         5481         432
- 9 R-HSA-198933  Immunoregul… L4            1.00  1.43          5481         103
-10 R-HSA-163200  Respiratory… L3            0.998 1.57          5481         121
-11 R-HSA-72764   Eukaryotic … L1            0.993 3.41          5481          90
-12 WP111         Electron Tr… L2            1.00  2.13          3698         101
-13 WP477         Cytoplasmic… L1            1     3.25          3698          85
-# … with 2 more variables: propSetInList &lt;dbl&gt;, pValueHypergeometric &lt;dbl&gt;</code></pre>
+    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="6%" />
+<col width="51%" />
+<col width="6%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="6%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">geneSet</th>
+<th align="left">description</th>
+<th align="left">top_component</th>
+<th align="right">pip</th>
+<th align="right">beta</th>
+<th align="right">geneListSize</th>
+<th align="right">geneSetSize</th>
+<th align="right">propSetInList</th>
+<th align="right">pValueHypergeometric</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a></td>
+<td align="left">cell activation</td>
+<td align="left">L1</td>
+<td align="right">0.9870540</td>
+<td align="right">0.7305079</td>
+<td align="right">8363</td>
+<td align="right">1128</td>
+<td align="right">0.8226950</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a></td>
+<td align="left">oxidative phosphorylation</td>
+<td align="left">L3</td>
+<td align="right">0.9989413</td>
+<td align="right">1.5639047</td>
+<td align="right">8363</td>
+<td align="right">118</td>
+<td align="right">0.9152542</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0006413" class="uri">GO:0006413</a></td>
+<td align="left">translational initiation</td>
+<td align="left">L2</td>
+<td align="right">0.9996608</td>
+<td align="right">1.0665346</td>
+<td align="right">7544</td>
+<td align="right">182</td>
+<td align="right">0.8736264</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="GO:0005515" class="uri">GO:0005515</a></td>
+<td align="left">protein binding</td>
+<td align="left">L2</td>
+<td align="right">1.0000000</td>
+<td align="right">0.3367103</td>
+<td align="right">8421</td>
+<td align="right">9031</td>
+<td align="right">0.7087809</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
+<td align="left">structural constituent of ribosome</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">1.7570426</td>
+<td align="right">8421</td>
+<td align="right">152</td>
+<td align="right">0.9276316</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">hsa00190</td>
+<td align="left">Oxidative phosphorylation</td>
+<td align="left">L1</td>
+<td align="right">0.9921759</td>
+<td align="right">1.5131062</td>
+<td align="right">3772</td>
+<td align="right">120</td>
+<td align="right">0.9250000</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">hsa03010</td>
+<td align="left">Ribosome</td>
+<td align="left">L2</td>
+<td align="right">1.0000000</td>
+<td align="right">1.5232912</td>
+<td align="right">3772</td>
+<td align="right">129</td>
+<td align="right">0.9224806</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">R-HSA-6798695</td>
+<td align="left">Neutrophil degranulation</td>
+<td align="left">L2</td>
+<td align="right">0.9862716</td>
+<td align="right">0.7788667</td>
+<td align="right">5481</td>
+<td align="right">432</td>
+<td align="right">0.8356481</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">R-HSA-198933</td>
+<td align="left">Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell</td>
+<td align="left">L4</td>
+<td align="right">0.9999503</td>
+<td align="right">1.4291485</td>
+<td align="right">5481</td>
+<td align="right">103</td>
+<td align="right">0.9126214</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">R-HSA-163200</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins.</td>
+<td align="left">L3</td>
+<td align="right">0.9977325</td>
+<td align="right">1.5694015</td>
+<td align="right">5481</td>
+<td align="right">121</td>
+<td align="right">0.9173554</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">R-HSA-72764</td>
+<td align="left">Eukaryotic Translation Termination</td>
+<td align="left">L1</td>
+<td align="right">0.9930562</td>
+<td align="right">3.4135736</td>
+<td align="right">5481</td>
+<td align="right">90</td>
+<td align="right">0.9888889</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">WP111</td>
+<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
+<td align="left">L2</td>
+<td align="right">0.9999971</td>
+<td align="right">2.1291975</td>
+<td align="right">3698</td>
+<td align="right">101</td>
+<td align="right">0.9603960</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">WP477</td>
+<td align="left">Cytoplasmic Ribosomal Proteins</td>
+<td align="left">L1</td>
+<td align="right">1.0000000</td>
+<td align="right">3.2474751</td>
+<td align="right">3698</td>
+<td align="right">85</td>
+<td align="right">0.9882353</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
 </div>
 </div>
