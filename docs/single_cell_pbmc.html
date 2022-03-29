@@ -480,16 +480,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree7ee315ca8bca2be2469e51bbb9c5221adbce95edtargetblank7ee315ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/7ee315ca8bca2be2469e51bbb9c5221adbce95ed" target="_blank">7ee315c</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree9fcb3b49de5ddd846c7ba51673ada1ab4146fe41targetblank9fcb3b4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/9fcb3b49de5ddd846c7ba51673ada1ab4146fe41" target="_blank">9fcb3b4</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree7ee315ca8bca2be2469e51bbb9c5221adbce95edtargetblank7ee315ca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree9fcb3b49de5ddd846c7ba51673ada1ab4146fe41targetblank9fcb3b4a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/7ee315ca8bca2be2469e51bbb9c5221adbce95ed" target="_blank">7ee315c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/9fcb3b49de5ddd846c7ba51673ada1ab4146fe41" target="_blank">9fcb3b4</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -590,6 +590,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/9fcb3b49de5ddd846c7ba51673ada1ab4146fe41/analysis/single_cell_pbmc.Rmd" target="_blank">9fcb3b4</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-29
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/2fa21ff62e6f6aad19792899aba6e9b9fe485cb0/docs/single_cell_pbmc.html" target="_blank">2fa21ff</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1137,18 +1171,18 @@ db_component_kable = function(tbl){
 <h3>CD19+ B</h3>
 <pre class="r"><code>pbmc_res_set_summary %&gt;%
   filter(celltype == &#39;CD19+ B&#39;) %&gt;%
-  filter(active_set, in_cs, thresh==1e-4) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
   db_component_kable</code></pre>
 <pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
 <table>
 <colgroup>
-<col width="12%" />
-<col width="5%" />
-<col width="8%" />
-<col width="8%" />
-<col width="44%" />
-<col width="6%" />
-<col width="13%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="10%" />
+<col width="70%" />
+<col width="9%" />
+<col width="9%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1175,21 +1209,48 @@ db_component_kable = function(tbl){
 <td align="left">gobp</td>
 <td align="left">CD19+ B</td>
 <td align="left">L2</td>
-<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a></td>
-<td align="left">protein targeting to ER</td>
-<td align="left">0.9620521</td>
-<td align="left">2.532661e-36</td>
+<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0006613" class="uri">GO:0006613</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0006614" class="uri">GO:0006614</a></td>
+<td align="left">protein targeting to ER , cotranslational protein targeting to membrane , establishment of protein localization to endoplasmic reticulum, SRP-dependent cotranslational protein targeting to membrane</td>
+<td align="left">0.96205208, 0.02165616, 0.01453688, 0.00410197</td>
+<td align="left">2.532661e-36, 1.984360e-34, 8.259486e-35, 9.432379e-33</td>
 </tr>
 <tr class="odd">
 <td align="left">gobp</td>
 <td align="left">CD19+ B</td>
-<td align="left">L5</td>
-<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a></td>
-<td align="left">cell activation</td>
-<td align="left">0.9780542</td>
-<td align="left">4.428372e-165</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a>, <a href="GO:0006119" class="uri">GO:0006119</a></td>
+<td align="left">ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport, oxidative phosphorylation</td>
+<td align="left">0.62449631, 0.36002221, 0.01752387</td>
+<td align="left">1.605842e-25, 4.064871e-25, 2.075548e-29</td>
 </tr>
 <tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD19+ B</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a>, <a href="GO:0045321" class="uri">GO:0045321</a>, <a href="GO:0002366" class="uri">GO:0002366</a>, <a href="GO:0002263" class="uri">GO:0002263</a></td>
+<td align="left">cell activation , leukocyte activation , leukocyte activation involved in immune response, cell activation involved in immune response</td>
+<td align="left">0.9780541751, 0.0218972721, 0.0005957131, 0.0005770067</td>
+<td align="left">4.428372e-165, 7.685551e-152, 1.405750e-97, 8.244815e-98</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD19+ B</td>
+<td align="left">L6</td>
+<td align="left"><a href="GO:0008380" class="uri">GO:0008380</a>, <a href="GO:0000377" class="uri">GO:0000377</a>, <a href="GO:0000398" class="uri">GO:0000398</a>, <a href="GO:0000375" class="uri">GO:0000375</a>, <a href="GO:0006397" class="uri">GO:0006397</a>, <a href="GO:0050684" class="uri">GO:0050684</a>, <a href="GO:0043484" class="uri">GO:0043484</a>, <a href="GO:0000380" class="uri">GO:0000380</a>, <a href="GO:0048024" class="uri">GO:0048024</a>, <a href="GO:0016071" class="uri">GO:0016071</a></td>
+<td align="left">RNA splicing , RNA splicing, via transesterification reactions with bulged adenosine as nucleophile, mRNA splicing, via spliceosome , RNA splicing, via transesterification reactions , mRNA processing , regulation of mRNA processing , regulation of RNA splicing , alternative mRNA splicing, via spliceosome , regulation of mRNA splicing, via spliceosome , mRNA metabolic process</td>
+<td align="left">0.822736133, 0.049644134, 0.049644134, 0.033005117, 0.017234053, 0.009417204, 0.007220671, 0.002939483, 0.001834918, 0.001051637</td>
+<td align="left">2.990867e-36, 3.387925e-28, 3.387925e-28, 6.887275e-28, 4.148046e-35, 6.486732e-18, 1.878944e-17, 7.772036e-12, 1.226187e-12, 1.879865e-61</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">CD19+ B</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0002446" class="uri">GO:0002446</a>, <a href="GO:0036230" class="uri">GO:0036230</a></td>
+<td align="left">neutrophil mediated immunity, granulocyte activation</td>
+<td align="left">0.5151440, 0.4857358</td>
+<td align="left">4.775951e-71, 2.936426e-71</td>
+</tr>
+<tr class="odd">
 <td align="left">gobp_nr</td>
 <td align="left">CD19+ B</td>
 <td align="left">L2</td>
@@ -1198,16 +1259,16 @@ db_component_kable = function(tbl){
 <td align="left">0.999958</td>
 <td align="left">7.382525e-33</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">gobp_nr</td>
 <td align="left">CD19+ B</td>
 <td align="left">L4</td>
-<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a></td>
-<td align="left">nucleoside monophosphate metabolic process</td>
-<td align="left">0.9844976</td>
-<td align="left">7.371703e-40</td>
+<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0009141" class="uri">GO:0009141</a></td>
+<td align="left">nucleoside monophosphate metabolic process, nucleoside triphosphate metabolic process</td>
+<td align="left">0.98449756, 0.01648675</td>
+<td align="left">7.371703e-40, 2.011998e-35</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">gobp_nr</td>
 <td align="left">CD19+ B</td>
 <td align="left">L5</td>
@@ -1216,7 +1277,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9961853</td>
 <td align="left">8.086259e-55</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">gomf</td>
 <td align="left">CD19+ B</td>
 <td align="left">L1</td>
@@ -1225,14 +1286,23 @@ db_component_kable = function(tbl){
 <td align="left">0.999744</td>
 <td align="left">3.707404e-127</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">gomf</td>
 <td align="left">CD19+ B</td>
 <td align="left">L2</td>
-<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a></td>
-<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific</td>
-<td align="left">0.9950038</td>
-<td align="left">1.942472e-16</td>
+<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a>, <a href="GO:0003700" class="uri">GO:0003700</a></td>
+<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific, DNA-binding transcription factor activity</td>
+<td align="left">0.995003783, 0.005058241</td>
+<td align="left">1.942472e-16, 2.738455e-20</td>
+</tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD19+ B</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0000977" class="uri">GO:0000977</a>, <a href="GO:0001012" class="uri">GO:0001012</a>, <a href="GO:0000987" class="uri">GO:0000987</a>, <a href="GO:0000978" class="uri">GO:0000978</a>, <a href="GO:0000976" class="uri">GO:0000976</a>, <a href="GO:0003690" class="uri">GO:0003690</a>, <a href="GO:1990837" class="uri">GO:1990837</a>, <a href="GO:0001067" class="uri">GO:0001067</a>, <a href="GO:0044212" class="uri">GO:0044212</a></td>
+<td align="left">RNA polymerase II regulatory region sequence-specific DNA binding, RNA polymerase II regulatory region DNA binding , proximal promoter sequence-specific DNA binding , RNA polymerase II proximal promoter sequence-specific DNA binding, transcription regulatory region sequence-specific DNA binding , double-stranded DNA binding , sequence-specific double-stranded DNA binding , regulatory region nucleic acid binding , transcription regulatory region DNA binding</td>
+<td align="left">0.4872513913, 0.4313993168, 0.0365953412, 0.0243679373, 0.0132413813, 0.0059278956, 0.0013679037, 0.0004652721, 0.0003557059</td>
+<td align="left">2.822624e-34, 2.658045e-34, 8.331683e-30, 2.661740e-29, 5.231202e-34, 8.306797e-44, 1.071864e-35, 1.990230e-36, 5.770724e-36</td>
 </tr>
 <tr class="odd">
 <td align="left">gomf</td>
@@ -1244,15 +1314,24 @@ db_component_kable = function(tbl){
 <td align="left">2.994289e-32</td>
 </tr>
 <tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD19+ B</td>
+<td align="left">L7</td>
+<td align="left"><a href="GO:0003954" class="uri">GO:0003954</a>, <a href="GO:0008137" class="uri">GO:0008137</a>, <a href="GO:0050136" class="uri">GO:0050136</a>, <a href="GO:0016655" class="uri">GO:0016655</a>, <a href="GO:0016651" class="uri">GO:0016651</a></td>
+<td align="left">NADH dehydrogenase activity , NADH dehydrogenase (ubiquinone) activity , NADH dehydrogenase (quinone) activity , oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor, oxidoreductase activity, acting on NAD(P)H</td>
+<td align="left">0.32595362, 0.21858318, 0.21858318, 0.17726552, 0.03879761</td>
+<td align="left">1.385073e-13, 3.413042e-13, 3.413042e-13, 1.315866e-14, 2.200053e-17</td>
+</tr>
+<tr class="odd">
 <td align="left">kegg</td>
 <td align="left">CD19+ B</td>
 <td align="left">L1</td>
-<td align="left">hsa00190</td>
-<td align="left">Oxidative phosphorylation</td>
-<td align="left">0.9979902</td>
-<td align="left">5.027625e-29</td>
+<td align="left">hsa00190, hsa05012</td>
+<td align="left">Oxidative phosphorylation, Parkinson disease</td>
+<td align="left">0.9979902, 0.0125303</td>
+<td align="left">5.027625e-29, 3.697096e-27</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">kegg</td>
 <td align="left">CD19+ B</td>
 <td align="left">L2</td>
@@ -1261,7 +1340,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9997951</td>
 <td align="left">8.551153e-21</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">kegg</td>
 <td align="left">CD19+ B</td>
 <td align="left">L3</td>
@@ -1270,7 +1349,7 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">3.24636e-30</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">reactome</td>
 <td align="left">CD19+ B</td>
 <td align="left">L1</td>
@@ -1279,16 +1358,70 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">7.929629e-180</td>
 </tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L2</td>
+<td align="left">R-HSA-156842 , R-HSA-156902 , R-HSA-192823 , R-HSA-2408557, R-HSA-72764 , R-HSA-72689 , R-HSA-1799339, R-HSA-72706 , R-HSA-156827</td>
+<td align="left">Eukaryotic Translation Elongation , Peptide chain elongation , Viral mRNA Translation , Selenocysteine synthesis , Eukaryotic Translation Termination , Formation of a pool of free 40S subunits , SRP-dependent cotranslational protein targeting to membrane , GTP hydrolysis and joining of the 60S ribosomal subunit , L13a-mediated translational silencing of Ceruloplasmin expression</td>
+<td align="left">0.760651464, 0.124389740, 0.067132923, 0.026006681, 0.017267678, 0.003305376, 0.003131980, 0.001226762, 0.001000830</td>
+<td align="left">7.985692e-32, 1.394445e-30, 1.394445e-30, 9.148401e-31, 9.148401e-31, 2.883586e-31, 2.254688e-34, 4.386878e-33, 1.096100e-32</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L3</td>
+<td align="left">R-HSA-74160 , R-HSA-212436, R-HSA-73857</td>
+<td align="left">Gene expression (Transcription), Generic Transcription Pathway , RNA Polymerase II Transcription</td>
+<td align="left">0.88567935, 0.07266257, 0.04183476</td>
+<td align="left">8.299766e-30, 2.296229e-21, 4.497082e-27</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L4</td>
+<td align="left">R-HSA-163200 , R-HSA-1428517, R-HSA-611105</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., The citric acid (TCA) cycle and respiratory electron transport , Respiratory electron transport</td>
+<td align="left">0.845323000, 0.149383366, 0.005965744</td>
+<td align="left">9.259886e-26, 5.557534e-29, 1.019708e-20</td>
+</tr>
 <tr class="even">
 <td align="left">reactome</td>
 <td align="left">CD19+ B</td>
 <td align="left">L5</td>
-<td align="left">R-HSA-983168</td>
-<td align="left">Antigen processing: Ubiquitination &amp; Proteasome degradation</td>
-<td align="left">0.9970497</td>
-<td align="left">6.660057e-09</td>
+<td align="left">R-HSA-983168, R-HSA-983169</td>
+<td align="left">Antigen processing: Ubiquitination &amp; Proteasome degradation, Class I MHC mediated antigen processing &amp; presentation</td>
+<td align="left">0.997049696, 0.003118792</td>
+<td align="left">6.660057e-09, 4.421456e-14</td>
 </tr>
 <tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L6</td>
+<td align="left">R-HSA-180585 , R-HSA-1234176, R-HSA-211733 , R-HSA-69601 , R-HSA-69610 , R-HSA-69613 , R-HSA-69541 , R-HSA-69229 , R-HSA-75815 , R-HSA-180534 , R-HSA-169911 , R-HSA-349425 , R-HSA-9604323, R-HSA-8854050, R-HSA-1236978, R-HSA-174154 , R-HSA-1169091, R-HSA-174084 , R-HSA-1234174, R-HSA-2262749, R-HSA-983705 , R-HSA-174113 , R-HSA-450408 , R-HSA-69563 , R-HSA-69580 , R-HSA-174184 , R-HSA-351202 , R-HSA-68867 , R-HSA-176409 , R-HSA-350562 , R-HSA-69615 , R-HSA-5362768, R-HSA-174178 , R-HSA-179419 , R-HSA-5610780</td>
+<td align="left">Vif-mediated degradation of APOBEC3G , Oxygen-dependent proline hydroxylation of Hypoxia-inducible Factor Alpha , Regulation of activated PAK-2p34 by proteasome mediated degradation , Ubiquitin Mediated Degradation of Phosphorylated Cdc25A , p53-Independent DNA Damage Response , p53-Independent G1/S DNA damage checkpoint , Stabilization of p53 , Ubiquitin-dependent degradation of Cyclin D1 , Ubiquitin-dependent degradation of Cyclin D , Vpu mediated degradation of CD4 , Regulation of Apoptosis , Autodegradation of the E3 ubiquitin ligase COP1 , Negative regulation of NOTCH4 signaling , FBXL7 down-regulates AURKA during mitotic entry and in early mitosis , Cross-presentation of soluble exogenous antigens (endosomes) , APC/C:Cdc20 mediated degradation of Securin , Activation of NF-kappaB in B cells , Autodegradation of Cdh1 by Cdh1:APC/C , Regulation of Hypoxia-inducible Factor (HIF) by oxygen , Cellular response to hypoxia , Signaling by the B Cell Receptor (BCR) , SCF-beta-TrCP mediated degradation of Emi1 , AUF1 (hnRNP D0) binds and destabilizes mRNA , p53-Dependent G1 DNA Damage Response , p53-Dependent G1/S DNA damage checkpoint , Cdc20:Phospho-APC/C mediated degradation of Cyclin A , Metabolism of polyamines , Assembly of the pre-replicative complex , APC/C:Cdc20 mediated degradation of mitotic proteins , Regulation of ornithine decarboxylase (ODC) , G1/S DNA Damage Checkpoints , Hh mutants that don’t undergo autocatalytic processing are degraded by ERAD , APC/C:Cdh1 mediated degradation of Cdc20 and other APC/C:Cdh1 targeted proteins in late mitosis/early G1, APC:Cdc20 mediated degradation of cell cycle proteins prior to satisfation of the cell cycle checkpoint , Degradation of GLI1 by the proteasome</td>
+<td align="left">0.7490393108, 0.0319137209, 0.0256472437, 0.0242873384, 0.0242873384, 0.0242873384, 0.0225422403, 0.0120133659, 0.0120133659, 0.0119846233, 0.0108046763, 0.0101911528, 0.0071579856, 0.0070377887, 0.0040655484, 0.0038589122, 0.0037679238, 0.0036141487, 0.0030579708, 0.0030579708, 0.0028683640, 0.0024109404, 0.0017126798, 0.0015009738, 0.0015009738, 0.0013319088, 0.0013173159, 0.0012105047, 0.0011649631, 0.0010246799, 0.0009578296, 0.0009514080, 0.0008622334, 0.0007207196, 0.0006610228</td>
+<td align="left">2.433018e-13, 1.735945e-13, 7.193688e-12, 5.424345e-12, 5.424345e-12, 5.424345e-12, 1.741572e-12, 1.238520e-11, 1.238520e-11, 1.238520e-11, 5.424345e-12, 1.238520e-11, 8.907071e-12, 4.486919e-11, 3.832536e-11, 1.884699e-12, 9.112376e-15, 2.855537e-12, 1.201408e-13, 1.201408e-13, 6.637218e-26, 6.786237e-11, 3.945748e-12, 8.833851e-12, 8.833851e-12, 3.601389e-12, 3.634256e-14, 8.655424e-13, 2.266767e-12, 2.223514e-10, 1.211591e-11, 6.786237e-11, 1.005329e-11, 1.005329e-11, 1.369024e-10</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L7</td>
+<td align="left">R-HSA-72163 , R-HSA-72172 , R-HSA-109688, R-HSA-73856 , R-HSA-72203</td>
+<td align="left">mRNA Splicing - Major Pathway , mRNA Splicing , Cleavage of Growing Transcript in the Termination Region, RNA Polymerase II Transcription Termination , Processing of Capped Intron-Containing Pre-mRNA</td>
+<td align="left">0.5457887505, 0.4439546364, 0.0021482288, 0.0021482288, 0.0006461411</td>
+<td align="left">1.512823e-22, 6.075949e-23, 1.754344e-08, 1.754344e-08, 5.751685e-20</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD19+ B</td>
+<td align="left">L8</td>
+<td align="left">R-HSA-76005 , R-HSA-114608, R-HSA-76002 , R-HSA-109582</td>
+<td align="left">Response to elevated platelet cytosolic Ca2+ , Platelet degranulation , Platelet activation, signaling and aggregation, Hemostasis</td>
+<td align="left">0.7063848487, 0.2314322026, 0.0252623002, 0.0004075344</td>
+<td align="left">1.614308e-20, 3.964098e-19, 1.767108e-29, 2.862108e-43</td>
+</tr>
+<tr class="even">
 <td align="left">wikipathway</td>
 <td align="left">CD19+ B</td>
 <td align="left">L1</td>
@@ -1297,7 +1430,7 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">1.254966e-28</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">wikipathway</td>
 <td align="left">CD19+ B</td>
 <td align="left">L2</td>
@@ -1306,7 +1439,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9999189</td>
 <td align="left">4.726328e-27</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">wikipathway_cancer</td>
 <td align="left">CD19+ B</td>
 <td align="left">L1</td>
@@ -1322,18 +1455,18 @@ db_component_kable = function(tbl){
 <h3>CD56+ NK</h3>
 <pre class="r"><code>pbmc_res_set_summary %&gt;%
   filter(celltype == &#39;CD56+ NK&#39;) %&gt;%
-  filter(active_set, in_cs, thresh==1e-4) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
   db_component_kable</code></pre>
 <pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
-<table style="width:100%;">
+<table>
 <colgroup>
-<col width="6%" />
-<col width="4%" />
-<col width="7%" />
-<col width="7%" />
-<col width="59%" />
-<col width="5%" />
-<col width="10%" />
+<col width="1%" />
+<col width="0%" />
+<col width="1%" />
+<col width="11%" />
+<col width="57%" />
+<col width="13%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1359,13 +1492,40 @@ db_component_kable = function(tbl){
 <tr class="even">
 <td align="left">gobp</td>
 <td align="left">CD56+ NK</td>
-<td align="left">L4</td>
-<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a></td>
-<td align="left">oxidative phosphorylation</td>
-<td align="left">0.9815754</td>
-<td align="left">2.922476e-26</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0006613" class="uri">GO:0006613</a></td>
+<td align="left">protein targeting to ER , establishment of protein localization to endoplasmic reticulum, SRP-dependent cotranslational protein targeting to membrane , cotranslational protein targeting to membrane</td>
+<td align="left">0.68278614, 0.20978513, 0.07123053, 0.03822676</td>
+<td align="left">9.495193e-34, 1.280004e-33, 1.085035e-31, 6.691900e-32</td>
 </tr>
 <tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a>, <a href="GO:0009161" class="uri">GO:0009161</a>, <a href="GO:0009126" class="uri">GO:0009126</a>, <a href="GO:0009167" class="uri">GO:0009167</a>, <a href="GO:0022900" class="uri">GO:0022900</a>, <a href="GO:0022904" class="uri">GO:0022904</a>, <a href="GO:0046034" class="uri">GO:0046034</a></td>
+<td align="left">oxidative phosphorylation , nucleoside monophosphate metabolic process , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport, ribonucleoside monophosphate metabolic process , purine nucleoside monophosphate metabolic process , purine ribonucleoside monophosphate metabolic process , electron transport chain , respiratory electron transport chain , ATP metabolic process</td>
+<td align="left">0.9815754083, 0.0075172568, 0.0050461669, 0.0035658370, 0.0031462719, 0.0018470112, 0.0018470112, 0.0017166414, 0.0015391764, 0.0009472366</td>
+<td align="left">2.922476e-26, 3.203909e-41, 3.830697e-19, 8.794047e-19, 6.509045e-39, 2.429909e-37, 2.429909e-37, 8.544784e-26, 1.986936e-19, 5.926956e-33</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0008380" class="uri">GO:0008380</a>, <a href="GO:0006397" class="uri">GO:0006397</a>, <a href="GO:0000375" class="uri">GO:0000375</a>, <a href="GO:0000377" class="uri">GO:0000377</a>, <a href="GO:0000398" class="uri">GO:0000398</a>, <a href="GO:0016071" class="uri">GO:0016071</a></td>
+<td align="left">RNA splicing , mRNA processing , RNA splicing, via transesterification reactions , RNA splicing, via transesterification reactions with bulged adenosine as nucleophile, mRNA splicing, via spliceosome , mRNA metabolic process</td>
+<td align="left">0.59074452, 0.22252471, 0.05825611, 0.05441422, 0.05441422, 0.01452235</td>
+<td align="left">1.141014e-39, 2.284529e-42, 9.013714e-32, 1.546092e-31, 1.546092e-31, 3.470305e-72</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a>, <a href="GO:0002446" class="uri">GO:0002446</a></td>
+<td align="left">granulocyte activation , neutrophil mediated immunity</td>
+<td align="left">0.6655074, 0.3354429</td>
+<td align="left">8.805074e-72, 8.544872e-71</td>
+</tr>
+<tr class="even">
 <td align="left">gobp_nr</td>
 <td align="left">CD56+ NK</td>
 <td align="left">L2</td>
@@ -1374,25 +1534,25 @@ db_component_kable = function(tbl){
 <td align="left">0.9954877</td>
 <td align="left">9.230939e-37</td>
 </tr>
-<tr class="even">
-<td align="left">gobp_nr</td>
-<td align="left">CD56+ NK</td>
-<td align="left">L3</td>
-<td align="left"><a href="GO:0042110" class="uri">GO:0042110</a></td>
-<td align="left">T cell activation</td>
-<td align="left">0.9856601</td>
-<td align="left">3.058385e-58</td>
-</tr>
 <tr class="odd">
 <td align="left">gobp_nr</td>
 <td align="left">CD56+ NK</td>
-<td align="left">L4</td>
-<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a></td>
-<td align="left">nucleoside monophosphate metabolic process</td>
-<td align="left">0.9815927</td>
-<td align="left">5.279727e-40</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0042110" class="uri">GO:0042110</a>, <a href="GO:0007159" class="uri">GO:0007159</a></td>
+<td align="left">T cell activation , leukocyte cell-cell adhesion</td>
+<td align="left">0.985660130, 0.008171918</td>
+<td align="left">3.058385e-58, 4.198497e-42</td>
 </tr>
 <tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0009141" class="uri">GO:0009141</a>, <a href="GO:0009259" class="uri">GO:0009259</a></td>
+<td align="left">nucleoside monophosphate metabolic process, nucleoside triphosphate metabolic process , ribonucleotide metabolic process</td>
+<td align="left">0.981592710, 0.015904774, 0.001372449</td>
+<td align="left">5.279727e-40, 6.177407e-35, 6.209394e-41</td>
+</tr>
+<tr class="odd">
 <td align="left">gobp_nr</td>
 <td align="left">CD56+ NK</td>
 <td align="left">L5</td>
@@ -1401,7 +1561,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9972725</td>
 <td align="left">9.375193e-38</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">gomf</td>
 <td align="left">CD56+ NK</td>
 <td align="left">L1</td>
@@ -1410,14 +1570,23 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">1.182382e-44</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">gomf</td>
 <td align="left">CD56+ NK</td>
 <td align="left">L2</td>
-<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a></td>
-<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific</td>
-<td align="left">0.9967706</td>
-<td align="left">3.240357e-18</td>
+<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a>, <a href="GO:0003700" class="uri">GO:0003700</a></td>
+<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific, DNA-binding transcription factor activity</td>
+<td align="left">0.996770584, 0.003356549</td>
+<td align="left">3.240357e-18, 3.414777e-22</td>
+</tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0000977" class="uri">GO:0000977</a>, <a href="GO:0000976" class="uri">GO:0000976</a>, <a href="GO:0001012" class="uri">GO:0001012</a>, <a href="GO:1990837" class="uri">GO:1990837</a>, <a href="GO:0003690" class="uri">GO:0003690</a>, <a href="GO:0043565" class="uri">GO:0043565</a>, <a href="GO:0000987" class="uri">GO:0000987</a>, <a href="GO:0001067" class="uri">GO:0001067</a>, <a href="GO:0044212" class="uri">GO:0044212</a></td>
+<td align="left">RNA polymerase II regulatory region sequence-specific DNA binding, transcription regulatory region sequence-specific DNA binding , RNA polymerase II regulatory region DNA binding , sequence-specific double-stranded DNA binding , double-stranded DNA binding , sequence-specific DNA binding , proximal promoter sequence-specific DNA binding , regulatory region nucleic acid binding , transcription regulatory region DNA binding</td>
+<td align="left">0.5246638008, 0.2816905881, 0.1760785081, 0.0110809288, 0.0067171732, 0.0006260858, 0.0003679068, 0.0002517074, 0.0002268130</td>
+<td align="left">6.617810e-37, 8.879108e-39, 2.222485e-36, 3.657740e-40, 6.115445e-47, 6.947558e-44, 1.156041e-28, 1.529375e-38, 4.443215e-38</td>
 </tr>
 <tr class="odd">
 <td align="left">kegg</td>
@@ -1458,22 +1627,49 @@ db_component_kable = function(tbl){
 <tr class="odd">
 <td align="left">reactome</td>
 <td align="left">CD56+ NK</td>
+<td align="left">L2</td>
+<td align="left">R-HSA-156842, R-HSA-156902, R-HSA-192823, R-HSA-72764 , R-HSA-72689</td>
+<td align="left">Eukaryotic Translation Elongation , Peptide chain elongation , Viral mRNA Translation , Eukaryotic Translation Termination , Formation of a pool of free 40S subunits</td>
+<td align="left">0.864742537, 0.106897566, 0.027158260, 0.002413175, 0.001418708</td>
+<td align="left">6.208280e-34, 1.059151e-32, 1.059151e-32, 1.163653e-32, 2.528922e-34</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L3</td>
+<td align="left">R-HSA-212436, R-HSA-74160 , R-HSA-73857</td>
+<td align="left">Generic Transcription Pathway , Gene expression (Transcription), RNA Polymerase II Transcription</td>
+<td align="left">0.68127740, 0.29679295, 0.02222635</td>
+<td align="left">1.321222e-30, 3.097765e-41, 2.085936e-37</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
 <td align="left">L4</td>
-<td align="left">R-HSA-163200</td>
-<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins.</td>
-<td align="left">0.9933245</td>
-<td align="left">1.782486e-25</td>
+<td align="left">R-HSA-163200 , R-HSA-1428517, R-HSA-611105</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., The citric acid (TCA) cycle and respiratory electron transport , Respiratory electron transport</td>
+<td align="left">0.993324533, 0.006034017, 0.001575567</td>
+<td align="left">1.782486e-25, 1.148730e-26, 7.189017e-19</td>
 </tr>
 <tr class="even">
 <td align="left">reactome</td>
 <td align="left">CD56+ NK</td>
 <td align="left">L5</td>
-<td align="left">R-HSA-8878171</td>
-<td align="left">Transcriptional regulation by RUNX1</td>
-<td align="left">0.9712818</td>
-<td align="left">4.649106e-25</td>
+<td align="left">R-HSA-8878171, R-HSA-157118 , R-HSA-8939236</td>
+<td align="left">Transcriptional regulation by RUNX1 , Signaling by NOTCH , RUNX1 regulates transcription of genes involved in differentiation of HSCs</td>
+<td align="left">0.97128181, 0.04393861, 0.01998012</td>
+<td align="left">4.649106e-25, 1.638239e-27, 2.982359e-17</td>
 </tr>
 <tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD56+ NK</td>
+<td align="left">L6</td>
+<td align="left">R-HSA-983168 , R-HSA-983169 , R-HSA-8951664</td>
+<td align="left">Antigen processing: Ubiquitination &amp; Proteasome degradation, Class I MHC mediated antigen processing &amp; presentation , Neddylation</td>
+<td align="left">0.8808248324, 0.1189949639, 0.0009720837</td>
+<td align="left">4.596003e-14, 1.163224e-19, 1.837871e-09</td>
+</tr>
+<tr class="even">
 <td align="left">wikipathway</td>
 <td align="left">CD56+ NK</td>
 <td align="left">L1</td>
@@ -1482,14 +1678,14 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">3.731258e-31</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">wikipathway</td>
 <td align="left">CD56+ NK</td>
 <td align="left">L2</td>
-<td align="left">WP111</td>
-<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
-<td align="left">0.990862</td>
-<td align="left">3.36456e-24</td>
+<td align="left">WP111, WP623</td>
+<td align="left">Electron Transport Chain (OXPHOS system in mitochondria), Oxidative phosphorylation</td>
+<td align="left">0.99086202, 0.01897664</td>
+<td align="left">3.364560e-24, 3.188613e-17</td>
 </tr>
 </tbody>
 </table>
@@ -1498,18 +1694,18 @@ db_component_kable = function(tbl){
 <h3>T cell</h3>
 <pre class="r"><code>pbmc_res_set_summary %&gt;%
   filter(celltype == &#39;T cell&#39;) %&gt;%
-  filter(active_set, in_cs, thresh==1e-4) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
   db_component_kable</code></pre>
 <pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
 <table>
 <colgroup>
-<col width="7%" />
-<col width="7%" />
-<col width="11%" />
-<col width="11%" />
-<col width="37%" />
-<col width="8%" />
-<col width="17%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="13%" />
+<col width="52%" />
+<col width="14%" />
+<col width="16%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1527,30 +1723,57 @@ db_component_kable = function(tbl){
 <td align="left">gobp</td>
 <td align="left">T cell</td>
 <td align="left">L1</td>
-<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a></td>
-<td align="left">cell activation</td>
-<td align="left">0.9982435</td>
-<td align="left">1.098801e-248</td>
+<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a>, <a href="GO:0045321" class="uri">GO:0045321</a></td>
+<td align="left">cell activation , leukocyte activation</td>
+<td align="left">0.998243491, 0.002864201</td>
+<td align="left">1.098801e-248, 2.328201e-226</td>
 </tr>
 <tr class="even">
 <td align="left">gobp</td>
 <td align="left">T cell</td>
 <td align="left">L2</td>
-<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a></td>
-<td align="left">oxidative phosphorylation</td>
-<td align="left">0.9988673</td>
-<td align="left">1.89124e-33</td>
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a></td>
+<td align="left">oxidative phosphorylation , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport</td>
+<td align="left">0.998867321, 0.002306692, 0.002090733</td>
+<td align="left">1.891240e-33, 9.259766e-25, 2.100714e-24</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">T cell</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0010941" class="uri">GO:0010941</a>, <a href="GO:0008219" class="uri">GO:0008219</a>, <a href="GO:0043067" class="uri">GO:0043067</a>, <a href="GO:0042981" class="uri">GO:0042981</a>, <a href="GO:0012501" class="uri">GO:0012501</a>, <a href="GO:0006915" class="uri">GO:0006915</a>, <a href="GO:0097190" class="uri">GO:0097190</a>, <a href="GO:0048518" class="uri">GO:0048518</a>, <a href="GO:0010942" class="uri">GO:0010942</a>, <a href="GO:0048522" class="uri">GO:0048522</a>, <a href="GO:0048519" class="uri">GO:0048519</a>, <a href="GO:0043068" class="uri">GO:0043068</a>, <a href="GO:0043065" class="uri">GO:0043065</a></td>
+<td align="left">regulation of cell death , cell death , regulation of programmed cell death , regulation of apoptotic process , programmed cell death , apoptotic process , apoptotic signaling pathway , positive regulation of biological process , positive regulation of cell death , positive regulation of cellular process , negative regulation of biological process , positive regulation of programmed cell death, positive regulation of apoptotic process</td>
+<td align="left">0.404035437, 0.367067203, 0.059812581, 0.059590178, 0.042848010, 0.038547811, 0.020693460, 0.009702335, 0.006246010, 0.006037632, 0.005468877, 0.002090144, 0.001933994</td>
+<td align="left">2.138535e-192, 7.032734e-238, 3.661703e-176, 1.383501e-174, 1.127119e-219, 4.508930e-213, 1.876837e-89, 0.000000e+00, 7.689401e-95, 0.000000e+00, 0.000000e+00, 3.313749e-84, 5.541783e-83</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">T cell</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0070972" class="uri">GO:0070972</a>, <a href="GO:0006613" class="uri">GO:0006613</a></td>
+<td align="left">protein targeting to ER , SRP-dependent cotranslational protein targeting to membrane , establishment of protein localization to endoplasmic reticulum, protein localization to endoplasmic reticulum , cotranslational protein targeting to membrane</td>
+<td align="left">0.42251775, 0.37005939, 0.13809458, 0.04385614, 0.03174252</td>
+<td align="left">6.738692e-29, 2.697911e-27, 1.069848e-28, 2.389817e-33, 4.015516e-26</td>
 </tr>
 <tr class="odd">
 <td align="left">gobp</td>
 <td align="left">T cell</td>
 <td align="left">L5</td>
-<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a></td>
-<td align="left">immune system process</td>
-<td align="left">0.9984689</td>
-<td align="left">0</td>
+<td align="left"><a href="GO:0002376" class="uri">GO:0002376</a>, <a href="GO:0006955" class="uri">GO:0006955</a></td>
+<td align="left">immune system process, immune response</td>
+<td align="left">0.998468901, 0.002881243</td>
+<td align="left">0.000000e+00, 2.059792e-293</td>
 </tr>
 <tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">T cell</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a>, <a href="GO:0002446" class="uri">GO:0002446</a></td>
+<td align="left">granulocyte activation , neutrophil mediated immunity</td>
+<td align="left">0.7324297, 0.2703360</td>
+<td align="left">8.893801e-111, 9.709562e-110</td>
+</tr>
+<tr class="odd">
 <td align="left">gobp_nr</td>
 <td align="left">T cell</td>
 <td align="left">L2</td>
@@ -1559,7 +1782,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9999906</td>
 <td align="left">2.423836e-82</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">gobp_nr</td>
 <td align="left">T cell</td>
 <td align="left">L3</td>
@@ -1568,7 +1791,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9998559</td>
 <td align="left">7.082395e-33</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">gomf</td>
 <td align="left">T cell</td>
 <td align="left">L1</td>
@@ -1577,7 +1800,7 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">kegg</td>
 <td align="left">T cell</td>
 <td align="left">L1</td>
@@ -1586,7 +1809,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9999993</td>
 <td align="left">1.469698e-43</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">reactome</td>
 <td align="left">T cell</td>
 <td align="left">L1</td>
@@ -1595,6 +1818,15 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">4.546436e-106</td>
 </tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">T cell</td>
+<td align="left">L2</td>
+<td align="left">R-HSA-72706 , R-HSA-156827, R-HSA-72689 , R-HSA-72613 , R-HSA-72737 , R-HSA-192823, R-HSA-156902</td>
+<td align="left">GTP hydrolysis and joining of the 60S ribosomal subunit , L13a-mediated translational silencing of Ceruloplasmin expression, Formation of a pool of free 40S subunits , Eukaryotic Translation Initiation , Cap-dependent Translation Initiation , Viral mRNA Translation , Peptide chain elongation</td>
+<td align="left">0.586005479, 0.400596683, 0.009180040, 0.004668524, 0.004668524, 0.003496445, 0.003174071</td>
+<td align="left">4.807983e-34, 1.097988e-33, 4.127765e-30, 2.515433e-32, 2.515433e-32, 6.804717e-29, 6.804717e-29</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1602,18 +1834,18 @@ db_component_kable = function(tbl){
 <h3>CD14+ Monocyte</h3>
 <pre class="r"><code>pbmc_res_set_summary %&gt;%
   filter(celltype == &#39;CD14+ Monocyte&#39;) %&gt;%
-  filter(active_set, in_cs, thresh==1e-4) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
   db_component_kable</code></pre>
 <pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
-<table>
+<table style="width:100%;">
 <colgroup>
-<col width="5%" />
-<col width="7%" />
-<col width="6%" />
-<col width="6%" />
-<col width="57%" />
-<col width="4%" />
-<col width="10%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="13%" />
+<col width="52%" />
+<col width="15%" />
+<col width="16%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1630,31 +1862,76 @@ db_component_kable = function(tbl){
 <tr class="odd">
 <td align="left">gobp</td>
 <td align="left">CD14+ Monocyte</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0045321" class="uri">GO:0045321</a>, <a href="GO:0001775" class="uri">GO:0001775</a></td>
+<td align="left">leukocyte activation, cell activation</td>
+<td align="left">0.9139560, 0.0861039</td>
+<td align="left">1.266041e-152, 4.878344e-159</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0006613" class="uri">GO:0006613</a>, <a href="GO:0072599" class="uri">GO:0072599</a>, <a href="GO:0070972" class="uri">GO:0070972</a></td>
+<td align="left">protein targeting to ER , SRP-dependent cotranslational protein targeting to membrane , cotranslational protein targeting to membrane , establishment of protein localization to endoplasmic reticulum, protein localization to endoplasmic reticulum</td>
+<td align="left">0.8615391988, 0.0574691370, 0.0477713854, 0.0336165786, 0.0004015912</td>
+<td align="left">6.375283e-36, 1.173258e-33, 6.348075e-34, 1.637199e-34, 6.297308e-36</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD14+ Monocyte</td>
 <td align="left">L3</td>
-<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a></td>
-<td align="left">oxidative phosphorylation</td>
-<td align="left">0.9990485</td>
-<td align="left">1.775985e-31</td>
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a></td>
+<td align="left">oxidative phosphorylation , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport</td>
+<td align="left">0.9990484928, 0.0006152697, 0.0004379516</td>
+<td align="left">1.775985e-31, 7.453047e-24, 1.881893e-23</td>
 </tr>
 <tr class="even">
 <td align="left">gobp</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L4</td>
-<td align="left"><a href="GO:0016192" class="uri">GO:0016192</a></td>
-<td align="left">vesicle-mediated transport</td>
-<td align="left">0.9851434</td>
-<td align="left">2.927115e-145</td>
+<td align="left"><a href="GO:0016192" class="uri">GO:0016192</a>, <a href="GO:0002376" class="uri">GO:0002376</a>, <a href="GO:0006955" class="uri">GO:0006955</a>, <a href="GO:0045055" class="uri">GO:0045055</a>, <a href="GO:0006810" class="uri">GO:0006810</a>, <a href="GO:0042119" class="uri">GO:0042119</a>, <a href="GO:0006887" class="uri">GO:0006887</a>, <a href="GO:0051234" class="uri">GO:0051234</a></td>
+<td align="left">vesicle-mediated transport , immune system process , immune response , regulated exocytosis , transport , neutrophil activation , exocytosis , establishment of localization</td>
+<td align="left">0.9851433899, 0.0210152324, 0.0059841488, 0.0010584611, 0.0009289568, 0.0008104012, 0.0007570762, 0.0007478103</td>
+<td align="left">2.927115e-145, 3.659065e-228, 8.733808e-175, 1.874116e-97, 3.322971e-280, 8.790244e-89, 1.301435e-98, 1.576263e-285</td>
 </tr>
 <tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0006915" class="uri">GO:0006915</a>, <a href="GO:0012501" class="uri">GO:0012501</a>, <a href="GO:0043067" class="uri">GO:0043067</a>, <a href="GO:0042981" class="uri">GO:0042981</a>, <a href="GO:0010941" class="uri">GO:0010941</a>, <a href="GO:0008219" class="uri">GO:0008219</a>, <a href="GO:0097190" class="uri">GO:0097190</a>, <a href="GO:0006950" class="uri">GO:0006950</a>, <a href="GO:0010942" class="uri">GO:0010942</a>, <a href="GO:0050790" class="uri">GO:0050790</a>, <a href="GO:0048518" class="uri">GO:0048518</a>, <a href="GO:0010033" class="uri">GO:0010033</a>, <a href="GO:0070887" class="uri">GO:0070887</a>, <a href="GO:2001233" class="uri">GO:2001233</a>, <a href="GO:0043065" class="uri">GO:0043065</a>, <a href="GO:0043068" class="uri">GO:0043068</a>, <a href="GO:0043069" class="uri">GO:0043069</a>, <a href="GO:0043066" class="uri">GO:0043066</a>, <a href="GO:0051716" class="uri">GO:0051716</a>, <a href="GO:0048522" class="uri">GO:0048522</a>, <a href="GO:0060548" class="uri">GO:0060548</a>, <a href="GO:0050896" class="uri">GO:0050896</a>, <a href="GO:0048523" class="uri">GO:0048523</a>, <a href="GO:0048519" class="uri">GO:0048519</a></td>
+<td align="left">apoptotic process , programmed cell death , regulation of programmed cell death , regulation of apoptotic process , regulation of cell death , cell death , apoptotic signaling pathway , response to stress , positive regulation of cell death , regulation of catalytic activity , positive regulation of biological process , response to organic substance , cellular response to chemical stimulus , regulation of apoptotic signaling pathway , positive regulation of apoptotic process , positive regulation of programmed cell death, negative regulation of programmed cell death, negative regulation of apoptotic process , cellular response to stimulus , positive regulation of cellular process , negative regulation of cell death , response to stimulus , negative regulation of cellular process , negative regulation of biological process</td>
+<td align="left">2.720176e-01, 1.948576e-01, 1.940882e-01, 1.583264e-01, 1.008376e-01, 5.132999e-02, 2.549188e-03, 9.307323e-04, 6.576479e-04, 5.735087e-04, 5.459875e-04, 4.811908e-04, 4.506495e-04, 3.491954e-04, 3.298411e-04, 2.900530e-04, 1.817724e-04, 1.476441e-04, 1.365127e-04, 1.359366e-04, 1.228290e-04, 1.125502e-04, 7.493961e-05, 6.920531e-05</td>
+<td align="left">4.451786e-113, 8.301835e-116, 7.895560e-95, 1.189669e-93, 3.999854e-100, 1.272117e-119, 1.841090e-46, 1.495543e-192, 1.854200e-49, 1.361590e-109, 1.578429e-290, 7.322372e-153, 5.666552e-149, 3.085467e-32, 1.847719e-44, 1.848623e-44, 2.655090e-54, 1.185635e-52, 7.682074e-311, 9.343174e-247, 5.466768e-57, 0.000000e+00, 3.391448e-204, 2.249264e-243</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L6</td>
+<td align="left"><a href="GO:0006518" class="uri">GO:0006518</a>, <a href="GO:0006412" class="uri">GO:0006412</a>, <a href="GO:0043043" class="uri">GO:0043043</a>, <a href="GO:0043603" class="uri">GO:0043603</a>, <a href="GO:0043604" class="uri">GO:0043604</a></td>
+<td align="left">peptide metabolic process , translation , peptide biosynthetic process , cellular amide metabolic process, amide biosynthetic process</td>
+<td align="left">0.790995030, 0.119614037, 0.082857945, 0.002543295, 0.001245957</td>
+<td align="left">4.678462e-78, 1.088274e-65, 4.547896e-66, 2.326686e-80, 8.359365e-66</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L7</td>
+<td align="left"><a href="GO:0008380" class="uri">GO:0008380</a>, <a href="GO:0000375" class="uri">GO:0000375</a>, <a href="GO:0000377" class="uri">GO:0000377</a>, <a href="GO:0000398" class="uri">GO:0000398</a>, <a href="GO:0006397" class="uri">GO:0006397</a>, <a href="GO:0016071" class="uri">GO:0016071</a></td>
+<td align="left">RNA splicing , RNA splicing, via transesterification reactions , RNA splicing, via transesterification reactions with bulged adenosine as nucleophile, mRNA splicing, via spliceosome , mRNA processing , mRNA metabolic process</td>
+<td align="left">0.422448316, 0.196794593, 0.178759471, 0.178759471, 0.021244858, 0.001609996</td>
+<td align="left">9.748365e-38, 7.437684e-32, 1.388978e-31, 1.388978e-31, 7.467478e-38, 2.423046e-69</td>
+</tr>
+<tr class="even">
 <td align="left">gobp_nr</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L1</td>
-<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a></td>
-<td align="left">granulocyte activation</td>
-<td align="left">0.975928</td>
-<td align="left">2.402996e-86</td>
+<td align="left"><a href="GO:0036230" class="uri">GO:0036230</a>, <a href="GO:0002446" class="uri">GO:0002446</a></td>
+<td align="left">granulocyte activation , neutrophil mediated immunity</td>
+<td align="left">0.97592803, 0.02469514</td>
+<td align="left">2.402996e-86, 1.745099e-83</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">gobp_nr</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L2</td>
@@ -1663,14 +1940,41 @@ db_component_kable = function(tbl){
 <td align="left">0.999994</td>
 <td align="left">1.131814e-41</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">gobp_nr</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L3</td>
-<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a></td>
-<td align="left">nucleoside monophosphate metabolic process</td>
-<td align="left">0.9883528</td>
-<td align="left">5.790725e-44</td>
+<td align="left"><a href="GO:0009123" class="uri">GO:0009123</a>, <a href="GO:0009141" class="uri">GO:0009141</a></td>
+<td align="left">nucleoside monophosphate metabolic process, nucleoside triphosphate metabolic process</td>
+<td align="left">0.98835280, 0.01259324</td>
+<td align="left">5.790725e-44, 5.147747e-40</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0002521" class="uri">GO:0002521</a>, <a href="GO:0042110" class="uri">GO:0042110</a>, <a href="GO:0002694" class="uri">GO:0002694</a>, <a href="GO:1903706" class="uri">GO:1903706</a></td>
+<td align="left">leukocyte differentiation , T cell activation , regulation of leukocyte activation, regulation of hemopoiesis</td>
+<td align="left">0.619222289, 0.358464783, 0.007935017, 0.004456591</td>
+<td align="left">9.454964e-48, 2.311611e-47, 1.222276e-45, 1.243755e-35</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0008380" class="uri">GO:0008380</a>, <a href="GO:0006397" class="uri">GO:0006397</a>, <a href="GO:1903311" class="uri">GO:1903311</a></td>
+<td align="left">RNA splicing , mRNA processing , regulation of mRNA metabolic process</td>
+<td align="left">0.876773133, 0.089632405, 0.004303895</td>
+<td align="left">3.387665e-36, 3.352465e-36, 9.733062e-24</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L6</td>
+<td align="left"><a href="GO:0090150" class="uri">GO:0090150</a>, <a href="GO:0070972" class="uri">GO:0070972</a>, <a href="GO:0006605" class="uri">GO:0006605</a></td>
+<td align="left">establishment of protein localization to membrane, protein localization to endoplasmic reticulum , protein targeting</td>
+<td align="left">0.756201036, 0.243465201, 0.004950252</td>
+<td align="left">9.080340e-44, 4.739729e-35, 6.381780e-43</td>
 </tr>
 <tr class="even">
 <td align="left">gomf</td>
@@ -1685,12 +1989,21 @@ db_component_kable = function(tbl){
 <td align="left">gomf</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L2</td>
-<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a></td>
-<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific</td>
-<td align="left">0.9998275</td>
-<td align="left">1.396985e-15</td>
+<td align="left"><a href="GO:0000981" class="uri">GO:0000981</a>, <a href="GO:0003700" class="uri">GO:0003700</a></td>
+<td align="left">DNA-binding transcription factor activity, RNA polymerase II-specific, DNA-binding transcription factor activity</td>
+<td align="left">0.9998274825, 0.0002279895</td>
+<td align="left">1.396985e-15, 1.312394e-20</td>
 </tr>
 <tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0001012" class="uri">GO:0001012</a>, <a href="GO:0000977" class="uri">GO:0000977</a>, <a href="GO:0000987" class="uri">GO:0000987</a>, <a href="GO:0000978" class="uri">GO:0000978</a>, <a href="GO:0000976" class="uri">GO:0000976</a>, <a href="GO:1990837" class="uri">GO:1990837</a>, <a href="GO:0043565" class="uri">GO:0043565</a>, <a href="GO:0044212" class="uri">GO:0044212</a></td>
+<td align="left">RNA polymerase II regulatory region DNA binding , RNA polymerase II regulatory region sequence-specific DNA binding, proximal promoter sequence-specific DNA binding , RNA polymerase II proximal promoter sequence-specific DNA binding, transcription regulatory region sequence-specific DNA binding , sequence-specific double-stranded DNA binding , sequence-specific DNA binding , transcription regulatory region DNA binding</td>
+<td align="left">0.6603205658, 0.2924363216, 0.0360620592, 0.0077244907, 0.0030829257, 0.0007025284, 0.0003868975, 0.0001017222</td>
+<td align="left">1.246290e-37, 4.365922e-37, 2.762407e-33, 3.447619e-32, 2.150387e-36, 1.010515e-38, 5.047518e-44, 3.418838e-38</td>
+</tr>
+<tr class="odd">
 <td align="left">gomf</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L4</td>
@@ -1699,7 +2012,25 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">4.918061e-44</td>
 </tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L5</td>
+<td align="left"><a href="GO:0016655" class="uri">GO:0016655</a>, <a href="GO:0008137" class="uri">GO:0008137</a>, <a href="GO:0050136" class="uri">GO:0050136</a>, <a href="GO:0003954" class="uri">GO:0003954</a>, <a href="GO:0016651" class="uri">GO:0016651</a></td>
+<td align="left">oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor, NADH dehydrogenase (ubiquinone) activity , NADH dehydrogenase (quinone) activity , NADH dehydrogenase activity , oxidoreductase activity, acting on NAD(P)H</td>
+<td align="left">0.8270835588, 0.0778621792, 0.0778621792, 0.0178702201, 0.0003469471</td>
+<td align="left">2.846509e-17, 9.084810e-15, 9.084810e-15, 5.476813e-14, 1.127698e-15</td>
+</tr>
 <tr class="odd">
+<td align="left">gomf</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L6</td>
+<td align="left"><a href="GO:0045296" class="uri">GO:0045296</a>, <a href="GO:0050839" class="uri">GO:0050839</a></td>
+<td align="left">cadherin binding , cell adhesion molecule binding</td>
+<td align="left">0.7890801, 0.1881604</td>
+<td align="left">4.054477e-37, 1.113159e-41</td>
+</tr>
+<tr class="even">
 <td align="left">kegg</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L1</td>
@@ -1708,7 +2039,7 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">7.453734e-35</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">kegg</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L2</td>
@@ -1717,7 +2048,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9999021</td>
 <td align="left">2.609968e-33</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">reactome</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L1</td>
@@ -1726,7 +2057,7 @@ db_component_kable = function(tbl){
 <td align="left">0.9999954</td>
 <td align="left">3.105498e-81</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">reactome</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L2</td>
@@ -1735,14 +2066,23 @@ db_component_kable = function(tbl){
 <td align="left">1</td>
 <td align="left">5.172352e-59</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">reactome</td>
 <td align="left">CD14+ Monocyte</td>
 <td align="left">L3</td>
-<td align="left">R-HSA-163200</td>
-<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins.</td>
-<td align="left">0.9996111</td>
-<td align="left">1.294295e-30</td>
+<td align="left">R-HSA-163200, R-HSA-611105</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., Respiratory electron transport</td>
+<td align="left">0.9996110591, 0.0008392269</td>
+<td align="left">1.294295e-30, 2.557783e-24</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD14+ Monocyte</td>
+<td align="left">L5</td>
+<td align="left">R-HSA-72172, R-HSA-72163, R-HSA-72203</td>
+<td align="left">mRNA Splicing , mRNA Splicing - Major Pathway , Processing of Capped Intron-Containing Pre-mRNA</td>
+<td align="left">0.67495558, 0.30641144, 0.01826453</td>
+<td align="left">2.542532e-25, 3.287091e-24, 2.103706e-25</td>
 </tr>
 <tr class="even">
 <td align="left">reactome</td>
@@ -1786,11 +2126,20 @@ db_component_kable = function(tbl){
 <div id="cd34" class="section level3">
 <h3>CD34+</h3>
 <pre class="r"><code>pbmc_res_set_summary %&gt;%
-  filter(celltype == &#39;CD14+&#39;) %&gt;%
-  filter(active_set, in_cs, thresh==1e-4) %&gt;%
+  filter(celltype == &#39;CD34+&#39;) %&gt;%
+  filter(active_set, thresh==1e-4) %&gt;%
   db_component_kable</code></pre>
 <pre><code>Adding missing grouping variables: `db`, `celltype`, `top_component`</code></pre>
 <table>
+<colgroup>
+<col width="2%" />
+<col width="2%" />
+<col width="3%" />
+<col width="10%" />
+<col width="57%" />
+<col width="11%" />
+<col width="12%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">db</th>
@@ -1803,6 +2152,150 @@ db_component_kable = function(tbl){
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD34+</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0001775" class="uri">GO:0001775</a>, <a href="GO:0045321" class="uri">GO:0045321</a></td>
+<td align="left">cell activation , leukocyte activation</td>
+<td align="left">0.9870540, 0.0137773</td>
+<td align="left">2.633476e-189, 3.972660e-173</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD34+</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0006613" class="uri">GO:0006613</a>, <a href="GO:0006614" class="uri">GO:0006614</a>, <a href="GO:0045047" class="uri">GO:0045047</a>, <a href="GO:0072599" class="uri">GO:0072599</a></td>
+<td align="left">cotranslational protein targeting to membrane , SRP-dependent cotranslational protein targeting to membrane , protein targeting to ER , establishment of protein localization to endoplasmic reticulum</td>
+<td align="left">0.813781011, 0.153626340, 0.029062966, 0.008527809</td>
+<td align="left">7.184084e-30, 2.122256e-28, 4.082612e-30, 6.229293e-30</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp</td>
+<td align="left">CD34+</td>
+<td align="left">L3</td>
+<td align="left"><a href="GO:0006119" class="uri">GO:0006119</a>, <a href="GO:0042773" class="uri">GO:0042773</a>, <a href="GO:0042775" class="uri">GO:0042775</a></td>
+<td align="left">oxidative phosphorylation , ATP synthesis coupled electron transport , mitochondrial ATP synthesis coupled electron transport</td>
+<td align="left">0.998941297, 0.002197687, 0.002040038</td>
+<td align="left">4.557019e-31, 6.681278e-22, 1.502267e-21</td>
+</tr>
+<tr class="even">
+<td align="left">gobp</td>
+<td align="left">CD34+</td>
+<td align="left">L4</td>
+<td align="left"><a href="GO:0044419" class="uri">GO:0044419</a>, <a href="GO:0016032" class="uri">GO:0016032</a>, <a href="GO:0044403" class="uri">GO:0044403</a></td>
+<td align="left">interspecies interaction between organisms, viral process , symbiont process</td>
+<td align="left">0.4203517, 0.3833143, 0.1952495</td>
+<td align="left">2.033013e-99, 3.869982e-91, 3.235558e-95</td>
+</tr>
+<tr class="odd">
+<td align="left">gobp_nr</td>
+<td align="left">CD34+</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0002446" class="uri">GO:0002446</a>, <a href="GO:0036230" class="uri">GO:0036230</a></td>
+<td align="left">neutrophil mediated immunity, granulocyte activation</td>
+<td align="left">0.6078439, 0.3946596</td>
+<td align="left">1.592450e-76, 1.318184e-76</td>
+</tr>
+<tr class="even">
+<td align="left">gobp_nr</td>
+<td align="left">CD34+</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0006413" class="uri">GO:0006413</a></td>
+<td align="left">translational initiation</td>
+<td align="left">0.9996608</td>
+<td align="left">1.64713e-38</td>
+</tr>
+<tr class="odd">
+<td align="left">gomf</td>
+<td align="left">CD34+</td>
+<td align="left">L1</td>
+<td align="left"><a href="GO:0003735" class="uri">GO:0003735</a></td>
+<td align="left">structural constituent of ribosome</td>
+<td align="left">1</td>
+<td align="left">4.128375e-42</td>
+</tr>
+<tr class="even">
+<td align="left">gomf</td>
+<td align="left">CD34+</td>
+<td align="left">L2</td>
+<td align="left"><a href="GO:0005515" class="uri">GO:0005515</a></td>
+<td align="left">protein binding</td>
+<td align="left">1</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">kegg</td>
+<td align="left">CD34+</td>
+<td align="left">L1</td>
+<td align="left">hsa00190, hsa05012</td>
+<td align="left">Oxidative phosphorylation, Parkinson disease</td>
+<td align="left">0.9921759, 0.0333608</td>
+<td align="left">4.886096e-32, 6.352523e-33</td>
+</tr>
+<tr class="even">
+<td align="left">kegg</td>
+<td align="left">CD34+</td>
+<td align="left">L2</td>
+<td align="left">hsa03010</td>
+<td align="left">Ribosome</td>
+<td align="left">1</td>
+<td align="left">5.679335e-34</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD34+</td>
+<td align="left">L1</td>
+<td align="left">R-HSA-72764 , R-HSA-156902, R-HSA-156842</td>
+<td align="left">Eukaryotic Translation Termination, Peptide chain elongation , Eukaryotic Translation Elongation</td>
+<td align="left">0.993056233, 0.006377217, 0.004060368</td>
+<td align="left">2.275039e-33, 7.764526e-32, 5.500776e-33</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD34+</td>
+<td align="left">L2</td>
+<td align="left">R-HSA-6798695, R-HSA-168249</td>
+<td align="left">Neutrophil degranulation, Innate Immune System</td>
+<td align="left">0.98627161, 0.01669373</td>
+<td align="left">1.517922e-75, 6.465420e-123</td>
+</tr>
+<tr class="odd">
+<td align="left">reactome</td>
+<td align="left">CD34+</td>
+<td align="left">L3</td>
+<td align="left">R-HSA-163200, R-HSA-611105</td>
+<td align="left">Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat production by uncoupling proteins., Respiratory electron transport</td>
+<td align="left">0.997732525, 0.003758523</td>
+<td align="left">8.425069e-32, 2.834000e-25</td>
+</tr>
+<tr class="even">
+<td align="left">reactome</td>
+<td align="left">CD34+</td>
+<td align="left">L4</td>
+<td align="left">R-HSA-198933</td>
+<td align="left">Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell</td>
+<td align="left">0.9999503</td>
+<td align="left">1.147541e-26</td>
+</tr>
+<tr class="odd">
+<td align="left">wikipathway</td>
+<td align="left">CD34+</td>
+<td align="left">L1</td>
+<td align="left">WP477</td>
+<td align="left">Cytoplasmic Ribosomal Proteins</td>
+<td align="left">1</td>
+<td align="left">1.328872e-30</td>
+</tr>
+<tr class="even">
+<td align="left">wikipathway</td>
+<td align="left">CD34+</td>
+<td align="left">L2</td>
+<td align="left">WP111</td>
+<td align="left">Electron Transport Chain (OXPHOS system in mitochondria)</td>
+<td align="left">0.9999971</td>
+<td align="left">1.517475e-31</td>
+</tr>
 </tbody>
 </table>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
