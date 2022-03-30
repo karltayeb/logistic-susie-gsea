@@ -1,5 +1,5 @@
 ---
-title: "Wenhe's Baboon Diet"
+title: "Baboon Diet Example"
 author: "karltayeb"
 date: "2022-03-16"
 output: workflowr::wflow_html
@@ -267,8 +267,10 @@ db_component_kable = function(tbl, min_alpha=0, max_sets=10){
 
 Gene set results for each tissue, across multiple gene set sources.
 
+We show the top 10 gene sets per credible set, green indicates that the gene set is in the 95% credible set. Red indicates it's not in the 95% credible set, but still ranked highly for SuSiE that component, to help get a sense of what's getting lumped in with the enrichments reported by SuSiE.
 
-```{r, results="asis"}
+
+```{r, results="asis", message=FALSE}
 gen.table = function(ct, g){
   cs.summary %>%
         filter(celltype == ct, db == g, active_cs) %>%
@@ -279,10 +281,10 @@ possibly.gen.table = possibly(gen.table, otherwise="nothing to report...")
 
 for(ct in celltypes){
   cat("\n") 
-  cat("###", ct, "\n") # Create second level headings with the names.
+  cat("##", ct, "\n") # Create second level headings with the names.
   
   for(g in names(genesets)){
-    cat("####", g, "\n") # Create second level headings with the names.
+    cat("###", g, "\n") # Create second level headings with the names.
     possibly.gen.table(ct, g) %>% print()
     cat("\n")
   }
