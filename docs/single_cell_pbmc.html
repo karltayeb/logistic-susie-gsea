@@ -480,16 +480,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree11ff3a36cd33cd4ca77ddf27f577c0b3d5e76b69targetblank11ff3a3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/11ff3a36cd33cd4ca77ddf27f577c0b3d5e76b69" target="_blank">11ff3a3</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreea6b9318266b9d1e729c6b9fc397573d83bddfa57targetblanka6b9318a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/a6b9318266b9d1e729c6b9fc397573d83bddfa57" target="_blank">a6b9318</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree11ff3a36cd33cd4ca77ddf27f577c0b3d5e76b69targetblank11ff3a3a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreea6b9318266b9d1e729c6b9fc397573d83bddfa57targetblanka6b9318a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/11ff3a36cd33cd4ca77ddf27f577c0b3d5e76b69" target="_blank">11ff3a3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/a6b9318266b9d1e729c6b9fc397573d83bddfa57" target="_blank">a6b9318</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -592,6 +592,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a6b9318266b9d1e729c6b9fc397573d83bddfa57/analysis/single_cell_pbmc.Rmd" target="_blank">a6b9318</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-30
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/26e6c281786276373a45be7b4d46bc630b3de030/docs/single_cell_pbmc.html" target="_blank">26e6c28</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1306,9 +1340,11 @@ pbmc_res &lt;- xfun::cache_rds({
 
 u &lt;- map(pbmc_res, credible_set_summary)
 pbmc.cs.summary &lt;- do.call(&#39;rbind&#39;, u)
+cs.summary &lt;- pbmc.cs.summary
 
 u &lt;- map(pbmc_res, gene_set_summary)
-pbmc.geneset.summary &lt;- do.call(&#39;rbind&#39;, u)</code></pre>
+pbmc.geneset.summary &lt;- do.call(&#39;rbind&#39;, u)
+geneset.summary &lt;- pbmc.geneset.summary</code></pre>
 <div id="summary-functions" class="section level3">
 <h3>Summary functions</h3>
 <p>Just a few functions to help streamline looking at output</p>
@@ -27301,8 +27337,46 @@ Irinotecan Pathway
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>knitr::knit_exit()</code></pre>
 </div>
+</div>
+<div id="designing-visualizations" class="section level2">
+<h2>Designing visualizations</h2>
+<p>There are a lot of facets of the enrichment results we might want to communicate.</p>
+<p>Its common to plot against the proportion of the genes in the list, but this obscures the sensitivity of the analysis to gene set size. Recreating a standard enrichment plot.</p>
+<pre class="r"><code>ct = celltypes[1]
+gs = &#39;gobp&#39;
+
+cs.summary %&gt;%
+  filter(celltype == ct, db == gs, active_cs, row_number() &lt;= 10) %&gt;%
+  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %&gt;%
+  arrange(component, desc(propInList)) %&gt;%
+  ggplot(aes(x=propInList, y=geneSet, size=geneSetSize, color=-log10(pValueHypergeometric))) +
+  geom_point() + facet_wrap(vars(component), scale=&#39;free_y&#39;, ncol = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc.Rmd/vis.standard-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The strongest marginal enticements come from the largest gene sets. But SuSiE is able to prioritizing smaller gene sets. The right ones? Who knows.</p>
+<pre class="r"><code>cs.summary %&gt;%
+  ggplot(aes(x=-log10(pValueHypergeometric), y=geneSetSize)) +
+  geom_point() + geom_smooth()</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;gam&#39; and formula &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<pre><code>Warning: Removed 198 rows containing non-finite values (stat_smooth).</code></pre>
+<p><img src="figure/single_cell_pbmc.Rmd/p.and.setsize-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Here, for the gene sets assigned to SuSiE components, we plot the proportion of the gene set observed. The bubble size is given by the gene set size, and the color indicates <code>alpha</code>, the posterior probability that the gene set is selected by the component.</p>
+<p>I’m surprised to see gene sets with large alpha, but only modest proportion</p>
+<pre class="r"><code>cs.summary %&gt;%
+  filter(celltype == ct, db == &#39;gobp&#39;, active_cs, row_number() &lt;= 10) %&gt;%
+  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %&gt;%
+  arrange(component, desc(propInList)) %&gt;%
+  ggplot(aes(x=propInList, y=geneSet, color=alpha, size=geneSetSize)) +
+  geom_point() + facet_wrap(vars(component), scale=&#39;free_y&#39;, ncol = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc.Rmd/new.vis-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cs.summary %&gt;%
+  filter(celltype == ct, db == &#39;gobp&#39;, active_cs, row_number() &lt;= 10) %&gt;%
+  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %&gt;%
+  arrange(component, desc(propInList)) %&gt;%
+  ggplot(aes(x=propInList, y=geneSet, color=in_cs, size=geneSetSize)) +
+  geom_point() + facet_wrap(vars(component), scale=&#39;free_y&#39;, ncol = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc.Rmd/new.vis-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>knitr::knit_exit()</code></pre>
 </div>
 
 
