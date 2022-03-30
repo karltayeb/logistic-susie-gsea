@@ -186,7 +186,7 @@ gene_set_summary = function(res){
 
 ### Example usage
 
-```{r}
+```{r run.example}
 db = 'gobp'
 celltype = 'CD19+ B'
 thresh = 1e-4
@@ -216,9 +216,11 @@ pbmc_res <- xfun::cache_rds({
 
 u <- map(pbmc_res, credible_set_summary)
 pbmc.cs.summary <- do.call('rbind', u)
+cs.summary <- pbmc.cs.summary
 
 u <- map(pbmc_res, gene_set_summary)
 pbmc.geneset.summary <- do.call('rbind', u)
+geneset.summary <- pbmc.geneset.summary
 ```
 
 ### Summary functions
@@ -276,12 +278,8 @@ General obseravtion:
 
 The tables are really long, so for each cell-type I summarize the components into "themes"
 
-```{r, include=FALSE}
-library(htmltools)
-library(DT)
-```
 
-```{r, results="asis"}
+```{r all.tables, results="asis"}
 library(htmltools)
 
 gen.table = function(ct, g){
@@ -304,344 +302,57 @@ for(ct in celltypes){
 }
 ```
 
-```{r}
-knitr::knit_exit()
+
+## Designing visualizations
+
+There are a lot of facets of the enrichment results we might want to communicate.
+
+Its common to plot against the proportion of the genes in the list, but this obscures the sensitivity of the analysis to gene set size. Recreating a standard enrichment plot.
+
+```{r vis.standard}
+ct = celltypes[1]
+gs = 'gobp'
+
+cs.summary %>%
+  filter(celltype == ct, db == gs, active_cs, row_number() <= 10) %>%
+  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %>%
+  arrange(component, desc(propInList)) %>%
+  ggplot(aes(x=propInList, y=geneSet, size=geneSetSize, color=-log10(pValueHypergeometric))) +
+  geom_point() + facet_wrap(vars(component), scale='free_y', ncol = 1)
 ```
 
-### CD19+ B 
+The strongest marginal enticements come from the largest gene sets.
+But SuSiE is able to prioritizing smaller gene sets. The right ones? Who knows.
 
-```{r cd19sets}
-ct = 'CD19+ B'
-pbmc.cs.summary %>%
-  filter(celltype == ct, active_cs) %>%
-  db_component_kable()
+```{r p.and.setsize}
+cs.summary %>%
+  ggplot(aes(x=-log10(pValueHypergeometric), y=geneSetSize)) +
+  geom_point() + geom_smooth()
 ```
 
-### CD56+ NK
+Here, for the gene sets assigned to SuSiE components, we plot the proportion of the gene set observed. The bubble size is given by the gene set size, and the color indicates `alpha`, the posterior probability that the gene set is selected by the component. 
 
-GO-BP
-* L1 = leukocyte/immune response
-* L2 = protein transport/localization
-* L3 = energy metabolism
-* L4 = transport
-* L5 = cell death
-* L6 = translation
-* L7 = RNA + (3 viral/sybiosis gene sets under the radar)
+I'm surprised to see gene sets with large alpha, but only modest proportion
 
-```{r cd56sets}
-ct = 'CD56+ NK'
-pbmc.cs.summary %>%
-  filter(celltype == ct, active_cs) %>%
-  db_component_kable()
+```{r new.vis}
+
+cs.summary %>%
+  filter(celltype == ct, db == 'gobp', active_cs, row_number() <= 10) %>%
+  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %>%
+  arrange(component, desc(propInList)) %>%
+  ggplot(aes(x=propInList, y=geneSet, color=alpha, size=geneSetSize)) +
+  geom_point() + facet_wrap(vars(component), scale='free_y', ncol = 1)
+
+cs.summary %>%
+  filter(celltype == ct, db == 'gobp', active_cs, row_number() <= 10) %>%
+  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %>%
+  arrange(component, desc(propInList)) %>%
+  ggplot(aes(x=propInList, y=geneSet, color=in_cs, size=geneSetSize)) +
+  geom_point() + facet_wrap(vars(component), scale='free_y', ncol = 1)
 ```
 
-### T cell
-
-```{r tsets}
-ct = 'T cell'
-pbmc.cs.summary %>%
-  filter(celltype == ct, active_cs) %>%
-  db_component_kable()
-```
-
-### CD14+ Monocyte
-
-GO-BP
-* L1 = leukocyte/immune response
-* L2 = protein transport/localization
-* L3 = energy metabolism
-* L4 = tranport
-* L5 = apoptosis
-* L6 = translation/biosynthesis
-* L7 = RNA + (3 viral/sybiosis gene sets under the radar)
-
-L7 seems interesting. It mainly consists of RNA processing gene sets. However, a few gene sets like "GO:0044403	symbiont process" and "GO:0044419	interspecies interaction between organisms" appear in the top 10 (allbeit with $\alpha \approx 1e-5$). The interspecies gene sets have p-value 0, but they are "masked" by the stronger enrichments by SuSiE. 
-
-I suppose the question is would we want a GSEA method to report this type of result? I'm tempted to say "the RNA gene sets explain away the symbiotic gene set enrichments", but that is trusting that their high rank in the gene set is meaningful despite their low alpha value.
-
-```{r cd14sets}
-ct = 'CD14+ Monocyte'
-pbmc.cs.summary %>%
-  filter(celltype == ct, active_cs) %>%
-  db_component_kable()
-```
-
-### CD34+
-
-```{r cd34sets}
-ct = 'CD34+'
-pbmc.cs.summary %>%
-  filter(celltype == ct, active_cs) %>%
-  db_component_kable()
-```
-
-```{r}
-knitr::knit_exit()
-```
-
-
-### Non-specific enrichments
-
-A lot of the cell types are enriched for the same gene sets! If we're interested in differences between different immune celltypes, as I presume we are, it would be good to be able to spot **different** enrichments across cell types.
-
-Here we just look at all geneSets with suggestive PIP in at least one celltype and list off the PIPs in all cell types. This isn't perfect, it's possible that two celltypes both use the same "theme" but promote a different gene set as the representative. Indeed, **everything** is marginally enriched.
-
-```{r}
-hist(pbmc.geneset.summary$pValueHypergeometric)
-
-pbmc.geneset.summary %>%
-  arrange(desc(pip)) %>%
-  group_by(geneSet, db) %>% 
-  filter(max(pip) > 0.2) %>%
-  select(description, pip, pValueHypergeometric, celltype) %>%
-  chop(c(pip, pValueHypergeometric, celltype)) %>%
-  arrange(db) %>%
-  kbl() %>% kableExtra::kable_styling()
-```
-
-```{r}
-knitr::knit_exit()
-```
-
-
-
-```{r}
-pbmc_res_set_summary %>%
-  filter(
-    db == 'kegg' &
-    thresh == 1e-3 &
-    in_cs & active_set
-  )  %>%
-  dplyr::arrange(celltype, desc(pip)) %>%
-  select(celltype, geneSet, description, pip, top_component, oddsRatio, pValueHypergeometric)
-  select(celltype, pip, description)
-```
-
-```{r}
-pbmc_res_set_summary %>%
-  filter(
-    db == 'gobp' &
-    thresh == 1e-3 &
-    in_cs & active_set
-  )  %>%
-  dplyr::arrange(celltype, desc(pip)) %>%
-  select(celltype, geneSet, description, pip, top_component, oddsRatio, pValueHypergeometric)
-  select(celltype, pip, description)
-```
-
-```{r}
-pbmc_res_set_summary %>%
-  filter(
-    db == 'gobp_nr' &
-    thresh == 1e-3 &
-    in_cs & active_set
-  )  %>%
-  dplyr::arrange(celltype, desc(pip)) %>%
-  select(celltype, geneSet, description, pip, top_component, oddsRatio, pValueHypergeometric)
-  select(celltype, pip, description)
-```
-
-```{r}
-
-```
-
-## CD19+B
-
-### Sensitivity to pvalue threshold
-
-```{r}
-data <- deseq$`CD19+ B`
-pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
-pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
-
-par(mfrow=c(2,3))
-for (i in 1:length(pthresh)){
-  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
-}
-```
-
-```{r}
-t <- dplyr::bind_rows(purrr::map(pthresh_res, ~ pluck(.x, 'set.summary')))
-t %>%
-  filter(active_set, in_cs) %>%
-  group_by(thresh, db) %>%
-  select(top_component, geneSet, pip, beta, description) %>%
-  chop(c(geneSet, pip, beta, description)) %>%
-  mutate_at(vars(thresh, top_component, db), factor) %>%
-  datatable(filter = 'top')
-
-```
-
-
-### Multiple gene set sources
-
-```{r}
-genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
-
-par(mfrow=c(1, 1))
-for (gs in names(genesets)){
-  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
-}
-```
-
-```{r}
-t <- dplyr::bind_rows(purrr::map(genesets_res, ~ pluck(.x, 'set.summary')))
-
-t %>%
-  filter(active_set) %>%
-  group_by(thresh, db) %>%
-  select(top_component, geneSet, pip, beta, description) %>%
-  chop(c(geneSet, pip, beta, description)) %>%
-  mutate_at(vars(thresh, top_component, db), factor) %>%
-  datatable(filter = 'top')
-```
-
-```{r}
-datatable(t %>% mutate_at(vars(thresh, top_component, db), factor), filter = 'top')
-```
 
 
 ```{r}
 knitr::knit_exit()
 ```
-
-## CD56+NK
-
-### Sensitivity to pvalue threshold
-
-```{r}
-data <- deseq$`CD56+ NK`
-pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
-pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
-
-par(mfrow=c(2,3))
-for (i in 1:length(pthresh)){
-  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
-}
-```
-
-```{r}
-for (i in 1:length(pthresh)){
-  reactable(pthresh_res[[i]]$set.summary %>% filter(active_set) %>% arrange(top_component))
-}
-```
-
-
-### Multiple gene set sources
-
-```{r}
-genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
-
-par(mfrow=c(1, 1))
-for (gs in names(genesets)){
-  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
-  reactable(genesets_res[[gs]]$set.summary %>% filter(active_set) %>% arrange(top_component))
-}
-```
-
-
-## T-Cells
-
-### Sensitivity to pvalue threshold
-
-```{r}
-data <- deseq$`T cell`
-pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
-pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
-
-par(mfrow=c(2,3))
-for (i in 1:length(pthresh)){
-  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
-}
-```
-
-```{r}
-for (i in 1:length(pthresh)){
-  reactable(pthresh_res[[i]]$set.summary %>% filter(active_set) %>% arrange(top_component))
-}
-```
-
-
-### Multiple gene set sources
-
-```{r}
-genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
-
-par(mfrow=c(1, 1))
-for (gs in names(genesets)){
-  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
-  reactable(genesets_res[[gs]]$set.summary %>% filter(active_set) %>% arrange(top_component))
-}
-```
-
-## CD14+ Monoctye
-
-### Sensitivity to pvalue threshold
-
-```{r}
-data <- deseq$`CD14+ Monocyte`
-pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
-pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
-
-par(mfrow=c(2,3))
-for (i in 1:length(pthresh)){
-  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
-}
-```
-
-```{r}
-for (i in 1:length(pthresh)){
-  reactable(pthresh_res[[i]]$set.summary %>% filter(active_set) %>% arrange(top_component))
-}
-```
-
-
-### Multiple gene set sources
-
-```{r}
-genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
-
-par(mfrow=c(1, 1))
-for (gs in names(genesets)){
-  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
-  reactable(genesets_res[[gs]]$set.summary %>% filter(active_set) %>% arrange(top_component))
-}
-```
-
-
-## CD34+
-
-### Sensitivity to pvalue threshold
-
-```{r}
-data <- deseq$`CD34+`
-pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
-pthresh_res <- purrr::map(pthresh, ~ logistic_susie_driver(gobp_nr, data, thresh=.x))
-
-par(mfrow=c(2,3))
-for (i in 1:length(pthresh)){
-  susie_plot(pthresh_res[[i]]$fit, 'PIP', main=paste0('p <', pthresh[[i]]))
-}
-```
-
-```{r}
-for (i in 1:length(pthresh)){
-  reactable(pthresh_res[[i]]$set.summary %>% filter(active_set) %>% arrange(top_component))
-}
-```
-
-
-### Multiple gene set sources
-
-```{r}
-genesets_res <- purrr::map(genesets, ~ logistic_susie_driver(.x, data, thresh=1e-4))
-
-par(mfrow=c(1, 1))
-for (gs in names(genesets)){
-  susie_plot(genesets_res[[gs]]$fit, 'PIP', main=gs)
-  reactable(genesets_res[[gs]]$set.summary %>% filter(active_set) %>% arrange(top_component))
-}
-```
-
-
-
