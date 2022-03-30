@@ -16,7 +16,9 @@ Welcome to my research website.
 
 ## Logistic SuSiE GSEA examples
 [Single cell PBMCs](single_cell_pbmc.html)
-[Wenhe Baboon Diet](wenhe_baboon_example.html)
+[Wenhe Baboon Diet](baboon_diet.html)
 
 ## GSEA from summary statistics
 [Two component model, initial exploration](summary_stat_gsea_exploration.html)
+# [Two component model, multiple regression]()
+

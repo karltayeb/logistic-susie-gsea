@@ -80,13 +80,14 @@ deseq$`CD19+ B` %>% .$padj %>% hist(main='CD19+B p-values')
 ```
 
 
-### Fit logistic SuSiE
+### Fitting and reporting helpers
 
 ```{r driver}
+#' fit logistic susie, and hypergeometric test
 logistic_susie_driver = function(db, celltype, thresh){
   gs <- genesets[[db]]
   data <- deseq[[celltype]]
-  
+
   # set up binary y
   y <- data %>%
     as.data.frame %>%
@@ -102,40 +103,105 @@ logistic_susie_driver = function(db, celltype, thresh){
   vb.fit <- logistic.susie(  # fit model
     u$X, u$y, L=10, init.intercept = 0, verbose=1, maxit=100)
 
-  # summarise results
-  set.summary <- vb.fit$pip %>% 
-    as_tibble(rownames='geneSet') %>%
-    rename(pip=value) %>%
-    mutate(
-      top_component = apply(vb.fit$alpha, 2, which.max),
-      active_set = top_component %in% vb.fit$sets$cs_index,
-      top_component = paste0('L', top_component),
-      cs = purrr::map(top_component, ~tryCatch(
-        colnames(gs$X)[get(.x, vb.fit$sets$cs)], error = function(e) list())),
-      in_cs = geneSet %in% cs,
-      beta = colSums(vb.fit$mu * vb.fit$alpha),
-      geneListSize = sum(u$y),
-      geneSetSize = colSums(u$X),
-      overlap = (u$y %*% u$X)[1,],
-      nGenes = length(u$y),
-      propSetInList = overlap / geneSetSize,
-      oddsRatio = (overlap / (geneListSize - overlap)) / (
-        (geneSetSize - overlap) / (nGenes - geneSetSize + overlap)),
+  #' hypergeometric test
+  ora <- tibble(
+    geneSet = colnames(u$X),
+    geneListSize = sum(u$y),
+    geneSetSize = colSums(u$X),
+    overlap = (u$y %*% u$X)[1,],
+    nGenes = length(u$y),
+    propInList = overlap / geneListSize,
+    propInSet = overlap / geneSetSize,
+    oddsRatio = (overlap / (geneListSize - overlap)) / (
+      (geneSetSize - overlap) / (nGenes - geneSetSize + overlap)),
     pValueHypergeometric = phyper(
       overlap-1, geneListSize, nGenes, geneSetSize, lower.tail= FALSE),
     db = db,
     celltype = celltype,
     thresh = thresh
-    ) %>% left_join(gs$geneSet$geneSetDes)
-  return(list(fit = vb.fit, set.summary=set.summary))
+  ) %>% 
+  left_join(gs$geneSet$geneSetDes)
+
+  return(list(
+    fit = vb.fit,
+    ora = ora,
+    db = db, celltype = celltype, thresh = thresh))
+}
+
+credible_set_summary = function(res){
+  gs <- genesets[[res$db]]
+  data <- deseq[[res$celltype]]
+
+  # set up binary y
+  y <- data %>%
+    as.data.frame %>%
+    rownames_to_column('gene') %>%
+    dplyr::select(gene, padj) %>%
+    filter(!is.na(padj)) %>%
+    mutate(y = as.integer(padj < res$thresh)) %>%
+    select(gene, y) %>%
+    tibble2namedlist %>%
+    convert_labels('ENSEMBL')
+  
+  u <- process_input(gs$X, y)  # subset to common genes
+
+  #' report top 50 elements in cs
+  credible.set.summary <- t(res$fit$alpha) %>%
+    data.frame() %>%
+    rownames_to_column(var='geneSet') %>%
+    rename_with(~str_replace(., 'X', 'L')) %>%
+    pivot_longer(starts_with('L'), names_to='component', values_to = 'alpha') %>%
+    arrange(component, desc(alpha)) %>%
+    dplyr::group_by(component) %>%
+    filter(row_number() < 50) %>%
+    mutate(cumalpha = c(0, head(cumsum(alpha), -1))) %>%
+    mutate(in_cs = cumalpha < 0.95) %>%
+    mutate(active_cs = component %in% names(res$fit$sets$cs)) %>%
+    left_join(res$ora) %>%
+    left_join(gs$geneSet$geneSetDes)
+
+  #' map each gene set to the component with top alpha
+  #' report pip
+  gene.set.summary <- res$fit$pip %>% 
+    as_tibble(rownames='geneSet') %>%
+    rename(pip=value) %>%
+    left_join(res$ora) %>%
+    left_join(gs$geneSet$geneSetDes)
+
+  return(credible.set.summary)
+}
+
+gene_set_summary = function(res){
+  gs <- genesets[[res$db]]
+  #' map each gene set to the component with top alpha
+  #' report pip
+  res$fit$pip %>% 
+    as_tibble(rownames='geneSet') %>%
+    rename(pip=value) %>%
+    left_join(res$ora) %>%
+    left_join(gs$geneSet$geneSetDes)
 }
 ```
+
+
+### Example usage
+
+```{r}
+db = 'gobp'
+celltype = 'CD19+ B'
+thresh = 1e-4
+res <- logistic_susie_driver(db, celltype, thresh)
+credible_set_summary(res) %>% head()
+gene_set_summary(res) %>% head()
+```
+
+## Fit PBMC data
 
 For each celltype, we fit logistic SuSiE using multiple gene set sources at various threshold of `padj`.
 
 ```{r run.all, results='hide', message=FALSE}
 celltypes <- names(deseq)
-pthresh <- c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
+pthresh <- c(1e-4) # c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
 db_name <- names(genesets)
 crossed <- cross3(db_name, celltypes, pthresh)
 
@@ -145,10 +211,14 @@ pbmc_res <- xfun::cache_rds({
     res[[i]]$fit$dat <- NULL
   }
   res
-  }, file = 'logistic_susie_pbmc_genesets_pthresh.rds'
+  }
 )
 
-pbmc_res_set_summary <- dplyr::bind_rows(purrr::map(pbmc_res, ~ pluck(.x, 'set.summary')))
+u <- map(pbmc_res, credible_set_summary)
+pbmc.cs.summary <- do.call('rbind', u)
+
+u <- map(pbmc_res, gene_set_summary)
+pbmc.geneset.summary <- do.call('rbind', u)
 ```
 
 ### Summary functions
@@ -156,46 +226,7 @@ pbmc_res_set_summary <- dplyr::bind_rows(purrr::map(pbmc_res, ~ pluck(.x, 'set.s
 Just a few functions to help streamline looking at output
 
 ```{r report.result.functions}
-pval_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL, top.n=50){
-  pbmc_res_set_summary %>%
-  filter(
-    case_when(
-      is.null(filter_db) ~ TRUE,
-      !is.null(filter_db) ~ db %in% filter_db
-    ) &
-    thresh == thresh &
-    case_when(
-      is.null(filter_celltype) ~ TRUE,
-      !is.null(filter_celltype) ~ celltype %in% filter_celltype
-    )
-  )  %>%
-  dplyr::arrange(celltype, db, pValueHypergeometric) %>%
-  group_by(celltype, db) %>% slice(1:top.n) %>%
-  select(celltype, db, geneSet, description, pip, top_component, oddsRatio, propSetInList, pValueHypergeometric) %>%
-  mutate_at(vars(celltype, db), factor) %>%
-  datatable(filter = 'top')
-}
-
-set_focussed_table = function(thresh=1e-3, filter_db=NULL, filter_celltype=NULL){
-  pbmc_res_set_summary %>%
-  filter(
-    case_when(
-      is.null(filter_db) ~ TRUE,
-      !is.null(filter_db) ~ db %in% filter_db
-    ) &
-    thresh == 1e-3 &
-    in_cs & active_set &
-    case_when(
-      is.null(filter_celltype) ~ TRUE,
-      !is.null(filter_celltype) ~ celltype %in% filter_celltype
-    )
-  )  %>%
-  dplyr::arrange(celltype, db, desc(pip)) %>%
-  select(celltype, db, geneSet, description, pip, top_component, oddsRatio, propSetInList, pValueHypergeometric) %>%
-  mutate_at(vars(celltype, geneSet, db), factor) %>%
-  datatable(filter = 'top')
-}
-
+library(kableExtra)
 #' takes a tibble
 #' organize by database and component
 #' report credible set, descriptions, pips, and hypergeometric pvalue
@@ -214,76 +245,134 @@ db_component_kable = function(tbl){
 #' organize by database and component
 #' report credible set, descriptions, pips, and hypergeometric pvalue
 #' in one row, with cs ordered by pip
-db_component_kable = function(tbl){
-  tbl %>%
-  filter(active_set, thresh==1e-4) %>%
-  group_by(db, celltype, top_component) %>%
-  arrange(db, celltype, top_component, desc(pip)) %>%
-  mutate(pip = cell_spec(pip, color=ifelse(in_cs, 'green', 'red'))) %>%
-  select(geneSet, description, pip, pValueHypergeometric) %>%
-  #chop(c(geneSet, description, pip, pValueHypergeometric)) %>%
-  knitr::kable()
+db_component_kable = function(tbl, min_alpha=0, max_sets=10){
+  tbl_filtered <-
+    tbl %>%
+    group_by(celltype, db, component) %>%
+    arrange(celltype, db, component, desc(alpha)) %>%
+    filter(alpha > min_alpha, row_number() <= max_sets)
+
+  tbl_filtered %>%
+    select(geneSet, description, alpha, pValueHypergeometric) %>%
+    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %>%
+    kbl() %>%
+    column_spec(c(4, 5, 6), color=ifelse(tbl_filtered$in_cs, 'green', 'red')) %>%
+    collapse_rows(columns = c(1, 2), valign = 'top') %>%
+    kableExtra::kable_styling()
 }
-
-
 ```
-
-## Results/Explore enrichments
-
-Our goal is to assess
-1. The quality of the gene set enrichments we get from each celltype
-  - do reported gene set enrichments seem celltype specific/celltype relevant?
-  - how much "interesting" marginal enrichment do we fail to capture in the multivariate model
-  - how sensitive are we to the choice of pvalue threshold
   
 
 ## Results
 
-Lets take a look at what enrichment we're getting across cell-types.
+Here for each cell type and gene set database, we look at the top 10 gene sets per SuSiE component. Gene sets are colored green if they're in the credible set and red otherwise.
+
+There tables are a lot to look at, so I'll have to come back and summarise results somehow.
+
+General obseravtion: 
+* Virtually ALL of these gene sets report as highly significant by hypergeometric test
+* For "dense" gene set sources like GO-BP the top 10 gene sets in a component are often closely related, but outside of the credible set often have vanishingly small `alpha`. So although they are marginally enriched, logistic SuSiE thinks that other gene sets provide a much better explaination for the observed gene list. I think this is the type of result we want to see-- credible sets capture related gene sets and nominate one/a few of them
+* Sometime we see a mix of topics within a component.
+
+The tables are really long, so for each cell-type I summarize the components into "themes"
+
+```{r, include=FALSE}
+library(htmltools)
+library(DT)
+```
+
+```{r, results="asis"}
+library(htmltools)
+
+gen.table = function(ct, g){
+  pbmc.cs.summary %>%
+        filter(celltype == ct, db == g, active_cs) %>%
+        db_component_kable() %>%
+        htmltools::HTML()
+}
+possibly.gen.table = possibly(gen.table, otherwise="nothing to report...")
+
+for(ct in celltypes){
+  cat("\n") 
+  cat("##", ct, "\n") # Create second level headings with the names.
+  
+  for(g in names(genesets)){
+    cat("###", g, "\n") # Create second level headings with the names.
+    possibly.gen.table(ct, g) %>% print()
+    cat("\n")
+  }
+}
+```
+
+```{r}
+knitr::knit_exit()
+```
 
 ### CD19+ B 
 
 ```{r cd19sets}
-pbmc_res_set_summary %>%
-  filter(celltype == 'CD19+ B') %>%
-  filter(active_set, thresh==1e-4) %>%
-  db_component_kable
+ct = 'CD19+ B'
+pbmc.cs.summary %>%
+  filter(celltype == ct, active_cs) %>%
+  db_component_kable()
 ```
 
 ### CD56+ NK
 
+GO-BP
+* L1 = leukocyte/immune response
+* L2 = protein transport/localization
+* L3 = energy metabolism
+* L4 = transport
+* L5 = cell death
+* L6 = translation
+* L7 = RNA + (3 viral/sybiosis gene sets under the radar)
+
 ```{r cd56sets}
-pbmc_res_set_summary %>%
-  filter(celltype == 'CD56+ NK') %>%
-  filter(active_set, thresh==1e-4) %>%
-  db_component_kable
+ct = 'CD56+ NK'
+pbmc.cs.summary %>%
+  filter(celltype == ct, active_cs) %>%
+  db_component_kable()
 ```
 
 ### T cell
 
 ```{r tsets}
-pbmc_res_set_summary %>%
-  filter(celltype == 'T cell') %>%
-  filter(active_set, thresh==1e-4) %>%
-  db_component_kable
+ct = 'T cell'
+pbmc.cs.summary %>%
+  filter(celltype == ct, active_cs) %>%
+  db_component_kable()
 ```
 
 ### CD14+ Monocyte
 
+GO-BP
+* L1 = leukocyte/immune response
+* L2 = protein transport/localization
+* L3 = energy metabolism
+* L4 = tranport
+* L5 = apoptosis
+* L6 = translation/biosynthesis
+* L7 = RNA + (3 viral/sybiosis gene sets under the radar)
+
+L7 seems interesting. It mainly consists of RNA processing gene sets. However, a few gene sets like "GO:0044403	symbiont process" and "GO:0044419	interspecies interaction between organisms" appear in the top 10 (allbeit with $\alpha \approx 1e-5$). The interspecies gene sets have p-value 0, but they are "masked" by the stronger enrichments by SuSiE. 
+
+I suppose the question is would we want a GSEA method to report this type of result? I'm tempted to say "the RNA gene sets explain away the symbiotic gene set enrichments", but that is trusting that their high rank in the gene set is meaningful despite their low alpha value.
+
 ```{r cd14sets}
-pbmc_res_set_summary %>%
-  filter(celltype == 'CD14+ Monocyte') %>%
-  filter(active_set, thresh==1e-4) %>%
-  db_component_kable
+ct = 'CD14+ Monocyte'
+pbmc.cs.summary %>%
+  filter(celltype == ct, active_cs) %>%
+  db_component_kable()
 ```
 
 ### CD34+
 
 ```{r cd34sets}
-pbmc_res_set_summary %>%
-  filter(celltype == 'CD34+') %>%
-  filter(active_set, thresh==1e-4) %>%
-  db_component_kable
+ct = 'CD34+'
+pbmc.cs.summary %>%
+  filter(celltype == ct, active_cs) %>%
+  db_component_kable()
 ```
 
 ```{r}
@@ -291,24 +380,24 @@ knitr::knit_exit()
 ```
 
 
-### CD34+
-```{r}
-pbmc_res_set_summary %>%
-  filter(active_set, in_cs, thresh == 1e-4, celltype == 'CD34+') %>%
-  select(
-    geneSet, description, top_component, pip,
-    beta, geneListSize, geneSetSize, propSetInList, pValueHypergeometric) %>%
-  knitr::kable()
-```
+### Non-specific enrichments
+
+A lot of the cell types are enriched for the same gene sets! If we're interested in differences between different immune celltypes, as I presume we are, it would be good to be able to spot **different** enrichments across cell types.
+
+Here we just look at all geneSets with suggestive PIP in at least one celltype and list off the PIPs in all cell types. This isn't perfect, it's possible that two celltypes both use the same "theme" but promote a different gene set as the representative. Indeed, **everything** is marginally enriched.
 
 ```{r}
-pbmc_res_set_summary %>% 
-  filter(active_set, in_cs, thresh==1e-4) %>%
-  group_by(celltype) %>%
-  chop(c(geneSet, description)) %>%
-  
-```
+hist(pbmc.geneset.summary$pValueHypergeometric)
 
+pbmc.geneset.summary %>%
+  arrange(desc(pip)) %>%
+  group_by(geneSet, db) %>% 
+  filter(max(pip) > 0.2) %>%
+  select(description, pip, pValueHypergeometric, celltype) %>%
+  chop(c(pip, pValueHypergeometric, celltype)) %>%
+  arrange(db) %>%
+  kbl() %>% kableExtra::kable_styling()
+```
 
 ```{r}
 knitr::knit_exit()
