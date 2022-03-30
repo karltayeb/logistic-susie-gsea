@@ -351,7 +351,20 @@ cs.summary %>%
   geom_point() + facet_wrap(vars(component), scale='free_y', ncol = 1)
 ```
 
+## Credible set distributions
 
+```{r}
+cs.summary %>%
+  group_by(celltype, db, component) %>%
+  summarise(entropy = -sum(alpha * log(alpha)), n = n()) %>%
+  ggplot(aes(x=entropy)) + geom_histogram() + labs(title='component entropy')
+
+cs.summary %>%
+  filter(active_cs, in_cs) %>%
+  group_by(celltype, db, component) %>%
+  summarise( n = n()) %>%
+  ggplot(aes(x=n)) + geom_histogram() + labs(title='95% Credible set size')
+```
 
 ```{r}
 knitr::knit_exit()
