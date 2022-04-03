@@ -384,8 +384,8 @@ plots <- purrr::map(geneset_sources, ~do.or.plot(
 ```
 
 ```{r results='asis'}
-for(i in 1:length(plot)){
-  cat('###', geneset_sources[[i]])
+for(i in 1:length(plots)){
+  cat('###', geneset_sources[[i]], '\n')
   print(plots[[i]])
   cat('\n')
 }
