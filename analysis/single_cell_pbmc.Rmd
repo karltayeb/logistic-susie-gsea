@@ -2,7 +2,9 @@
 title: "Single-cell PBMC Example"
 author: "karltayeb"
 date: "2022-03-16"
-output: workflowr::wflow_html
+output:
+  workflowr::wflow_html:
+    code_folding: hide
 editor_options:
   chunk_output_type: console
 ---
@@ -60,7 +62,14 @@ genesets <- list(
 
 ```{r data.setup}
 load('data/pbmc-purified/deseq2-pbmc-purified.RData')
+par(mfrow=c(1,1))
+deseq$`CD19+ B` %>% .$padj %>% hist(main='CD19+B p-values')
+```
 
+
+### Fitting and reporting helpers
+
+```{r driver}
 convert_labels <- function(y, from='SYMBOL', to='ENTREZID'){
   hs <- org.Hs.eg.db::org.Hs.eg.db
   gene_symbols <- names(y)
@@ -73,35 +82,50 @@ convert_labels <- function(y, from='SYMBOL', to='ENTREZID'){
   names(ysub) <- symbol2entrez[names(ysub),][[to]]
   return(ysub)
 }
+convert_labels = partial(convert_labels, from='ENSEMBL')
 
-
-par(mfrow=c(1,1))
-deseq$`CD19+ B` %>% .$padj %>% hist(main='CD19+B p-values')
-```
-
-
-### Fitting and reporting helpers
-
-```{r driver}
-#' fit logistic susie, and hypergeometric test
-logistic_susie_driver = function(db, celltype, thresh){
-  gs <- genesets[[db]]
-  data <- deseq[[celltype]]
-
-  # set up binary y
-  y <- data %>%
+#' take gene level results and put them in a standard format
+#' a named list with ENTREZID names and gene level stats
+#' target_col is the column to extract
+#' from is the source gene label to convert to ENTREZID
+clean_gene_list = function(data, target_col){
+  target_col = sym(target_col)
+  data %>%
     as.data.frame %>%
     rownames_to_column('gene') %>%
-    dplyr::select(gene, padj) %>%
-    filter(!is.na(padj)) %>%
-    mutate(y = as.integer(padj < thresh)) %>%
+    dplyr::select(gene, !!target_col) %>%
+    filter(!is.na(!!target_col)) %>%
+    mutate(y = !!target_col) %>%
     select(gene, y) %>%
     tibble2namedlist %>%
-    convert_labels('ENSEMBL')
-  
+    convert_labels()
+}
+clean_gene_list = partial(clean_gene_list, target_col='padj')
+
+#' makes a binary list from table like data
+get_y = function(data, thresh=1e-4){
+  data %>%
+    clean_gene_list() %>%
+    {
+      y <- as.integer(. < thresh)
+      names(y) <- names(.)
+      y
+    }
+}
+#get_y(deseq$`CD19+ B`, 1e-40) %>% mean()
+
+#' fit logistic susie, and hypergeometric test
+do_logistic_susie = function(db, celltype, thresh, susie.args=NULL){
+  gs <- genesets[[db]]
+  data <- deseq[[celltype]]
+  y <- get_y(data, thresh)
   u <- process_input(gs$X, y)  # subset to common genes
-  vb.fit <- logistic.susie(  # fit model
-    u$X, u$y, L=10, init.intercept = 0, verbose=1, maxit=100)
+  
+  if(is.null(susie.args)){
+    susie.args = list(
+      L=10, init.intercept=0, verbose=1, maxit=100, standardize=TRUE)
+  }
+  vb.fit <- exec(logistic.susie, u$X, u$y, !!!susie.args)
 
   #' hypergeometric test
   ora <- tibble(
@@ -115,7 +139,7 @@ logistic_susie_driver = function(db, celltype, thresh){
     oddsRatio = (overlap / (geneListSize - overlap)) / (
       (geneSetSize - overlap) / (nGenes - geneSetSize + overlap)),
     pValueHypergeometric = phyper(
-      overlap-1, geneListSize, nGenes, geneSetSize, lower.tail= FALSE),
+      overlap-1, geneListSize, nGenes - geneListSize, geneSetSize, lower.tail= FALSE),
     db = db,
     celltype = celltype,
     thresh = thresh
@@ -128,71 +152,51 @@ logistic_susie_driver = function(db, celltype, thresh){
     db = db, celltype = celltype, thresh = thresh))
 }
 
-credible_set_summary = function(res){
+get_credible_set_summary = function(res){
   gs <- genesets[[res$db]]
   data <- deseq[[res$celltype]]
-
-  # set up binary y
-  y <- data %>%
-    as.data.frame %>%
-    rownames_to_column('gene') %>%
-    dplyr::select(gene, padj) %>%
-    filter(!is.na(padj)) %>%
-    mutate(y = as.integer(padj < res$thresh)) %>%
-    select(gene, y) %>%
-    tibble2namedlist %>%
-    convert_labels('ENSEMBL')
-  
-  u <- process_input(gs$X, y)  # subset to common genes
 
   #' report top 50 elements in cs
   credible.set.summary <- t(res$fit$alpha) %>%
     data.frame() %>%
     rownames_to_column(var='geneSet') %>%
     rename_with(~str_replace(., 'X', 'L')) %>%
+    rename(L1 = 2) %>%  # rename deals with L=1 case
     pivot_longer(starts_with('L'), names_to='component', values_to = 'alpha') %>%
     arrange(component, desc(alpha)) %>%
     dplyr::group_by(component) %>%
     filter(row_number() < 50) %>%
-    mutate(cumalpha = c(0, head(cumsum(alpha), -1))) %>%
+    mutate(alpha_rank = row_number(), cumalpha = c(0, head(cumsum(alpha), -1))) %>%
     mutate(in_cs = cumalpha < 0.95) %>%
     mutate(active_cs = component %in% names(res$fit$sets$cs)) %>%
-    left_join(res$ora) %>%
-    left_join(gs$geneSet$geneSetDes)
-
-  #' map each gene set to the component with top alpha
-  #' report pip
-  gene.set.summary <- res$fit$pip %>% 
-    as_tibble(rownames='geneSet') %>%
-    rename(pip=value) %>%
     left_join(res$ora) %>%
     left_join(gs$geneSet$geneSetDes)
 
   return(credible.set.summary)
 }
 
-gene_set_summary = function(res){
+get_gene_set_summary = function(res){
   gs <- genesets[[res$db]]
   #' map each gene set to the component with top alpha
   #' report pip
   res$fit$pip %>% 
     as_tibble(rownames='geneSet') %>%
     rename(pip=value) %>%
+    mutate(beta=colSums(res$fit$alpha * res$fit$mu)) %>%
     left_join(res$ora) %>%
     left_join(gs$geneSet$geneSetDes)
 }
 ```
 
-
 ### Example usage
 
 ```{r run.example}
-db = 'gobp'
+db = 'gobp_nr'
 celltype = 'CD19+ B'
 thresh = 1e-4
-res <- logistic_susie_driver(db, celltype, thresh)
-credible_set_summary(res) %>% head()
-gene_set_summary(res) %>% head()
+res <- do_logistic_susie(db, celltype, thresh, susie.args=list(L=1, standardize=TRUE, verbose=TRUE))
+get_credible_set_summary(res) %>% filter(active_cs, in_cs)
+get_gene_set_summary(res) %>% head()
 ```
 
 ## Fit PBMC data
@@ -205,22 +209,43 @@ pthresh <- c(1e-4) # c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
 db_name <- names(genesets)
 crossed <- cross3(db_name, celltypes, pthresh)
 
-pbmc_res <- xfun::cache_rds({
-  res <- purrr::map(crossed, purrr::lift_dl(logistic_susie_driver))
-  for (i in 1:length(res)){  # save some space
-    res[[i]]$fit$dat <- NULL
-  }
-  res
-  }
-)
+run_logistic_susie = function(susie.args){
+  driver = partial(do_logistic_susie, susie.args = susie.args)
+  res <- xfun::cache_rds({
+    res <- purrr::map(crossed, purrr::lift_dl(driver))
+    for (i in 1:length(res)){  # save some space
+      res[[i]]$fit$dat <- NULL
+    }
+    res
+    }, hash = susie.args
+  )
+  # get summary
+  cs.summary <- do.call(
+    'rbind', map(res, get_credible_set_summary))
+  geneset.summary <- do.call(
+    'rbind',  map(res, get_gene_set_summary))
 
-u <- map(pbmc_res, credible_set_summary)
-pbmc.cs.summary <- do.call('rbind', u)
-cs.summary <- pbmc.cs.summary
+  return(list(res=res, cs.summary=cs.summary, geneset.summary=geneset.summary))
+}
 
-u <- map(pbmc_res, gene_set_summary)
-pbmc.geneset.summary <- do.call('rbind', u)
-geneset.summary <- pbmc.geneset.summary
+susie.args = list(L=10, standardize=F, verbose=T)
+res.l10 = run_logistic_susie(susie.args)
+```
+
+```{r l1.runs, eval=FALSE}
+# L =1
+susie.args = list(L=1, standardize=F, verbose=T)
+res.l1 = run_logistic_susie(susie.args)
+
+
+# L=1, standardized
+susie.args = list(L=1, standardize=T, verbose=T)
+res.l1.standardized = run_logistic_susie(susie.args)
+
+
+# L = 1, flat
+susie.args = list(L=1, standardize=F, V=1000, estimate_prior_variance=F, verbose=T)
+res.l1.flat = run_logistic_susie(susie.args)
 ```
 
 ### Summary functions
@@ -229,33 +254,35 @@ Just a few functions to help streamline looking at output
 
 ```{r report.result.functions}
 library(kableExtra)
-#' takes a tibble
-#' organize by database and component
-#' report credible set, descriptions, pips, and hypergeometric pvalue
-#' in one row, with cs ordered by pip
-db_component_kable = function(tbl){
-  tbl %>%
-  filter(active_set, thresh==1e-4) %>%
-  group_by(db, celltype, top_component) %>%
-  arrange(db, celltype, top_component, desc(pip)) %>%
-  select(geneSet, description, pip, pValueHypergeometric) %>%
-  chop(c(geneSet, description, pip, pValueHypergeometric)) %>%
-  knitr::kable()
-}
 
 #' takes a tibble
 #' organize by database and component
 #' report credible set, descriptions, pips, and hypergeometric pvalue
 #' in one row, with cs ordered by pip
-db_component_kable = function(tbl, min_alpha=0, max_sets=10){
+make_susie_component_kable = function(tbl, min_alpha=0, max_sets=10){
   tbl_filtered <-
     tbl %>%
     group_by(celltype, db, component) %>%
     arrange(celltype, db, component, desc(alpha)) %>%
     filter(alpha > min_alpha, row_number() <= max_sets)
-
   tbl_filtered %>%
     select(geneSet, description, alpha, pValueHypergeometric) %>%
+    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %>%
+    kbl() %>%
+    column_spec(c(4, 5, 6), color=ifelse(tbl_filtered$in_cs, 'green', 'red')) %>%
+    collapse_rows(columns = c(1, 2), valign = 'top') %>%
+    kableExtra::kable_styling()
+}
+
+make_pval_sorted_kable = function(tbl, max_sets=1000){
+  tbl_filtered <-
+    tbl %>%
+    group_by(celltype, db) %>%
+    arrange(celltype, db, pValueHypergeometric) %>%
+    filter(row_number() <= max_sets)
+  
+  tbl_filtered %>%
+    select(geneSet, description, pip, pValueHypergeometric) %>%
     dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %>%
     kbl() %>%
     column_spec(c(4, 5, 6), color=ifelse(tbl_filtered$in_cs, 'green', 'red')) %>%
@@ -267,6 +294,101 @@ db_component_kable = function(tbl, min_alpha=0, max_sets=10){
 
 ## Results
 
+### A pip centerd view 
+
+Here we rank the gene sets by their hypergeometirc pvalues. The sets are green if they belong to a SuSiE credible set, red otherwise. Think about just performing the marginal test, sorting by pvalue, and then scrolling down the list. 
+
+* Which gene sets would you pick out?
+* How far down would you scroll (e.g what cutoff would you pick)?
+* Would you percieve gene sets high and low in the list as related to one another?
+
+```{r}
+in_cs <- res.l10$cs.summary %>%
+  filter(in_cs, active_cs, celltype == 'CD19+ B', db == 'gobp') %>%
+  ungroup() %>%
+  select(geneSet, celltype, db, in_cs) %>%
+  distinct()
+
+res.l10$geneset.summary %>%
+  filter(celltype == 'CD19+ B', db == 'gobp') %>%
+  left_join(in_cs) %>%
+  mutate(in_cs = ifelse(is.na(in_cs), F, T)) %>%
+  make_pval_sorted_kable(max_sets = 500)
+```
+
+### A set focussed view
+
+What if we just pick out the gene sets in the SuSiE 95% credible sets?
+Do we trust these? Some have relatively weak marginal enrichment.
+
+```{r}
+res.l10$cs.summary %>%
+  filter(in_cs, active_cs, celltype == 'CD19+ B', db == 'gobp') %>%
+  left_join(in_cs) %>%
+  mutate(in_cs = ifelse(is.na(in_cs), F, T)) %>%
+  make_susie_component_kable()
+```
+
+###  Credible set sizes
+
+```{r}
+res.l10$cs.summary %>%
+  filter(in_cs, active_cs) %>%
+  count(celltype, db) %>%
+  ggplot(aes(x=n, fill=celltype)) + geom_bar() + facet_wrap(vars(db), ncol = 1)
+```
+
+
+### CS vs pValues
+
+```{r}
+do.or.plot = function(res, 
+                      ct=NULL, 
+                      g=NULL, 
+                      x='oddsRatio', 
+                      s='geneSetSize', 
+                      c='in_cs'){
+  col_sym = sym(x)
+  gene.set.order <- res$geneset.summary %>% 
+    filter(if(!is.null(ct)) celltype == ct else TRUE) %>%
+    filter(if(!is.null(g)) db == g else TRUE) %>%
+    arrange(db, !!col_sym) %>%
+    .$geneSet %>% unique()
+  
+  size_sym = sym(s)
+  color_sym = sym(c)
+  plot <- res$cs.summary %>%
+    filter(if(!is.null(ct)) celltype == ct else TRUE) %>%
+    filter(if(!is.null(g)) db == g else TRUE) %>%
+    filter(active_cs, alpha_rank <= 10) %>%
+    mutate(geneSet=factor(geneSet, levels=gene.set.order)) %>%
+    ggplot(aes(x=!!col_sym, y=geneSet, color=!!color_sym, size=!!size_sym)) +
+    geom_point() +
+    facet_wrap(vars(component), scale='free', nrow = 1)
+  return(plot)
+}
+
+
+res.l10$cs.summary <-
+  res.l10$cs.summary %>%
+  mutate(nl10p = -log10(pValueHypergeometric))
+res.l10$geneset.summary <-
+  res.l10$geneset.summary %>%
+  mutate(nl10p = -log10(pValueHypergeometric))
+
+celltype <- celltypes[1]
+geneset_sources <- names(genesets)
+
+plots <- purrr::map(geneset_sources, ~do.or.plot(
+  res.l10, ct=celltype, g=.x, x='nl10p'))
+
+f <- partial(cowplot::plot_grid, ncol=1)
+exec(f, plots)
+```
+
+
+## A long list of results
+
 Here for each cell type and gene set database, we look at the top 10 gene sets per SuSiE component. Gene sets are colored green if they're in the credible set and red otherwise.
 
 There tables are a lot to look at, so I'll have to come back and summarise results somehow.
@@ -276,19 +398,16 @@ General obseravtion:
 * For "dense" gene set sources like GO-BP the top 10 gene sets in a component are often closely related, but outside of the credible set often have vanishingly small `alpha`. So although they are marginally enriched, logistic SuSiE thinks that other gene sets provide a much better explaination for the observed gene list. I think this is the type of result we want to see-- credible sets capture related gene sets and nominate one/a few of them
 * Sometime we see a mix of topics within a component.
 
-The tables are really long, so for each cell-type I summarize the components into "themes"
-
-
 ```{r all.tables, results="asis"}
 library(htmltools)
 
-gen.table = function(ct, g){
-  pbmc.cs.summary %>%
+make_susie_html_table = function(ct, g){
+  res.l10$cs.summary %>%
         filter(celltype == ct, db == g, active_cs) %>%
-        db_component_kable() %>%
+        make_susie_component_kable() %>%
         htmltools::HTML()
 }
-possibly.gen.table = possibly(gen.table, otherwise="nothing to report...")
+possibly_make_susie_html_table = possibly(make_susie_html_table, otherwise="nothing to report...")
 
 for(ct in celltypes){
   cat("\n") 
@@ -296,76 +415,201 @@ for(ct in celltypes){
   
   for(g in names(genesets)){
     cat("###", g, "\n") # Create second level headings with the names.
-    possibly.gen.table(ct, g) %>% print()
+    possibly_make_susie_html_table(ct, g) %>% print()
     cat("\n")
   }
 }
 ```
 
 
-## Designing visualizations
-
-There are a lot of facets of the enrichment results we might want to communicate.
-
-Its common to plot against the proportion of the genes in the list, but this obscures the sensitivity of the analysis to gene set size. Recreating a standard enrichment plot.
-
-```{r vis.standard}
-ct = celltypes[1]
-gs = 'gobp'
-
-cs.summary %>%
-  filter(celltype == ct, db == gs, active_cs, row_number() <= 10) %>%
-  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %>%
-  arrange(component, desc(propInList)) %>%
-  ggplot(aes(x=propInList, y=geneSet, size=geneSetSize, color=-log10(pValueHypergeometric))) +
-  geom_point() + facet_wrap(vars(component), scale='free_y', ncol = 1)
-```
-
-The strongest marginal enticements come from the largest gene sets.
-But SuSiE is able to prioritizing smaller gene sets. The right ones? Who knows.
-
-```{r p.and.setsize}
-cs.summary %>%
-  ggplot(aes(x=-log10(pValueHypergeometric), y=geneSetSize)) +
-  geom_point() + geom_smooth()
-```
-
-Here, for the gene sets assigned to SuSiE components, we plot the proportion of the gene set observed. The bubble size is given by the gene set size, and the color indicates `alpha`, the posterior probability that the gene set is selected by the component. 
-
-I'm surprised to see gene sets with large alpha, but only modest proportion
-
-```{r new.vis}
-
-cs.summary %>%
-  filter(celltype == ct, db == 'gobp', active_cs, row_number() <= 10) %>%
-  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %>%
-  arrange(component, desc(propInList)) %>%
-  ggplot(aes(x=propInList, y=geneSet, color=alpha, size=geneSetSize)) +
-  geom_point() + facet_wrap(vars(component), scale='free_y', ncol = 1)
-
-cs.summary %>%
-  filter(celltype == ct, db == 'gobp', active_cs, row_number() <= 10) %>%
-  mutate(geneSet=factor(geneSet, levels=geneSet[order((propInList))])) %>%
-  arrange(component, desc(propInList)) %>%
-  ggplot(aes(x=propInList, y=geneSet, color=in_cs, size=geneSetSize)) +
-  geom_point() + facet_wrap(vars(component), scale='free_y', ncol = 1)
-```
-
-## Credible set distributions
-
-```{r}
-cs.summary %>%
-  group_by(celltype, db, component) %>%
-  summarise(entropy = -sum(alpha * log(alpha)), n = n()) %>%
-  ggplot(aes(x=entropy)) + geom_histogram() + labs(title='component entropy')
-
-cs.summary %>%
-  filter(active_cs, in_cs) %>%
-  group_by(celltype, db, component) %>%
-  summarise( n = n()) %>%
-  ggplot(aes(x=n)) + geom_histogram() + labs(title='95% Credible set size')
-```
-
 ```{r}
 knitr::knit_exit()
 ```
+
+
+## Explaining SuSiE's gene set choice...
+
+Why is SuSiE not picking the large credible set with high proporton observed? Would we draw the same conclusion from the marignal regressions (one gene set at a time)?
+
+To start at this quesiton, let's fit a logistic regression to each gene set separately.
+We'd like to compare it to the conditional gene set effects SuSiE $L=1$ learned.
+The differences between these are:
+
+1. The SuSiE effects are regularized by the normal prior
+2. The intercept in SuSiE is estimated averaging over the single effects of all gene sets, whereas the intercept in the marginal regression is estimated separately for each gene set.
+3. SuSiE uses the variational approximation, the marginal regression is exact.
+
+In short, for $L=1$ the conditional effects in SuSiE are like the marginal effects of the univariate logistic regression, except they're estimated with a fixed fixed intercept, and with an approximation to the likelihood, and with a prior that provides some shrinkage.
+
+We can alleviate (1) by fixing the effect size variance to be large (approximately flat). Better, we can assess the impact of (3) by fitting the univariate regression with the variational approximation, and account for (1) by fixing the effect size variance for the SuSiE and marginal run.
+
+```{r marginal.regression}
+#' fit logistic regression to each gene set individually
+do_marginal_logistic_regression = function(db,
+                                           celltype,
+                                           thresh,
+                                           susie.args=NULL){
+  gs <- genesets[[db]]
+  data <- deseq[[celltype]]
+  y <- get_y(data, thresh)
+  u <- process_input(gs$X, y)  # subset to common genes
+  
+  n <- dim(u$X)[1]  # number of genes
+  p <- dim(u$X)[2]  # number of gene sets
+  marginal.fit <- map(1:p, ~ glm(u$y ~ u$X[,.x], family = 'binomial'))
+  names(marginal.fit) <- colnames(u$X)
+  tibble(marginal.fit)
+
+  return(list(
+    fit = marginal.fit,
+    db = db, celltype = celltype, thresh = thresh))
+}
+```
+
+```{r}
+susie.args = list(L=1, estimate_prior_variance=T, standardize=F, verbose=T)
+cd19.kegg.l1 <- do_logistic_susie(
+  'kegg', 'CD19+ B', 1e-4, susie.args = susie.args)
+
+susie.args = list(L=1, standardize=F, V=1000, estimate_prior_variance=F, verbose=T)
+cd19.kegg.l1.flat <- do_logistic_susie(
+  'kegg', 'CD19+ B', 1e-4, susie.args = susie.args)
+cd19.kegg.marginal <- do_marginal_logistic_regression('kegg', 'CD19+ B', 1e-4)
+
+
+cd19.kegg.marginal_tbl = tibble(
+  geneSet = names(cd19.kegg.marginal$fit),
+  loglik = - map_dbl(cd19.kegg.marginal$fit, ~pluck(.x, 'aic'))/2 + 4
+)
+
+cs.summary <-
+  cd19.kegg.l1 %>% 
+  get_credible_set_summary() %>%
+  mutate(nl10p = -log10(pValueHypergeometric)) %>%
+  left_join(cd19.kegg.marginal_tlb)
+geneset.summary <-
+  cd19.kegg.l1 %>% 
+  get_gene_set_summary() %>%
+  mutate(nl10p = -log10(pValueHypergeometric)) %>%
+  left_join(cd19.kegg.marginal_tlb)
+res <- list(
+  cs.summary = cs.summary,
+  geneset.summary = geneset.summary
+)
+
+do.or.plot(res, 'CD19+ B', 'kegg', x='loglik', facet='db')
+do.or.plot(res, 'CD19+ B', 'kegg', x='nl10p', facet='db')
+do.or.plot(res, 'CD19+ B', 'kegg', x='oddsRatio', facet='db')
+do.or.plot(res, 'CD19+ B', 'kegg', x='propInSet', facet='db')
+```
+
+
+```{r susie.shrinkage.vs.marginal}
+# pick out one example to check
+res.focus <- res.l1$res[[2]]
+
+# extract likelihood, parameters from model
+marginal.res <- tibble(
+  geneSet = colnames(u$X),
+  loglik = map_dbl(marginal.fit, ~-(pluck(.x, 'aic') - 4)/2),
+  intercept = map_dbl(marginal.fit, ~pluck(.x, 'coefficients', 1)),
+  marginal.beta = map_dbl(marginal.fit, ~pluck(.x, 'coefficients', 2)),
+  susie.mu = res.focus$fit$mu[1,],
+  susie.beta = res.focus$fit$mu[1,] * res.focus$fit$alpha[1,],
+  susie.intercept = res.focus$fit$intercept,
+  pip = res.focus$fit$pip,
+  odds.ratio = res.focus$ora$oddsRatio
+)
+
+p1 <- marginal.res %>%
+  ggplot(aes(x=marginal.beta, y=susie.mu)) +
+  geom_point()
+
+# pick out one example to check
+res.focus <- do_logistic_susie(
+  db, celltype, thresh,
+  susie.args=list(L=1, V=1000, standardize=F, verbose=T, estimate_prior_variance=F)
+)
+
+# extract likelihood, parameters from model
+marginal.res <- tibble(
+  geneSet = colnames(u$X),
+  loglik = map_dbl(marginal.fit, ~-(pluck(.x, 'aic') - 4)/2),
+  intercept = map_dbl(marginal.fit, ~pluck(.x, 'coefficients', 1)),
+  marginal.beta = map_dbl(marginal.fit, ~pluck(.x, 'coefficients', 2)),
+  susie.mu = res.focus$fit$mu[1,],
+  susie.beta = res.focus$fit$mu[1,] * res.focus$fit$alpha[1,],
+  susie.intercept = res.focus$fit$intercept,
+  pip = res.focus$fit$pip,
+  odds.ratio = res.focus$ora$oddsRatio
+)
+
+p2 <- marginal.res %>%
+  ggplot(aes(x=marginal.beta, y=susie.mu)) +
+  geom_point()
+
+cowplot::plot_grid(p1, p2)
+```
+
+Do the marginal models also prefer the smaller gene sets?
+
+```{r marginal.preference}
+gene.set.order = res.l1$geneset.summary %>% 
+  ungroup() %>% 
+  arrange(geneSet, propInSet) %>%
+  distinct() %>%
+  arrange(propInSet) %>%
+  .$geneSet %>%
+  unique()
+
+res.l1$cs.summary %>%
+  filter(celltype == ct, db == 'gobp', active_cs, alpha_rank <= 10) %>%
+  left_join(select(marginal.res, geneSet, loglik)) %>%
+  mutate(geneSet=factor(geneSet, levels=gene.set.order)) %>%
+  arrange(component, desc(propInSet)) %>%
+  ggplot(aes(x=propInSet, y=geneSet, color=loglik, size=geneSetSize)) +
+  geom_point() + facet_wrap(vars(db), scale='free_y')
+
+res.l1$geneset.summary %>%
+  left_join(marginal.res) %>%
+  ggplot(aes(y=pmin(propInSet, 1-propInSet), x=loglik)) + geom_point()
+
+```
+
+So we might wonder what gene sets we pick in the "flat" $L=1$ logistic SuSiE
+
+
+Now the effects are much more in line!
+
+We see pretty strong agreement between
+
+```{r}
+res.focus <- res.l1[[2]]
+res.focus$fit$mu[1,] %>% head
+```
+
+```{r}
+res.l1$geneset.summary %>%
+  left_join(marginal.aic) %>%
+  ggplot(aes(x=aic, y=propInSet)) + 
+  geom_point() + geom_smooth()
+
+res.l1$geneset.summary %>%
+  left_join(marginal.aic) %>%
+  ggplot(aes(x=aic, y=pip)) + 
+  geom_point() + geom_smooth()
+
+res.l1$geneset.summary.standardized %>%
+  left_join(marginal.aic) %>%
+  ggplot(aes(x=aic, y=propInSet)) + 
+  geom_point() + geom_smooth()
+
+res.l1$geneset.summary.standardized %>%
+  left_join(marginal.aic) %>%
+  arrange((pip)) %>%
+  ggplot(aes(x=-aic, color= pip, y=propInSet, size=-log10(pValueHypergeometric))) + 
+  geom_point()
+
+plot(res.l1$geneset.summary.standardized$pip, res.l1$geneset.summary$pip)
+```
+
