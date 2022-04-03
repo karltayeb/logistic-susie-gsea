@@ -382,7 +382,9 @@ geneset_sources <- names(genesets)
 plots <- purrr::map(geneset_sources, ~do.or.plot(
   res.l10, ct=celltype, g=.x, x='nl10p'))
 
-cowplot::plot_grid(plotlist = plots, labels= geneset_sources, ncol = 1)
+for(i in 1:length(plot)){
+  print(plots[[i]])
+}
 ```
 
 
