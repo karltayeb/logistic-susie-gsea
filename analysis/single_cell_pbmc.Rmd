@@ -364,7 +364,7 @@ do.or.plot = function(res,
     mutate(geneSet=factor(geneSet, levels=gene.set.order)) %>%
     ggplot(aes(x=!!col_sym, y=geneSet, color=!!color_sym, size=!!size_sym)) +
     geom_point() +
-    facet_wrap(vars(component), scale='free', nrow = 1)
+    facet_wrap(vars(component), scale='free')
   return(plot)
 }
 
@@ -387,7 +387,7 @@ plots <- purrr::map(geneset_sources, ~do.or.plot(
 for(i in 1:length(plots)){
   cat('###', geneset_sources[[i]], '\n')
   print(plots[[i]])
-  cat('\n')
+  cat('\n\n')
 }
 ```
 
