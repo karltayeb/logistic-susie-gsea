@@ -494,16 +494,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeb3914578c5d60f58268f68735baf38f9df276900targetblankb391457a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/b3914578c5d60f58268f68735baf38f9df276900" target="_blank">b391457</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeb3ad008dfb0b80ff589b00c5144f17ce9e241089targetblankb3ad008a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/b3ad008dfb0b80ff589b00c5144f17ce9e241089" target="_blank">b3ad008</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeb3914578c5d60f58268f68735baf38f9df276900targetblankb391457a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeb3ad008dfb0b80ff589b00c5144f17ce9e241089targetblankb3ad008a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/b3914578c5d60f58268f68735baf38f9df276900" target="_blank">b391457</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/b3ad008dfb0b80ff589b00c5144f17ce9e241089" target="_blank">b3ad008</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -610,6 +610,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/b3ad008dfb0b80ff589b00c5144f17ce9e241089/analysis/single_cell_pbmc.Rmd" target="_blank">b3ad008</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/8ddc903a511a11f42a5d8a15a674b61abee95f6a/docs/single_cell_pbmc.html" target="_blank">8ddc903</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -12008,7 +12042,7 @@ karltayeb
     mutate(geneSet=factor(geneSet, levels=gene.set.order)) %&gt;%
     ggplot(aes(x=!!col_sym, y=geneSet, color=!!color_sym, size=!!size_sym)) +
     geom_point() +
-    facet_wrap(vars(component), scale=&#39;free&#39;, nrow = 1)
+    facet_wrap(vars(component), scale=&#39;free&#39;)
   return(plot)
 }
 
@@ -12028,7 +12062,7 @@ plots &lt;- purrr::map(geneset_sources, ~do.or.plot(
 <pre class="r"><code>for(i in 1:length(plots)){
   cat(&#39;###&#39;, geneset_sources[[i]], &#39;\n&#39;)
   print(plots[[i]])
-  cat(&#39;\n&#39;)
+  cat(&#39;\n\n&#39;)
 }</code></pre>
 </div>
 <div id="gobp" class="section level3">
@@ -12074,7 +12108,249 @@ karltayeb
 </div>
 <div id="gobp_nr" class="section level3">
 <h3>gobp_nr</h3>
-<p><img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /> ### gomf <img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /> ### kegg <img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /> ### reactome <img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-5.png" width="672" style="display: block; margin: auto;" /> ### wikipathway_cancer <img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-6.png" width="672" style="display: block; margin: auto;" /> ### wikipathway <img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-2">
+Past versions of unnamed-chunk-6-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8ddc903a511a11f42a5d8a15a674b61abee95f6a/docs/figure/single_cell_pbmc.Rmd/unnamed-chunk-6-2.png" target="_blank">8ddc903</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="gomf" class="section level3">
+<h3>gomf</h3>
+<p><img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-3">
+Past versions of unnamed-chunk-6-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8ddc903a511a11f42a5d8a15a674b61abee95f6a/docs/figure/single_cell_pbmc.Rmd/unnamed-chunk-6-3.png" target="_blank">8ddc903</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="kegg" class="section level3">
+<h3>kegg</h3>
+<p><img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-4">
+Past versions of unnamed-chunk-6-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8ddc903a511a11f42a5d8a15a674b61abee95f6a/docs/figure/single_cell_pbmc.Rmd/unnamed-chunk-6-4.png" target="_blank">8ddc903</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="reactome" class="section level3">
+<h3>reactome</h3>
+<p><img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-5">
+Past versions of unnamed-chunk-6-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8ddc903a511a11f42a5d8a15a674b61abee95f6a/docs/figure/single_cell_pbmc.Rmd/unnamed-chunk-6-5.png" target="_blank">8ddc903</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="wikipathway_cancer" class="section level3">
+<h3>wikipathway_cancer</h3>
+<p><img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-6">
+Past versions of unnamed-chunk-6-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8ddc903a511a11f42a5d8a15a674b61abee95f6a/docs/figure/single_cell_pbmc.Rmd/unnamed-chunk-6-6.png" target="_blank">8ddc903</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="wikipathway" class="section level3">
+<h3>wikipathway</h3>
+<p><img src="figure/single_cell_pbmc.Rmd/unnamed-chunk-6-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-7">
+Past versions of unnamed-chunk-6-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8ddc903a511a11f42a5d8a15a674b61abee95f6a/docs/figure/single_cell_pbmc.Rmd/unnamed-chunk-6-7.png" target="_blank">8ddc903</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="a-long-list-of-results" class="section level2">
@@ -14243,7 +14519,7 @@ response to tumor necrosis factor
 </tbody>
 </table>
 </div>
-<div id="gomf" class="section level3">
+<div id="gomf-1" class="section level3">
 <h3>gomf</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -15427,7 +15703,7 @@ SH3/SH2 adaptor activity
 </tbody>
 </table>
 </div>
-<div id="kegg" class="section level3">
+<div id="kegg-1" class="section level3">
 <h3>kegg</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -16151,7 +16427,7 @@ Carbon metabolism
 </tbody>
 </table>
 </div>
-<div id="reactome" class="section level3">
+<div id="reactome-1" class="section level3">
 <h3>reactome</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -18025,7 +18301,7 @@ Transport of Mature mRNA Derived from an Intronless Transcript
 </tbody>
 </table>
 </div>
-<div id="wikipathway_cancer" class="section level3">
+<div id="wikipathway_cancer-1" class="section level3">
 <h3>wikipathway_cancer</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -18289,7 +18565,7 @@ IL-6 signaling pathway
 </tbody>
 </table>
 </div>
-<div id="wikipathway" class="section level3">
+<div id="wikipathway-1" class="section level3">
 <h3>wikipathway</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -21384,7 +21660,7 @@ chromatin remodeling
 </tbody>
 </table>
 </div>
-<div id="gomf-1" class="section level3">
+<div id="gomf-2" class="section level3">
 <h3>gomf</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -22108,7 +22384,7 @@ RNA polymerase II proximal promoter sequence-specific DNA binding
 </tbody>
 </table>
 </div>
-<div id="kegg-1" class="section level3">
+<div id="kegg-2" class="section level3">
 <h3>kegg</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -22832,7 +23108,7 @@ Primary immunodeficiency
 </tbody>
 </table>
 </div>
-<div id="reactome-1" class="section level3">
+<div id="reactome-2" class="section level3">
 <h3>reactome</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -24246,7 +24522,7 @@ Platelet degranulation
 </tbody>
 </table>
 </div>
-<div id="wikipathway_cancer-1" class="section level3">
+<div id="wikipathway_cancer-2" class="section level3">
 <h3>wikipathway_cancer</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -24254,7 +24530,7 @@ Platelet degranulation
 in color does not equal to the number of rows.</code></pre>
 <p>[1] “nothing to report…”</p>
 </div>
-<div id="wikipathway-1" class="section level3">
+<div id="wikipathway-2" class="section level3">
 <h3>wikipathway</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -26429,7 +26705,7 @@ regulation of apoptotic signaling pathway
 </tbody>
 </table>
 </div>
-<div id="gomf-2" class="section level3">
+<div id="gomf-3" class="section level3">
 <h3>gomf</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -26693,7 +26969,7 @@ lipid binding
 </tbody>
 </table>
 </div>
-<div id="kegg-2" class="section level3">
+<div id="kegg-3" class="section level3">
 <h3>kegg</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -26957,7 +27233,7 @@ Graft-versus-host disease
 </tbody>
 </table>
 </div>
-<div id="reactome-2" class="section level3">
+<div id="reactome-3" class="section level3">
 <h3>reactome</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -27451,7 +27727,7 @@ Nonsense Mediated Decay (NMD) independent of the Exon Junction Complex (EJC)
 </tbody>
 </table>
 </div>
-<div id="wikipathway_cancer-2" class="section level3">
+<div id="wikipathway_cancer-3" class="section level3">
 <h3>wikipathway_cancer</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -27459,7 +27735,7 @@ Nonsense Mediated Decay (NMD) independent of the Exon Junction Complex (EJC)
 in color does not equal to the number of rows.</code></pre>
 <p>[1] “nothing to report…”</p>
 </div>
-<div id="wikipathway-2" class="section level3">
+<div id="wikipathway-3" class="section level3">
 <h3>wikipathway</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -30528,7 +30804,7 @@ mitochondrial respiratory chain complex assembly
 </tbody>
 </table>
 </div>
-<div id="gomf-3" class="section level3">
+<div id="gomf-4" class="section level3">
 <h3>gomf</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -31942,7 +32218,7 @@ solute:sodium symporter activity
 </tbody>
 </table>
 </div>
-<div id="kegg-3" class="section level3">
+<div id="kegg-4" class="section level3">
 <h3>kegg</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -32436,7 +32712,7 @@ Tuberculosis
 </tbody>
 </table>
 </div>
-<div id="reactome-3" class="section level3">
+<div id="reactome-4" class="section level3">
 <h3>reactome</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -33850,7 +34126,7 @@ Ion homeostasis
 </tbody>
 </table>
 </div>
-<div id="wikipathway_cancer-3" class="section level3">
+<div id="wikipathway_cancer-4" class="section level3">
 <h3>wikipathway_cancer</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -33858,7 +34134,7 @@ Ion homeostasis
 in color does not equal to the number of rows.</code></pre>
 <p>[1] “nothing to report…”</p>
 </div>
-<div id="wikipathway-3" class="section level3">
+<div id="wikipathway-4" class="section level3">
 <h3>wikipathway</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -35803,7 +36079,7 @@ regulation of peptidase activity
 </tbody>
 </table>
 </div>
-<div id="gomf-4" class="section level3">
+<div id="gomf-5" class="section level3">
 <h3>gomf</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -36297,7 +36573,7 @@ heterocyclic compound binding
 </tbody>
 </table>
 </div>
-<div id="kegg-4" class="section level3">
+<div id="kegg-5" class="section level3">
 <h3>kegg</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -36791,7 +37067,7 @@ Glycosylphosphatidylinositol (GPI)-anchor biosynthesis
 </tbody>
 </table>
 </div>
-<div id="reactome-4" class="section level3">
+<div id="reactome-5" class="section level3">
 <h3>reactome</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -37745,7 +38021,7 @@ Neurodegenerative Diseases
 </tbody>
 </table>
 </div>
-<div id="wikipathway_cancer-4" class="section level3">
+<div id="wikipathway_cancer-5" class="section level3">
 <h3>wikipathway_cancer</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
@@ -37753,7 +38029,7 @@ Neurodegenerative Diseases
 in color does not equal to the number of rows.</code></pre>
 <p>[1] “nothing to report…”</p>
 </div>
-<div id="wikipathway-4" class="section level3">
+<div id="wikipathway-5" class="section level3">
 <h3>wikipathway</h3>
 <pre><code>Adding missing grouping variables: `celltype`, `db`, `component`
 `mutate_if()` ignored the following grouping variables:</code></pre>
