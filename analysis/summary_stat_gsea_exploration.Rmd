@@ -25,7 +25,7 @@ $$
 The detail that Peter's expressed intest in is how we model $\sigma_i^2$. Most treatments of GSEA use just z-scores or p-values. If we were to just model z-scores here with a model like
 
 $$ 
-\hat z_i = \frac{\hat\beta}{s_i} \sim N(z_i, 1) \\
+\hat z_i = \frac{\hat\beta_i}{s_i} \sim N(z_i, 1) \\
 z_i \sim (1-\pi_i) \delta_0 + \pi_i N(0, \sigma^2_0)
 $$
 
