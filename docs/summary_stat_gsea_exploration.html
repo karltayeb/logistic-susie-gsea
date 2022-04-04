@@ -502,16 +502,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree62fa4bc69d9c4234fcb7bc7769e5d6da147a93b8targetblank62fa4bca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/62fa4bc69d9c4234fcb7bc7769e5d6da147a93b8" target="_blank">62fa4bc</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeda42d2a330fe5dfd85066a7d78df975f11bb9920targetblankda42d2aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/da42d2a330fe5dfd85066a7d78df975f11bb9920" target="_blank">da42d2a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree62fa4bc69d9c4234fcb7bc7769e5d6da147a93b8targetblank62fa4bca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeda42d2a330fe5dfd85066a7d78df975f11bb9920targetblankda42d2aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/62fa4bc69d9c4234fcb7bc7769e5d6da147a93b8" target="_blank">62fa4bc</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/da42d2a330fe5dfd85066a7d78df975f11bb9920" target="_blank">da42d2a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -623,6 +623,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/da42d2a330fe5dfd85066a7d78df975f11bb9920/analysis/summary_stat_gsea_exploration.Rmd" target="_blank">da42d2a</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+<td>
+wflow_publish(“analysis/summary_stat_gsea_exploration.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/6582929c9fa1ab0509f6098602aa7d19d6868108/docs/summary_stat_gsea_exploration.html" target="_blank">6582929</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -745,7 +779,7 @@ wflow_publish(“analysis/summary_stat_gsea_exploration.Rmd”)
 \]</span></p>
 <p>The detail that Peter’s expressed intest in is how we model <span class="math inline">\(\sigma_i^2\)</span>. Most treatments of GSEA use just z-scores or p-values. If we were to just model z-scores here with a model like</p>
 <p><span class="math display">\[ 
-\hat z_i = \frac{\hat\beta}{s_i} \sim N(z_i, 1) \\
+\hat z_i = \frac{\hat\beta_i}{s_i} \sim N(z_i, 1) \\
 z_i \sim (1-\pi_i) \delta_0 + \pi_i N(0, \sigma^2_0)
 \]</span></p>
 <p>Translating this to the summary stat model we can see it’s equivalent to choosing <span class="math inline">\(\sigma_i = \sigma_0 s_i\)</span>. That is, genes with larger standard error are expected to have larger effect sizes on average. This assumption may not hold in single cell DE expression analysis and other single cell analysis which might be upstream of GSEA.</p>
