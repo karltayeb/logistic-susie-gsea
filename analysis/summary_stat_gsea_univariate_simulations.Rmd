@@ -1,0 +1,359 @@
+---
+title: "summary_stat_gsea_univariate_simulations"
+author: "karltayeb"
+date: "2022-04-03"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r setup, results=FALSE}
+library(tidyverse)
+library(latex2exp)
+source('code/marginal_sumstat_gsea.R')
+```
+
+```{r simulations}
+#' simulate summary statistics from two component enrichment model
+#' params is a list with elements theta, sigma0, alpha
+#' r.se is a function for sampling standard errors runif(1e-3, 5) by default
+simulate.gene.summary.stats = function(params, x = NULL, gene.set.prop=0.01, n.genes=10000, r.se=NULL) {
+  theta0 = params$theta[1]
+  theta1 = params$theta[2]
+  sigma0 = params$sigma0
+  alpha = params$alpha
+  # simulate x if not provided
+  if(is.null(x)){
+    x <- rbinom(n.genes, 1, gene.set.prop)  # gene set
+  } else{
+    n.genes <- length(x)
+  }
+  
+  if(is.null(r.se)){
+    se <- runif(n.genes, 1e-3, 5)  # simulate standard errors, reasonable?
+  } else {
+    se <- r.se(n.genes)
+  }
+  sigma <- se ^ alpha * sigma0
+  gamma <- rbinom(n.genes, 1, sigmoid(theta0 + theta1 * x))  # null/non-null
+  beta <- rnorm(n.genes, mean = 0, sd = se)
+  beta <- beta + (rnorm(n.genes, mean=0, sd=sigma) * gamma)
+  return(list(beta=beta, se=se, gamma=gamma))
+}
+```
+
+```{r simulate.X}
+roll = function(v, n=1){
+  if(n==0){
+    return(v)
+  } else{
+    return(c(tail(v, n), head(v, -n)))
+  }
+}
+
+#' make sequence of simulated gene sets of fixed size
+#' and decreasing overlap with first gene set
+#' gene.set.size = size of gene set
+#' by = how much to overlap incriment
+sim.X.base = function(n.genes=1e4, gene.set.size=1e2, from=0, to=NULL, by=5){
+  to <- ifelse(is.null(to), gene.set.size, to)
+  x = c(rep(1, gene.set.size), rep(0, n.genes-gene.set.size))
+  u <- map(seq(from, to, by=by), ~roll(x, n=.x))
+  X <- matrix(unlist(u), nrow = n.genes)
+  return(X)
+}
+
+#' make sequence of gene sets overlapping base gene set
+sim.X.other = function(gene.set.size, other.size, by=5){
+  sim.X.base(
+    gene.set.size=other.size,
+    from=max(0, gene.set.size - other.size), to=gene.set.size, by=by
+  )
+}
+
+#' put it all together
+#' returns matrix X
+#' first columns is the gene set of interest
+#' other columns are gene sets of varying sizes that overlap the first
+sim.X = function(gene.set.size=50, set.sizes = NULL, by=5){
+  X <- sim.X.base(gene.set.size = gene.set.size, by=by)
+  if(!is.null(set.sizes)){
+    Xs <- do.call('cbind', map(set.sizes, ~sim.X.other(gene.set.size, .x, by=by)))
+    X <- cbind(X, Xs)
+  }
+  return(X)
+}
+```
+
+Here's just a reminder of our optimization options.
+We can either optimize the marginal likelihood directly, or perform EM.
+For the scale of problems we're working on, they run about the same speed. `optim` is maybe 20% faster.
+But, I've also seen that it's harder to initialize right. And in general we need a good initialization strategy.
+
+```{r}
+library(tictoc)
+params = list(
+  theta = c(-2, 1),
+  alpha = 0.5,
+  sigma0 = 3.0
+)
+
+x = c(rep(1, 100), rep(0, 9900))
+sim <- simulate.gene.summary.stats(params, x)
+gsea <- summary.stat.gsea(x, sim$beta, sim$se)
+
+params.init = list(
+  theta = c(0, 0),
+  alpha = 1.0,
+  sigma0 = 1.0
+)
+
+tic('optimizing marginal likelihood')
+params.fit <- gsea$optimize.marginal.likelihood(
+  params.init, update.alpha = T, update.sigma0 = T)
+toc()
+
+tic('optimize via EM')
+params.fit = gsea$expectation.maximiztion(
+  params.init, n.iter=1000, update.alpha = T, update.sigma0 = T)
+toc()
+```
+
+
+```{r sim.driver}
+#' fit the model and return parameter list
+#' ... arguments to pass to to EM
+fit.sumstat.gsea = function(beta, se, x, params.init=NULL, theta=NULL, alpha=NULL, sigma0=NULL, ...){
+  gsea <- summary.stat.gsea(x, beta, se)
+  # TODO: figure out how to initialize parameters
+  if(is.null(params.init)){
+    params.init = list(
+      theta = c(-3, 0),
+      alpha = 1.0,
+      sigma0 = 1
+    )
+  }
+  if(!is.null(theta)){
+    params.init$theta = theta
+  }
+  if(!is.null(alpha)){
+    params.init$alpha = alpha
+  }
+  if(!is.null(sigma0)){
+    params.init$sigma0 = sigma0
+  }
+  params.fit = gsea$expectation.maximiztion(params.init, ...)
+  return(params.fit)
+}
+
+#' driver function for simulations
+#' fit model for all gene sets
+#' assume first column of X is the gene is sim$x
+sim.driver = function(X, sim, params.init=NULL, update.alpha=T, update.sigma0=T){
+  # fit model for each gene set
+  res <- map(1:dim(X)[2], ~fit.sumstat.gsea(
+    sim$beta, sim$se, X[,.x],
+    params.init=params.init,
+    update.alpha=update.alpha, update.sigma0=update.sigma0
+  ))
+  
+  # clean up data
+  for (i in 1:length(res)){
+    res[[i]]$responsibilities <- NULL
+    names(res[[i]]$theta) <- paste0('theta', c(0, 1))
+  }
+
+  # dump into table with some useful stats
+  res_tbl <- tibble(
+      overlap=(X[,1] %*% X)[1,],
+      active = 1:dim(X)[2] == 1,
+      set.size=colSums(X),
+      p.overlap = overlap/set.size,
+      res=res
+    ) %>% 
+    unnest_wider(res) %>%
+    unnest_wider(theta) %>%
+    rename(
+      theta0_hat=theta0,
+      theta1_hat=theta1,
+      alpha_hat=alpha,
+      sigma0_hat=sigma0) %>%
+    mutate(likelihood = map_dbl(lik.history, ~tail(.x, 1)))
+  return(res_tbl)
+}
+```
+
+```{r simulate.and.fit, eval=FALSE}
+library(future)
+plan(multisession, workers = 4)
+
+X <- sim.X(60, by=20)
+r.se = function(n) exp(rnorm(n, mean=-1, sd=0.5))
+hist(r.se(100000))
+
+# make simulation
+n = 100
+sim <- map_dfr(c(0.1, 0.5, 1.0, 2.0, 4.0, 8.0),
+  ~tibble(  # sample parameters
+    theta0 = runif(n, -4, 0),
+    theta1 = runif(n, 0, 4),
+    alpha = runif(n, 0, 1),
+    sigma0 = rep(.x, n)
+  ) %>% 
+  rowwise() %>%
+  mutate(  # simulate gene lists
+    params = list(list(
+      theta = c(theta0, theta1),
+      alpha = alpha,
+      sigma0 = sigma0
+    )),
+    sim = list(simulate.gene.summary.stats(params, X[, 1], r.se=r.se))
+  ) %>% ungroup()
+)
+
+possibly.sim.driver = possibly(sim.driver, NA)
+
+# fix alpha = 0 
+params.init = list(
+  theta = c(0, 0),
+  alpha = 0.,
+  sigma0 = 1
+)
+exchangeable.effects.fit <- xfun::cache_rds({
+  sim %>%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X, .x, params.init, update.alpha=F, update.sigma0=T))
+    )
+})
+
+params.init = list(
+  theta = c(0, 0),
+  alpha = 1.,
+  sigma0 = 1
+)
+exchangeable.z.fit <- xfun::cache_rds({
+  sim %>%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X, .x, params.init, update.alpha=F, update.sigma0=T))
+    )
+})
+
+params.init = list(
+  theta = c(0, 0),
+  alpha = 1.,
+  sigma0 = 1
+)
+estimate.alpha.fit <- xfun::cache_rds({
+  sim %>%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X, .x, params.init, update.alpha=T, update.sigma0=T))
+    )
+})
+```
+
+```{r plot.non_null}
+do.true.hat.scatter = function(tbl, par){
+  plot <- tbl %>% 
+    unnest(fit) %>% 
+    filter(active) %>%
+    ggplot(aes(x=!!sym(par), y=!!sym(paste0(par, '_hat')))) +
+    geom_line(aes(x=!!sym(par), y=!!sym(par), color='r')) + 
+    geom_point() + facet_wrap(vars(sigma0))
+  return(plot)
+}
+
+do.true.hat.violin = function(tbl, par){
+  plot <- tbl %>% 
+  unnest(fit) %>% 
+  filter(active) %>%
+  ggplot(aes(x=factor(!!sym(par)), y=!!sym(paste0(par, '_hat')))) +
+  geom_violin() +
+  geom_hline(aes(yintercept=!!sym(par))) +
+  facet_wrap(vars(!!sym(par)), scale='free')
+  return(plot)
+}
+
+p1 <- do.true.hat.scatter(exchangeable.z.fit, 'theta0') +
+  labs(title='Exchangeable z')
+p2 <- do.true.hat.scatter(exchangeable.effects.fit, 'theta0') +
+  labs(title='Exchangeable effects')
+p3 <- do.true.hat.scatter(estimate.alpha.fit, 'theta0') +
+  labs(title='Estimate')
+cowplot::plot_grid(p1, p2, p3, nrow = 1)
+
+
+p1 <- do.true.hat.scatter(exchangeable.z.fit, 'theta1') +
+  labs(title='Exchangeable effects')
+p2 <- do.true.hat.scatter(exchangeable.effects.fit, 'theta1') +
+  labs(title='Exchangeable z')
+p3 <- do.true.hat.scatter(estimate.alpha.fit, 'theta1') +
+  labs(title='Estimate')
+cowplot::plot_grid(p1, p2, p3, nrow = 1)
+
+
+p1 <- do.true.hat.violin(exchangeable.z.fit, 'sigma0') +
+  labs(title='Exchangeable effects')
+p2 <- do.true.hat.violin(exchangeable.effects.fit, 'sigma0') +
+  labs(title='Exchangeable z')
+p3 <- do.true.hat.violin(estimate.alpha.fit, 'sigma0') +
+  labs(title='Estimate')
+cowplot::plot_grid(p1, p2, p3, nrow = 1)
+
+p <- do.true.hat.scatter(estimate.alpha.fit, 'alpha') +
+  labs(title='Estimate alpha ')
+p
+```
+
+
+```{r plot.null}
+do.null.freq.poly = function(tbl, par){
+  plot <- tbl %>%
+    unnest(fit) %>%
+    mutate(diff = !!sym(paste0(par, '_hat')) - !!sym(par)) %>%
+    ggplot(aes(x=diff, color=factor(overlap))) +
+    geom_density() +
+    facet_wrap(vars(sigma0), scale='free')
+  return(plot)
+}
+
+p1 <- do.null.freq.poly(exchangeable.z.fit, 'theta0') +
+  labs(title='Exchangeable effects')
+p2 <- do.null.freq.poly(exchangeable.effects.fit, 'theta0') +
+  labs(title='Exchangeable z')
+p3 <- do.null.freq.poly(estimate.alpha.fit, 'theta0') +
+  labs(title='Estimate')
+cowplot::plot_grid(p1, p2, p3, nrow = 1)
+
+
+
+p1 <- do.null.freq.poly(exchangeable.z.fit, 'theta1') +
+  labs(title='Exchangeable effects')
+p2 <- do.null.freq.poly(exchangeable.effects.fit, 'theta1') +
+  labs(title='Exchangeable z')
+p3 <- do.null.freq.poly(estimate.alpha.fit, 'theta1') +
+  labs(title='Estimate')
+cowplot::plot_grid(p1, p2, p3)
+
+
+p1 <- do.null.freq.poly(exchangeable.z.fit, 'simga0') +
+  labs(title='Exchangeable effects')
+p2 <- do.null.freq.poly(exchangeable.effects.fit, 'simga0') +
+  labs(title='Exchangeable z')
+p3 <- do.null.freq.poly(estimate.alpha.fit, 'simga0') +
+  labs(title='Estimate')
+cowplot::plot_grid(p1, p2, p3)
+
+
+do.null.freq.poly(estimate.alpha.fit, 'alpha') +
+  labs(title='Estimate alpha')
+```
+
+
+

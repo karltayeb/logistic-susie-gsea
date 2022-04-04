@@ -1,0 +1,297 @@
+---
+title: "Baboon Diet Example"
+author: "karltayeb"
+date: "2022-03-16"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Baboons were fed different diets for two years. Adipose, liver and muscle tissue were collected. Differential expression was conducted across the diet conditions.
+
+```{r message=FALSE, results='hide'}
+library(GSEABenchmarkeR)
+library(EnrichmentBrowser)
+library(tidyverse)
+library(susieR)
+library(htmltools)
+library(DT)
+library(kableExtra)
+
+source('code/load_gene_sets.R')
+source('code/utils.R')
+source('code/logistic_susie_vb.R')
+source('code/logistic_susie_veb_boost.R')
+source('code/latent_logistic_susie.R')
+```
+
+## Setup
+
+### Load Gene Sets
+`loadGeneSetX` uniformly formats gene sets and generates the $X$ matrix
+We can source any gene set from `WebGestaltR::listGeneSet()`
+
+```{r geneset.setup, message=FALSE, results='hide'}
+gs_list <- WebGestaltR::listGeneSet()
+gobp <- loadGeneSetX('geneontology_Biological_Process', min.size=50)  # just huge number of gene sets
+gobp_nr <- loadGeneSetX('geneontology_Biological_Process_noRedundant', min.size=1)
+gomf <- loadGeneSetX('geneontology_Molecular_Function', min.size=1)
+kegg <- loadGeneSetX('pathway_KEGG', min.size=1)
+reactome <- loadGeneSetX('pathway_Reactome', min.size=1)
+wikipathway_cancer <- loadGeneSetX('pathway_Wikipathway_cancer', min.size=1)
+wikipathway <- loadGeneSetX('pathway_Wikipathway', min.size=1)
+
+genesets <- list(
+  gobp=gobp,
+  gobp_nr=gobp_nr,
+  gomf=gomf,
+  kegg=kegg,
+  reactome=reactome,
+  wikipathway_cancer=wikipathway_cancer,
+  wikipathway=wikipathway
+)
+```
+
+```{r data.setup}
+adipose <- read.table('data/wenhe_baboon_diet/DE_lrt_adipose.txt')
+muscle <- read.table('data/wenhe_baboon_diet/DE_lrt_muscle.txt')
+liver <- read.table('data/wenhe_baboon_diet/DE_lrt_liver.txt')
+deseq <- list(Adipose=adipose, Muscle = muscle, Liver = liver)
+
+convert_labels <- function(y, from='SYMBOL', to='ENTREZID'){
+  hs <- org.Hs.eg.db::org.Hs.eg.db
+  gene_symbols <- names(y)
+  symbol2entrez <- AnnotationDbi::select(hs, keys=gene_symbols, columns=c(to, from), keytype = from)
+  symbol2entrez <- symbol2entrez[!duplicated(symbol2entrez[[from]]),]
+  symbol2entrez <- symbol2entrez[!is.na(symbol2entrez[[to]]),]
+  symbol2entrez <- symbol2entrez[!is.na(symbol2entrez[[from]]),]
+  rownames(symbol2entrez) <- symbol2entrez[[from]]
+  ysub <- y[names(y) %in% symbol2entrez[[from]]]
+  names(ysub) <- symbol2entrez[names(ysub),][[to]]
+  return(ysub)
+}
+
+par(mfrow=c(1,1))
+deseq$Adipose %>% .$PValue %>% hist(main='Adipose p-values')
+```
+
+
+### Fitting and reporting helpers
+
+```{r driver}
+#' take gene level results
+#' put into standard format
+#' call the value we threshold on 'y'
+#' convert gene labels to ENTREIZID
+clean_gene_list = function(dat, thresh_col='padj', from='SYMBOL'){
+  thresh_col = sym(thresh_col)
+  dat %>%
+    as.data.frame %>%
+    rownames_to_column('gene') %>%
+    dplyr::select(gene, !!thresh_col) %>%
+    filter(!is.na(!!thresh_col)) %>%
+    mutate(y = !!thresh_col) %>%
+    select(gene, y) %>%
+    tibble2namedlist %>%
+    convert_labels(from)
+}
+
+#' modify this for different data sources
+#' makes a binary list from table like data
+proc_y = function(data, thresh){
+  data %>%
+    clean_gene_list('PValue') %>%
+    {
+      y <- as.integer(. < thresh)
+      names(y) <- names(.)
+      y
+    }
+}
+
+
+#' fit logistic susie, and hypergeometric test
+logistic_susie_driver = function(db, celltype, thresh){
+  gs <- genesets[[db]]
+  data <- deseq[[celltype]]
+
+  # set up binary y
+  y <- proc_y(data, thresh)
+  
+  u <- process_input(gs$X, y)  # subset to common genes
+  vb.fit <- logistic.susie(  # fit model
+    u$X, u$y, L=10, init.intercept = 0, verbose=1, maxit=100)
+
+  #' hypergeometric test
+  ora <- tibble(
+    geneSet = colnames(u$X),
+    geneListSize = sum(u$y),
+    geneSetSize = colSums(u$X),
+    overlap = (u$y %*% u$X)[1,],
+    nGenes = length(u$y),
+    propInList = overlap / geneListSize,
+    propInSet = overlap / geneSetSize,
+    oddsRatio = (overlap / (geneListSize - overlap)) / (
+      (geneSetSize - overlap) / (nGenes - geneSetSize + overlap)),
+    pValueHypergeometric = phyper(
+      overlap-1, geneListSize, nGenes, geneSetSize, lower.tail= FALSE),
+    db = db,
+    celltype = celltype,
+    thresh = thresh
+  ) %>% 
+  left_join(gs$geneSet$geneSetDes)
+
+  return(list(
+    fit = vb.fit,
+    ora = ora,
+    db = db, celltype = celltype, thresh = thresh))
+}
+
+credible_set_summary = function(res){
+  gs <- genesets[[res$db]]
+  data <- deseq[[res$celltype]]
+
+  # set up binary y
+  y <- proc_y(data, thresh)
+  
+  u <- process_input(gs$X, y)  # subset to common genes
+
+  #' report top 50 elements in cs
+  credible.set.summary <- t(res$fit$alpha) %>%
+    data.frame() %>%
+    rownames_to_column(var='geneSet') %>%
+    rename_with(~str_replace(., 'X', 'L')) %>%
+    pivot_longer(starts_with('L'), names_to='component', values_to = 'alpha') %>%
+    arrange(component, desc(alpha)) %>%
+    dplyr::group_by(component) %>%
+    filter(row_number() < 50) %>%
+    mutate(cumalpha = c(0, head(cumsum(alpha), -1))) %>%
+    mutate(in_cs = cumalpha < 0.95) %>%
+    mutate(active_cs = component %in% names(res$fit$sets$cs)) %>%
+    left_join(res$ora) %>%
+    left_join(gs$geneSet$geneSetDes)
+
+  #' map each gene set to the component with top alpha
+  #' report pip
+  gene.set.summary <- res$fit$pip %>% 
+    as_tibble(rownames='geneSet') %>%
+    rename(pip=value) %>%
+    left_join(res$ora) %>%
+    left_join(gs$geneSet$geneSetDes)
+
+  return(credible.set.summary)
+}
+
+gene_set_summary = function(res){
+  gs <- genesets[[res$db]]
+  #' map each gene set to the component with top alpha
+  #' report pip
+  res$fit$pip %>% 
+    as_tibble(rownames='geneSet') %>%
+    rename(pip=value) %>%
+    left_join(res$ora) %>%
+    left_join(gs$geneSet$geneSetDes)
+}
+```
+
+
+### Example usage
+
+```{r}
+db = 'gobp'
+celltype = 'Adipose'
+thresh = 1e-4
+  
+res <- logistic_susie_driver(db, celltype, thresh)
+credible_set_summary(res) %>% head()
+gene_set_summary(res) %>% head()
+```
+
+## Fit logistic SuSiE 
+
+For each celltype, we fit logistic SuSiE using multiple gene set sources at various threshold of `padj`.
+
+```{r run.all, results='hide', message=FALSE}
+celltypes <- names(deseq)
+pthresh <- c(1e-2) # c(0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001)
+db_name <- names(genesets)
+crossed <- cross3(db_name, celltypes, pthresh)
+
+res <- xfun::cache_rds({
+  res <- purrr::map(crossed, purrr::lift_dl(logistic_susie_driver))
+  for (i in 1:length(res)){  # save some space
+    res[[i]]$fit$dat <- NULL
+  }
+  res
+  }
+)
+
+u <- map(res, credible_set_summary)
+cs.summary <- do.call('rbind', u)
+
+u <- map(res, gene_set_summary)
+geneset.summary <- do.call('rbind', u)
+```
+
+### Summary functions
+
+Just a few functions to help streamline looking at output
+
+```{r report.result.functions}
+library(kableExtra)
+
+#' takes a tibble
+#' organize by database and component
+#' report credible set, descriptions, pips, and hypergeometric pvalue
+#' in one row, with cs ordered by pip
+db_component_kable = function(tbl, min_alpha=0, max_sets=10){
+  tbl_filtered <-
+    tbl %>%
+    group_by(celltype, db, component) %>%
+    arrange(celltype, db, component, desc(alpha)) %>%
+    filter(alpha > min_alpha, row_number() <= max_sets)
+
+  tbl_filtered %>%
+    select(geneSet, description, alpha, pValueHypergeometric) %>%
+    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %>%
+    kbl() %>%
+    column_spec(c(4, 5, 6), color=ifelse(tbl_filtered$in_cs, 'green', 'red')) %>%
+    collapse_rows(columns = c(1, 2), valign = 'top') %>%
+    kableExtra::kable_styling()
+}
+```
+  
+
+## Results
+
+Gene set results for each tissue, across multiple gene set sources.
+
+We show the top 10 gene sets per credible set, green indicates that the gene set is in the 95% credible set. Red indicates it's not in the 95% credible set, but still ranked highly for SuSiE that component, to help get a sense of what's getting lumped in with the enrichments reported by SuSiE.
+
+
+```{r, results="asis", message=FALSE}
+gen.table = function(ct, g){
+  cs.summary %>%
+        filter(celltype == ct, db == g, active_cs) %>%
+        db_component_kable() %>%
+        htmltools::HTML()
+}
+possibly.gen.table = possibly(gen.table, otherwise="nothing to report...")
+
+for(ct in celltypes){
+  cat("\n") 
+  cat("##", ct, "\n") # Create second level headings with the names.
+  
+  for(g in names(genesets)){
+    cat("###", g, "\n") # Create second level headings with the names.
+    possibly.gen.table(ct, g) %>% print()
+    cat("\n")
+  }
+}
+```
+
+```{r}
+knitr::knit_exit()
+```
+
