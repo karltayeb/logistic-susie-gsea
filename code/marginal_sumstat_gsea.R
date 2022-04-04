@@ -1,6 +1,7 @@
 sigmoid = function(x){
   1 / (1 + exp(-x))
 }
+
 #' make all the functions for performing summary stat gsea
 #' beta_i | se_i, x, theta, alpha  ~ pi_i N_1 + (\pi_i - 1) N_0
 summary.stat.gsea = function(x, beta, se){
@@ -54,7 +55,7 @@ summary.stat.gsea = function(x, beta, se){
     non_null = dnorm(beta, mean=0, sd=sqrt(se^2 + sigma^2), log=TRUE) + log(pi)
     return(sum(responsiblities * non_null + (1-responsiblities) * null))
   }
-  
+
   #' compute posterior probability of coming from the non-null component
   #' conditioned on current parameter settings
   update.responsibilities = function(params, log.odds=FALSE){
@@ -71,7 +72,7 @@ summary.stat.gsea = function(x, beta, se){
     new.params$responsibilities = responsibilities
     return(new.params)
   }
-  
+
   #' factory returns function
   #' optimization objective for theta with fixed responsibilities
   #' and other parameters fixex
@@ -128,9 +129,10 @@ summary.stat.gsea = function(x, beta, se){
     # update parameters
     new.params = params
     new.params$theta = theta.opt$par
+    new.params$theta.se <- approximate.theta.se(new.params)
     return(new.params)
   }
-  
+
   #' routine for updating theta w.r.t Q
   update.theta.Q = function(params){
     # function in terms of log alpha, log sigma0
@@ -147,11 +149,19 @@ summary.stat.gsea = function(x, beta, se){
     # update parameters
     new.params = params
     new.params$theta <- res$par
-    browser()
+    new.params$theta.se <- approximate.theta.se(new.params)
     return(new.params)
   }
   update.theta = update.theta.Q
 
+
+  approximate.theta.se = function(params){
+    logit.pi = params$theta[1] + params$theta[2] * x
+    pi = sigmoid(logit.pi)
+    W = pi * (1-pi)
+    I = t(X) %*% apply(X, 2, function(x) x*W)
+    sqrt(diag(solve(I)))
+  }
 
   #' routine for updating alpha and sigma0 w.r.t marginal likelihood
   update.alpha.sigma0 = function(params){
@@ -248,7 +258,7 @@ summary.stat.gsea = function(x, beta, se){
     new.params$alpha <- new.alpha
     return(new.params)
   }
-  
+
   #' routine for updating sigma0 w.r.t marginal likelihood
   update.sigma0.Q = function(params){
     # function in terms of log sigma0, log sigma0
@@ -262,14 +272,14 @@ summary.stat.gsea = function(x, beta, se){
     new.params$sigma0 <- new.sigma0
     return(new.params)
   }
-  
+
   #' full em routine
   #' optimize marginal: if TRUE, optimize alpha and sigma0 w.r.t marginal likelihood
-  expectation.maximization = function(params.init, n.iter=50, tol=1e-4, update.alpha=TRUE, update.sigma0=TRUE){
+  expectation.maximization = function(params.init, n.iter=500, tol=1e-4, update.alpha=TRUE, update.sigma0=TRUE){
     params.fit <- params.init
     params.fit$lik.history = -Inf
     pb <- progress::progress_bar$new(total = n.iter)
-    
+
     for(i in 1:n.iter){
       pb$tick()
       params.fit <- update.responsibilities(params.fit)
@@ -289,16 +299,117 @@ summary.stat.gsea = function(x, beta, se){
     return(params.fit)
   }
   
+  #' simple optimization of marginal likelihood via L-BFGS-B
+  .optimize.marginal.likelihood.all = function(params.init, update.alpha=TRUE, update.sigma=TRUE){
+    par.init = c(params.init$theta, params.init$alpha, params.init$sigma0)
+    lik = function(par){
+      theta = par[1:2]
+      alpha = par[3]
+      sigma0 = par[4]
+      likelihood(theta=theta, alpha=alpha, sigma0=sigma0)
+    }
+    par.opt <- optim(
+      par.init,
+      fn=lik,
+      lower=c(-Inf,-Inf, 0, 1e-8),
+      upper=c(Inf, Inf, 1, Inf),
+      method='L-BFGS-B',
+      control=list(fnscale=-1))$par
+    params.fit <- list(
+      theta = par.opt[1:2],
+      alpha = par.opt[3],
+      sigma0 = par.opt[4])
+    return(params.fit)
+  }
+  
+  .optimize.marginal.likelihood.theta = function(params.init){
+    par.init = params.init$theta
+    lik.theta = function(par){
+      theta = par[1:2]
+      likelihood(params.init, theta=theta)
+    }
+    par.opt <- optim(
+      par.init,
+      fn=lik.theta,
+      method='L-BFGS-B',
+      control=list(fnscale=-1))$par
+    params.fit <- list(
+      theta = par.opt,
+      alpha = params.init$alpha,
+      sigma0 = params.init$sigma0)
+    return(params.fit)
+  }
+
+  .optimize.marginal.likelihood.theta.alpha = function(params.init){
+    par.init = c(params.init$theta, params.init$alpha)
+    lik = function(par){
+      theta = par[1:2]
+      alpha = par[3]
+      likelihood(params.init, theta=theta, alpha=alpha)
+    }
+    par.opt <- optim(
+      par.init,
+      fn=lik,
+      lower=c(-Inf,-Inf, 0),
+      upper=c(Inf, Inf, 1),
+      method='L-BFGS-B',
+      control=list(fnscale=-1))$par
+    params.fit <- list(
+      theta = par.opt[1:2],
+      alpha = par.opt[3],
+      sigma0 = params.init$sigma0)
+    return(params.fit)
+  }
+
+  .optimize.marginal.likelihood.theta.sigma0 = function(params.init){
+    par.init = c(params.init$theta, params.init$sigma0)
+    lik = function(par){
+      theta = par[1:2]
+      sigma0 = par[3]
+      likelihood(params.init, theta=theta, sigma0=sigma0)
+    }
+    par.opt <- optim(
+      par.init,
+      fn=lik,
+      lower=c(-Inf,-Inf, 1e-8),
+      upper=c(Inf, Inf, Inf),
+      method='L-BFGS-B',
+      control=list(fnscale=-1))$par
+    params.fit <- list(
+      theta = par.opt[1:2],
+      alpha = params.init$alpha,
+      sigma0 = par.opt[3])
+    return(params.fit)
+  }
+
+  optimize.marginal.likelihood = function(params.init, update.alpha=TRUE, update.sigma0=TRUE){
+    if(update.alpha & update.sigma0){
+      message('optimize all parameters')
+      params.fit <- .optimize.marginal.likelihood.all(params.init)
+    } else if(update.alpha & !update.sigma0){
+      message('optimze with fixed sigma0')
+      params.fit <- .optimize.marginal.likelihood.theta.alpha(params.init)
+    } else if(!update.alpha & update.sigma0){
+      message('optimze with fixed alpha')
+      params.fit <- .optimize.marginal.likelihood.theta.sigma0(params.init)
+    } else{
+      message('optimize theta only')
+      params.fit <- .optimize.marginal.likelihood.theta(params.init)
+    }
+  }
+
+
   return(list(
     update.responsibilities=update.responsibilities,
     theta.obj=theta.obj.factory,
     theta.grad=theta.grad.factory,
+    theta.hess=theta.hess.factory,
     update.theta=update.theta.Q,
     update.alpha = update.alpha.Q,
     update.sigma0 = update.sigma0.Q,
     expectation.maximiztion = expectation.maximization,
     likelihood=likelihood,
-    Q=Q
-    )
-  )
+    approximate.theta.se=approximate.theta.se,
+    Q=Q,
+    optimize.marginal.likelihood=optimize.marginal.likelihood))
 }
