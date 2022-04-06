@@ -13,7 +13,7 @@
 
 <meta name="date" content="2022-04-03" />
 
-<title>summary_stat_gsea_univariate_simulations</title>
+<title>Summary statistic GSEA univariate simulations</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -374,7 +374,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">summary_stat_gsea_univariate_simulations</h1>
+<h1 class="title toc-ignore">Summary statistic GSEA univariate simulations</h1>
 <h4 class="author">karltayeb</h4>
 <h4 class="date">2022-04-03</h4>
 
@@ -492,16 +492,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeeb8b2ae12abd03224edd4d2b964a1ab366b997dftargetblankeb8b2aea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/eb8b2ae12abd03224edd4d2b964a1ab366b997df" target="_blank">eb8b2ae</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree8944883a1563fa60bc6d04521e567d6c595f58b2targetblank8944883a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/8944883a1563fa60bc6d04521e567d6c595f58b2" target="_blank">8944883</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeeb8b2ae12abd03224edd4d2b964a1ab366b997dftargetblankeb8b2aea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree8944883a1563fa60bc6d04521e567d6c595f58b2targetblank8944883a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/eb8b2ae12abd03224edd4d2b964a1ab366b997df" target="_blank">eb8b2ae</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/8944883a1563fa60bc6d04521e567d6c595f58b2" target="_blank">8944883</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -612,6 +612,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8944883a1563fa60bc6d04521e567d6c595f58b2/analysis/summary_stat_gsea_sim.Rmd" target="_blank">8944883</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+<td>
+wflow_publish(c(“analysis/index.Rmd”, “analysis/summary_stat_gsea_sim.Rmd”))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/281c7d29781d9c4ec44e99cdfdb5f46e41213916/docs/summary_stat_gsea_sim.html" target="_blank">281c7d2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -755,12 +789,12 @@ params.fit1 &lt;- gsea$optimize.marginal.likelihood(
   params.init, update.alpha = T, update.sigma0 = T)</code></pre>
 <pre><code>optimize all parameters</code></pre>
 <pre class="r"><code>toc()</code></pre>
-<pre><code>optimizing marginal likelihood: 5.031 sec elapsed</code></pre>
+<pre><code>optimizing marginal likelihood: 5.068 sec elapsed</code></pre>
 <pre class="r"><code>tic(&#39;optimize via EM&#39;)
 params.fit2 &lt;- gsea$expectation.maximiztion(
   params.init, n.iter=1000, update.alpha = T, update.sigma0 = T)
 toc()</code></pre>
-<pre><code>optimize via EM: 6.302 sec elapsed</code></pre>
+<pre><code>optimize via EM: 6.298 sec elapsed</code></pre>
 <pre class="r"><code>#&#39; fit the model and return parameter list
 #&#39; ... arguments to pass to to EM
 fit.sumstat.gsea = function(beta, se, x, params.init=NULL, theta=NULL, alpha=NULL, sigma0=NULL, ...){
@@ -843,6 +877,43 @@ plan(multisession)
 r.se = function(n) exp(rnorm(n, mean=-1, sd=0.5))
 hist(r.se(100000))</code></pre>
 <p><img src="figure/summary_stat_gsea_sim.Rmd/sim-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-sim-1">
+Past versions of sim-1.png
+</button>
+</p>
+<div id="fig-sim-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/281c7d29781d9c4ec44e99cdfdb5f46e41213916/docs/figure/summary_stat_gsea_sim.Rmd/sim-1.png" target="_blank">281c7d2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># make simulation
 # sigma0=0 is the null simulation
 sim &lt;- xfun::cache_rds({
@@ -1011,6 +1082,43 @@ p3 &lt;- do.true.hat.scatter(estimate.alpha.fit %&gt;% filter(sigma0 &gt;0), &#3
   labs(title=&#39;Estimate&#39;)
 cowplot::plot_grid(p1, p2, p3, ncol = 1)</code></pre>
 <p><img src="figure/summary_stat_gsea_sim.Rmd/plot.non_null.theta1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot.non_null.theta1-1">
+Past versions of plot.non_null.theta1-1.png
+</button>
+</p>
+<div id="fig-plot.non_null.theta1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/281c7d29781d9c4ec44e99cdfdb5f46e41213916/docs/figure/summary_stat_gsea_sim.Rmd/plot.non_null.theta1-1.png" target="_blank">281c7d2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="intercept" class="section level3">
 <h3>Intercept</h3>
@@ -1022,6 +1130,43 @@ p3 &lt;- do.true.hat.scatter(estimate.alpha.fit %&gt;% filter(sigma0 &gt;0), &#3
   labs(title=&#39;Estimate&#39;)
 cowplot::plot_grid(p1, p2, p3, ncol = 1)</code></pre>
 <p><img src="figure/summary_stat_gsea_sim.Rmd/plot.non_null.theta0-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot.non_null.theta0-1">
+Past versions of plot.non_null.theta0-1.png
+</button>
+</p>
+<div id="fig-plot.non_null.theta0-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/281c7d29781d9c4ec44e99cdfdb5f46e41213916/docs/figure/summary_stat_gsea_sim.Rmd/plot.non_null.theta0-1.png" target="_blank">281c7d2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="alpha" class="section level3">
 <h3><span class="math inline">\(\alpha\)</span></h3>
@@ -1029,6 +1174,43 @@ cowplot::plot_grid(p1, p2, p3, ncol = 1)</code></pre>
   labs(title=&#39;Estimate&#39;)
 p3</code></pre>
 <p><img src="figure/summary_stat_gsea_sim.Rmd/plot.non_null.alpha-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot.non_null.alpha-1">
+Past versions of plot.non_null.alpha-1.png
+</button>
+</p>
+<div id="fig-plot.non_null.alpha-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/281c7d29781d9c4ec44e99cdfdb5f46e41213916/docs/figure/summary_stat_gsea_sim.Rmd/plot.non_null.alpha-1.png" target="_blank">281c7d2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="sigma_0" class="section level3">
 <h3><span class="math inline">\(\sigma_0\)</span></h3>
@@ -1040,6 +1222,43 @@ p3 &lt;- do.true.hat.violin(estimate.alpha.fit %&gt;% filter(sigma0 &gt;0), &#39
   labs(title=&#39;Estimate&#39;)
 cowplot::plot_grid(p1, p2, p3, ncol = 1)</code></pre>
 <p><img src="figure/summary_stat_gsea_sim.Rmd/plot.non_null.sigma0-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot.non_null.sigma0-1">
+Past versions of plot.non_null.sigma0-1.png
+</button>
+</p>
+<div id="fig-plot.non_null.sigma0-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/281c7d29781d9c4ec44e99cdfdb5f46e41213916/docs/figure/summary_stat_gsea_sim.Rmd/plot.non_null.sigma0-1.png" target="_blank">281c7d2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="null-simulation" class="section level2">
@@ -1059,12 +1278,86 @@ null.fit %&gt;%
   facet_wrap(vars(model))</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="figure/summary_stat_gsea_sim.Rmd/plot.null.theta1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot.null.theta1-1">
+Past versions of plot.null.theta1-1.png
+</button>
+</p>
+<div id="fig-plot.null.theta1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/281c7d29781d9c4ec44e99cdfdb5f46e41213916/docs/figure/summary_stat_gsea_sim.Rmd/plot.null.theta1-1.png" target="_blank">281c7d2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>null.fit %&gt;%
   unnest(fit) %&gt;%
   ggplot(aes(y=theta1_hat, x=theta0)) +
   geom_point() +
   facet_wrap(vars(model))</code></pre>
 <p><img src="figure/summary_stat_gsea_sim.Rmd/plot.null.theta1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot.null.theta1-2">
+Past versions of plot.null.theta1-2.png
+</button>
+</p>
+<div id="fig-plot.null.theta1-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/281c7d29781d9c4ec44e99cdfdb5f46e41213916/docs/figure/summary_stat_gsea_sim.Rmd/plot.null.theta1-2.png" target="_blank">281c7d2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
 </div>
 

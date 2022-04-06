@@ -309,7 +309,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-03-30
+<strong>Last updated:</strong> 2022-04-06
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -340,16 +340,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree57400f21bbd5926a68a390bf8ea518e0be76c146targetblank57400f2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/57400f21bbd5926a68a390bf8ea518e0be76c146" target="_blank">57400f2</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree8944883a1563fa60bc6d04521e567d6c595f58b2targetblank8944883a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/8944883a1563fa60bc6d04521e567d6c595f58b2" target="_blank">8944883</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree57400f21bbd5926a68a390bf8ea518e0be76c146targetblank57400f2a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree8944883a1563fa60bc6d04521e567d6c595f58b2targetblank8944883a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/57400f21bbd5926a68a390bf8ea518e0be76c146" target="_blank">57400f2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/8944883a1563fa60bc6d04521e567d6c595f58b2" target="_blank">8944883</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -371,6 +371,7 @@ Untracked files:
     Untracked:  _targets.md
     Untracked:  _targets/
     Untracked:  _targets_r/
+    Untracked:  analysis/deng_example.Rmd
     Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
     Untracked:  analysis/fixed_intercept.Rmd
     Untracked:  analysis/iDEA_examples.Rmd
@@ -380,16 +381,20 @@ Untracked files:
     Untracked:  analysis/linear_method_failure_modes.Rmd
     Untracked:  analysis/linear_regression_failure_regime.Rmd
     Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
     Untracked:  analysis/references.bib
     Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/single_cell_pbmc_l1.Rmd
     Untracked:  analysis/test.Rmd
     Untracked:  analysis/wenhe_baboon_example.Rmd
     Untracked:  baboon_diet_cache/
     Untracked:  build_site.R
     Untracked:  cache/
     Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
     Untracked:  code/marginal_sumstat_gsea_collapsed.R
     Untracked:  data/adipose_2yr_topsnp.txt
+    Untracked:  data/deng/
     Untracked:  data/fetal_reference_cellid_gene_sets.RData
     Untracked:  data/pbmc-purified/
     Untracked:  data/wenhe_baboon_diet/
@@ -398,18 +403,21 @@ Untracked files:
     Untracked:  latent_logistic_susie_cache/
     Untracked:  simulation_targets/
     Untracked:  single_cell_pbmc_cache/
+    Untracked:  single_cell_pbmc_l1_cache/
     Untracked:  summary_stat_gsea_exploration_cache/
+    Untracked:  summary_stat_gsea_sim_cache/
 
 Unstaged changes:
     Modified:   _simulation_targets.R
     Modified:   _targets.Rmd
+    Modified:   analysis/baboon_diet.Rmd
     Modified:   analysis/gseabenchmark_tcga.Rmd
+    Deleted:    analysis/summary_stat_gsea_univariate_simulations.Rmd
     Modified:   code/fit_baselines.R
     Modified:   code/fit_logistic_susie.R
     Modified:   code/fit_mr_ash.R
     Modified:   code/fit_susie.R
     Modified:   code/load_gene_sets.R
-    Modified:   code/marginal_sumstat_gsea.R
     Modified:   code/simulate_gene_lists.R
     Modified:   code/utils.R
     Modified:   target_components/factories.R
@@ -452,6 +460,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8944883a1563fa60bc6d04521e567d6c595f58b2/analysis/index.Rmd" target="_blank">8944883</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+<td>
+wflow_publish(c(“analysis/index.Rmd”, “analysis/summary_stat_gsea_sim.Rmd”))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/5a3ea2c86da6699e849160de75c055d060c2458b/docs/index.html" target="_blank">5a3ea2c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-03-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -709,7 +751,7 @@ Start workflowr project.
 </div>
 <div id="gsea-from-summary-statistics" class="section level2">
 <h2>GSEA from summary statistics</h2>
-<p><a href="summary_stat_gsea_exploration.html">Two component model, initial exploration</a></p>
+<p><a href="summary_stat_gsea_exploration.html">Two component model, initial exploration</a> <a href="summary_stat_gsea_sim.html">Two component model, simulations</a></p>
 <!-- [Two component model, multiple regression]() -->
 </div>
 
