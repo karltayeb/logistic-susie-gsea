@@ -20,6 +20,7 @@ Welcome to my research website.
 
 ## GSEA from summary statistics
 [Two component model, initial exploration](summary_stat_gsea_exploration.html)
+[Two component model, simulations](summary_stat_gsea_sim.html)
 
 <!-- [Two component model, multiple regression]() -->
 

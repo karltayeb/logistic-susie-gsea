@@ -1,5 +1,5 @@
 ---
-title: "summary_stat_gsea_univariate_simulations"
+title: "Summary statistic GSEA univariate simulations"
 author: "karltayeb"
 date: "2022-04-03"
 output:
