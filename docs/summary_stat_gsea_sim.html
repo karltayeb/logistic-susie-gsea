@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="karltayeb" />
+
+<meta name="date" content="2022-04-03" />
+
+<title>summary_stat_gsea_univariate_simulations</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">summary_stat_gsea_univariate_simulations</h1>
+<h4 class="author">karltayeb</h4>
+<h4 class="date">2022-04-03</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-04-06
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeeb8b2ae12abd03224edd4d2b964a1ab366b997dftargetblankeb8b2aea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/eb8b2ae12abd03224edd4d2b964a1ab366b997df" target="_blank">eb8b2ae</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeeb8b2ae12abd03224edd4d2b964a1ab366b997dftargetblankeb8b2aea" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/eb8b2ae12abd03224edd4d2b964a1ab366b997df" target="_blank">eb8b2ae</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    library/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+    Ignored:    staging/
+
+Untracked files:
+    Untracked:  _targets.R
+    Untracked:  _targets.html
+    Untracked:  _targets.md
+    Untracked:  _targets/
+    Untracked:  _targets_r/
+    Untracked:  analysis/deng_example.Rmd
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/latent_logistic_susie.Rmd
+    Untracked:  analysis/libra_setup.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/single_cell_pbmc_l1.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  analysis/wenhe_baboon_example.Rmd
+    Untracked:  baboon_diet_cache/
+    Untracked:  build_site.R
+    Untracked:  cache/
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  data/adipose_2yr_topsnp.txt
+    Untracked:  data/deng/
+    Untracked:  data/fetal_reference_cellid_gene_sets.RData
+    Untracked:  data/pbmc-purified/
+    Untracked:  data/wenhe_baboon_diet/
+    Untracked:  docs.zip
+    Untracked:  index.md
+    Untracked:  latent_logistic_susie_cache/
+    Untracked:  simulation_targets/
+    Untracked:  single_cell_pbmc_cache/
+    Untracked:  single_cell_pbmc_l1_cache/
+    Untracked:  summary_stat_gsea_exploration_cache/
+    Untracked:  summary_stat_gsea_sim_cache/
+
+Unstaged changes:
+    Modified:   _simulation_targets.R
+    Modified:   _targets.Rmd
+    Modified:   analysis/baboon_diet.Rmd
+    Modified:   analysis/gseabenchmark_tcga.Rmd
+    Deleted:    analysis/summary_stat_gsea_univariate_simulations.Rmd
+    Modified:   code/fit_baselines.R
+    Modified:   code/fit_logistic_susie.R
+    Modified:   code/fit_mr_ash.R
+    Modified:   code/fit_susie.R
+    Modified:   code/load_gene_sets.R
+    Modified:   code/simulate_gene_lists.R
+    Modified:   code/utils.R
+    Modified:   target_components/factories.R
+    Modified:   target_components/methods.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/summary_stat_gsea_sim.Rmd</code>) and HTML (<code>docs/summary_stat_gsea_sim.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb8b2ae12abd03224edd4d2b964a1ab366b997df/analysis/summary_stat_gsea_sim.Rmd" target="_blank">eb8b2ae</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-06
+</td>
+<td>
+wflow_publish(“analysis/summary_stat_gsea_sim.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+✓ tibble  3.1.6     ✓ dplyr   1.0.8
+✓ tidyr   1.2.0     ✓ stringr 1.4.0
+✓ readr   2.1.2     ✓ forcats 0.5.1</code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(latex2exp)
+source(&#39;code/marginal_sumstat_gsea.R&#39;)</code></pre>
+<pre class="r"><code>#&#39; simulate summary statistics from two component enrichment model
+#&#39; params is a list with elements theta, sigma0, alpha
+#&#39; r.se is a function for sampling standard errors runif(1e-3, 5) by default
+simulate.gene.summary.stats = function(params, x = NULL, gene.set.prop=0.01, n.genes=10000, r.se=NULL) {
+  theta0 = params$theta[1]
+  theta1 = params$theta[2]
+  sigma0 = params$sigma0
+  alpha = params$alpha
+  # simulate x if not provided
+  if(is.null(x)){
+    x &lt;- rbinom(n.genes, 1, gene.set.prop)  # gene set
+  } else{
+    n.genes &lt;- length(x)
+  }
+  
+  if(is.null(r.se)){
+    se &lt;- runif(n.genes, 1e-3, 5)  # simulate standard errors, reasonable?
+  } else {
+    se &lt;- r.se(n.genes)
+  }
+  sigma &lt;- se ^ alpha * sigma0
+  gamma &lt;- rbinom(n.genes, 1, sigmoid(theta0 + theta1 * x))  # null/non-null
+  beta &lt;- rnorm(n.genes, mean = 0, sd = se)
+  beta &lt;- beta + (rnorm(n.genes, mean=0, sd=sigma) * gamma)
+  return(list(beta=beta, se=se, gamma=gamma))
+}</code></pre>
+<pre class="r"><code>roll = function(v, n=1){
+  if(n==0){
+    return(v)
+  } else{
+    return(c(tail(v, n), head(v, -n)))
+  }
+}
+
+#&#39; make sequence of simulated gene sets of fixed size
+#&#39; and decreasing overlap with first gene set
+#&#39; gene.set.size = size of gene set
+#&#39; by = how much to overlap incriment
+sim.X.base = function(n.genes=1e4, gene.set.size=1e2, from=0, to=NULL, by=5){
+  to &lt;- ifelse(is.null(to), gene.set.size, to)
+  x = c(rep(1, gene.set.size), rep(0, n.genes-gene.set.size))
+  u &lt;- map(seq(from, to, by=by), ~roll(x, n=.x))
+  X &lt;- matrix(unlist(u), nrow = n.genes)
+  return(X)
+}
+
+#&#39; make sequence of gene sets overlapping base gene set
+sim.X.other = function(gene.set.size, other.size, by=5){
+  sim.X.base(
+    gene.set.size=other.size,
+    from=max(0, gene.set.size - other.size), to=gene.set.size, by=by
+  )
+}
+
+#&#39; put it all together
+#&#39; returns matrix X
+#&#39; first columns is the gene set of interest
+#&#39; other columns are gene sets of varying sizes that overlap the first
+sim.X = function(gene.set.size=50, set.sizes = NULL, by=5){
+  X &lt;- sim.X.base(gene.set.size = gene.set.size, by=by)
+  if(!is.null(set.sizes)){
+    Xs &lt;- do.call(&#39;cbind&#39;, map(set.sizes, ~sim.X.other(gene.set.size, .x, by=by)))
+    X &lt;- cbind(X, Xs)
+  }
+  return(X)
+}
+
+
+X.overlap &lt;- sim.X(gene.set.size=100, by=20)
+X.nest &lt;- cbind(
+  sim.X.base(gene.set.size = 50, by=50),
+  sim.X.base(gene.set.size = 100, by=100),
+  sim.X.base(gene.set.size = 200, by=200),
+  sim.X.base(gene.set.size = 500, by=500),
+  sim.X.base(gene.set.size = 1000, by=1000),
+  sim.X.base(gene.set.size = 2000, by=2000),
+  sim.X.base(gene.set.size = 5000, by=5000)
+)
+
+X &lt;- cbind(X.overlap, X.nest)
+
+X &lt;- sim.X(gene.set.size = 100, by=100)
+X.true &lt;- X.overlap[, 1]</code></pre>
+<p>Here’s just a reminder of our optimization options. We can either optimize the marginal likelihood directly, or perform EM. For the scale of problems we’re working on, they run about the same speed. <code>optim</code> is maybe 20% faster. But, I’ve also seen that it’s harder to initialize right. And in general we need a good initialization strategy.</p>
+<pre class="r"><code>library(tictoc)
+params = list(
+  theta = c(-2, 1),
+  alpha = 0.5,
+  sigma0 = 3.0
+)
+
+x = c(rep(1, 100), rep(0, 9900))
+sim &lt;- simulate.gene.summary.stats(params, x)
+gsea &lt;- summary.stat.gsea(x, sim$beta, sim$se)
+
+params.init = list(
+  theta = c(0, 0),
+  alpha = 1.0,
+  sigma0 = 1.0
+)
+
+tic(&#39;optimizing marginal likelihood&#39;)
+params.fit1 &lt;- gsea$optimize.marginal.likelihood(
+  params.init, update.alpha = T, update.sigma0 = T)</code></pre>
+<pre><code>optimize all parameters</code></pre>
+<pre class="r"><code>toc()</code></pre>
+<pre><code>optimizing marginal likelihood: 5.031 sec elapsed</code></pre>
+<pre class="r"><code>tic(&#39;optimize via EM&#39;)
+params.fit2 &lt;- gsea$expectation.maximiztion(
+  params.init, n.iter=1000, update.alpha = T, update.sigma0 = T)
+toc()</code></pre>
+<pre><code>optimize via EM: 6.302 sec elapsed</code></pre>
+<pre class="r"><code>#&#39; fit the model and return parameter list
+#&#39; ... arguments to pass to to EM
+fit.sumstat.gsea = function(beta, se, x, params.init=NULL, theta=NULL, alpha=NULL, sigma0=NULL, ...){
+  gsea &lt;- summary.stat.gsea(x, beta, se)
+  # TODO: figure out how to initialize parameters
+  if(is.null(params.init)){
+    params.init = list(
+      theta = c(-3, 0),
+      alpha = 1.0,
+      sigma0 = 1
+    )
+  }
+  if(!is.null(theta)){
+    params.init$theta = theta
+  }
+  if(!is.null(alpha)){
+    params.init$alpha = alpha
+  }
+  if(!is.null(sigma0)){
+    params.init$sigma0 = sigma0
+  }
+  params.fit = gsea$expectation.maximiztion(params.init, ...)
+  return(params.fit)
+}
+
+#&#39; driver function for simulations
+#&#39; fit model for all gene sets
+#&#39; assume first column of X is the gene is sim$x
+sim.driver = function(X, sim, params.init=NULL, update.alpha=T, update.sigma0=T){
+  # fit model for each gene set
+  res &lt;- map(1:dim(X)[2], ~fit.sumstat.gsea(
+    sim$beta, sim$se, X[,.x],
+    params.init=params.init,
+    update.alpha=update.alpha, update.sigma0=update.sigma0
+  ))
+  
+  # clean up data
+  for (i in 1:length(res)){
+    res[[i]]$responsibilities &lt;- NULL
+    names(res[[i]]$theta) &lt;- paste0(&#39;theta&#39;, c(0, 1))
+  }
+
+  # dump into table with some useful stats
+  res_tbl &lt;- tibble(
+      overlap=(X[,1] %*% X)[1,],
+      active = 1:dim(X)[2] == 1,
+      set.size=colSums(X),
+      p.overlap = overlap/set.size,
+      res=res
+    ) %&gt;% 
+    unnest_wider(res) %&gt;%
+    unnest_wider(theta) %&gt;%
+    rename(
+      theta0_hat=theta0,
+      theta1_hat=theta1,
+      alpha_hat=alpha,
+      sigma0_hat=sigma0) %&gt;%
+    mutate(likelihood = map_dbl(lik.history, ~tail(.x, 1)))
+  return(res_tbl)
+}</code></pre>
+</div>
+<div id="simulation" class="section level2">
+<h2>Simulation</h2>
+<p>We have a null and non-null simulation. <span class="math inline">\(\theta_0 \sim \text{Unif}[-6, 0]\)</span></p>
+<p><span class="math inline">\(\theta_1 \sim \text{Unif}[0.1, 4]\)</span> for the non-null, and <span class="math inline">\(\theta_1 = 0\)</span> for the null simulation.</p>
+<p><span class="math inline">\(\alpha \sim \text{Unif}[0, 1]\)</span></p>
+<p><span class="math inline">\(s_i^2 \sim log \mathcal{N}(-1, 0.5^2)\)</span> to approximate the histogram that peter showed me.</p>
+<p><span class="math inline">\(\sigma_0 \in \{0.1, 0.5, 1.0, 2.0, 4.0}\)</span></p>
+<p>From these we sample the latent indicator of component membership</p>
+<p><span class="math inline">\(\gamma_i \sim \text{Bernoulli} (p_i)\)</span> Where <span class="math inline">\(p_i = \sigma(\theta_0 + \theta_1 x_i)\)</span>)</p>
+<p>And finally</p>
+<p><span class="math inline">\(\hat \beta_i \sim \mathcal{N}(0, s_i^2 + \gamma_i s_i^{2\alpha} \sigma_0^2)\)</span></p>
+<p>It seems to me the relative values of <span class="math inline">\(s_i\)</span> and <span class="math inline">\(\sigma_0\)</span> are whats critical, so I picked a range of values for <span class="math inline">\(\sigma_0\)</span> so we can study how easy it is for the model to estimate our enrichment parameters when effect sizes are strong or weak.</p>
+<p>The “true” gene set is taken to be the first 100 genes. We simulate 10000 genes. For each non-null simulation, we also fit the model to a gene set of 100 genes with no overap with the true gene set (the second 100 genes…).</p>
+<p>For the null simulations we just fit the one geneset consisting of the first hundred genes.</p>
+<p>Of course, we would like to know how we estimate the parameters when the model is fit against sub-sets and super-sets of the gene set, and at various degrees of overlap. We’d also like to know how often we prioritize the true gene set over these other various sets (which are all enriched marginally). But we hdo not explore that here.</p>
+<pre class="r"><code>library(future)
+plan(multisession)
+
+r.se = function(n) exp(rnorm(n, mean=-1, sd=0.5))
+hist(r.se(100000))</code></pre>
+<p><img src="figure/summary_stat_gsea_sim.Rmd/sim-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># make simulation
+# sigma0=0 is the null simulation
+sim &lt;- xfun::cache_rds({
+  n &lt;- 100
+  map_dfr(c(0.1, 0.5, 1.0, 2.0, 4.0),
+  ~tibble(  # sample parameters
+    theta0 = runif(n, -6, 0),
+    theta1 = runif(n, 0.1, 4),
+    alpha = runif(n, 0, 1),
+    sigma0 = rep(.x, n)
+  ) %&gt;% 
+  rowwise() %&gt;%
+  mutate(  # simulate gene lists
+    params = list(list(
+      theta = c(theta0, theta1),
+      alpha = alpha,
+      sigma0 = sigma0
+    )),
+    sim = list(simulate.gene.summary.stats(params, X.true, r.se=r.se))
+  ) %&gt;% ungroup())}, dir=&#39;cache/summary_stat_gsea_sim/&#39;)
+
+possibly.sim.driver = possibly(sim.driver, NA)</code></pre>
+<pre class="r"><code># fix alpha = 0 
+exchangeable.effects.fit &lt;- xfun::cache_rds({
+  params.init = list(
+    theta = c(0, 0),
+    alpha = 0.,
+    sigma0 = 1
+  )
+  sim %&gt;%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X, .x, params.init, update.alpha=F, update.sigma0=T))
+    )
+}, hash = list(sim), dir=&#39;cache/summary_stat_gsea_sim/&#39;)</code></pre>
+<pre class="r"><code>exchangeable.z.fit &lt;- xfun::cache_rds({
+  params.init &lt;- list(
+    theta = c(0, 0),
+    alpha = 1.,
+    sigma0 = 1
+  )
+  sim %&gt;%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X, .x, params.init, update.alpha=F, update.sigma0=T))
+    )
+}, hash = list(sim), dir=&#39;cache/summary_stat_gsea_sim/&#39;)</code></pre>
+<pre class="r"><code>estimate.alpha.fit &lt;- xfun::cache_rds({
+  params.init &lt;- list(
+    theta = c(0, 0),
+    alpha = 1.,
+    sigma0 = 1
+  )
+  sim %&gt;%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X, .x, params.init, update.alpha=T, update.sigma0=T))
+    )
+}, hash = list(sim), dir=&#39;cache/summary_stat_gsea_sim/&#39;)</code></pre>
+<pre class="r"><code># simulate at various levels of sigma0
+null.sim &lt;- xfun::cache_rds({
+  n &lt;- 20
+  map_dfr(c(0.1, 0.5, 1.0, 2.0, 4.0),
+  ~tibble(  # sample parameters
+    theta0 = runif(n, -6, 0),
+    theta1 = rep(0, n),
+    alpha = runif(n, 0, 1),
+    sigma0 = rep(.x, n)
+  ) %&gt;% 
+  rowwise() %&gt;%
+  mutate(  # simulate gene lists
+    params = list(list(
+      theta = c(theta0, theta1),
+      alpha = alpha,
+      sigma0 = sigma0
+    )),
+    sim = list(simulate.gene.summary.stats(params, X[, 1], r.se=r.se))
+  ) %&gt;% ungroup())}, dir=&#39;cache/summary_stat_gsea_sim/&#39;)</code></pre>
+<pre class="r"><code># fix alpha = 0 
+null.exchangeable.effects.fit &lt;- xfun::cache_rds({
+  params.init = list(
+    theta = c(0, 0),
+    alpha = 0.,
+    sigma0 = 1
+  )
+  null.sim %&gt;%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X[, 1, drop=FALSE], .x, params.init, update.alpha=F, update.sigma0=T))
+    )
+}, hash = list(null.sim), dir=&#39;cache/summary_stat_gsea_sim/&#39;)</code></pre>
+<pre class="r"><code>null.exchangeable.z.fit &lt;- xfun::cache_rds({
+  params.init &lt;- list(
+    theta = c(0, 0),
+    alpha = 1.,
+    sigma0 = 1
+  )
+  null.sim %&gt;%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X[, 1, drop=FALSE], .x, params.init, update.alpha=F, update.sigma0=T))
+    )
+}, hash = list(null.sim), dir=&#39;cache/summary_stat_gsea_sim/&#39;)</code></pre>
+<pre class="r"><code>null.estimate.alpha.fit &lt;- xfun::cache_rds({
+  params.init &lt;- list(
+    theta = c(0, 0),
+    alpha = 1.,
+    sigma0 = 1
+  )
+  null.sim %&gt;%
+    mutate(
+      fit = furrr::future_map(sim, ~possibly.sim.driver(
+        X[, 1, drop=FALSE], .x, params.init, update.alpha=T, update.sigma0=T))
+    )
+}, hash = list(null.sim), dir=&#39;cache/summary_stat_gsea_sim/&#39;)</code></pre>
+<pre class="r"><code>#&#39; file is the stem of the file name...
+#&#39; search for the file in the cache directory file_HASH.rds
+read_cache = function(file, dir=&#39;cache/summary_stat_gsea_sim/&#39;){
+  files &lt;- list.files(path = &quot;cache/summary_stat_gsea_sim/&quot;, pattern=paste0(&#39;^&#39;, file, &#39;_&#39;), full.names = TRUE)
+  if(length(files == 1)){
+    print(paste(&#39;loading from:&#39;, files[1]))
+    return(readRDS(files[1]))
+  }
+}
+
+sim &lt;- read_cache(&#39;sim&#39;)
+exchangeable.z.fit &lt;- read_cache(&#39;sim.ex.z&#39;)
+exchangeable.effects.fit &lt;- read_cache(&#39;sim.ex.effects&#39;)
+estimate.alpha.fit &lt;- read_cache(&#39;sim.alpha.fit&#39;)
+
+null.sim &lt;- read_cache(&#39;null.sim&#39;)
+null.exchangeable.z.fit &lt;- read_cache(&#39;null.sim.ex.z&#39;)
+null.exchangeable.effects.fit &lt;- read_cache(&#39;null.sim.ex.effect&#39;)
+null.estimate.alpha.fit &lt;- read_cache(&#39;null.sim.alpha.fit&#39;)</code></pre>
+<pre class="r"><code>do.true.hat.scatter = function(tbl, par){
+  plot &lt;- tbl %&gt;% 
+    unnest(fit) %&gt;% 
+    filter(active) %&gt;%
+    ggplot(aes(x=!!sym(par), y=!!sym(paste0(par, &#39;_hat&#39;)))) +
+    geom_line(aes(x=!!sym(par), y=!!sym(par), color=&#39;r&#39;)) + 
+    geom_point() + facet_wrap(vars(sigma0), nrow=1)
+  return(plot)
+}
+
+do.true.hat.violin = function(tbl, par){
+  plot &lt;- tbl %&gt;% 
+  unnest(fit) %&gt;% 
+  filter(active) %&gt;%
+  ggplot(aes(x=factor(!!sym(par)), y=!!sym(paste0(par, &#39;_hat&#39;)))) +
+  geom_violin() +
+  geom_hline(aes(yintercept=!!sym(par))) +
+  facet_wrap(vars(!!sym(par)), scale=&#39;free&#39;, nrow=1)
+  return(plot)
+}</code></pre>
+</div>
+<div id="non-null-simulations" class="section level2">
+<h2>Non-null simulations</h2>
+<p>How well are we estimating our effect size and other (nuiscance) parameters</p>
+<div id="effect-size" class="section level3">
+<h3>Effect size</h3>
+<pre class="r"><code>p1 &lt;- do.true.hat.scatter(exchangeable.z.fit %&gt;% filter(sigma0 &gt;0), &#39;theta1&#39;) +
+  labs(title=&#39;Exchangeable z&#39;)
+p2 &lt;- do.true.hat.scatter(exchangeable.effects.fit %&gt;% filter(sigma0 &gt;0), &#39;theta1&#39;) +
+  labs(title=&#39;Exchangeable effects&#39;)
+p3 &lt;- do.true.hat.scatter(estimate.alpha.fit %&gt;% filter(sigma0 &gt;0), &#39;theta1&#39;) +
+  labs(title=&#39;Estimate&#39;)
+cowplot::plot_grid(p1, p2, p3, ncol = 1)</code></pre>
+<p><img src="figure/summary_stat_gsea_sim.Rmd/plot.non_null.theta1-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="intercept" class="section level3">
+<h3>Intercept</h3>
+<pre class="r"><code>p1 &lt;- do.true.hat.scatter(exchangeable.z.fit %&gt;% filter(sigma0 &gt;0), &#39;theta0&#39;) +
+  labs(title=&#39;Exchangeable z&#39;)
+p2 &lt;- do.true.hat.scatter(exchangeable.effects.fit %&gt;% filter(sigma0 &gt;0), &#39;theta0&#39;) +
+  labs(title=&#39;Exchangeable effects&#39;)
+p3 &lt;- do.true.hat.scatter(estimate.alpha.fit %&gt;% filter(sigma0 &gt;0), &#39;theta0&#39;) +
+  labs(title=&#39;Estimate&#39;)
+cowplot::plot_grid(p1, p2, p3, ncol = 1)</code></pre>
+<p><img src="figure/summary_stat_gsea_sim.Rmd/plot.non_null.theta0-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="alpha" class="section level3">
+<h3><span class="math inline">\(\alpha\)</span></h3>
+<pre class="r"><code>p3 &lt;- do.true.hat.scatter(estimate.alpha.fit %&gt;% filter(sigma0 &gt;0), &#39;alpha&#39;) +
+  labs(title=&#39;Estimate&#39;)
+p3</code></pre>
+<p><img src="figure/summary_stat_gsea_sim.Rmd/plot.non_null.alpha-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sigma_0" class="section level3">
+<h3><span class="math inline">\(\sigma_0\)</span></h3>
+<pre class="r"><code>p1 &lt;- do.true.hat.violin(exchangeable.z.fit %&gt;% filter(sigma0 &gt;0), &#39;sigma0&#39;) +
+  labs(title=&#39;Exchangeable z&#39;)
+p2 &lt;- do.true.hat.violin(exchangeable.effects.fit %&gt;% filter(sigma0 &gt;0), &#39;sigma0&#39;) +
+  labs(title=&#39;Exchangeable effects&#39;)
+p3 &lt;- do.true.hat.violin(estimate.alpha.fit %&gt;% filter(sigma0 &gt;0), &#39;sigma0&#39;) +
+  labs(title=&#39;Estimate&#39;)
+cowplot::plot_grid(p1, p2, p3, ncol = 1)</code></pre>
+<p><img src="figure/summary_stat_gsea_sim.Rmd/plot.non_null.sigma0-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="null-simulation" class="section level2">
+<h2>Null simulation</h2>
+<p>So interestingly, we sometimes aggressively deplete an irrelevant gene sets. The gene set we simulated here are small (1% of genes) so if the background rate is small there is a high probability that none of the null gene set genes are non-null. The model pays likelihood for keeping non-zero weight on the non-null component.</p>
+<p>Indeed, if we plot <span class="math inline">\(\hat\theta_1\)</span> against <span class="math inline">\(\theta_0\)</span> we see that as the background rate decreases, the frequency of theses strong estimated depletions increases.</p>
+<pre class="r"><code>null.fit &lt;- rbind(
+  null.exchangeable.effects.fit %&gt;% mutate(model=&#39;exchangeable.effects&#39;),
+  null.exchangeable.z.fit %&gt;% mutate(model=&#39;exchangeable.z&#39;),
+  null.estimate.alpha.fit %&gt;% mutate(model=&#39;estimate.alpha&#39;)
+)
+
+null.fit %&gt;%
+  unnest(fit) %&gt;%
+  ggplot(aes(x=theta1_hat)) +
+  geom_histogram() +
+  facet_wrap(vars(model))</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="figure/summary_stat_gsea_sim.Rmd/plot.null.theta1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>null.fit %&gt;%
+  unnest(fit) %&gt;%
+  ggplot(aes(y=theta1_hat, x=theta0)) +
+  geom_point() +
+  facet_wrap(vars(model))</code></pre>
+<p><img src="figure/summary_stat_gsea_sim.Rmd/plot.null.theta1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>knitr::knit_exit()</code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
