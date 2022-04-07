@@ -15,12 +15,15 @@ Welcome to my research website.
 [Why logistic may be better for GSEA](linear_v_logistic_start.html)
 
 ## Logistic SuSiE GSEA examples
+
+### Single cell PBMCs
 * [Single cell PBMCs](single_cell_pbmc.html)
+* [Shared intercept explains differences to univariate enrichment tests](single_cell_pbmc_l1.Rmd)
 * [Wenhe Baboon Diet](baboon_diet.html)
 
 ## GSEA from summary statistics
-[Two component model, initial exploration](summary_stat_gsea_exploration.html)
-[Two component model, simulations](summary_stat_gsea_sim.html)
+* [Two component model, initial exploration](summary_stat_gsea_exploration.html)
+* [Two component model, simulations](summary_stat_gsea_sim.html)
 
 <!-- [Two component model, multiple regression]() -->
 
