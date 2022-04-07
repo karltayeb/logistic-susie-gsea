@@ -1,0 +1,644 @@
+---
+title: "single_cell_pbmc_l1"
+author: "karltayeb"
+date: "2022-04-03"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+editor_options:
+  chunk_output_type: console
+---
+
+## Summary
+
+When we fit logistic SuSiE, with $L=1$ (SER) or $L=10$ we often see that the gene sets selected in the credible sets are not the gene sets with the highest marginal significance (by hypergeometric test p-value and univariate logistic regression p-value from `glm`)
+
+We explore if this is driven by (1) shrinkage of the effects or (2) the shared intercept term in the SER. If you go back and fit the univariate logistic regression with the intercept fixed to the SER estimate, we find that SER and univariate logistic regression agree.
+
+We can also see that there are differences between the hypergeometric p-values and the logistic regression p-values. But these are explained by negative effect sizes (depletion) in the logistic regression and small, highly observed gene sets (which are an edge case for the hypergeometric test, I suppose).
+
+Finally, we can't rule out the variational approximation causing some differences, but we don't need to blame the approximation in this case.
+
+```{r message=FALSE, results='hide'}
+library(GSEABenchmarkeR)
+library(EnrichmentBrowser)
+library(tidyverse)
+library(susieR)
+library(DT)
+library(kableExtra)
+
+source('code/load_gene_sets.R')
+source('code/utils.R')
+source('code/logistic_susie_vb.R')
+source('code/logistic_susie_veb_boost.R')
+source('code/latent_logistic_susie.R')
+```
+
+```{r geneset.setup, message=FALSE, results='hide'}
+gs_list <- WebGestaltR::listGeneSet()
+gobp <- loadGeneSetX('geneontology_Biological_Process', min.size=50)  # just huge number of gene sets
+gobp_nr <- loadGeneSetX('geneontology_Biological_Process_noRedundant', min.size=1)
+gomf <- loadGeneSetX('geneontology_Molecular_Function', min.size=1)
+kegg <- loadGeneSetX('pathway_KEGG', min.size=1)
+reactome <- loadGeneSetX('pathway_Reactome', min.size=1)
+wikipathway_cancer <- loadGeneSetX('pathway_Wikipathway_cancer', min.size=1)
+wikipathway <- loadGeneSetX('pathway_Wikipathway', min.size=1)
+
+genesets <- list(
+  gobp=gobp,
+  gobp_nr=gobp_nr,
+  gomf=gomf,
+  kegg=kegg,
+  reactome=reactome,
+  wikipathway_cancer=wikipathway_cancer,
+  wikipathway=wikipathway
+)
+```
+
+```{r data.setup}
+load('data/pbmc-purified/deseq2-pbmc-purified.RData')
+```
+
+
+```{r driver}
+convert_labels <- function(y, from='SYMBOL', to='ENTREZID'){
+  hs <- org.Hs.eg.db::org.Hs.eg.db
+  gene_symbols <- names(y)
+  symbol2entrez <- AnnotationDbi::select(
+    hs, keys=gene_symbols, columns=c(to, from), keytype = from)
+  symbol2entrez <- symbol2entrez[!duplicated(symbol2entrez[[from]]),]
+  symbol2entrez <- symbol2entrez[!is.na(symbol2entrez[[to]]),]
+  symbol2entrez <- symbol2entrez[!is.na(symbol2entrez[[from]]),]
+  rownames(symbol2entrez) <- symbol2entrez[[from]]
+  ysub <- y[names(y) %in% symbol2entrez[[from]]]
+  names(ysub) <- symbol2entrez[names(ysub),][[to]]
+  return(ysub)
+}
+convert_labels = partial(convert_labels, from='ENSEMBL')
+
+#' take gene level results and put them in a standard format
+#' a named list with ENTREZID names and gene level stats
+#' target_col is the column to extract
+#' from is the source gene label to convert to ENTREZID
+clean_gene_list = function(data, target_col){
+  target_col = sym(target_col)
+  data %>%
+    as.data.frame %>%
+    rownames_to_column('gene') %>%
+    dplyr::select(gene, !!target_col) %>%
+    filter(!is.na(!!target_col)) %>%
+    mutate(y = !!target_col) %>%
+    select(gene, y) %>%
+    tibble2namedlist %>%
+    convert_labels()
+}
+clean_gene_list = partial(clean_gene_list, target_col='padj')
+
+#' makes a binary list from table like data
+get_y = function(data, thresh=1e-4){
+  data %>%
+    clean_gene_list() %>%
+    {
+      y <- as.integer(. < thresh)
+      names(y) <- names(.)
+      y
+    }
+}
+get_y(deseq$`CD19+ B`, 1e-40) %>% mean()
+
+#' fit logistic regression to each gene set individually
+do_marginal_logistic_regression = function(db,
+                                           celltype,
+                                           thresh,
+                                           glm.args = list(family='binomial')){
+  gs <- genesets[[db]]
+  data <- deseq[[celltype]]
+  y <- get_y(data, thresh)
+  u <- process_input(gs$X, y)  # subset to common genes
+  
+  n <- dim(u$X)[1]  # number of genes
+  p <- dim(u$X)[2]  # number of gene sets
+  f <- exec(partial, glm, !!!glm.args)
+  library(tictoc)
+  tic()
+  marginal.fit <- purrr::map(1:p, ~ f(u$y ~ u$X[,.x]))
+  toc()
+  names(marginal.fit) <- colnames(u$X)[1:p]
+
+  return(list(
+    fit = marginal.fit,
+    db = db, celltype = celltype, thresh = thresh))
+}
+
+#' fit logistic susie, and hypergeometric test
+do_logistic_susie = function(db, celltype, thresh, susie.args=NULL){
+  gs <- genesets[[db]]
+  data <- deseq[[celltype]]
+  y <- get_y(data, thresh)
+  u <- process_input(gs$X, y)  # subset to common genes
+  
+  if(is.null(susie.args)){
+    susie.args = list(
+      L=10, init.intercept=0, verbose=1, maxit=100, standardize=TRUE)
+  }
+  vb.fit <- exec(logistic.susie, u$X, u$y, !!!susie.args)
+
+  #' hypergeometric test
+  ora <- tibble(
+    geneSet = colnames(u$X),
+    geneListSize = sum(u$y),
+    geneSetSize = colSums(u$X),
+    overlap = (u$y %*% u$X)[1,],
+    nGenes = length(u$y),
+    propInList = overlap / geneListSize,
+    propInSet = overlap / geneSetSize,
+    oddsRatio = (overlap / (geneListSize - overlap)) / (
+      (geneSetSize - overlap) / (nGenes - geneSetSize + overlap)),
+    pValueHypergeometric = phyper(
+      overlap-1, geneListSize, nGenes - geneListSize, geneSetSize, lower.tail= FALSE),
+    nl10p = -log10(pValueHypergeometric),
+    db = db,
+    celltype = celltype,
+    thresh = thresh
+  ) %>% 
+  left_join(gs$geneSet$geneSetDes)
+
+  return(list(
+    fit = vb.fit,
+    ora = ora,
+    db = db, celltype = celltype, thresh = thresh))
+}
+
+get_credible_set_summary = function(res){
+  gs <- genesets[[res$db]]
+  data <- deseq[[res$celltype]]
+
+  #' report top 50 elements in cs
+  credible.set.summary <- t(res$fit$alpha) %>%
+    data.frame() %>%
+    rownames_to_column(var='geneSet') %>%
+    rename_with(~str_replace(., 'X', 'L')) %>%
+    rename(L1 = 2) %>%  # rename deals with L=1 case
+    pivot_longer(starts_with('L'), names_to='component', values_to = 'alpha') %>%
+    arrange(component, desc(alpha)) %>%
+    dplyr::group_by(component) %>%
+    filter(row_number() < 50) %>%
+    mutate(alpha_rank = row_number(), cumalpha = c(0, head(cumsum(alpha), -1))) %>%
+    mutate(in_cs = cumalpha < 0.95) %>%
+    mutate(active_cs = component %in% names(res$fit$sets$cs)) %>%
+    left_join(res$ora) %>%
+    left_join(gs$geneSet$geneSetDes)
+
+  return(credible.set.summary)
+}
+
+get_gene_set_summary = function(res){
+  gs <- genesets[[res$db]]
+  #' map each gene set to the component with top alpha
+  #' report pip
+  res$fit$pip %>% 
+    as_tibble(rownames='geneSet') %>%
+    rename(pip=value) %>%
+    mutate(beta=colSums(res$fit$alpha * res$fit$mu)) %>%
+    left_join(res$ora) %>%
+    left_join(gs$geneSet$geneSetDes)
+}
+```
+
+```{r plot.function}
+do.or.plot = function(res, 
+                      ct=NULL, 
+                      g=NULL, 
+                      x='oddsRatio', 
+                      s='geneSetSize', 
+                      c='in_cs'){
+  col_sym = sym(x)
+  gene.set.order <- res$geneset.summary %>% 
+    filter(if(!is.null(ct)) celltype == ct else TRUE) %>%
+    filter(if(!is.null(g)) db == g else TRUE) %>%
+    arrange(db, !!col_sym) %>%
+    .$geneSet %>% 
+    unique()
+  
+  size_sym = sym(s)
+  color_sym = sym(c)
+  plot <- res$cs.summary %>%
+    filter(if(!is.null(ct)) celltype == ct else TRUE) %>%
+    filter(if(!is.null(g)) db == g else TRUE) %>%
+    filter(active_cs, alpha_rank <= 10) %>%
+    mutate(geneSet=factor(geneSet, levels=gene.set.order)) %>%
+    ggplot(aes(x=!!col_sym, y=geneSet, color=!!color_sym, size=!!size_sym)) +
+    geom_point() +
+    facet_wrap(vars(component), scale='free')
+  return(plot)
+}
+```
+
+
+```{r fit.logistic.regression}
+#' fit logistic regression to each gene set individually
+summarize_fit = function(glm.fitted){
+  coef = summary(glm.fitted)$coefficients
+  return(list(
+    logistic.intercept = coef[1, 1],
+    logistic.intercept.se = coef[1,2],
+    logistic.effect = coef[2,1],
+    logistic.effect.se = coef[2,2],
+    logistic.p.value = coef[2,4],
+    logistic.regression.nl10p = -log10(coef[2,4] + 1e-20),
+    logistic.aic = glm.fitted$aic
+  ))
+}
+
+do_marginal_logistic_regression = function(db,
+                                           celltype,
+                                           thresh,
+                                           glm.args = list(family='binomial')){
+  gs <- genesets[[db]]
+  data <- deseq[[celltype]]
+  y <- get_y(data, thresh)
+  u <- process_input(gs$X, y)  # subset to common genes
+  
+  n <- dim(u$X)[1]  # number of genes
+  p <- dim(u$X)[2]  # number of gene sets
+  f <- exec(partial, glm, !!!glm.args)
+  
+  library(tictoc)
+  tic()
+  marginal.fit <- purrr::map(1:p, ~ possibly(summarize_fit, NULL)(f(u$y ~ u$X[,.x])))
+  names(marginal.fit) <- colnames(u$X)[1:p]
+  toc()
+
+  marginal <- tibble(
+    geneSet = names(marginal.fit),
+    fit = marginal.fit) %>%
+    unnest_wider(fit) %>%
+    mutate(
+      db = db,
+      celltype = celltype,
+      thresh = thresh
+    )
+  return(marginal)
+}
+
+marginal_tbl <- xfun::cache_rds({
+  do_marginal_logistic_regression('gomf', 'CD19+ B', 1e-4)},
+  dir = 'cache/single_cell_pbmc_l1/',
+  file='fit.logistic.regression',
+  rerun=TRUE)
+```
+
+
+```{r fit.models}
+# L =10
+susie.args = list(L=10, standardize=F, verbose=T)
+susie.l10 = do_logistic_susie('gomf', 'CD19+ B', 1e-4, susie.args)
+res.l10 = list(
+  cs.summary = get_credible_set_summary(susie.l10),
+  geneset.summary = get_gene_set_summary(susie.l10)
+)
+
+# L =1
+susie.args <- list(L=1, standardize=F, verbose=T)
+susie.l1 <- do_logistic_susie('gomf', 'CD19+ B', 1e-4, susie.args)
+res.l1 <- list(
+  cs.summary = get_credible_set_summary(susie.l1),
+  geneset.summary = get_gene_set_summary(susie.l1)
+)
+
+# L =1 "flat" prior
+susie.args <- list(L=1, estimate_prior_variance = F, V= 1000, standardize=F, verbose=T)
+susie.l1.flat <- do_logistic_susie('gomf', 'CD19+ B', 1e-4, susie.args)
+res.l1.flat <- list(
+  cs.summary = get_credible_set_summary(susie.l1.flat),
+  geneset.summary = get_gene_set_summary(susie.l1.flat)
+)
+```
+
+
+```{r fit.fixed.intercept}
+#' fit logistic regression to each gene set individually
+#' calls glm.fit for more flexibility
+do_marginal_logistic_regression2= function(db,
+                                           celltype,
+                                           thresh,
+                                           glm.args = list(family='binomial')){
+  gs <- genesets[[db]]
+  data <- deseq[[celltype]]
+  y <- get_y(data, thresh)
+  u <- process_input(gs$X, y)  # subset to common genes
+  
+  n <- dim(u$X)[1]  # number of genes
+  p <- dim(u$X)[2]  # number of gene sets
+  f <- exec(partial, glm.fit, !!!glm.args)
+  tic()
+  sf = function(fit){
+    return(list(
+      effect = fit$coefficients,
+      aic = fit$aic))
+  }
+  marginal.fit <- purrr::map(1:p, ~ possibly(sf, NULL)(f(u$X[,.x], u$y)))
+  names(marginal.fit) <- colnames(u$X)[1:p]
+  toc()
+
+  marginal <- tibble(
+    geneSet = names(marginal.fit),
+    fit = marginal.fit) %>%
+    unnest_wider(fit) %>%
+    mutate(
+      db = db,
+      celltype = celltype,
+      thresh = thresh
+    )
+  return(marginal)
+}
+
+# fixed intercept model
+intercept <- susie.l1$fit$intercept
+n <- susie.l1$fit$dat$y %>% length()
+marginal.fixed.intercept <- xfun::cache_rds({
+  glm.args <- list(family=binomial(), intercept=F, offset=rep(intercept, n))
+  do_marginal_logistic_regression2(
+    'gomf', 'CD19+ B', 1e-4, glm.args = glm.args)},
+  dir = 'cache/single_cell_pbmc_l1/',
+  file='fit.logistic.regression.fixed.intercept')
+```
+
+
+```{r update.results}
+res.l10$cs.summary <-
+  res.l10$cs.summary %>%
+  left_join(marginal_tbl) %>%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+
+res.l10$geneset.summary <-
+  res.l10$geneset.summary %>%
+  left_join(marginal_tbl) %>%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+
+res.l1$cs.summary <-
+  res.l1$cs.summary %>%
+  left_join(marginal_tbl) %>%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+res.l1$geneset.summary <-
+  res.l1$geneset.summary %>%
+  left_join(marginal_tbl) %>%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+
+res.l1.flat$cs.summary <-
+  res.l1.flat$cs.summary %>%
+  left_join(marginal_tbl) %>%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+res.l1.flat$geneset.summary <-
+  res.l1.flat$geneset.summary %>%
+  left_join(marginal_tbl) %>%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+```
+
+### $L=10$
+The gene set selected by logistic susie with $L=10$ are not the gene sets with the highest likelihood (fitting each gene set seperately), and they're not the gene set with the smallest pvalue from a (one-sided) hypergeometric test.
+
+```{r susie.plots}
+do.or.plot(res.l10, x='nl10p', s='minor.gene.frequency')
+do.or.plot(res.l10, x='loglik', s='minor.gene.frequency')
+```
+
+That could be because the multivariate regression is competing gene sets against eachother. 
+
+### $L=1$
+
+For the single effect regression (SER) $L=1$ I would expect that ranking the effects by increasing PIP in the SER would give the same results as ranking the marginal univariate regressions by increasing likelihood. But that's not the case...
+
+```{r ser.plots}
+p1 <- do.or.plot(res.l1, x='nl10p', s='minor.gene.frequency')
+p2 <-do.or.plot(res.l1, x='loglik', s='minor.gene.frequency')
+cowplot::plot_grid(p1, p2, nrow = 1)
+```
+
+
+Two reasons this could be happening are (1) shrinkage of the effect sizes in the SER or (2) the SER estimates a shared intercept for all the gene sets.
+
+So next we look at the SER but we fix the effect size variance to a large value so the prior is flat.
+
+### Flat prior on effect sizes
+
+```{r flat.ser.plot}
+p1 <- do.or.plot(res.l1.flat, x='nl10p', s='minor.gene.frequency')
+p2 <- do.or.plot(res.l1.flat, x='loglik', s='minor.gene.frequency')
+cowplot::plot_grid(p1, p2, nrow = 1)
+```
+
+The results for "flat" SER are suspiciously similar to what we just showed. But if we look at `mu` for both fits they're different. We see the expected shrinkage (although that's a pretty funky shape-- it looks like smaller gene sets experience stronger shrinkage which makes sense)
+
+```{r check.shrinkage}
+sizes <- colSums(genesets$gomf$X[, colnames(susie.l1$fit$mu)])
+tbl <- tibble(
+  flat.mu=susie.l1.flat$fit$mu[1,],
+  mu=susie.l1$fit$mu[1,],
+  size = sizes)
+
+tbl %>% 
+  ggplot(aes(y=mu, x=flat.mu, color=log(size))) +
+  geom_point()
+```
+
+### Fixed intercept in marginal regression
+
+So could it be the intercept? I took the intercept estimated from SER and refit the univariate logistic regressions with a fixed intercept. For this example, it resolves the discrepancy.
+
+
+```{r fixed.intercept.ll.plots}
+marginal.fixed.intercept <-
+  marginal.fixed.intercept %>%
+  mutate(fixed.loglik = -(aic - 4)/2)
+
+tmpa <-
+  marginal_tbl %>%
+  mutate(loglik = -(logistic.aic - 4)/2)
+
+tmpb <- marginal.fixed.intercept %>% 
+  mutate(fixed.loglik = -(aic - 4)/2) %>%
+  select(geneSet, fixed.loglik)
+
+tmpc <- res.l1.flat
+tmpc$geneset.summary <- tmpc$geneset.summary %>% 
+  left_join(tmpb)
+tmpc$cs.summary <- tmpc$cs.summary %>% 
+  left_join(tmpb)
+p1 <- do.or.plot(tmpc, x='loglik', s='minor.gene.frequency')
+p2 <- do.or.plot(tmpc, x='fixed.loglik', s='minor.gene.frequency')
+cowplot::plot_grid(p1, p2, nrow = 1)
+```
+
+And here you can look at the likelihood of each univariate model with the fixed vs not fixed intercept...
+
+```{r fixed.ll.vs.ll}
+tmpa %>%
+  left_join(tmpb)%>%
+  ggplot(aes(x=loglik, y=fixed.loglik)) + geom_point()
+```
+
+```{r}
+knitr::knit_exit()
+```
+
+
+We performed a univariate logistic regression against each gene set.
+
+If we plot the negative log 10 pvalues of the effects (from `summary(fit)$coefficients`) we see general agreement with the hypergeometric p-values. Since the hypergeometric test is one-sided, we see a discrepency where the logistic regression estimates depletion (i.e. negative effect). There is a group of tests that the hypergeometric test ranks as more significant, and these tend to be small gene sets with a high proportion of genes from gene gene set observed in the gene list.
+
+```{r}
+res.l1.flat$geneset.summary %>%
+  ggplot(aes(x=nl10p, y=logistic.regression.nl10p, color=pip)) +
+  geom_point()
+
+res.l1.flat$geneset.summary %>%
+  ggplot(aes(x=nl10p, y=logistic.regression.nl10p, color=(logistic.effect >0))) +
+  geom_point()
+```
+
+Interesting if we look at the log-likelihood of the regressions, these agree with the more the the hypergeometric pvalues (with the exception of the depleted genesets, where the regression can improve the likelihood with a negative effect)
+
+```{r}
+res.l1.flat$geneset.summary %>%
+  ggplot(aes(x=nl10p, y=loglik, color=(logistic.effect >0))) +
+  geom_point()
+```
+
+```{r}
+do.or.plot(res.l10, x='nl10p')
+do.or.plot(res.l10, x='loglik')
+
+do.or.plot(res.l1, x='nl10p')
+do.or.plot(res.l1, x='loglik')
+
+do.or.plot(res.l1.flat, x='nl10p')
+do.or.plot(res.l1.flat, x='loglik')
+```
+
+
+```{r p0}
+marginal.fixed.intercept_tbl = tibble(
+  geneSet = names(marginal.fixed.intercept$fit),
+  loglik = - map_dbl(marginal.fixed.intercept$fit, ~pluck(.x, 'aic'))/2 + 4
+)
+
+res.l10$cs.summary <-
+  res.l10$cs.summary %>%
+  left_join(marginal.fixed.intercept_tbl)
+
+res.l10$geneset.summary <-
+  res.l10$geneset.summary %>%
+  left_join(marginal.fixed.intercept_tbl)
+
+res.l1$cs.summary <-
+  res.l1$cs.summary %>%
+  left_join(marginal.fixed.intercept_tbl)
+
+res.l1$geneset.summary <-
+  res.l1$geneset.summary %>%
+  left_join(marginal.fixed.intercept_tbl)
+
+res.l1.flat$cs.summary <-
+  res.l1.flat$cs.summary %>%
+  left_join(marginal.fixed.intercept_tbl)
+
+res.l1.flat$geneset.summary <-
+  res.l1.flat$geneset.summary %>%
+  left_join(marginal.fixed.intercept_tbl)
+
+do.or.plot(res.l10, x='loglik')
+
+do.or.plot(res.l1, x='loglik')
+do.or.plot(res.l1, x='alpha')
+
+do.or.plot(res.l1.flat, x='loglik')
+
+
+plot(res.l1$geneset.summary$pip, marginal_tbl$loglik)
+```
+
+
+```{r p1}
+p1 <- res.l1.flat$cs.summary %>%
+  left_join(marginal.fixed.intercept_tbl) %>%
+  ggplot(aes(x=loglik, y=nl10p, size=geneSetSize)) +
+  geom_point()
+
+p2 <- res.l1.flat$geneset.summary %>%
+  left_join(marginal.fixed.intercept_tbl) %>%
+  ggplot(aes(x=loglik, y=pip, size=geneSetSize)) +
+  geom_point()
+cowplot::plot_grid(p1, p2)
+```
+
+```{r}
+knitr::knit_exit()
+```
+
+```{r}
+susie.args = list(L=1, estimate_prior_variance=T, standardize=F, verbose=T)
+cd19.kegg.l1 <- do_logistic_susie(
+  'kegg', 'CD19+ B', 1e-4, susie.args = susie.args)
+
+susie.args = list(L=1, standardize=F, V=1000, estimate_prior_variance=F, verbose=T)
+cd19.kegg.l1.flat <- do_logistic_susie(
+  'kegg', 'CD19+ B', 1e-4, susie.args = susie.args)
+cd19.kegg.marginal <- do_marginal_logistic_regression('kegg', 'CD19+ B', 1e-4)
+
+
+cd19.kegg.marginal_tbl = tibble(
+  geneSet = names(cd19.kegg.marginal$fit),
+  loglik = - map_dbl(cd19.kegg.marginal$fit, ~pluck(.x, 'aic'))/2 + 4
+)
+
+cs.summary <-
+  cd19.kegg.l1 %>% 
+  get_credible_set_summary() %>%
+  mutate(nl10p = -log10(pValueHypergeometric)) %>%
+  left_join(cd19.kegg.marginal_tlb)
+geneset.summary <-
+  cd19.kegg.l1 %>% 
+  get_gene_set_summary() %>%
+  mutate(nl10p = -log10(pValueHypergeometric)) %>%
+  left_join(cd19.kegg.marginal_tlb)
+res <- list(
+  cs.summary = cs.summary,
+  geneset.summary = geneset.summary
+)
+
+do.or.plot(res, 'CD19+ B', 'kegg', x='loglik', facet='db')
+do.or.plot(res, 'CD19+ B', 'kegg', x='nl10p', facet='db')
+do.or.plot(res, 'CD19+ B', 'kegg', x='oddsRatio', facet='db')
+do.or.plot(res, 'CD19+ B', 'kegg', x='propInSet', facet='db')
+```
+
+
+```{r}
+
+```
+
