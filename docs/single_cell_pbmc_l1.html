@@ -13,7 +13,7 @@
 
 <meta name="date" content="2022-04-03" />
 
-<title>single_cell_pbmc_l1</title>
+<title>Single Cell PBMC Example: Shared intercept explains difference with univariate enrichment tests</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -374,7 +374,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">single_cell_pbmc_l1</h1>
+<h1 class="title toc-ignore">Single Cell PBMC Example: Shared intercept explains difference with univariate enrichment tests</h1>
 <h4 class="author">karltayeb</h4>
 <h4 class="date">2022-04-03</h4>
 
@@ -492,16 +492,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree9e9ced51bb0292959b24cba9a97a6a3ccbd0b53atargetblank9e9ced5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/9e9ced51bb0292959b24cba9a97a6a3ccbd0b53a" target="_blank">9e9ced5</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6cd8628c253d09ec88ebcbe14985cd118925dfeftargetblank6cd8628a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6cd8628c253d09ec88ebcbe14985cd118925dfef" target="_blank">6cd8628</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree9e9ced51bb0292959b24cba9a97a6a3ccbd0b53atargetblank9e9ced5a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6cd8628c253d09ec88ebcbe14985cd118925dfeftargetblank6cd8628a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/9e9ced51bb0292959b24cba9a97a6a3ccbd0b53a" target="_blank">9e9ced5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6cd8628c253d09ec88ebcbe14985cd118925dfef" target="_blank">6cd8628</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -512,7 +512,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    library/
     Ignored:    renv/library/
     Ignored:    renv/staging/
@@ -616,6 +615,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6cd8628c253d09ec88ebcbe14985cd118925dfef/analysis/single_cell_pbmc_l1.Rmd" target="_blank">6cd8628</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc_l1.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/single_cell_pbmc_l1.html" target="_blank">53ac4cb</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -899,7 +932,7 @@ marginal_tbl &lt;- xfun::cache_rds({
   file=&#39;fit.logistic.regression&#39;,
   rerun=TRUE)</code></pre>
 <pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
-<pre><code>133.347 sec elapsed</code></pre>
+<pre><code>129.159 sec elapsed</code></pre>
 <pre class="r"><code># L =10
 susie.args = list(L=10, standardize=F, verbose=T)
 susie.l10 = do_logistic_susie(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, susie.args)</code></pre>
@@ -1049,8 +1082,82 @@ marginal.fixed.intercept &lt;- xfun::cache_rds({
 <p>The gene set selected by logistic susie with <span class="math inline">\(L=10\)</span> are not the gene sets with the highest likelihood (fitting each gene set seperately), and they’re not the gene set with the smallest pvalue from a (one-sided) hypergeometric test.</p>
 <pre class="r"><code>do.or.plot(res.l10, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/susie.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-susie.plots-1">
+Past versions of susie.plots-1.png
+</button>
+</p>
+<div id="fig-susie.plots-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/susie.plots-1.png" target="_blank">53ac4cb</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>do.or.plot(res.l10, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/susie.plots-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-susie.plots-2">
+Past versions of susie.plots-2.png
+</button>
+</p>
+<div id="fig-susie.plots-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/susie.plots-2.png" target="_blank">53ac4cb</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>That could be because the multivariate regression is competing gene sets against eachother.</p>
 </div>
 <div id="l1" class="section level3">
@@ -1060,6 +1167,43 @@ marginal.fixed.intercept &lt;- xfun::cache_rds({
 p2 &lt;-do.or.plot(res.l1, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)
 cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/ser.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ser.plots-1">
+Past versions of ser.plots-1.png
+</button>
+</p>
+<div id="fig-ser.plots-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/ser.plots-1.png" target="_blank">53ac4cb</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Two reasons this could be happening are (1) shrinkage of the effect sizes in the SER or (2) the SER estimates a shared intercept for all the gene sets.</p>
 <p>So next we look at the SER but we fix the effect size variance to a large value so the prior is flat.</p>
 </div>
@@ -1069,6 +1213,43 @@ cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
 p2 &lt;- do.or.plot(res.l1.flat, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)
 cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/flat.ser.plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-flat.ser.plot-1">
+Past versions of flat.ser.plot-1.png
+</button>
+</p>
+<div id="fig-flat.ser.plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/flat.ser.plot-1.png" target="_blank">53ac4cb</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The results for “flat” SER are suspiciously similar to what we just showed. But if we look at <code>mu</code> for both fits they’re different. We see the expected shrinkage (although that’s a pretty funky shape– it looks like smaller gene sets experience stronger shrinkage which makes sense)</p>
 <pre class="r"><code>sizes &lt;- colSums(genesets$gomf$X[, colnames(susie.l1$fit$mu)])
 tbl &lt;- tibble(
@@ -1080,6 +1261,43 @@ tbl %&gt;%
   ggplot(aes(y=mu, x=flat.mu, color=log(size))) +
   geom_point()</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/check.shrinkage-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-check.shrinkage-1">
+Past versions of check.shrinkage-1.png
+</button>
+</p>
+<div id="fig-check.shrinkage-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/check.shrinkage-1.png" target="_blank">53ac4cb</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="fixed-intercept-in-marginal-regression" class="section level3">
 <h3>Fixed intercept in marginal regression</h3>
@@ -1107,6 +1325,43 @@ tmpc$geneset.summary &lt;- tmpc$geneset.summary %&gt;%
 p2 &lt;- do.or.plot(tmpc, x=&#39;fixed.loglik&#39;, s=&#39;minor.gene.frequency&#39;)
 cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/fixed.intercept.ll.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fixed.intercept.ll.plots-1">
+Past versions of fixed.intercept.ll.plots-1.png
+</button>
+</p>
+<div id="fig-fixed.intercept.ll.plots-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/fixed.intercept.ll.plots-1.png" target="_blank">53ac4cb</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>And here you can look at the likelihood of each univariate model with the fixed vs not fixed intercept…</p>
 <pre class="r"><code>tmpa %&gt;%
   left_join(tmpb)%&gt;%
@@ -1114,6 +1369,43 @@ cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
 <pre><code>Joining, by = &quot;geneSet&quot;</code></pre>
 <pre><code>Warning: Removed 100 rows containing missing values (geom_point).</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/fixed.ll.vs.ll-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fixed.ll.vs.ll-1">
+Past versions of fixed.ll.vs.ll-1.png
+</button>
+</p>
+<div id="fig-fixed.ll.vs.ll-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/fixed.ll.vs.ll-1.png" target="_blank">53ac4cb</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
 </div>
 </div>
