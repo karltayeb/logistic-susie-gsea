@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="karltayeb" />
+
+<meta name="date" content="2022-04-03" />
+
+<title>single_cell_pbmc_l1</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">single_cell_pbmc_l1</h1>
+<h4 class="author">karltayeb</h4>
+<h4 class="date">2022-04-03</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-04-07
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree9e9ced51bb0292959b24cba9a97a6a3ccbd0b53atargetblank9e9ced5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/9e9ced51bb0292959b24cba9a97a6a3ccbd0b53a" target="_blank">9e9ced5</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree9e9ced51bb0292959b24cba9a97a6a3ccbd0b53atargetblank9e9ced5a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/9e9ced51bb0292959b24cba9a97a6a3ccbd0b53a" target="_blank">9e9ced5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
+    Ignored:    library/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+    Ignored:    staging/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Untitled.ipynb
+    Untracked:  _targets.R
+    Untracked:  _targets.html
+    Untracked:  _targets.md
+    Untracked:  _targets/
+    Untracked:  _targets_r/
+    Untracked:  analysis/deng_example.Rmd
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/latent_logistic_susie.Rmd
+    Untracked:  analysis/libra_setup.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  analysis/wenhe_baboon_example.Rmd
+    Untracked:  baboon_diet_cache/
+    Untracked:  build_site.R
+    Untracked:  cache/
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  data/adipose_2yr_topsnp.txt
+    Untracked:  data/deng/
+    Untracked:  data/fetal_reference_cellid_gene_sets.RData
+    Untracked:  data/pbmc-purified/
+    Untracked:  data/wenhe_baboon_diet/
+    Untracked:  docs.zip
+    Untracked:  index.md
+    Untracked:  latent_logistic_susie_cache/
+    Untracked:  simulation_targets/
+    Untracked:  single_cell_pbmc_cache/
+    Untracked:  single_cell_pbmc_l1_cache/
+    Untracked:  summary_stat_gsea_exploration_cache/
+    Untracked:  summary_stat_gsea_sim_cache/
+
+Unstaged changes:
+    Modified:   _simulation_targets.R
+    Modified:   _targets.Rmd
+    Modified:   analysis/baboon_diet.Rmd
+    Modified:   analysis/gseabenchmark_tcga.Rmd
+    Modified:   analysis/single_cell_pbmc.Rmd
+    Deleted:    analysis/summary_stat_gsea_univariate_simulations.Rmd
+    Modified:   code/fit_baselines.R
+    Modified:   code/fit_logistic_susie.R
+    Modified:   code/fit_mr_ash.R
+    Modified:   code/fit_susie.R
+    Modified:   code/load_gene_sets.R
+    Modified:   code/simulate_gene_lists.R
+    Modified:   code/utils.R
+    Modified:   target_components/factories.R
+    Modified:   target_components/methods.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/single_cell_pbmc_l1.Rmd</code>) and HTML (<code>docs/single_cell_pbmc_l1.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/9e9ced51bb0292959b24cba9a97a6a3ccbd0b53a/analysis/single_cell_pbmc_l1.Rmd" target="_blank">9e9ced5</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc_l1.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>When we fit logistic SuSiE, with <span class="math inline">\(L=1\)</span> (SER) or <span class="math inline">\(L=10\)</span> we often see that the gene sets selected in the credible sets are not the gene sets with the highest marginal significance (by hypergeometric test p-value and univariate logistic regression p-value from <code>glm</code>)</p>
+<p>We explore if this is driven by (1) shrinkage of the effects or (2) the shared intercept term in the SER. If you go back and fit the univariate logistic regression with the intercept fixed to the SER estimate, we find that SER and univariate logistic regression agree.</p>
+<p>We can also see that there are differences between the hypergeometric p-values and the logistic regression p-values. But these are explained by negative effect sizes (depletion) in the logistic regression and small, highly observed gene sets (which are an edge case for the hypergeometric test, I suppose).</p>
+<p>Finally, we can’t rule out the variational approximation causing some differences, but we don’t need to blame the approximation in this case.</p>
+<pre class="r"><code>library(GSEABenchmarkeR)
+library(EnrichmentBrowser)
+library(tidyverse)
+library(susieR)
+library(DT)
+library(kableExtra)
+
+source(&#39;code/load_gene_sets.R&#39;)
+source(&#39;code/utils.R&#39;)
+source(&#39;code/logistic_susie_vb.R&#39;)
+source(&#39;code/logistic_susie_veb_boost.R&#39;)
+source(&#39;code/latent_logistic_susie.R&#39;)</code></pre>
+<pre class="r"><code>gs_list &lt;- WebGestaltR::listGeneSet()
+gobp &lt;- loadGeneSetX(&#39;geneontology_Biological_Process&#39;, min.size=50)  # just huge number of gene sets
+gobp_nr &lt;- loadGeneSetX(&#39;geneontology_Biological_Process_noRedundant&#39;, min.size=1)
+gomf &lt;- loadGeneSetX(&#39;geneontology_Molecular_Function&#39;, min.size=1)
+kegg &lt;- loadGeneSetX(&#39;pathway_KEGG&#39;, min.size=1)
+reactome &lt;- loadGeneSetX(&#39;pathway_Reactome&#39;, min.size=1)
+wikipathway_cancer &lt;- loadGeneSetX(&#39;pathway_Wikipathway_cancer&#39;, min.size=1)
+wikipathway &lt;- loadGeneSetX(&#39;pathway_Wikipathway&#39;, min.size=1)
+
+genesets &lt;- list(
+  gobp=gobp,
+  gobp_nr=gobp_nr,
+  gomf=gomf,
+  kegg=kegg,
+  reactome=reactome,
+  wikipathway_cancer=wikipathway_cancer,
+  wikipathway=wikipathway
+)</code></pre>
+<pre class="r"><code>load(&#39;data/pbmc-purified/deseq2-pbmc-purified.RData&#39;)</code></pre>
+<pre class="r"><code>convert_labels &lt;- function(y, from=&#39;SYMBOL&#39;, to=&#39;ENTREZID&#39;){
+  hs &lt;- org.Hs.eg.db::org.Hs.eg.db
+  gene_symbols &lt;- names(y)
+  symbol2entrez &lt;- AnnotationDbi::select(
+    hs, keys=gene_symbols, columns=c(to, from), keytype = from)
+  symbol2entrez &lt;- symbol2entrez[!duplicated(symbol2entrez[[from]]),]
+  symbol2entrez &lt;- symbol2entrez[!is.na(symbol2entrez[[to]]),]
+  symbol2entrez &lt;- symbol2entrez[!is.na(symbol2entrez[[from]]),]
+  rownames(symbol2entrez) &lt;- symbol2entrez[[from]]
+  ysub &lt;- y[names(y) %in% symbol2entrez[[from]]]
+  names(ysub) &lt;- symbol2entrez[names(ysub),][[to]]
+  return(ysub)
+}
+convert_labels = partial(convert_labels, from=&#39;ENSEMBL&#39;)
+
+#&#39; take gene level results and put them in a standard format
+#&#39; a named list with ENTREZID names and gene level stats
+#&#39; target_col is the column to extract
+#&#39; from is the source gene label to convert to ENTREZID
+clean_gene_list = function(data, target_col){
+  target_col = sym(target_col)
+  data %&gt;%
+    as.data.frame %&gt;%
+    rownames_to_column(&#39;gene&#39;) %&gt;%
+    dplyr::select(gene, !!target_col) %&gt;%
+    filter(!is.na(!!target_col)) %&gt;%
+    mutate(y = !!target_col) %&gt;%
+    select(gene, y) %&gt;%
+    tibble2namedlist %&gt;%
+    convert_labels()
+}
+clean_gene_list = partial(clean_gene_list, target_col=&#39;padj&#39;)
+
+#&#39; makes a binary list from table like data
+get_y = function(data, thresh=1e-4){
+  data %&gt;%
+    clean_gene_list() %&gt;%
+    {
+      y &lt;- as.integer(. &lt; thresh)
+      names(y) &lt;- names(.)
+      y
+    }
+}
+get_y(deseq$`CD19+ B`, 1e-40) %&gt;% mean()</code></pre>
+<pre><code></code></pre>
+<pre><code>Loading required package: DESeq2</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<pre><code>[1] 0.1473949</code></pre>
+<pre class="r"><code>#&#39; fit logistic regression to each gene set individually
+do_marginal_logistic_regression = function(db,
+                                           celltype,
+                                           thresh,
+                                           glm.args = list(family=&#39;binomial&#39;)){
+  gs &lt;- genesets[[db]]
+  data &lt;- deseq[[celltype]]
+  y &lt;- get_y(data, thresh)
+  u &lt;- process_input(gs$X, y)  # subset to common genes
+  
+  n &lt;- dim(u$X)[1]  # number of genes
+  p &lt;- dim(u$X)[2]  # number of gene sets
+  f &lt;- exec(partial, glm, !!!glm.args)
+  library(tictoc)
+  tic()
+  marginal.fit &lt;- purrr::map(1:p, ~ f(u$y ~ u$X[,.x]))
+  toc()
+  names(marginal.fit) &lt;- colnames(u$X)[1:p]
+
+  return(list(
+    fit = marginal.fit,
+    db = db, celltype = celltype, thresh = thresh))
+}
+
+#&#39; fit logistic susie, and hypergeometric test
+do_logistic_susie = function(db, celltype, thresh, susie.args=NULL){
+  gs &lt;- genesets[[db]]
+  data &lt;- deseq[[celltype]]
+  y &lt;- get_y(data, thresh)
+  u &lt;- process_input(gs$X, y)  # subset to common genes
+  
+  if(is.null(susie.args)){
+    susie.args = list(
+      L=10, init.intercept=0, verbose=1, maxit=100, standardize=TRUE)
+  }
+  vb.fit &lt;- exec(logistic.susie, u$X, u$y, !!!susie.args)
+
+  #&#39; hypergeometric test
+  ora &lt;- tibble(
+    geneSet = colnames(u$X),
+    geneListSize = sum(u$y),
+    geneSetSize = colSums(u$X),
+    overlap = (u$y %*% u$X)[1,],
+    nGenes = length(u$y),
+    propInList = overlap / geneListSize,
+    propInSet = overlap / geneSetSize,
+    oddsRatio = (overlap / (geneListSize - overlap)) / (
+      (geneSetSize - overlap) / (nGenes - geneSetSize + overlap)),
+    pValueHypergeometric = phyper(
+      overlap-1, geneListSize, nGenes - geneListSize, geneSetSize, lower.tail= FALSE),
+    nl10p = -log10(pValueHypergeometric),
+    db = db,
+    celltype = celltype,
+    thresh = thresh
+  ) %&gt;% 
+  left_join(gs$geneSet$geneSetDes)
+
+  return(list(
+    fit = vb.fit,
+    ora = ora,
+    db = db, celltype = celltype, thresh = thresh))
+}
+
+get_credible_set_summary = function(res){
+  gs &lt;- genesets[[res$db]]
+  data &lt;- deseq[[res$celltype]]
+
+  #&#39; report top 50 elements in cs
+  credible.set.summary &lt;- t(res$fit$alpha) %&gt;%
+    data.frame() %&gt;%
+    rownames_to_column(var=&#39;geneSet&#39;) %&gt;%
+    rename_with(~str_replace(., &#39;X&#39;, &#39;L&#39;)) %&gt;%
+    rename(L1 = 2) %&gt;%  # rename deals with L=1 case
+    pivot_longer(starts_with(&#39;L&#39;), names_to=&#39;component&#39;, values_to = &#39;alpha&#39;) %&gt;%
+    arrange(component, desc(alpha)) %&gt;%
+    dplyr::group_by(component) %&gt;%
+    filter(row_number() &lt; 50) %&gt;%
+    mutate(alpha_rank = row_number(), cumalpha = c(0, head(cumsum(alpha), -1))) %&gt;%
+    mutate(in_cs = cumalpha &lt; 0.95) %&gt;%
+    mutate(active_cs = component %in% names(res$fit$sets$cs)) %&gt;%
+    left_join(res$ora) %&gt;%
+    left_join(gs$geneSet$geneSetDes)
+
+  return(credible.set.summary)
+}
+
+get_gene_set_summary = function(res){
+  gs &lt;- genesets[[res$db]]
+  #&#39; map each gene set to the component with top alpha
+  #&#39; report pip
+  res$fit$pip %&gt;% 
+    as_tibble(rownames=&#39;geneSet&#39;) %&gt;%
+    rename(pip=value) %&gt;%
+    mutate(beta=colSums(res$fit$alpha * res$fit$mu)) %&gt;%
+    left_join(res$ora) %&gt;%
+    left_join(gs$geneSet$geneSetDes)
+}</code></pre>
+<pre class="r"><code>do.or.plot = function(res, 
+                      ct=NULL, 
+                      g=NULL, 
+                      x=&#39;oddsRatio&#39;, 
+                      s=&#39;geneSetSize&#39;, 
+                      c=&#39;in_cs&#39;){
+  col_sym = sym(x)
+  gene.set.order &lt;- res$geneset.summary %&gt;% 
+    filter(if(!is.null(ct)) celltype == ct else TRUE) %&gt;%
+    filter(if(!is.null(g)) db == g else TRUE) %&gt;%
+    arrange(db, !!col_sym) %&gt;%
+    .$geneSet %&gt;% 
+    unique()
+  
+  size_sym = sym(s)
+  color_sym = sym(c)
+  plot &lt;- res$cs.summary %&gt;%
+    filter(if(!is.null(ct)) celltype == ct else TRUE) %&gt;%
+    filter(if(!is.null(g)) db == g else TRUE) %&gt;%
+    filter(active_cs, alpha_rank &lt;= 10) %&gt;%
+    mutate(geneSet=factor(geneSet, levels=gene.set.order)) %&gt;%
+    ggplot(aes(x=!!col_sym, y=geneSet, color=!!color_sym, size=!!size_sym)) +
+    geom_point() +
+    facet_wrap(vars(component), scale=&#39;free&#39;)
+  return(plot)
+}</code></pre>
+<pre class="r"><code>#&#39; fit logistic regression to each gene set individually
+summarize_fit = function(glm.fitted){
+  coef = summary(glm.fitted)$coefficients
+  return(list(
+    logistic.intercept = coef[1, 1],
+    logistic.intercept.se = coef[1,2],
+    logistic.effect = coef[2,1],
+    logistic.effect.se = coef[2,2],
+    logistic.p.value = coef[2,4],
+    logistic.regression.nl10p = -log10(coef[2,4] + 1e-20),
+    logistic.aic = glm.fitted$aic
+  ))
+}
+
+do_marginal_logistic_regression = function(db,
+                                           celltype,
+                                           thresh,
+                                           glm.args = list(family=&#39;binomial&#39;)){
+  gs &lt;- genesets[[db]]
+  data &lt;- deseq[[celltype]]
+  y &lt;- get_y(data, thresh)
+  u &lt;- process_input(gs$X, y)  # subset to common genes
+  
+  n &lt;- dim(u$X)[1]  # number of genes
+  p &lt;- dim(u$X)[2]  # number of gene sets
+  f &lt;- exec(partial, glm, !!!glm.args)
+  
+  library(tictoc)
+  tic()
+  marginal.fit &lt;- purrr::map(1:p, ~ possibly(summarize_fit, NULL)(f(u$y ~ u$X[,.x])))
+  names(marginal.fit) &lt;- colnames(u$X)[1:p]
+  toc()
+
+  marginal &lt;- tibble(
+    geneSet = names(marginal.fit),
+    fit = marginal.fit) %&gt;%
+    unnest_wider(fit) %&gt;%
+    mutate(
+      db = db,
+      celltype = celltype,
+      thresh = thresh
+    )
+  return(marginal)
+}
+
+marginal_tbl &lt;- xfun::cache_rds({
+  do_marginal_logistic_regression(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4)},
+  dir = &#39;cache/single_cell_pbmc_l1/&#39;,
+  file=&#39;fit.logistic.regression&#39;,
+  rerun=TRUE)</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<pre><code>133.347 sec elapsed</code></pre>
+<pre class="r"><code># L =10
+susie.args = list(L=10, standardize=F, verbose=T)
+susie.l10 = do_logistic_susie(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, susie.args)</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<pre><code>
+converged</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>res.l10 = list(
+  cs.summary = get_credible_set_summary(susie.l10),
+  geneset.summary = get_gene_set_summary(susie.l10)
+)</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)</code></pre>
+<pre class="r"><code># L =1
+susie.args &lt;- list(L=1, standardize=F, verbose=T)
+susie.l1 &lt;- do_logistic_susie(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, susie.args)</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns
+
+converged
+Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>res.l1 &lt;- list(
+  cs.summary = get_credible_set_summary(susie.l1),
+  geneset.summary = get_gene_set_summary(susie.l1)
+)</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)</code></pre>
+<pre class="r"><code># L =1 &quot;flat&quot; prior
+susie.args &lt;- list(L=1, estimate_prior_variance = F, V= 1000, standardize=F, verbose=T)
+susie.l1.flat &lt;- do_logistic_susie(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, susie.args)</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns
+
+converged
+Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>res.l1.flat &lt;- list(
+  cs.summary = get_credible_set_summary(susie.l1.flat),
+  geneset.summary = get_gene_set_summary(susie.l1.flat)
+)</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)</code></pre>
+<pre class="r"><code>#&#39; fit logistic regression to each gene set individually
+#&#39; calls glm.fit for more flexibility
+do_marginal_logistic_regression2= function(db,
+                                           celltype,
+                                           thresh,
+                                           glm.args = list(family=&#39;binomial&#39;)){
+  gs &lt;- genesets[[db]]
+  data &lt;- deseq[[celltype]]
+  y &lt;- get_y(data, thresh)
+  u &lt;- process_input(gs$X, y)  # subset to common genes
+  
+  n &lt;- dim(u$X)[1]  # number of genes
+  p &lt;- dim(u$X)[2]  # number of gene sets
+  f &lt;- exec(partial, glm.fit, !!!glm.args)
+  tic()
+  sf = function(fit){
+    return(list(
+      effect = fit$coefficients,
+      aic = fit$aic))
+  }
+  marginal.fit &lt;- purrr::map(1:p, ~ possibly(sf, NULL)(f(u$X[,.x], u$y)))
+  names(marginal.fit) &lt;- colnames(u$X)[1:p]
+  toc()
+
+  marginal &lt;- tibble(
+    geneSet = names(marginal.fit),
+    fit = marginal.fit) %&gt;%
+    unnest_wider(fit) %&gt;%
+    mutate(
+      db = db,
+      celltype = celltype,
+      thresh = thresh
+    )
+  return(marginal)
+}
+
+# fixed intercept model
+intercept &lt;- susie.l1$fit$intercept
+n &lt;- susie.l1$fit$dat$y %&gt;% length()
+marginal.fixed.intercept &lt;- xfun::cache_rds({
+  glm.args &lt;- list(family=binomial(), intercept=F, offset=rep(intercept, n))
+  do_marginal_logistic_regression2(
+    &#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, glm.args = glm.args)},
+  dir = &#39;cache/single_cell_pbmc_l1/&#39;,
+  file=&#39;fit.logistic.regression.fixed.intercept&#39;)</code></pre>
+<pre class="r"><code>res.l10$cs.summary &lt;-
+  res.l10$cs.summary %&gt;%
+  left_join(marginal_tbl) %&gt;%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
+<pre class="r"><code>res.l10$geneset.summary &lt;-
+  res.l10$geneset.summary %&gt;%
+  left_join(marginal_tbl) %&gt;%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
+<pre class="r"><code>res.l1$cs.summary &lt;-
+  res.l1$cs.summary %&gt;%
+  left_join(marginal_tbl) %&gt;%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
+<pre class="r"><code>res.l1$geneset.summary &lt;-
+  res.l1$geneset.summary %&gt;%
+  left_join(marginal_tbl) %&gt;%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
+<pre class="r"><code>res.l1.flat$cs.summary &lt;-
+  res.l1.flat$cs.summary %&gt;%
+  left_join(marginal_tbl) %&gt;%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
+<pre class="r"><code>res.l1.flat$geneset.summary &lt;-
+  res.l1.flat$geneset.summary %&gt;%
+  left_join(marginal_tbl) %&gt;%
+  mutate(
+    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
+<div id="l10" class="section level3">
+<h3><span class="math inline">\(L=10\)</span></h3>
+<p>The gene set selected by logistic susie with <span class="math inline">\(L=10\)</span> are not the gene sets with the highest likelihood (fitting each gene set seperately), and they’re not the gene set with the smallest pvalue from a (one-sided) hypergeometric test.</p>
+<pre class="r"><code>do.or.plot(res.l10, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/susie.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>do.or.plot(res.l10, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/susie.plots-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>That could be because the multivariate regression is competing gene sets against eachother.</p>
+</div>
+<div id="l1" class="section level3">
+<h3><span class="math inline">\(L=1\)</span></h3>
+<p>For the single effect regression (SER) <span class="math inline">\(L=1\)</span> I would expect that ranking the effects by increasing PIP in the SER would give the same results as ranking the marginal univariate regressions by increasing likelihood. But that’s not the case…</p>
+<pre class="r"><code>p1 &lt;- do.or.plot(res.l1, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)
+p2 &lt;-do.or.plot(res.l1, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)
+cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/ser.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Two reasons this could be happening are (1) shrinkage of the effect sizes in the SER or (2) the SER estimates a shared intercept for all the gene sets.</p>
+<p>So next we look at the SER but we fix the effect size variance to a large value so the prior is flat.</p>
+</div>
+<div id="flat-prior-on-effect-sizes" class="section level3">
+<h3>Flat prior on effect sizes</h3>
+<pre class="r"><code>p1 &lt;- do.or.plot(res.l1.flat, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)
+p2 &lt;- do.or.plot(res.l1.flat, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)
+cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/flat.ser.plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The results for “flat” SER are suspiciously similar to what we just showed. But if we look at <code>mu</code> for both fits they’re different. We see the expected shrinkage (although that’s a pretty funky shape– it looks like smaller gene sets experience stronger shrinkage which makes sense)</p>
+<pre class="r"><code>sizes &lt;- colSums(genesets$gomf$X[, colnames(susie.l1$fit$mu)])
+tbl &lt;- tibble(
+  flat.mu=susie.l1.flat$fit$mu[1,],
+  mu=susie.l1$fit$mu[1,],
+  size = sizes)
+
+tbl %&gt;% 
+  ggplot(aes(y=mu, x=flat.mu, color=log(size))) +
+  geom_point()</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/check.shrinkage-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fixed-intercept-in-marginal-regression" class="section level3">
+<h3>Fixed intercept in marginal regression</h3>
+<p>So could it be the intercept? I took the intercept estimated from SER and refit the univariate logistic regressions with a fixed intercept. For this example, it resolves the discrepancy.</p>
+<pre class="r"><code>marginal.fixed.intercept &lt;-
+  marginal.fixed.intercept %&gt;%
+  mutate(fixed.loglik = -(aic - 4)/2)
+
+tmpa &lt;-
+  marginal_tbl %&gt;%
+  mutate(loglik = -(logistic.aic - 4)/2)
+
+tmpb &lt;- marginal.fixed.intercept %&gt;% 
+  mutate(fixed.loglik = -(aic - 4)/2) %&gt;%
+  select(geneSet, fixed.loglik)
+
+tmpc &lt;- res.l1.flat
+tmpc$geneset.summary &lt;- tmpc$geneset.summary %&gt;% 
+  left_join(tmpb)</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>tmpc$cs.summary &lt;- tmpc$cs.summary %&gt;% 
+  left_join(tmpb)</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>p1 &lt;- do.or.plot(tmpc, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)
+p2 &lt;- do.or.plot(tmpc, x=&#39;fixed.loglik&#39;, s=&#39;minor.gene.frequency&#39;)
+cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/fixed.intercept.ll.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And here you can look at the likelihood of each univariate model with the fixed vs not fixed intercept…</p>
+<pre class="r"><code>tmpa %&gt;%
+  left_join(tmpb)%&gt;%
+  ggplot(aes(x=loglik, y=fixed.loglik)) + geom_point()</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;</code></pre>
+<pre><code>Warning: Removed 100 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/fixed.ll.vs.ll-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>knitr::knit_exit()</code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
