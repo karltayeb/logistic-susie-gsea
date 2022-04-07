@@ -1,5 +1,5 @@
 ---
-title: "single_cell_pbmc_l1"
+title: "Single Cell PBMC Example: Shared intercept explains difference with univariate enrichment tests"
 author: "karltayeb"
 date: "2022-04-03"
 output:
