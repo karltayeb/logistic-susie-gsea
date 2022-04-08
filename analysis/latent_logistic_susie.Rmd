@@ -1,0 +1,311 @@
+---
+title: "Latent gene list"
+author: "karltayeb"
+date: "2022-03-02"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+We've been thinking about the question "how much information is lost when you discritize?"
+
+Running linear SuSiE on zscores/summary stats isn't appropriate because you may have genes within an enriched gene set with differing effect sign and magnitude. Additionally, when I raised this at Gilad lab meeting Yoav was very vocal that the threshold free aspect of GSEA was a desirable property.
+
+Borrowing from the work in iDEA, we're going to treat the interesting/differential expression status of a gene as latent. So z-scores/summary stats are either drawn from a null-component or a non-null/interesting component. Our job is to estimate the probability that each gene is interesting. The prior probability of a gene being interesting will be modeled as a function of genesets/enrichment parameters with a SuSiE prior.
+
+
+$$
+\begin{align}
+\hat z_i \sim \mathcal{N}(z_i, 1) \\
+
+z_i \sim \pi_{0i} f_0 + \pi_{1i} f_1
+
+\end{align}
+$$
+
+$$
+\begin{align}
+\ln \frac{\pi_{1i}}{1 - \pi_{1i}} = \beta^Tx_i \\ 
+\end{align}
+$$
+
+Where $x_i$ is a binary vector indicating gene set membership of gene $i$. 
+
+
+Fortunately, if we look at the ELBO for logistic SuSiE the realized binary indicators $y_i$ only appear linearly, so we can just pass in $\mathbb E \gamma_i$ to logistic SuSiE.
+
+All we need to do then is introduce variational approximations for (1) the latent indicators $\gamma_i$ and (2) the paramters of $f_0$ and $f_1$, which for now we'll leave fixed. We choose $q(\gamma) = \prod_i q(\gamma_i)$ since we need $\gamma_i$ to be (conditionally) independent to just pass them to SuSiE.
+
+$$
+\begin{align}
+\ln p(z | X) &= \ln \int p(z |\theta, \gamma) p(\gamma, \beta | X,\beta)p(\theta | X) d\{\beta, \gamma, \theta\} \\
+&\geq \mathbb E\left[\ln p(z | \theta, \gamma) + \ln p(\theta | X) +\ln p(\gamma, \beta | X) \right] - \mathbb E_q\left[\ln q\right]
+\end{align} \\
+= \mathbb E_q\left[\ln p(z | \theta,  \gamma) + \ln p(\theta | X) \right] - \mathbb E_q\left[\ln q(\gamma, \theta)\right] 
++ \mathbb E_{q(\gamma)} \left[ELBO_{\text{logistic SuSiE}} \right]
+$$
+
+
+```{r load.data}
+f <- system.file('data', 'summary_data.RData', package='iDEA'); load(f)
+f <- system.file('data', 'annotation_data.RData', package='iDEA'); load(f)
+f <- system.file('data', 'humanGeneSets.RData', package='iDEA'); load(f)
+f <- system.file('data', 'humanGeneSetsInfo.RData', package='iDEA'); load(f)
+```
+
+
+```{r fit-idea, eval=FALSE}
+library(iDEA)
+library(tictoc)
+data(summary_data)
+head(summary_data)
+
+tic('fitting iDEA to example data')
+idea <- xfun::cache_rds({
+  idea <- CreateiDEAObject(summary_data, annotation_data, max_var_beta = 100, min_precent_annot = 0.0025, num_core=8)
+  idea <- iDEA.fit(
+    idea, fit_noGS=FALSE, init_beta=NULL, init_tau=c(-2,0.5), min_degene=5,
+    em_iter=15, mcmc_iter=1000, fit.tol=1e-5, modelVariant = F, verbose=TRUE)
+  idea <- iDEA.louis(idea)
+})
+toc()
+
+idea <- iDEA.louis(idea) ##
+head(idea@de[["GO_REGULATION_OF_CANONICAL_WNT_SIGNALING_PATHWAY"]]$pip)
+```
+
+
+
+```{r misc-functions}
+source('code/logistic_susie_vb.R')
+source('code/fit_susie.R')
+source('code/fit_baselines.R')
+source('code/load_gene_sets.R')
+library(org.Hs.eg.db)
+library(susieR)
+library(progress)
+library(RColorBrewer)
+library(tidyverse)
+library(targets)
+
+convert_labels <- function(y){
+  hs <- org.Hs.eg.db
+  gene_symbols <- names(y)
+  symbol2entrez <- AnnotationDbi::select(hs, keys=gene_symbols, columns=c('ENTREZID', 'SYMBOL'), keytype = 'SYMBOL')
+  symbol2entrez <- symbol2entrez[!duplicated(symbol2entrez$SYMBOL),]
+  rownames(symbol2entrez) <- symbol2entrez$SYMBOL
+  ysub <- y[names(y) %in% symbol2entrez$SYMBOL]
+  names(ysub) <- symbol2entrez[names(ysub),]$ENTREZID
+  return(ysub)
+}
+
+procrustes <- function(X, y){
+  idx <- intersect(rownames(X), names(y))
+  return(list(X=X[idx,], y=y[idx]))
+}
+
+make_gene_list <- function(z, z_threshold=2){
+  y <- as.integer(abs(z) > z_threshold)
+  names(y) <- names(z)
+  return(y)
+}
+
+# emualate susie_plot for wrapped fit functions
+susie_plot2 <- function(fit, max_set_size=200, ...){
+  gs <- colnames(fit$alpha[[1]])
+  plot(fit$pip[[1]], cex=0.001, ylab='PIP', xlab='Gene Set', ...)
+  
+  to_plot <- fit$cs[[1]] %>%
+    mutate(plot = cs_size < 20) %>% 
+    dplyr::select(plot) %>% pluck(1)
+  n_cs <- sum(to_plot)
+  cols <- brewer.pal(n_cs,'Set1')
+  
+  print(n_cs)
+  color <- 1
+  for (i in which(to_plot)){
+    idx = (gs %in% fit$cs[[1]]$cs[[i]])
+    print(which(idx))
+    points(x=which(idx), y=fit$pip[[1]][which(idx)], col=cols[color], cex=2, pch=16)
+    color <- color+1
+  }
+  points(fit$pip[[1]], col='black', pch=16, cex=0.5)
+}
+```
+
+```{r latent-log-susie-functions}
+normalize <- function(x){
+  m <- max(x)
+  norm <- log(sum(exp(x - m)) +1e-10) + m
+  return(x - norm)
+}
+
+logit <- function(p){
+  return(log(p) - log(1-p))
+}
+
+sigmoid <- function(logit){
+  1 / (1 + exp(-logit))
+}
+update_gamma <- function(y, prediction, f0, f1){
+  u <- bind_cols(f0(y) - prediction, f1(y) + prediction)
+  u <- cbind(apply(u, 1, normalize))[2,]
+  names(u) <- names(y)
+  return(u)
+}
+
+compute_ELBO <- function(gamma, y, f0, f1, logistic.susie.fit){
+  likf0 <-f0(y)
+  likf1 <- f1(y)
+  ELBO <- sum(gamma * likf1 + (1-gamma) * likf0)
+  ELBO <- ELBO - sum((gamma * logit(gamma) + log(1 - gamma + 1e-10)))
+  ELBO <- ELBO + tail(logistic.susie.fit$elbo, 1)
+  return(ELBO)
+}
+
+predict.logistic.susie <- function(fit, X){
+  (fit$intercept + X %*% colSums(fit$mu * fit$alpha))[,1]
+}
+
+fit.latent.logistic.susie <- function(X, z, f0, f1, outer_maxit=20, ...){
+  # TODO: check inputs
+  
+  # Initialization
+  prediction <- rep(-3, length(z))   # initial prediction, prior log odds DE
+  gamma <- exp(update_gamma(z, prediction, f0, f1))
+  res <- logistic.susie(X, gamma)
+  ELBO <- compute_ELBO(gamma, z, f0, f1, res)
+  res <- c(res, list(gamma=gamma, prediction=prediction))
+
+  # Main loop
+  for (i in 1:outer_maxit){
+    prediction <- predict.logistic.susie(res, X)
+    gamma <- exp(update_gamma(z, prediction, f0, f1))
+    
+    res$dat$y <- gamma
+    for (i in 1:10){
+      res <- logistic.susie.iteration(res)
+    }
+    res <- logistic.susie.wrapup(res)
+    ELBO <- compute_ELBO(gamma, z, f0, f1, res)
+    res$gamma <- gamma
+    res$prediction <- prediction
+  }
+  return(res)
+}
+```
+
+```{r data-setup}
+# set up
+library(targets)
+tar_load(X.gonr)
+z <- summary_data[,1] / sqrt(summary_data[,2])
+names(z) <- rownames(summary_data)
+z.entrez <- convert_labels(z)
+
+tmp <- procrustes(X.gonr, z.entrez)
+z <- tmp$y
+X <- tmp$X
+```
+
+```{r fit-latent-model}
+# density function
+f0 <- function(x){dnorm(x, mean=0, sd=1, log=T)}
+f1 <- function(x){dnorm(x, mean=0, sd=100, log=T)}
+latent.logistic.susie <- fit.latent.logistic.susie(X, z, f0, f1)
+```
+
+```{r plot-latent-model1}
+par(mfrow=c(1, 3))
+susie_plot(latent.logistic.susie, 'PIP')
+hist(latent.logistic.susie$gamma)
+```
+
+```{r plot-latent-model2}
+par(mfrow=c(1, 3))
+prediction <- latent.logistic.susie$prediction[[10]]
+gamma <- latent.logistic.susie$gamma[[10]]
+plot(prediction, logit2prob(prediction), main='prior/prediction')
+plot(logit(gamma), gamma, main='posterior')
+plot(prediction, logit(gamma))
+```
+
+## GSEA sensitivity to thresholding in logistic model
+
+```{r threshold-stability}
+logistic.susie.threshold.stability <- purrr::map(
+  1:10,
+  ~list(fit = logistic.susie(X, (abs(z) > .x), L=10, verbose=T), thresh = .x))
+
+par(mfrow=c(2, 5))
+for (i in 1:10){
+  susie_plot(logistic.susie.threshold.stability[[i]]$fit, 'PIP', main=paste0('|z|>', i))
+}
+```
+
+```{r}
+latent.logistic.susie$sets$cs
+```
+
+```{r}
+logistic.susie.threshold.stability[[2]]$fit$sets$cs
+logistic.susie.threshold.stability[[4]]$fit$sets$cs
+logistic.susie.threshold.stability[[6]]$fit$sets$cs
+logistic.susie.threshold.stability[[8]]$fit$sets$cs
+```
+
+The latent model is recovering similar gene set enrichment as the threshold model. They agree most around $|z| > 4$. What threshold the models tend to agree on should depend a lot on $f_0$ and $f_1$ so it would be good to think a bit more closesly what these should look like. Maybe there is an easy way to make this work with ranked lists too.
+
+```{r}
+knitr::knit_exit()
+```
+
+
+## Compare latent model to threshold model
+
+```{r latent-v-thresh}
+par(mfrow=c(1, 2))
+
+thresh_prediction <- predict.logistic.susie(logistic.susie.threshold.stability$model[[4]], X)
+latent_prediction <- latent.logistic.susie$prediction[[10]]
+plot(latent_prediction, thresh_prediction)
+
+
+thresh_coef <- logistic.susie.threshold.stability$coef[[4]]
+latent_coef <- latent.logistic.susie$coef[[10]]
+plot(latent_coef, thresh_coef)
+```
+
+## Different choices of null/active component densities
+
+```{r}
+# density function
+f0 <- function(x){dnorm(x, mean=0, sd=1, log=T)}
+f1 <- function(x){dnorm(x, mean=0, sd=10, log=T)}
+latent.logistic.susie10 <- fit.latent.logistic.susie(X, z, f0, f1)
+
+par(mfrow=c(3, 3))
+for (i in c(1, 3, 6)){
+  susie_plot2(latent.logistic.susie10[i,])
+  plot(density(latent.logistic.susie10$prediction[[i]]), log='y', main='prior')
+  plot(density(latent.logistic.susie10$gamma[[i]]), log='y', main='posterior')
+}
+```
+
+
+```{r}
+# density function
+f0 <- function(x){dnorm(x, mean=0, sd=1, log=T)}
+f1 <- function(x){dnorm(x, mean=0, sd=2, log=T)}
+latent.logistic.susie2 <- fit.latent.logistic.susie(X, z, f0, f1)
+
+par(mfrow=c(3, 3))
+for (i in c(1, 3, 6)){
+  susie_plot2(latent.logistic.susie2[i,])
+  plot(density(latent.logistic.susie2$prediction[[i]]), log='y', main='prior')
+  plot(density(latent.logistic.susie2$gamma[[i]]), log='y', main='posterior')
+}
+```
+
