@@ -29,6 +29,7 @@ Coming soon....
 ## GSEA from summary statistics
 * [Two component model, initial exploration](summary_stat_gsea_exploration.html)
 * [Two component model, simulations](summary_stat_gsea_sim.html)
+* [Two component model, multivariate (SuSiE prior)](latent_logistic_susie.html)
 
 <!-- [Two component model, multiple regression]() -->
 
