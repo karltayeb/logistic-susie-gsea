@@ -18,7 +18,7 @@ Welcome to my research website.
 
 ### Single cell PBMCs
 * [Single cell PBMCs](single_cell_pbmc.html)
-* [Shared intercept explains differences to univariate enrichment tests](single_cell_pbmc_l1.Rmd)
+* [Shared intercept explains differences to univariate enrichment tests](single_cell_pbmc_l1.html)
 
 ### Wenhe's Baboom Diet Example
 * [Wenhe Baboon Diet](baboon_diet.html)
