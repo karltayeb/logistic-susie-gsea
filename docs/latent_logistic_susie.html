@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="karltayeb" />
+
+<meta name="date" content="2022-03-02" />
+
+<title>Latent gene list</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Latent gene list</h1>
+<h4 class="author">karltayeb</h4>
+<h4 class="date">2022-03-02</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-04-07
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreedc085e46a85839ed8ed64363db6947c7c52b6e6ftargetblankdc085e4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/dc085e46a85839ed8ed64363db6947c7c52b6e6f" target="_blank">dc085e4</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreedc085e46a85839ed8ed64363db6947c7c52b6e6ftargetblankdc085e4a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/dc085e46a85839ed8ed64363db6947c7c52b6e6f" target="_blank">dc085e4</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    library/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+    Ignored:    staging/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Untitled.ipynb
+    Untracked:  _targets.R
+    Untracked:  _targets.html
+    Untracked:  _targets.md
+    Untracked:  _targets/
+    Untracked:  _targets_r/
+    Untracked:  analysis/deng_example.Rmd
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/libra_setup.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  analysis/wenhe_baboon_example.Rmd
+    Untracked:  baboon_diet_cache/
+    Untracked:  build_site.R
+    Untracked:  cache/
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  data/adipose_2yr_topsnp.txt
+    Untracked:  data/deng/
+    Untracked:  data/fetal_reference_cellid_gene_sets.RData
+    Untracked:  data/pbmc-purified/
+    Untracked:  data/wenhe_baboon_diet/
+    Untracked:  docs.zip
+    Untracked:  index.md
+    Untracked:  latent_logistic_susie_cache/
+    Untracked:  simulation_targets/
+    Untracked:  single_cell_pbmc_cache/
+    Untracked:  single_cell_pbmc_l1_cache/
+    Untracked:  summary_stat_gsea_exploration_cache/
+    Untracked:  summary_stat_gsea_sim_cache/
+
+Unstaged changes:
+    Modified:   _simulation_targets.R
+    Modified:   _targets.Rmd
+    Modified:   analysis/baboon_diet.Rmd
+    Modified:   analysis/gseabenchmark_tcga.Rmd
+    Modified:   analysis/single_cell_pbmc.Rmd
+    Deleted:    analysis/summary_stat_gsea_univariate_simulations.Rmd
+    Modified:   code/fit_baselines.R
+    Modified:   code/fit_logistic_susie.R
+    Modified:   code/fit_mr_ash.R
+    Modified:   code/fit_susie.R
+    Modified:   code/load_gene_sets.R
+    Modified:   code/logistic_susie_vb.R
+    Modified:   code/simulate_gene_lists.R
+    Modified:   code/utils.R
+    Modified:   target_components/factories.R
+    Modified:   target_components/methods.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/latent_logistic_susie.Rmd</code>) and HTML (<code>docs/latent_logistic_susie.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/dc085e46a85839ed8ed64363db6947c7c52b6e6f/analysis/latent_logistic_susie.Rmd" target="_blank">dc085e4</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+wflow_publish(“analysis/latent_logistic_susie.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>We’ve been thinking about the question “how much information is lost when you discritize?”</p>
+<p>Running linear SuSiE on zscores/summary stats isn’t appropriate because you may have genes within an enriched gene set with differing effect sign and magnitude. Additionally, when I raised this at Gilad lab meeting Yoav was very vocal that the threshold free aspect of GSEA was a desirable property.</p>
+<p>Borrowing from the work in iDEA, we’re going to treat the interesting/differential expression status of a gene as latent. So z-scores/summary stats are either drawn from a null-component or a non-null/interesting component. Our job is to estimate the probability that each gene is interesting. The prior probability of a gene being interesting will be modeled as a function of genesets/enrichment parameters with a SuSiE prior.</p>
+<p>$$ <span class="math display">\[\begin{align}
+\hat z_i \sim \mathcal{N}(z_i, 1) \\
+
+z_i \sim \pi_{0i} f_0 + \pi_{1i} f_1
+
+\end{align}\]</span> $$</p>
+<p><span class="math display">\[
+\begin{align}
+\ln \frac{\pi_{1i}}{1 - \pi_{1i}} = \beta^Tx_i \\ 
+\end{align}
+\]</span></p>
+<p>Where <span class="math inline">\(x_i\)</span> is a binary vector indicating gene set membership of gene <span class="math inline">\(i\)</span>.</p>
+<p>Fortunately, if we look at the ELBO for logistic SuSiE the realized binary indicators <span class="math inline">\(y_i\)</span> only appear linearly, so we can just pass in <span class="math inline">\(\mathbb E \gamma_i\)</span> to logistic SuSiE.</p>
+<p>All we need to do then is introduce variational approximations for (1) the latent indicators <span class="math inline">\(\gamma_i\)</span> and (2) the paramters of <span class="math inline">\(f_0\)</span> and <span class="math inline">\(f_1\)</span>, which for now we’ll leave fixed. We choose <span class="math inline">\(q(\gamma) = \prod_i q(\gamma_i)\)</span> since we need <span class="math inline">\(\gamma_i\)</span> to be (conditionally) independent to just pass them to SuSiE.</p>
+<p><span class="math display">\[
+\begin{align}
+\ln p(z | X) &amp;= \ln \int p(z |\theta, \gamma) p(\gamma, \beta | X,\beta)p(\theta | X) d\{\beta, \gamma, \theta\} \\
+&amp;\geq \mathbb E\left[\ln p(z | \theta, \gamma) + \ln p(\theta | X) +\ln p(\gamma, \beta | X) \right] - \mathbb E_q\left[\ln q\right]
+\end{align} \\
+= \mathbb E_q\left[\ln p(z | \theta,  \gamma) + \ln p(\theta | X) \right] - \mathbb E_q\left[\ln q(\gamma, \theta)\right] 
++ \mathbb E_{q(\gamma)} \left[ELBO_{\text{logistic SuSiE}} \right]
+\]</span></p>
+<pre class="r"><code>f &lt;- system.file(&#39;data&#39;, &#39;summary_data.RData&#39;, package=&#39;iDEA&#39;); load(f)
+f &lt;- system.file(&#39;data&#39;, &#39;annotation_data.RData&#39;, package=&#39;iDEA&#39;); load(f)
+f &lt;- system.file(&#39;data&#39;, &#39;humanGeneSets.RData&#39;, package=&#39;iDEA&#39;); load(f)
+f &lt;- system.file(&#39;data&#39;, &#39;humanGeneSetsInfo.RData&#39;, package=&#39;iDEA&#39;); load(f)</code></pre>
+<pre class="r"><code>library(iDEA)
+library(tictoc)
+data(summary_data)
+head(summary_data)
+
+tic(&#39;fitting iDEA to example data&#39;)
+idea &lt;- xfun::cache_rds({
+  idea &lt;- CreateiDEAObject(summary_data, annotation_data, max_var_beta = 100, min_precent_annot = 0.0025, num_core=8)
+  idea &lt;- iDEA.fit(
+    idea, fit_noGS=FALSE, init_beta=NULL, init_tau=c(-2,0.5), min_degene=5,
+    em_iter=15, mcmc_iter=1000, fit.tol=1e-5, modelVariant = F, verbose=TRUE)
+  idea &lt;- iDEA.louis(idea)
+})
+toc()
+
+idea &lt;- iDEA.louis(idea) ##
+head(idea@de[[&quot;GO_REGULATION_OF_CANONICAL_WNT_SIGNALING_PATHWAY&quot;]]$pip)</code></pre>
+<pre class="r"><code>source(&#39;code/logistic_susie_vb.R&#39;)
+source(&#39;code/fit_susie.R&#39;)
+source(&#39;code/fit_baselines.R&#39;)</code></pre>
+<pre><code>Loading required package: Matrix</code></pre>
+<pre><code>Loaded glmnet 4.1-3</code></pre>
+<pre class="r"><code>source(&#39;code/load_gene_sets.R&#39;)
+library(org.Hs.eg.db)</code></pre>
+<pre><code>Loading required package: AnnotationDbi</code></pre>
+<pre><code>Loading required package: stats4</code></pre>
+<pre><code>Loading required package: BiocGenerics</code></pre>
+<pre><code>
+Attaching package: &#39;BiocGenerics&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    IQR, mad, sd, var, xtabs</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which.max, which.min</code></pre>
+<pre><code>Loading required package: Biobase</code></pre>
+<pre><code>Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    &#39;browseVignettes()&#39;. To cite Bioconductor, see
+    &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.</code></pre>
+<pre><code>Loading required package: IRanges</code></pre>
+<pre><code>Loading required package: S4Vectors</code></pre>
+<pre><code>
+Attaching package: &#39;S4Vectors&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:Matrix&#39;:
+
+    expand, unname</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    expand.grid, I, unname</code></pre>
+<pre><code></code></pre>
+<pre class="r"><code>library(susieR)
+library(progress)
+library(RColorBrewer)
+library(tidyverse)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+✓ tibble  3.1.6     ✓ dplyr   1.0.8
+✓ tidyr   1.2.0     ✓ stringr 1.4.0
+✓ readr   2.1.2     ✓ forcats 0.5.1</code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::collapse()   masks IRanges::collapse()
+x dplyr::combine()    masks Biobase::combine(), BiocGenerics::combine()
+x dplyr::desc()       masks IRanges::desc()
+x tidyr::expand()     masks S4Vectors::expand(), Matrix::expand()
+x dplyr::filter()     masks stats::filter()
+x dplyr::first()      masks S4Vectors::first()
+x dplyr::lag()        masks stats::lag()
+x tidyr::pack()       masks Matrix::pack()
+x ggplot2::Position() masks BiocGenerics::Position(), base::Position()
+x purrr::reduce()     masks IRanges::reduce()
+x dplyr::rename()     masks S4Vectors::rename()
+x dplyr::select()     masks AnnotationDbi::select()
+x dplyr::slice()      masks IRanges::slice()
+x tidyr::unpack()     masks Matrix::unpack()</code></pre>
+<pre class="r"><code>library(targets)
+
+convert_labels &lt;- function(y){
+  hs &lt;- org.Hs.eg.db
+  gene_symbols &lt;- names(y)
+  symbol2entrez &lt;- AnnotationDbi::select(hs, keys=gene_symbols, columns=c(&#39;ENTREZID&#39;, &#39;SYMBOL&#39;), keytype = &#39;SYMBOL&#39;)
+  symbol2entrez &lt;- symbol2entrez[!duplicated(symbol2entrez$SYMBOL),]
+  rownames(symbol2entrez) &lt;- symbol2entrez$SYMBOL
+  ysub &lt;- y[names(y) %in% symbol2entrez$SYMBOL]
+  names(ysub) &lt;- symbol2entrez[names(ysub),]$ENTREZID
+  return(ysub)
+}
+
+procrustes &lt;- function(X, y){
+  idx &lt;- intersect(rownames(X), names(y))
+  return(list(X=X[idx,], y=y[idx]))
+}
+
+make_gene_list &lt;- function(z, z_threshold=2){
+  y &lt;- as.integer(abs(z) &gt; z_threshold)
+  names(y) &lt;- names(z)
+  return(y)
+}
+
+# emualate susie_plot for wrapped fit functions
+susie_plot2 &lt;- function(fit, max_set_size=200, ...){
+  gs &lt;- colnames(fit$alpha[[1]])
+  plot(fit$pip[[1]], cex=0.001, ylab=&#39;PIP&#39;, xlab=&#39;Gene Set&#39;, ...)
+  
+  to_plot &lt;- fit$cs[[1]] %&gt;%
+    mutate(plot = cs_size &lt; 20) %&gt;% 
+    dplyr::select(plot) %&gt;% pluck(1)
+  n_cs &lt;- sum(to_plot)
+  cols &lt;- brewer.pal(n_cs,&#39;Set1&#39;)
+  
+  print(n_cs)
+  color &lt;- 1
+  for (i in which(to_plot)){
+    idx = (gs %in% fit$cs[[1]]$cs[[i]])
+    print(which(idx))
+    points(x=which(idx), y=fit$pip[[1]][which(idx)], col=cols[color], cex=2, pch=16)
+    color &lt;- color+1
+  }
+  points(fit$pip[[1]], col=&#39;black&#39;, pch=16, cex=0.5)
+}</code></pre>
+<pre class="r"><code>normalize &lt;- function(x){
+  m &lt;- max(x)
+  norm &lt;- log(sum(exp(x - m)) +1e-10) + m
+  return(x - norm)
+}
+
+logit &lt;- function(p){
+  return(log(p) - log(1-p))
+}
+
+sigmoid &lt;- function(logit){
+  1 / (1 + exp(-logit))
+}
+update_gamma &lt;- function(y, prediction, f0, f1){
+  u &lt;- bind_cols(f0(y) - prediction, f1(y) + prediction)
+  u &lt;- cbind(apply(u, 1, normalize))[2,]
+  names(u) &lt;- names(y)
+  return(u)
+}
+
+compute_ELBO &lt;- function(gamma, y, f0, f1, logistic.susie.fit){
+  likf0 &lt;-f0(y)
+  likf1 &lt;- f1(y)
+  ELBO &lt;- sum(gamma * likf1 + (1-gamma) * likf0)
+  ELBO &lt;- ELBO - sum((gamma * logit(gamma) + log(1 - gamma + 1e-10)))
+  ELBO &lt;- ELBO + tail(logistic.susie.fit$elbo, 1)
+  return(ELBO)
+}
+
+predict.logistic.susie &lt;- function(fit, X){
+  (fit$intercept + X %*% colSums(fit$mu * fit$alpha))[,1]
+}
+
+fit.latent.logistic.susie &lt;- function(X, z, f0, f1, outer_maxit=20, ...){
+  # TODO: check inputs
+  
+  # Initialization
+  prediction &lt;- rep(-3, length(z))   # initial prediction, prior log odds DE
+  gamma &lt;- exp(update_gamma(z, prediction, f0, f1))
+  res &lt;- logistic.susie(X, gamma)
+  ELBO &lt;- compute_ELBO(gamma, z, f0, f1, res)
+  res &lt;- c(res, list(gamma=gamma, prediction=prediction))
+
+  # Main loop
+  for (i in 1:outer_maxit){
+    prediction &lt;- predict.logistic.susie(res, X)
+    gamma &lt;- exp(update_gamma(z, prediction, f0, f1))
+    
+    res$dat$y &lt;- gamma
+    for (i in 1:10){
+      res &lt;- logistic.susie.iteration(res)
+    }
+    res &lt;- logistic.susie.wrapup(res)
+    ELBO &lt;- compute_ELBO(gamma, z, f0, f1, res)
+    res$gamma &lt;- gamma
+    res$prediction &lt;- prediction
+  }
+  return(res)
+}</code></pre>
+<pre class="r"><code># set up
+library(targets)
+tar_load(X.gonr)
+z &lt;- summary_data[,1] / sqrt(summary_data[,2])
+names(z) &lt;- rownames(summary_data)
+z.entrez &lt;- convert_labels(z)</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<pre class="r"><code>tmp &lt;- procrustes(X.gonr, z.entrez)
+z &lt;- tmp$y
+X &lt;- tmp$X</code></pre>
+<pre class="r"><code># density function
+f0 &lt;- function(x){dnorm(x, mean=0, sd=1, log=T)}
+f1 &lt;- function(x){dnorm(x, mean=0, sd=100, log=T)}
+latent.logistic.susie &lt;- fit.latent.logistic.susie(X, z, f0, f1)</code></pre>
+<pre><code>New names:
+* `` -&gt; ...1
+* `` -&gt; ...2</code></pre>
+<pre><code>Warning in eval(family$initialize): non-integer #successes in a binomial glm!</code></pre>
+<pre><code>New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2
+New names:
+* `` -&gt; ...1
+* `` -&gt; ...2</code></pre>
+<pre class="r"><code>par(mfrow=c(1, 3))
+susie_plot(latent.logistic.susie, &#39;PIP&#39;)
+hist(latent.logistic.susie$gamma)</code></pre>
+<p><img src="figure/latent_logistic_susie.Rmd/plot-latent-model1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow=c(1, 3))
+prediction &lt;- latent.logistic.susie$prediction[[10]]
+gamma &lt;- latent.logistic.susie$gamma[[10]]
+plot(prediction, logit2prob(prediction), main=&#39;prior/prediction&#39;)
+plot(logit(gamma), gamma, main=&#39;posterior&#39;)
+plot(prediction, logit(gamma))</code></pre>
+<p><img src="figure/latent_logistic_susie.Rmd/plot-latent-model2-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gsea-sensitivity-to-thresholding-in-logistic-model" class="section level2">
+<h2>GSEA sensitivity to thresholding in logistic model</h2>
+<pre class="r"><code>logistic.susie.threshold.stability &lt;- purrr::map(
+  1:10,
+  ~list(fit = logistic.susie(X, (abs(z) &gt; .x), L=10, verbose=T), thresh = .x))</code></pre>
+<pre><code>
+converged
+
+converged
+
+converged
+
+converged
+
+converged
+
+converged
+
+converged
+
+converged
+
+converged
+
+converged</code></pre>
+<pre class="r"><code>par(mfrow=c(2, 5))
+for (i in 1:10){
+  susie_plot(logistic.susie.threshold.stability[[i]]$fit, &#39;PIP&#39;, main=paste0(&#39;|z|&gt;&#39;, i))
+}</code></pre>
+<p><img src="figure/latent_logistic_susie.Rmd/threshold-stability-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>latent.logistic.susie$sets$cs</code></pre>
+<pre><code>$L2
+[1] 11
+
+$L3
+[1] 476
+
+$L1
+[1] 582 585</code></pre>
+<pre class="r"><code>logistic.susie.threshold.stability[[2]]$fit$sets$cs</code></pre>
+<pre><code>$L1
+[1] 11
+
+$L2
+[1] 585</code></pre>
+<pre class="r"><code>logistic.susie.threshold.stability[[4]]$fit$sets$cs</code></pre>
+<pre><code>$L1
+[1] 11
+
+$L3
+[1] 476
+
+$L4
+[1] 28
+
+$L5
+[1] 582 585</code></pre>
+<pre class="r"><code>logistic.susie.threshold.stability[[6]]$fit$sets$cs</code></pre>
+<pre><code>$L1
+[1] 11
+
+$L3
+[1] 600
+
+$L4
+[1] 476
+
+$L5
+[1] 582
+
+$L6
+[1] 552
+
+$L7
+[1] 61</code></pre>
+<pre class="r"><code>logistic.susie.threshold.stability[[8]]$fit$sets$cs</code></pre>
+<pre><code>$L1
+[1] 11
+
+$L3
+[1] 850</code></pre>
+<p>The latent model is recovering similar gene set enrichment as the threshold model. They agree most around <span class="math inline">\(|z| &gt; 4\)</span>. What threshold the models tend to agree on should depend a lot on <span class="math inline">\(f_0\)</span> and <span class="math inline">\(f_1\)</span> so it would be good to think a bit more closesly what these should look like. Maybe there is an easy way to make this work with ranked lists too.</p>
+<pre class="r"><code>knitr::knit_exit()</code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
