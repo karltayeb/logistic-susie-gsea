@@ -340,16 +340,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6eb825ed0e9df2a9ef26c86c4b2ad5b272b8099btargetblank6eb825ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6eb825ed0e9df2a9ef26c86c4b2ad5b272b8099b" target="_blank">6eb825e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree38e14a2cb193d882cefa140baad670a8717e2200targetblank38e14a2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/38e14a2cb193d882cefa140baad670a8717e2200" target="_blank">38e14a2</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6eb825ed0e9df2a9ef26c86c4b2ad5b272b8099btargetblank6eb825ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree38e14a2cb193d882cefa140baad670a8717e2200targetblank38e14a2a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6eb825ed0e9df2a9ef26c86c4b2ad5b272b8099b" target="_blank">6eb825e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/38e14a2cb193d882cefa140baad670a8717e2200" target="_blank">38e14a2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -378,7 +378,6 @@ Untracked files:
     Untracked:  analysis/fixed_intercept.Rmd
     Untracked:  analysis/iDEA_examples.Rmd
     Untracked:  analysis/latent_gene_list.Rmd
-    Untracked:  analysis/latent_logistic_susie.Rmd
     Untracked:  analysis/libra_setup.Rmd
     Untracked:  analysis/linear_method_failure_modes.Rmd
     Untracked:  analysis/linear_regression_failure_regime.Rmd
@@ -421,6 +420,7 @@ Unstaged changes:
     Modified:   code/fit_mr_ash.R
     Modified:   code/fit_susie.R
     Modified:   code/load_gene_sets.R
+    Modified:   code/logistic_susie_vb.R
     Modified:   code/simulate_gene_lists.R
     Modified:   code/utils.R
     Modified:   target_components/factories.R
@@ -463,6 +463,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/38e14a2cb193d882cefa140baad670a8717e2200/analysis/index.Rmd" target="_blank">38e14a2</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+wflow_publish(“analysis/index.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/4d82faadad5cfaf3fb3b63872d89614a7b943df2/docs/index.html" target="_blank">4d82faa</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -872,6 +906,7 @@ Start workflowr project.
 <ul>
 <li><a href="summary_stat_gsea_exploration.html">Two component model, initial exploration</a></li>
 <li><a href="summary_stat_gsea_sim.html">Two component model, simulations</a></li>
+<li><a href="latent_logistic_susie.html">Two component model, multivariate (SuSiE prior)</a></li>
 </ul>
 <!-- [Two component model, multiple regression]() -->
 </div>
