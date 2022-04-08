@@ -494,6 +494,19 @@ p2 <- do.or.plot(tmpc, x='fixed.loglik', s='minor.gene.frequency')
 cowplot::plot_grid(p1, p2, nrow = 1)
 ```
 
+So once you fix the intercept the likelihoods track with the log(PIPs)...
+
+```{r fixed.ll.vs.ll.pip}
+p1 <- tmpc$geneset.summary %>%
+  left_join(tmpb)%>%
+  ggplot(aes(x=log(pip), y=loglik)) + geom_point()
+
+p2 <- tmpc$geneset.summary %>%
+  left_join(tmpb)%>%
+  ggplot(aes(x=log(pip), y=fixed.loglik)) + geom_point()
+cowplot::plot_grid(p1, p2, nrow = 1)
+```
+
 And here you can look at the likelihood of each univariate model with the fixed vs not fixed intercept...
 
 ```{r fixed.ll.vs.ll}
@@ -505,140 +518,3 @@ tmpa %>%
 ```{r}
 knitr::knit_exit()
 ```
-
-
-We performed a univariate logistic regression against each gene set.
-
-If we plot the negative log 10 pvalues of the effects (from `summary(fit)$coefficients`) we see general agreement with the hypergeometric p-values. Since the hypergeometric test is one-sided, we see a discrepency where the logistic regression estimates depletion (i.e. negative effect). There is a group of tests that the hypergeometric test ranks as more significant, and these tend to be small gene sets with a high proportion of genes from gene gene set observed in the gene list.
-
-```{r}
-res.l1.flat$geneset.summary %>%
-  ggplot(aes(x=nl10p, y=logistic.regression.nl10p, color=pip)) +
-  geom_point()
-
-res.l1.flat$geneset.summary %>%
-  ggplot(aes(x=nl10p, y=logistic.regression.nl10p, color=(logistic.effect >0))) +
-  geom_point()
-```
-
-Interesting if we look at the log-likelihood of the regressions, these agree with the more the the hypergeometric pvalues (with the exception of the depleted genesets, where the regression can improve the likelihood with a negative effect)
-
-```{r}
-res.l1.flat$geneset.summary %>%
-  ggplot(aes(x=nl10p, y=loglik, color=(logistic.effect >0))) +
-  geom_point()
-```
-
-```{r}
-do.or.plot(res.l10, x='nl10p')
-do.or.plot(res.l10, x='loglik')
-
-do.or.plot(res.l1, x='nl10p')
-do.or.plot(res.l1, x='loglik')
-
-do.or.plot(res.l1.flat, x='nl10p')
-do.or.plot(res.l1.flat, x='loglik')
-```
-
-
-```{r p0}
-marginal.fixed.intercept_tbl = tibble(
-  geneSet = names(marginal.fixed.intercept$fit),
-  loglik = - map_dbl(marginal.fixed.intercept$fit, ~pluck(.x, 'aic'))/2 + 4
-)
-
-res.l10$cs.summary <-
-  res.l10$cs.summary %>%
-  left_join(marginal.fixed.intercept_tbl)
-
-res.l10$geneset.summary <-
-  res.l10$geneset.summary %>%
-  left_join(marginal.fixed.intercept_tbl)
-
-res.l1$cs.summary <-
-  res.l1$cs.summary %>%
-  left_join(marginal.fixed.intercept_tbl)
-
-res.l1$geneset.summary <-
-  res.l1$geneset.summary %>%
-  left_join(marginal.fixed.intercept_tbl)
-
-res.l1.flat$cs.summary <-
-  res.l1.flat$cs.summary %>%
-  left_join(marginal.fixed.intercept_tbl)
-
-res.l1.flat$geneset.summary <-
-  res.l1.flat$geneset.summary %>%
-  left_join(marginal.fixed.intercept_tbl)
-
-do.or.plot(res.l10, x='loglik')
-
-do.or.plot(res.l1, x='loglik')
-do.or.plot(res.l1, x='alpha')
-
-do.or.plot(res.l1.flat, x='loglik')
-
-
-plot(res.l1$geneset.summary$pip, marginal_tbl$loglik)
-```
-
-
-```{r p1}
-p1 <- res.l1.flat$cs.summary %>%
-  left_join(marginal.fixed.intercept_tbl) %>%
-  ggplot(aes(x=loglik, y=nl10p, size=geneSetSize)) +
-  geom_point()
-
-p2 <- res.l1.flat$geneset.summary %>%
-  left_join(marginal.fixed.intercept_tbl) %>%
-  ggplot(aes(x=loglik, y=pip, size=geneSetSize)) +
-  geom_point()
-cowplot::plot_grid(p1, p2)
-```
-
-```{r}
-knitr::knit_exit()
-```
-
-```{r}
-susie.args = list(L=1, estimate_prior_variance=T, standardize=F, verbose=T)
-cd19.kegg.l1 <- do_logistic_susie(
-  'kegg', 'CD19+ B', 1e-4, susie.args = susie.args)
-
-susie.args = list(L=1, standardize=F, V=1000, estimate_prior_variance=F, verbose=T)
-cd19.kegg.l1.flat <- do_logistic_susie(
-  'kegg', 'CD19+ B', 1e-4, susie.args = susie.args)
-cd19.kegg.marginal <- do_marginal_logistic_regression('kegg', 'CD19+ B', 1e-4)
-
-
-cd19.kegg.marginal_tbl = tibble(
-  geneSet = names(cd19.kegg.marginal$fit),
-  loglik = - map_dbl(cd19.kegg.marginal$fit, ~pluck(.x, 'aic'))/2 + 4
-)
-
-cs.summary <-
-  cd19.kegg.l1 %>% 
-  get_credible_set_summary() %>%
-  mutate(nl10p = -log10(pValueHypergeometric)) %>%
-  left_join(cd19.kegg.marginal_tlb)
-geneset.summary <-
-  cd19.kegg.l1 %>% 
-  get_gene_set_summary() %>%
-  mutate(nl10p = -log10(pValueHypergeometric)) %>%
-  left_join(cd19.kegg.marginal_tlb)
-res <- list(
-  cs.summary = cs.summary,
-  geneset.summary = geneset.summary
-)
-
-do.or.plot(res, 'CD19+ B', 'kegg', x='loglik', facet='db')
-do.or.plot(res, 'CD19+ B', 'kegg', x='nl10p', facet='db')
-do.or.plot(res, 'CD19+ B', 'kegg', x='oddsRatio', facet='db')
-do.or.plot(res, 'CD19+ B', 'kegg', x='propInSet', facet='db')
-```
-
-
-```{r}
-
-```
-
