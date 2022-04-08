@@ -492,16 +492,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6cd8628c253d09ec88ebcbe14985cd118925dfeftargetblank6cd8628a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6cd8628c253d09ec88ebcbe14985cd118925dfef" target="_blank">6cd8628</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree2efbcd90174b59557c4d95ca739e1b068eb86d65targetblank2efbcd9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/2efbcd90174b59557c4d95ca739e1b068eb86d65" target="_blank">2efbcd9</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6cd8628c253d09ec88ebcbe14985cd118925dfeftargetblank6cd8628a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree2efbcd90174b59557c4d95ca739e1b068eb86d65targetblank2efbcd9a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6cd8628c253d09ec88ebcbe14985cd118925dfef" target="_blank">6cd8628</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/2efbcd90174b59557c4d95ca739e1b068eb86d65" target="_blank">2efbcd9</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -615,6 +615,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/2efbcd90174b59557c4d95ca739e1b068eb86d65/analysis/single_cell_pbmc_l1.Rmd" target="_blank">2efbcd9</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc_l1.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/c5c6f9a248f94fff6e84d178897c10d8bc98238d/docs/single_cell_pbmc_l1.html" target="_blank">c5c6f9a</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -932,7 +966,7 @@ marginal_tbl &lt;- xfun::cache_rds({
   file=&#39;fit.logistic.regression&#39;,
   rerun=TRUE)</code></pre>
 <pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
-<pre><code>129.159 sec elapsed</code></pre>
+<pre><code>137.199 sec elapsed</code></pre>
 <pre class="r"><code># L =10
 susie.args = list(L=10, standardize=F, verbose=T)
 susie.l10 = do_logistic_susie(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, susie.args)</code></pre>
@@ -1362,6 +1396,18 @@ karltayeb
 </table>
 </div>
 </div>
+<p>So once you fix the intercept the likelihoods track with the log(PIPs)…</p>
+<pre class="r"><code>p1 &lt;- tmpc$geneset.summary %&gt;%
+  left_join(tmpb)%&gt;%
+  ggplot(aes(x=log(pip), y=loglik)) + geom_point()</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;fixed.loglik&quot;)</code></pre>
+<pre class="r"><code>p2 &lt;- tmpc$geneset.summary %&gt;%
+  left_join(tmpb)%&gt;%
+  ggplot(aes(x=log(pip), y=fixed.loglik)) + geom_point()</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;fixed.loglik&quot;)</code></pre>
+<pre class="r"><code>cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
+<pre><code>Warning: Removed 100 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/fixed.ll.vs.ll.pip-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>And here you can look at the likelihood of each univariate model with the fixed vs not fixed intercept…</p>
 <pre class="r"><code>tmpa %&gt;%
   left_join(tmpb)%&gt;%
