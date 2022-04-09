@@ -10,9 +10,13 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_knit$set(
+  root.dir = '/project2/gilad/ktayeb/logistic-susie-gsea/'
+)
 knitr::opts_chunk$set(
   comment = '',
-  message=FALSE, warning=FALSE
+  message=FALSE, warning=FALSE,
+  root.dir = '/project2/gilad/ktayeb/logistic-susie-gsea/'
 )
 ```
 
@@ -24,7 +28,7 @@ For each topic we construct a binary gene list by thresholding on local false si
 
 
 
-```{r message=FALSE, results='hide'}
+```{r load, message=FALSE, results='hide'}
 #library(GSEABenchmarkeR)
 #library(EnrichmentBrowser)
 library(susieR)
@@ -33,12 +37,9 @@ library(kableExtra)
 library(tidyverse)
 library(Matrix)
 
-
 source('code/load_gene_sets.R')
 source('code/utils.R')
 source('code/logistic_susie_vb.R')
-source('code/susie_gsea_queries.R')
-source('code/html_tables.R')
 
 #source('code/latent_logistic_susie.R')
 ```
@@ -231,14 +232,13 @@ nmf.kegg <- xfun::cache_rds({
   purrr::map(Y, ~do_logistic_susie(.x, 'kegg', susie.args = susie.args))},
   dir = 'cache/deng_example/', file='nmf.kegg')
 
-remove(nmf.fits)
 nmf.fits <- mget(ls(pattern='^nmf.+'))
 names(nmf.fits) <- purrr::map_chr(names(nmf.fits), ~str_split(.x, '\\.')[[1]][2])
 ```
 
 ### Thresholds
 
-```{r threshold.sensitivity}
+```{r threshold.sensitivity, eval=FALSE}
 mean.gene.prop = function(l){
   purrr::map_dbl(3:10, ~get_y(l, 10^(-.x)) %>% mean())
 }
@@ -295,7 +295,7 @@ names(Y.snmf) = paste0('topic_', ix[1:5])
 snmf.gobp <- xfun::cache_rds({
   susie.args <- list(L=10, maxit=200, verbose=T)
   purrr::map(Y.snmf, ~do_logistic_susie(.x, 'gobp', susie.args = susie.args))},
-  dir = 'cache/deng_example/', file='snmf.gobp')
+  dir = 'cache/deng_example/', file='snmf.gobp', rerun=T)
 
 snmf.gomf <- xfun::cache_rds({
   susie.args <- list(L=10, maxit=200, verbose=T)
@@ -323,11 +323,5 @@ for(topic in names(Y.snmf)){
     cat("\n")
   }
 }
-```
-
-
-
-```{r}
-hist(nmf$fl$L.lfsr[,2])
 ```
 
