@@ -401,7 +401,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-04-07
+<strong>Last updated:</strong> 2022-04-08
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -492,16 +492,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree2efbcd90174b59557c4d95ca739e1b068eb86d65targetblank2efbcd9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/2efbcd90174b59557c4d95ca739e1b068eb86d65" target="_blank">2efbcd9</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreedba11361a7eab23f446104a25b08aa7d1e14e699targetblankdba1136a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/dba11361a7eab23f446104a25b08aa7d1e14e699" target="_blank">dba1136</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree2efbcd90174b59557c4d95ca739e1b068eb86d65targetblank2efbcd9a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreedba11361a7eab23f446104a25b08aa7d1e14e699targetblankdba1136a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/2efbcd90174b59557c4d95ca739e1b068eb86d65" target="_blank">2efbcd9</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/dba11361a7eab23f446104a25b08aa7d1e14e699" target="_blank">dba1136</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -512,6 +512,7 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
     Ignored:    library/
     Ignored:    renv/library/
     Ignored:    renv/staging/
@@ -530,7 +531,6 @@ Untracked files:
     Untracked:  analysis/fixed_intercept.Rmd
     Untracked:  analysis/iDEA_examples.Rmd
     Untracked:  analysis/latent_gene_list.Rmd
-    Untracked:  analysis/latent_logistic_susie.Rmd
     Untracked:  analysis/libra_setup.Rmd
     Untracked:  analysis/linear_method_failure_modes.Rmd
     Untracked:  analysis/linear_regression_failure_regime.Rmd
@@ -550,6 +550,7 @@ Untracked files:
     Untracked:  data/adipose_2yr_topsnp.txt
     Untracked:  data/deng/
     Untracked:  data/fetal_reference_cellid_gene_sets.RData
+    Untracked:  data/human_chimp_eb/
     Untracked:  data/pbmc-purified/
     Untracked:  data/wenhe_baboon_diet/
     Untracked:  docs.zip
@@ -573,6 +574,7 @@ Unstaged changes:
     Modified:   code/fit_mr_ash.R
     Modified:   code/fit_susie.R
     Modified:   code/load_gene_sets.R
+    Modified:   code/logistic_susie_vb.R
     Modified:   code/simulate_gene_lists.R
     Modified:   code/utils.R
     Modified:   target_components/factories.R
@@ -615,6 +617,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/dba11361a7eab23f446104a25b08aa7d1e14e699/analysis/single_cell_pbmc_l1.Rmd" target="_blank">dba1136</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-08
+</td>
+<td>
+wflow_publish(“analysis/single_cell_pbmc_l1.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/c9fd3c773dae86f4441dfa7d30699f7968d53071/docs/single_cell_pbmc_l1.html" target="_blank">c9fd3c7</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -855,6 +891,72 @@ do_logistic_susie = function(db, celltype, thresh, susie.args=NULL){
     db = db, celltype = celltype, thresh = thresh))
 }
 
+#&#39; fit logistic susie, and hypergeometric test
+do_logistic_susie_veb_boost = function(db, celltype, thresh, susie.args=NULL){
+  gs &lt;- genesets[[db]]
+  data &lt;- deseq[[celltype]]
+  y &lt;- get_y(data, thresh)
+  u &lt;- process_input(gs$X, y)  # subset to common genes
+  
+  X &lt;- u$X
+  dim(X[,(colSums(X) &gt; 0 &amp; colSums(X) &lt; dim(X)[1])])
+  dim(X)
+  if(is.null(susie.args)){
+    susie.args = list(L=10)
+  }
+  vb.fit &lt;- exec(logistic.susie.veb.boost, u$X, u$y, !!!susie.args)
+
+  veb.fit &lt;- VEB.Boost::veb_boost_stumps(
+    u$X, u$y, k=2,
+    family=&#39;binomial&#39;,
+    include_stumps = F,
+    growTree=F,
+    changeToConstant=F
+  )
+  
+  sum(colSums(u$X) == 12210)
+  
+  veb.fit$X
+  
+  alpha &lt;- t(do.call(cbind, lapply(veb.fit$leaves, function(x) x$currentFit$alpha)))
+  mu &lt;- t(do.call(cbind, lapply(veb.fit$leaves, function(x) x$currentFit$mu)))
+  mu2 &lt;- t(do.call(cbind, lapply(veb.fit$leaves, function(x) x$currentFit$mu2)))
+  elbo &lt;- veb.fit$ELBO_progress[[2]]
+  res &lt;- list(alpha=alpha, mu=mu, mu2=mu2, elbo=elbo, veb.fit=veb.fit)
+  
+  class(res) &lt;- &#39;susie&#39;
+  colnames(res$alpha) &lt;- colnames(u$X)
+  colnames(res$mu) &lt;- colnames(X)
+  res$pip &lt;- susieR::susie_get_pip(res)
+  names(res$pip) &lt;- colnames(X)
+  res$sets &lt;- susieR::susie_get_cs(res, X=X)
+ 
+  #&#39; hypergeometric test
+  ora &lt;- tibble(
+    geneSet = colnames(u$X),
+    geneListSize = sum(u$y),
+    geneSetSize = colSums(u$X),
+    overlap = (u$y %*% u$X)[1,],
+    nGenes = length(u$y),
+    propInList = overlap / geneListSize,
+    propInSet = overlap / geneSetSize,
+    oddsRatio = (overlap / (geneListSize - overlap)) / (
+      (geneSetSize - overlap) / (nGenes - geneSetSize + overlap)),
+    pValueHypergeometric = phyper(
+      overlap-1, geneListSize, nGenes - geneListSize, geneSetSize, lower.tail= FALSE),
+    nl10p = -log10(pValueHypergeometric),
+    db = db,
+    celltype = celltype,
+    thresh = thresh
+  ) %&gt;% 
+  left_join(gs$geneSet$geneSetDes)
+
+  return(list(
+    fit = vb.fit,
+    ora = ora,
+    db = db, celltype = celltype, thresh = thresh))
+}
+
 get_credible_set_summary = function(res){
   gs &lt;- genesets[[res$db]]
   data &lt;- deseq[[res$celltype]]
@@ -929,10 +1031,18 @@ summarize_fit = function(glm.fitted){
   ))
 }
 
+summarize_fit = function(glm.fitted){
+  coef = summary(glm.fitted)$coefficients
+  return(list(
+    coef = coef,
+    logistic.aic = glm.fitted$aic
+  ))
+}
+
 do_marginal_logistic_regression = function(db,
                                            celltype,
                                            thresh,
-                                           glm.args = list(family=&#39;binomial&#39;)){
+                                           glm.args = list(family=&#39;binomial&#39;), intercept=T){
   gs &lt;- genesets[[db]]
   data &lt;- deseq[[celltype]]
   y &lt;- get_y(data, thresh)
@@ -940,11 +1050,15 @@ do_marginal_logistic_regression = function(db,
   
   n &lt;- dim(u$X)[1]  # number of genes
   p &lt;- dim(u$X)[2]  # number of gene sets
-  f &lt;- exec(partial, glm, !!!glm.args)
   
+  f &lt;- exec(partial, glm, !!!glm.args)
   library(tictoc)
   tic()
-  marginal.fit &lt;- purrr::map(1:p, ~ possibly(summarize_fit, NULL)(f(u$y ~ u$X[,.x])))
+  if(intercept){
+    marginal.fit &lt;- purrr::map(1:p, ~ possibly(summarize_fit, NULL)(f(u$y ~ u$X[,.x])))
+  } else {
+    marginal.fit &lt;- purrr::map(1:p, ~ possibly(summarize_fit, NULL)(f(u$y ~ u$X[,.x] - 1)))
+  }
   names(marginal.fit) &lt;- colnames(u$X)[1:p]
   toc()
 
@@ -963,10 +1077,7 @@ do_marginal_logistic_regression = function(db,
 marginal_tbl &lt;- xfun::cache_rds({
   do_marginal_logistic_regression(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4)},
   dir = &#39;cache/single_cell_pbmc_l1/&#39;,
-  file=&#39;fit.logistic.regression&#39;,
-  rerun=TRUE)</code></pre>
-<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
-<pre><code>137.199 sec elapsed</code></pre>
+  file=&#39;fit.logistic.regression&#39;)</code></pre>
 <pre class="r"><code># L =10
 susie.args = list(L=10, standardize=F, verbose=T)
 susie.l10 = do_logistic_susie(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, susie.args)</code></pre>
@@ -1012,108 +1123,153 @@ Joining, by = &quot;geneSet&quot;</code></pre>
 Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)
 Joining, by = &quot;geneSet&quot;
 Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)</code></pre>
-<pre class="r"><code>#&#39; fit logistic regression to each gene set individually
-#&#39; calls glm.fit for more flexibility
-do_marginal_logistic_regression2= function(db,
-                                           celltype,
-                                           thresh,
-                                           glm.args = list(family=&#39;binomial&#39;)){
-  gs &lt;- genesets[[db]]
-  data &lt;- deseq[[celltype]]
-  y &lt;- get_y(data, thresh)
-  u &lt;- process_input(gs$X, y)  # subset to common genes
-  
-  n &lt;- dim(u$X)[1]  # number of genes
-  p &lt;- dim(u$X)[2]  # number of gene sets
-  f &lt;- exec(partial, glm.fit, !!!glm.args)
-  tic()
-  sf = function(fit){
-    return(list(
-      effect = fit$coefficients,
-      aic = fit$aic))
-  }
-  marginal.fit &lt;- purrr::map(1:p, ~ possibly(sf, NULL)(f(u$X[,.x], u$y)))
-  names(marginal.fit) &lt;- colnames(u$X)[1:p]
-  toc()
-
-  marginal &lt;- tibble(
-    geneSet = names(marginal.fit),
-    fit = marginal.fit) %&gt;%
-    unnest_wider(fit) %&gt;%
-    mutate(
-      db = db,
-      celltype = celltype,
-      thresh = thresh
-    )
-  return(marginal)
-}
-
-# fixed intercept model
+<pre class="r"><code># L = 1 &quot;flat&quot; prior
+susie.args &lt;- list(L=1)
+susie.l1.veb &lt;- do_logistic_susie_veb_boost(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, susie.args)</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns
+Loading required package: VEB.Boost
+Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>res.l1.veb &lt;- list(
+  cs.summary = get_credible_set_summary(susie.l1.veb),
+  geneset.summary = get_gene_set_summary(susie.l1.veb)
+)</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)</code></pre>
+<pre class="r"><code># L = 10 &quot;flat&quot; prior
+susie.args &lt;- list(L=1)
+susie.l10.veb &lt;- do_logistic_susie_veb_boost(&#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4)</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns
+Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>res.l10.veb &lt;- list(
+  cs.summary = get_credible_set_summary(susie.l10.veb),
+  geneset.summary = get_gene_set_summary(susie.l10.veb)
+)</code></pre>
+<pre><code>Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = c(&quot;geneSet&quot;, &quot;description&quot;)</code></pre>
+<pre class="r"><code># fixed intercept model
 intercept &lt;- susie.l1$fit$intercept
 n &lt;- susie.l1$fit$dat$y %&gt;% length()
+
 marginal.fixed.intercept &lt;- xfun::cache_rds({
-  glm.args &lt;- list(family=binomial(), intercept=F, offset=rep(intercept, n))
-  do_marginal_logistic_regression2(
-    &#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, glm.args = glm.args)},
+  glm.args &lt;- list(family=binomial(), offset=rep(intercept, n))
+  do_marginal_logistic_regression(
+    &#39;gomf&#39;, &#39;CD19+ B&#39;, 1e-4, glm.args = glm.args, intercept=F)},
   dir = &#39;cache/single_cell_pbmc_l1/&#39;,
-  file=&#39;fit.logistic.regression.fixed.intercept&#39;)</code></pre>
+  file=&#39;fit.logistic.regression.fixed.intercept&#39;)
+
+
+marginal.fixed.intercept &lt;-
+  marginal.fixed.intercept %&gt;%
+  mutate(
+    nl10p.fixed.intercept = -log10(marginal.fixed.intercept$coef[, 4]),
+    loglik.fixed.intercept = -0.5 *(logistic.aic - 4)
+  )
+
+marginal &lt;- 
+  marginal_tbl %&gt;%
+  filter(row_number() &gt; 1) %&gt;%
+  rowwise() %&gt;%
+  mutate(
+    nl10p.beta = -log10(tail(coef[,4], 1))
+  ) %&gt;% ungroup() %&gt;%
+  mutate(
+    loglik.beta = -0.5 *(logistic.aic - 4)
+  ) %&gt;%
+  select(-c(coef, logistic.aic)) %&gt;%
+  left_join(marginal.fixed.intercept %&gt;% select(-coef))</code></pre>
+<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
+<pre class="r"><code>p1 &lt;- marginal %&gt;%
+  ggplot(aes(x=loglik.beta, y=loglik.fixed.intercept)) +
+  geom_point()
+p2 &lt;- marginal %&gt;%
+  ggplot(aes(x=nl10p.beta, y=nl10p.fixed.intercept)) +
+  geom_point()
+cowplot::plot_grid(p1, p2)</code></pre>
+<pre><code>Warning: Removed 99 rows containing missing values (geom_point).</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/fit.fixed.intercept-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>res.l10$cs.summary &lt;-
   res.l10$cs.summary %&gt;%
-  left_join(marginal_tbl) %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
   mutate(
-    loglik = -(logistic.aic -4)/2,
     minor.gene.frequency = geneSetSize / nGenes,
     minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
-  )</code></pre>
-<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
-<pre class="r"><code>res.l10$geneset.summary &lt;-
+  )
+
+res.l10$geneset.summary &lt;-
   res.l10$geneset.summary %&gt;%
-  left_join(marginal_tbl) %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
   mutate(
-    loglik = -(logistic.aic -4)/2,
     minor.gene.frequency = geneSetSize / nGenes,
     minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
-  )</code></pre>
-<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
-<pre class="r"><code>res.l1$cs.summary &lt;-
+  )
+
+res.l1$cs.summary &lt;-
   res.l1$cs.summary %&gt;%
-  left_join(marginal_tbl) %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
   mutate(
-    loglik = -(logistic.aic -4)/2,
     minor.gene.frequency = geneSetSize / nGenes,
     minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
-  )</code></pre>
-<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
-<pre class="r"><code>res.l1$geneset.summary &lt;-
+  )
+
+res.l1$geneset.summary &lt;-
   res.l1$geneset.summary %&gt;%
-  left_join(marginal_tbl) %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
   mutate(
-    loglik = -(logistic.aic -4)/2,
     minor.gene.frequency = geneSetSize / nGenes,
     minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
-  )</code></pre>
-<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
-<pre class="r"><code>res.l1.flat$cs.summary &lt;-
+  )
+
+res.l1.flat$cs.summary &lt;-
   res.l1.flat$cs.summary %&gt;%
-  left_join(marginal_tbl) %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
   mutate(
-    loglik = -(logistic.aic -4)/2,
     minor.gene.frequency = geneSetSize / nGenes,
     minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
-  )</code></pre>
-<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
-<pre class="r"><code>res.l1.flat$geneset.summary &lt;-
+  )
+res.l1.flat$geneset.summary &lt;-
   res.l1.flat$geneset.summary %&gt;%
-  left_join(marginal_tbl) %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
   mutate(
-    loglik = -(logistic.aic -4)/2,
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+
+res.l1.veb$cs.summary &lt;-
+  res.l1.veb$cs.summary %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
+  mutate(
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+res.l1.veb$geneset.summary &lt;-
+  res.l1.veb$geneset.summary %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
+  mutate(
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+
+res.l10.veb$cs.summary &lt;-
+  res.l10.veb$cs.summary %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
+  mutate(
+    minor.gene.frequency = geneSetSize / nGenes,
+    minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
+  )
+res.l10.veb$geneset.summary &lt;-
+  res.l10.veb$geneset.summary %&gt;%
+  left_join(marginal, by = c(&#39;geneSet&#39;, &#39;db&#39;, &#39;celltype&#39;)) %&gt;%
+  mutate(
     minor.gene.frequency = geneSetSize / nGenes,
     minor.gene.frequency = pmin(1 - minor.gene.frequency, minor.gene.frequency)
   )</code></pre>
-<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;db&quot;, &quot;celltype&quot;, &quot;thresh&quot;)</code></pre>
 <div id="l10" class="section level3">
 <h3><span class="math inline">\(L=10\)</span></h3>
-<p>The gene set selected by logistic susie with <span class="math inline">\(L=10\)</span> are not the gene sets with the highest likelihood (fitting each gene set seperately), and they’re not the gene set with the smallest pvalue from a (one-sided) hypergeometric test.</p>
+<p>The gene set selected by logistic susie with <span class="math inline">\(L=10\)</span> are not the gene sets with the smallest p-value from a hypergeometric test. This is partially remedied by ranking by the p-values (<span class="math inline">\(L2\)</span> get’s fixed) from logistic regression. If we fit the logistic regression with a fixed intercept we also recover <span class="math inline">\(L1\)</span>. We don’t get the other components, but it’s possible the effects estimates are not independent. Let’s look at the SER case.</p>
 <pre class="r"><code>do.or.plot(res.l10, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/susie.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -1153,7 +1309,7 @@ karltayeb
 </table>
 </div>
 </div>
-<pre class="r"><code>do.or.plot(res.l10, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)</code></pre>
+<pre class="r"><code>do.or.plot(res.l10, x=&#39;nl10p.beta&#39;, s=&#39;minor.gene.frequency&#39;)</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/susie.plots-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-susie.plots-2">
@@ -1192,14 +1348,17 @@ karltayeb
 </table>
 </div>
 </div>
-<p>That could be because the multivariate regression is competing gene sets against eachother.</p>
+<pre class="r"><code>do.or.plot(res.l10, x=&#39;nl10p.fixed.intercept&#39;, s=&#39;minor.gene.frequency&#39;)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/susie.plots-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="l1" class="section level3">
 <h3><span class="math inline">\(L=1\)</span></h3>
-<p>For the single effect regression (SER) <span class="math inline">\(L=1\)</span> I would expect that ranking the effects by increasing PIP in the SER would give the same results as ranking the marginal univariate regressions by increasing likelihood. But that’s not the case…</p>
+<p>Consistent with <span class="math inline">\(L=10\)</span> only when we fix the regression intercept do we get pvalues that agree with the PIPs.</p>
 <pre class="r"><code>p1 &lt;- do.or.plot(res.l1, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)
-p2 &lt;-do.or.plot(res.l1, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)
-cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
+p2 &lt;-do.or.plot(res.l1, x=&#39;nl10p.beta&#39;, s=&#39;minor.gene.frequency&#39;)
+p3 &lt;-do.or.plot(res.l1, x=&#39;nl10p.fixed.intercept&#39;, s=&#39;minor.gene.frequency&#39;)
+
+cowplot::plot_grid(p1, p2, p3, nrow = 1)</code></pre>
 <p><img src="figure/single_cell_pbmc_l1.Rmd/ser.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ser.plots-1">
@@ -1238,53 +1397,16 @@ karltayeb
 </table>
 </div>
 </div>
-<p>Two reasons this could be happening are (1) shrinkage of the effect sizes in the SER or (2) the SER estimates a shared intercept for all the gene sets.</p>
-<p>So next we look at the SER but we fix the effect size variance to a large value so the prior is flat.</p>
 </div>
-<div id="flat-prior-on-effect-sizes" class="section level3">
-<h3>Flat prior on effect sizes</h3>
+<div id="l1-flat" class="section level3">
+<h3><span class="math inline">\(L=1\)</span> Flat</h3>
+<p>I also wanted to see if shrinkage on the effect estimates was causing any differences. The enrichment plot looks remarkable similar but if we plot <code>mu</code> from SER we see that the effects are shrunk (although that’s a pretty funky shape– it looks like smaller gene sets experience stronger shrinkage which makes sense).</p>
 <pre class="r"><code>p1 &lt;- do.or.plot(res.l1.flat, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)
-p2 &lt;- do.or.plot(res.l1.flat, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)
-cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
-<p><img src="figure/single_cell_pbmc_l1.Rmd/flat.ser.plot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-flat.ser.plot-1">
-Past versions of flat.ser.plot-1.png
-</button>
-</p>
-<div id="fig-flat.ser.plot-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/flat.ser.plot-1.png" target="_blank">53ac4cb</a>
-</td>
-<td>
-karltayeb
-</td>
-<td>
-2022-04-07
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>The results for “flat” SER are suspiciously similar to what we just showed. But if we look at <code>mu</code> for both fits they’re different. We see the expected shrinkage (although that’s a pretty funky shape– it looks like smaller gene sets experience stronger shrinkage which makes sense)</p>
+p2 &lt;-do.or.plot(res.l1.flat, x=&#39;nl10p.beta&#39;, s=&#39;minor.gene.frequency&#39;)
+p3 &lt;-do.or.plot(res.l1.flat, x=&#39;nl10p.fixed.intercept&#39;, s=&#39;minor.gene.frequency&#39;)
+
+cowplot::plot_grid(p1, p2, p3, nrow = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/ser.flat.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>sizes &lt;- colSums(genesets$gomf$X[, colnames(susie.l1$fit$mu)])
 tbl &lt;- tibble(
   flat.mu=susie.l1.flat$fit$mu[1,],
@@ -1333,125 +1455,45 @@ karltayeb
 </div>
 </div>
 </div>
-<div id="fixed-intercept-in-marginal-regression" class="section level3">
-<h3>Fixed intercept in marginal regression</h3>
-<p>So could it be the intercept? I took the intercept estimated from SER and refit the univariate logistic regressions with a fixed intercept. For this example, it resolves the discrepancy.</p>
-<pre class="r"><code>marginal.fixed.intercept &lt;-
-  marginal.fixed.intercept %&gt;%
-  mutate(fixed.loglik = -(aic - 4)/2)
+<div id="l1-veb.boost-estimate-intercept-per-effect" class="section level3">
+<h3><span class="math inline">\(L=1\)</span> VEB.Boost (estimate intercept per effect)</h3>
+<pre class="r"><code>p1 &lt;- do.or.plot(res.l1.veb, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)
+p2 &lt;-do.or.plot(res.l1.veb, x=&#39;nl10p.beta&#39;, s=&#39;minor.gene.frequency&#39;)
+p3 &lt;-do.or.plot(res.l1.veb, x=&#39;nl10p.fixed.intercept&#39;, s=&#39;minor.gene.frequency&#39;)
 
-tmpa &lt;-
-  marginal_tbl %&gt;%
-  mutate(loglik = -(logistic.aic - 4)/2)
+cowplot::plot_grid(p1, p2, p3, nrow = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/veb.1.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="l10-veb.boost-estimate-intercept-per-effect" class="section level3">
+<h3><span class="math inline">\(L=10\)</span> VEB.Boost (estimate intercept per effect)</h3>
+<pre class="r"><code>p1 &lt;- do.or.plot(res.l10.veb, x=&#39;nl10p&#39;, s=&#39;minor.gene.frequency&#39;)
+p2 &lt;-do.or.plot(res.l10.veb, x=&#39;nl10p.beta&#39;, s=&#39;minor.gene.frequency&#39;)
+p3 &lt;-do.or.plot(res.l10.veb, x=&#39;nl10p.fixed.intercept&#39;, s=&#39;minor.gene.frequency&#39;)
 
-tmpb &lt;- marginal.fixed.intercept %&gt;% 
-  mutate(fixed.loglik = -(aic - 4)/2) %&gt;%
-  select(geneSet, fixed.loglik)
-
-tmpc &lt;- res.l1.flat
-tmpc$geneset.summary &lt;- tmpc$geneset.summary %&gt;% 
-  left_join(tmpb)</code></pre>
-<pre><code>Joining, by = &quot;geneSet&quot;</code></pre>
-<pre class="r"><code>tmpc$cs.summary &lt;- tmpc$cs.summary %&gt;% 
-  left_join(tmpb)</code></pre>
-<pre><code>Joining, by = &quot;geneSet&quot;</code></pre>
-<pre class="r"><code>p1 &lt;- do.or.plot(tmpc, x=&#39;loglik&#39;, s=&#39;minor.gene.frequency&#39;)
-p2 &lt;- do.or.plot(tmpc, x=&#39;fixed.loglik&#39;, s=&#39;minor.gene.frequency&#39;)
+cowplot::plot_grid(p1, p2, p3, ncol = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/sveb.10.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="some-other-plots" class="section level3">
+<h3>Some other plots</h3>
+<p>log PIPs vs nl10p from hypergeometric test, logitic regression, and fixed intercept regression</p>
+<pre class="r"><code>p1 &lt;- res.l1$geneset.summary %&gt;% ggplot(aes(x=log(pip), y=nl10p)) + geom_point()
+p2 &lt;- res.l1$geneset.summary %&gt;% ggplot(aes(x=log(pip), y=nl10p.beta)) + geom_point()
+p3 &lt;- res.l1$geneset.summary %&gt;% ggplot(aes(x=log(pip), y=nl10p.fixed.intercept)) + geom_point()
+cowplot::plot_grid(p1, p2, p3, nrow = 1)</code></pre>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/pip.v.nl10p-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>There are some discrepancies between the pvalues from different methods. One class of differences are where SuSiE estimates a negative effect. This depletion is not detected by the one-sided hypergeometric test. For some small, highly observed, gene sets, the hypergeometric test is giving a much stronger pvalue than the logistic regression.</p>
+<pre class="r"><code>p1 &lt;- res.l1$geneset.summary %&gt;% ggplot(aes(x=nl10p.beta, y=nl10p, color=(beta &gt; 0))) + geom_point()
+p2 &lt;- res.l1$geneset.summary %&gt;%
+  mutate(geneSetSize = case_when(
+      geneSetSize &lt; 10 ~ &#39;&lt;10&#39;,
+      geneSetSize &lt; 50 ~ &#39;10-50&#39;,
+      geneSetSize &lt; 100 ~ &#39;50-100&#39;,
+      TRUE ~ &#39;&gt;100&#39;)) %&gt;%
+  ggplot(aes(x=nl10p.beta, y=nl10p, color=factor(geneSetSize, levels = c(&#39;&lt;10&#39;, &#39;10-50&#39;, &#39;50-100&#39;, &#39;&gt;100&#39;)))) +
+  geom_point() +
+  scale_color_discrete(&#39;Gene set size&#39;)
 cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
-<p><img src="figure/single_cell_pbmc_l1.Rmd/fixed.intercept.ll.plots-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fixed.intercept.ll.plots-1">
-Past versions of fixed.intercept.ll.plots-1.png
-</button>
-</p>
-<div id="fig-fixed.intercept.ll.plots-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/fixed.intercept.ll.plots-1.png" target="_blank">53ac4cb</a>
-</td>
-<td>
-karltayeb
-</td>
-<td>
-2022-04-07
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>So once you fix the intercept the likelihoods track with the log(PIPs)…</p>
-<pre class="r"><code>p1 &lt;- tmpc$geneset.summary %&gt;%
-  left_join(tmpb)%&gt;%
-  ggplot(aes(x=log(pip), y=loglik)) + geom_point()</code></pre>
-<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;fixed.loglik&quot;)</code></pre>
-<pre class="r"><code>p2 &lt;- tmpc$geneset.summary %&gt;%
-  left_join(tmpb)%&gt;%
-  ggplot(aes(x=log(pip), y=fixed.loglik)) + geom_point()</code></pre>
-<pre><code>Joining, by = c(&quot;geneSet&quot;, &quot;fixed.loglik&quot;)</code></pre>
-<pre class="r"><code>cowplot::plot_grid(p1, p2, nrow = 1)</code></pre>
-<pre><code>Warning: Removed 100 rows containing missing values (geom_point).</code></pre>
-<p><img src="figure/single_cell_pbmc_l1.Rmd/fixed.ll.vs.ll.pip-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>And here you can look at the likelihood of each univariate model with the fixed vs not fixed intercept…</p>
-<pre class="r"><code>tmpa %&gt;%
-  left_join(tmpb)%&gt;%
-  ggplot(aes(x=loglik, y=fixed.loglik)) + geom_point()</code></pre>
-<pre><code>Joining, by = &quot;geneSet&quot;</code></pre>
-<pre><code>Warning: Removed 100 rows containing missing values (geom_point).</code></pre>
-<p><img src="figure/single_cell_pbmc_l1.Rmd/fixed.ll.vs.ll-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fixed.ll.vs.ll-1">
-Past versions of fixed.ll.vs.ll-1.png
-</button>
-</p>
-<div id="fig-fixed.ll.vs.ll-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/53ac4cb1981edb6f385ff7a26e17f78db3a90b97/docs/figure/single_cell_pbmc_l1.Rmd/fixed.ll.vs.ll-1.png" target="_blank">53ac4cb</a>
-</td>
-<td>
-karltayeb
-</td>
-<td>
-2022-04-07
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/single_cell_pbmc_l1.Rmd/hyper.v.logistic-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
 </div>
 </div>
