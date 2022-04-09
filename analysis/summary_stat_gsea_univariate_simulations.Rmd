@@ -187,9 +187,9 @@ sim.driver = function(X, sim, params.init=NULL, update.alpha=T, update.sigma0=T)
 }
 ```
 
-```{r simulate.and.fit, eval=FALSE}
+```{r simulate.and.fit}
 library(future)
-plan(multisession, workers = 4)
+plan(multisession)
 
 X <- sim.X(60, by=20)
 r.se = function(n) exp(rnorm(n, mean=-1, sd=0.5))
@@ -197,7 +197,7 @@ hist(r.se(100000))
 
 # make simulation
 n = 100
-sim <- map_dfr(c(0.1, 0.5, 1.0, 2.0, 4.0, 8.0),
+sim <- map_dfr(c(0.1, 0.5, 1.0, 2.0, 4.0),
   ~tibble(  # sample parameters
     theta0 = runif(n, -4, 0),
     theta1 = runif(n, 0, 4),
@@ -214,9 +214,10 @@ sim <- map_dfr(c(0.1, 0.5, 1.0, 2.0, 4.0, 8.0),
     sim = list(simulate.gene.summary.stats(params, X[, 1], r.se=r.se))
   ) %>% ungroup()
 )
-
 possibly.sim.driver = possibly(sim.driver, NA)
+```
 
+```{r fit.exchangeable.effects}
 # fix alpha = 0 
 params.init = list(
   theta = c(0, 0),
@@ -230,7 +231,9 @@ exchangeable.effects.fit <- xfun::cache_rds({
         X, .x, params.init, update.alpha=F, update.sigma0=T))
     )
 })
+```
 
+```{r fit.z.effects}
 params.init = list(
   theta = c(0, 0),
   alpha = 1.,
@@ -243,7 +246,9 @@ exchangeable.z.fit <- xfun::cache_rds({
         X, .x, params.init, update.alpha=F, update.sigma0=T))
     )
 })
+```
 
+```{r fit.estimate.alpha}
 params.init = list(
   theta = c(0, 0),
   alpha = 1.,
@@ -354,6 +359,5 @@ cowplot::plot_grid(p1, p2, p3)
 do.null.freq.poly(estimate.alpha.fit, 'alpha') +
   labs(title='Estimate alpha')
 ```
-
 
 
