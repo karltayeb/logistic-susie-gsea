@@ -11,7 +11,6 @@ calc_Q = function(X, Sigma2, Mu, Alpha, Z, delta) {
   # Z is matrix of covariates (e.g. column for intercept, top 10 PCs, etc)
   # delta is current estimate for effects of Z variables
   ASU2 = Alpha * (Sigma2 + Mu^2) # [j, l] = alpha[j, l] * (Sigma2[j, l] + Mu[j, l]^2)
-
   Q = rowSums(X^2 %*% ASU2) # start w/ sum_l E_(ql)[(x_i' b_l)^2]
 
   # now add 2 sum_l sum_{k>l} (x_i' b_l_post)(x_i' b_k_post)
@@ -114,7 +113,19 @@ update_delta = function(X, y, xi, Mu, Alpha, Z) {
 
 }
 
-update_all = function(X, y, xi, prior_weights, V, Sigma2, Mu, Alpha, Z, delta, estimate_prior_variance, share_prior_variance, intercept) {
+update_all = function(X,
+                      y,
+                      xi,
+                      prior_weights,
+                      V,
+                      Sigma2,
+                      Mu,
+                      Alpha,
+                      Z,
+                      delta,
+                      estimate_prior_variance,
+                      share_prior_variance,
+                      intercept) {
   # X is data matrix
   # y is binary response
   # xi is lower-bound approximation parameters
@@ -223,9 +234,9 @@ logistic.susie.init = function(
   n = nrow(X)
   se = rep(1, p)
   if(standardize){
-    se <- sqrt(colVars(X))
+    se <- sqrt(sparseMatrixStats::colVars(X))
     se[is.na(se)] <- 1
-    se[se < 1e-5] <- 1e-5
+    se[se < 1e-5] <- 1e-5  # clip small values for stability
     X <- wordspace::scaleMargins(X, cols = 1/se)  # TODO: weird dependency, reimpliment
   }
   else{
@@ -300,7 +311,7 @@ logistic.susie.wrapup = function(res){
   res = list(
     alpha = t(post_info$Alpha),
     mu = t(post_info$Mu),
-    mu2 = t(post_info$Sigma2 + post_info$mu^2),
+    mu2 = t(post_info$Sigma2 + post_info$Mu^2),
     elbo = res$elbo,
     dat = res$dat,
     post_info = res$post_info
