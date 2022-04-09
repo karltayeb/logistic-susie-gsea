@@ -33,6 +33,19 @@ load.msigdb.X <- function(){
   X <- X[rowSums(X) > 0, ]
 }
 
+load.webGestalt.geneSet <- function(db='geneontology_Biological_Process_noRedundant'){
+  organism <- 'hsapiens'
+  interestGeneType = "ensembl_gene_id"
+  referenceGeneType = "ensembl_gene_id"
+  outputDirectory = './data/WebGestalt/results'
+  hostName = 'http://www.webgestalt.org/'
+
+  enrichDatabase <- c(db)
+  geneSet <- WebGestaltR::loadGeneSet(
+    organism=organism, enrichDatabase=enrichDatabase, hostName=hostName)
+  return(geneSet)
+}
+
 load.webGestalt.X <- function(db='geneontology_Biological_Process_noRedundant'){
   organism <- 'hsapiens'
   interestGeneType = "ensembl_gene_id"
@@ -48,9 +61,69 @@ load.webGestalt.X <- function(db='geneontology_Biological_Process_noRedundant'){
   return(X)
 }
 
+load.gonr.geneSet <- function(){
+  load.webGestalt.geneSet()
+}
 
-load.gobp <- function(){
+load.gobp.geneSet <- function(){
+  load.webGestalt.geneSet()
+}
+
+load.gobp.X <- function(){
   X <- load.webGestalt.X(db='geneontology_Biological_Process')
   sizes <- colSums(X)
   X <- X[, (sizes > 5) & (sizes < 500)]
 }
+
+load.gonr.X <- function(){
+  X <- load.webGestalt.X()
+  sizes <- colSums(X)
+  X <- X[, (sizes > 5) & (sizes < 500)]
+}
+
+load.gobp.X <- function(){
+  X <- load.webGestalt.X(db='geneontology_Biological_Process')
+  sizes <- colSums(X)
+  X <- X[, (sizes > 5) & (sizes < 500)]
+}
+
+
+# turn a tibble with two columns
+# into a named list with names from first column
+# values from second column
+tibble2namedlist <- function(tibble){
+  x <- tibble[[2]]
+  names(x) <- tibble[[1]]
+  return(x)
+}
+
+# turn webgestalt geneSet object
+# into named list of gene sets
+convertGeneSet <- function(gs, min.size = 100){
+  gs$geneSet %>%
+    group_by(geneSet) %>%
+    filter(n() > min.size) %>%
+    select(gene) %>%
+    chop(gene) %>% ungroup() %>%
+    tibble2namedlist
+}
+
+# convert list of gene sets into binary indicator matrix
+geneSet2X <- function(gs){
+  unique.genes <- unique(unlist(gs))
+  X <- purrr::map(gs, ~ Matrix::Matrix(unique.genes %in% .x %>% as.integer, sparse = T)) %>%
+    Reduce(cbind2, .) %>%
+    `rownames<-`(unique.genes) %>%
+    `colnames<-`(names(gs))
+  return(X)
+}
+
+loadGeneSetX = function(db, min.size=50){
+  gs <- load.webGestalt.geneSet(db)
+  X <- xfun::cache_rds({
+      gs %>% convertGeneSet(min.size=min.size) %>% geneSet2X
+    }, file=paste0(db, '.', min.size, '.X.rds')
+  )
+  return(list(geneSet = gs, X=X, db=db, min.size=min.size))
+}
+
