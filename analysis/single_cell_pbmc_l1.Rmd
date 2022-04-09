@@ -613,7 +613,9 @@ log PIPs vs nl10p from hypergeometric test, logitic regression, and fixed interc
 p1 <- res.l1$geneset.summary %>% ggplot(aes(x=log(pip), y=nl10p)) + geom_point()
 p2 <- res.l1$geneset.summary %>% ggplot(aes(x=log(pip), y=nl10p.beta)) + geom_point()
 p3 <- res.l1$geneset.summary %>% ggplot(aes(x=log(pip), y=nl10p.fixed.intercept)) + geom_point()
-cowplot::plot_grid(p1, p2, p3, nrow = 1)
+p1
+p2
+p3
 ```
 
 
