@@ -553,7 +553,7 @@ p1 <- do.or.plot(res.l1, x='nl10p', s='minor.gene.frequency')
 p2 <-do.or.plot(res.l1, x='nl10p.beta', s='minor.gene.frequency')
 p3 <-do.or.plot(res.l1, x='nl10p.fixed.intercept', s='minor.gene.frequency')
 
-cowplot::plot_grid(p1, p2, p3)
+cowplot::plot_grid(p1, p2, p3, ncol=1)
 ```
 
 
@@ -568,7 +568,7 @@ p1 <- do.or.plot(res.l1.flat, x='nl10p', s='minor.gene.frequency')
 p2 <-do.or.plot(res.l1.flat, x='nl10p.beta', s='minor.gene.frequency')
 p3 <-do.or.plot(res.l1.flat, x='nl10p.fixed.intercept', s='minor.gene.frequency')
 
-cowplot::plot_grid(p1, p2, p3, nrow = 1)
+cowplot::plot_grid(p1, p2, p3, ncol=1)
 ```
 
 ```{r check.shrinkage}
@@ -591,7 +591,7 @@ p1 <- do.or.plot(res.l1.veb, x='nl10p', s='minor.gene.frequency')
 p2 <-do.or.plot(res.l1.veb, x='nl10p.beta', s='minor.gene.frequency')
 p3 <-do.or.plot(res.l1.veb, x='nl10p.fixed.intercept', s='minor.gene.frequency')
 
-cowplot::plot_grid(p1, p2, p3, nrow = 1)
+cowplot::plot_grid(p1, p2, p3, ncol=1)
 ```
 
 
@@ -602,7 +602,7 @@ p1 <- do.or.plot(res.l10.veb, x='nl10p', s='minor.gene.frequency')
 p2 <-do.or.plot(res.l10.veb, x='nl10p.beta', s='minor.gene.frequency')
 p3 <-do.or.plot(res.l10.veb, x='nl10p.fixed.intercept', s='minor.gene.frequency')
 
-cowplot::plot_grid(p1, p2, p3, ncol = 1)
+cowplot::plot_grid(p1, p2, p3, ncol=1)
 ```
 
 ### Some other plots
