@@ -252,7 +252,17 @@ p2 <- ggplot(pdat, aes(x=resp.pn.1, y=1 - (beta.hat - beta.post.pn.1)/beta.hat, 
     title='Point normal alpha=1'
   )
 
-cowplot::plot_grid(p1, p2, ncol=2)
+p3 <- ggplot(pdat, aes(x=resp.pn.1, y=resp.pn.0, color=se)) +
+  geom_point() +
+  scale_color_gradient2(
+    low = "lightskyblue",mid = "gold", high = "orangered", midpoint = 3)+
+  labs(
+    x=TeX('\\alpha = 1'),
+    y=TeX('\\alpha = 0'),
+    title=TeX('p(\\beta != 0 | D)')
+  )  
+
+cowplot::plot_grid(p1, p2, p3, ncol=3)
 ```
 
 
@@ -277,6 +287,11 @@ p2 <- pdat %>%
     title=TeX('\\alpha = 1')
   )
 cowplot::plot_grid(p1, p2, ncol=2)
+```
+
+
+```{r}
+ash.fits[[1]]$result %>% head()
 ```
 
 ```{r}
