@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="karltayeb" />
+
+<meta name="date" content="2022-04-09" />
+
+<title>alpha_for_single_cell</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">alpha_for_single_cell</h1>
+<h4 class="author">karltayeb</h4>
+<h4 class="date">2022-04-09</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-04-10
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongabsolute"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>File paths:</strong> absolute </a>
+</p>
+</div>
+<div id="strongFilepathsstrongabsolute" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Using absolute paths to the files within your workflowr project makes it difficult for you and others to run your code on a different machine. Change the absolute path(s) below to the suggested relative path(s) to make your code more reproducible.
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+absolute
+</th>
+<th style="text-align:left;">
+relative
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+~/Research/logistic-susie-gsea/data/de-droplet/de-droplet-noshrink.RData
+</td>
+<td style="text-align:left;">
+data/de-droplet/de-droplet-noshrink.RData
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree67d1eb8196052a3a8b32926b54cbaa843f159bf4targetblank67d1eb8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/67d1eb8196052a3a8b32926b54cbaa843f159bf4" target="_blank">67d1eb8</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree67d1eb8196052a3a8b32926b54cbaa843f159bf4targetblank67d1eb8a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/67d1eb8196052a3a8b32926b54cbaa843f159bf4" target="_blank">67d1eb8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    library/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+    Ignored:    staging/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Untitled.ipynb
+    Untracked:  _targets.R
+    Untracked:  _targets.html
+    Untracked:  _targets.md
+    Untracked:  _targets/
+    Untracked:  _targets_r/
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/libra_setup.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  baboon_diet_cache/
+    Untracked:  build_site.R
+    Untracked:  cache/
+    Untracked:  code/html_tables.R
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  code/susie_gsea_queries.R
+    Untracked:  data/adipose_2yr_topsnp.txt
+    Untracked:  data/de-droplet/
+    Untracked:  data/deng/
+    Untracked:  data/fetal_reference_cellid_gene_sets.RData
+    Untracked:  data/human_chimp_eb/
+    Untracked:  data/pbmc-purified/
+    Untracked:  data/wenhe_baboon_diet/
+    Untracked:  deng_example_cache/
+    Untracked:  docs.zip
+    Untracked:  index.md
+    Untracked:  latent_logistic_susie_cache/
+    Untracked:  simulation_targets/
+    Untracked:  single_cell_pbmc_cache/
+    Untracked:  single_cell_pbmc_l1_cache/
+    Untracked:  summary_stat_gsea_exploration_cache/
+    Untracked:  summary_stat_gsea_sim_cache/
+
+Unstaged changes:
+    Modified:   _simulation_targets.R
+    Modified:   _targets.Rmd
+    Modified:   analysis/baboon_diet.Rmd
+    Modified:   analysis/deng_example.Rmd
+    Modified:   analysis/gseabenchmark_tcga.Rmd
+    Modified:   analysis/single_cell_pbmc.Rmd
+    Modified:   analysis/single_cell_pbmc_l1.Rmd
+    Deleted:    analysis/summary_stat_gsea_univariate_simulations.Rmd
+    Modified:   code/fit_baselines.R
+    Modified:   code/fit_logistic_susie.R
+    Modified:   code/fit_mr_ash.R
+    Modified:   code/fit_susie.R
+    Modified:   code/marginal_sumstat_gsea.R
+    Modified:   code/simulate_gene_lists.R
+    Modified:   target_components/factories.R
+    Modified:   target_components/methods.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/alpha_for_single_cell.Rmd</code>) and HTML (<code>docs/alpha_for_single_cell.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/67d1eb8196052a3a8b32926b54cbaa843f159bf4/analysis/alpha_for_single_cell.Rmd" target="_blank">67d1eb8</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+<td>
+wflow_publish(“analysis/alpha_for_single_cell.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Most GSEA methods operate on z-score/p-values Methods like <code>ash</code> use effect sizes and standard errors Both make implicit assumptions about the relationship between standard error and effect size. z-score model implies that larger standard errors imply larger effects on average. The summary stat model assumes standard errors and effect sizes are independent.</p>
+<p>A family of</p>
+<p><span class="math display">\[
+\hat \beta_i | s_i \sim \mathcal{N}(\beta, s_i^2)\\
+\beta_i | s_i \sim \pi_0 \delta_0 + \sum_k \pi_k \mathcal{N}(0, s_i^{2\alpha} \sigma^2_{0k})
+\]</span></p>
+<p>Before getting into the enrichment problem, we can explore how well the data support different values of <span class="math inline">\(\alpha\)</span>. Peter’s already shown for the droplet DE data that when we fit ASH with a grid of <span class="math inline">\(\alpha\)</span> values we strongly prefer <span class="math inline">\(\alpha=0\)</span>. That is reproduced below.</p>
+<p>We also carry out the same analysis with a point normal (where the normal component has variation <span class="math inline">\(\sigma_i = s_i^\alpha \sigma_0\)</span>). For the point normal we estimate <span class="math inline">\(\pi_0\)</span> and <span class="math inline">\(\sigma_0\)</span> across a grid of <span class="math inline">\(\alpha\)</span> values.</p>
+<p>While the point normal also prefers small <span class="math inline">\(\alpha\)</span> I think it is not really behaving the way we want to. Almost all the shrinkage from <span class="math inline">\(\alpha=1\)</span> model comes from the point mass, which almost exclusively emphasizes tests with small standard errors. Almost all the shrinkage from <span class="math inline">\(\alpha=0\)</span> comes from small estimate of <span class="math inline">\(\hat \sigma_0\)</span>, which could cause overly aggressive shrinkage of large effects.</p>
+<pre class="r"><code>load(&quot;~/Research/logistic-susie-gsea/data/de-droplet/de-droplet-noshrink.RData&quot;)</code></pre>
+</div>
+<div id="fit-ash-and-point-normal" class="section level2">
+<h2>Fit ASH and Point normal</h2>
+<pre class="r"><code>library(fastTopics)
+library(ashr)
+library(ggplot2)
+library(cowplot)
+library(tidyverse)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✓ tibble  3.1.6     ✓ dplyr   1.0.8
+✓ tidyr   1.2.0     ✓ stringr 1.4.0
+✓ readr   2.1.2     ✓ forcats 0.5.1
+✓ purrr   0.3.4     </code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>set.seed(1)
+
+# Load the results of the DE analysis.
+load(&quot;data/de-droplet/de-droplet-noshrink.RData&quot;)
+b  &lt;- c(de_merged$postmean)
+se &lt;- c(with(de_merged,postmean/z))
+
+#b &lt;- de_merged$postmean[, 1]
+#se &lt;- de_merged$postmean[,1] / de_merged$z[,1]
+
+i  &lt;- which(!is.na(se))
+b  &lt;- b[i]
+se &lt;- se[i]
+
+# Run adaptive shrinkage for different settings of alpha.
+a &lt;- seq(0,1,0.05)
+n &lt;- length(a)
+ash.fits &lt;- xfun::cache_rds({
+  vector(&quot;list&quot;,n)
+  for (i in 1:n) {
+    cat(i,&quot;&quot;)
+    fits[[i]] &lt;- ash(b,se,alpha = a[i])
+  }
+  cat(&quot;\n&quot;)
+  fits
+}, dir=&#39;cache/alpha_for_single_cell&#39;, file=&#39;ash.fits&#39;)</code></pre>
+<pre class="r"><code>source(&#39;code/marginal_sumstat_gsea.R&#39;)
+
+fit.fixed.alpha = function(a){
+  cat(a,&quot;&quot;)
+  x &lt;- rbinom(length(b), 1, 0.5)
+  gsea &lt;- summary.stat.gsea(x=x, beta=b.mod, se=se)
+  params.init = list(
+    theta = c(0, 0),
+    alpha = a,
+    sigma0 = 1.0
+  )
+  res &lt;- gsea$expectation.maximiztion(params.init, tol=1e-6, update.theta1 = F, update.alpha = F)
+  res$loglik &lt;- tail(res$lik.history, 1)
+  
+  # compute posterior mean
+  pi1.post &lt;- res$responsibilities
+  var.post &lt;- 1 / (1/se^2 + 1/res$sigma0^2)
+  mu.post  &lt;- var.post * b / se^2
+  res$PosteriorMean &lt;- mu.post * pi1.post
+  return(res)
+}
+point.normal.fits &lt;- xfun::cache_rds({
+  map(a, ~ fit.fixed.alpha(.x))
+}, dir=&#39;cache/alpha_for_single_cell&#39;, file=&#39;point.normal.fits&#39;)</code></pre>
+<pre class="r"><code>pdat &lt;- data.frame(
+  beta.hat = b,
+  se = se,
+  beta.post.ash.0 = ash.fits[[1]]$result$PosteriorMean,
+  beta.post.ash.1 = ash.fits[[n]]$result$PosteriorMean,
+  beta.post.pn.0 = point.normal.fits[[1]]$PosteriorMean,
+  resp.pn.0 = point.normal.fits[[1]]$responsibilities,
+  beta.post.pn.1 = point.normal.fits[[n]]$PosteriorMean,
+  resp.pn.1 = point.normal.fits[[n]]$responsibilities
+)
+
+q.ash.0 = quantile(ash.fits[[1]]$result$PosteriorMean, seq(0.05,0.95,0.01))
+q.ash.1 = quantile(ash.fits[[n]]$result$PosteriorMean, seq(0.05,0.95,0.01))
+q.pn.0 = quantile(point.normal.fits[[1]]$PosteriorMean, seq(0.05,0.95,0.01))
+q.pn.1 = quantile(point.normal.fits[[n]]$PosteriorMean, seq(0.05,0.95,0.01))
+quantiles &lt;- as.data.frame(cbind(q.ash.0, q.ash.1, q.pn.0, q.pn.1))
+
+loglik.ash &lt;- map_dbl(ash.fits, ~pluck(.x, &#39;loglik&#39;))
+loglik.pn &lt;- map_dbl(point.normal.fits, ~pluck(.x, &#39;loglik&#39;))
+loglik &lt;- data.frame(
+  alpha=a,
+  loglik.ash = loglik.ash,
+  loglik.point.normal = loglik.pn
+)
+
+pi0.ash &lt;- map_dbl(ash.fits, ~pluck(.x, &#39;fitted_g&#39;, &#39;pi&#39;, 1))
+theta0.pn &lt;- map_dbl(point.normal.fits, ~pluck(.x, &#39;theta&#39;, 1))
+sigma0.pn &lt;- map_dbl(point.normal.fits, ~pluck(.x, &#39;sigma0&#39;))
+params &lt;- data.frame(
+  alpha=a,
+  pi0.ash = pi0.ash,
+  pi0.pn = 1 - 1/(1+exp(-theta0.pn)),
+  sigma0.pn = sigma0.pn
+)</code></pre>
+<pre class="r"><code># Plot likelihood vs. alpha.
+p1 &lt;- ggplot(loglik, aes(x = alpha,y = loglik.ash)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;loglik vs. alpha&quot;) +
+  theme_cowplot(font_size = 12)
+
+# Plot posterior estimates for best fit vs. worst fit.
+p2 &lt;- ggplot(pdat, aes(x = beta.post.ash.0, y = beta.post.ash.1, color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = &quot;black&quot;,linetype = &quot;dotted&quot;) +
+  scale_color_gradient2(
+    low = &quot;lightskyblue&quot;,mid = &quot;gold&quot;, high = &quot;orangered&quot;, midpoint = 3) +
+  labs(
+    x = &quot;alpha = 0&quot;,
+    y = &quot;alpha = 1&quot;,
+    color = &quot;s.e.&quot;,
+    title = &quot;posterior estimates&quot;) +
+  theme_cowplot(font_size = 12)
+
+# Compare the distributions of the estimated coefs.
+
+x &lt;- with(quantiles,c(q.ash.0,q.ash.1))
+p3 &lt;- ggplot(quantiles, aes(x = q.ash.0,y = q.ash.1)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = &quot;skyblue&quot;, linetype = &quot;dashed&quot;) +
+  coord_cartesian(xlim = range(x), ylim = range(x)) +
+  labs(x = &quot;alpha = 0&quot;,y = &quot;alpha = 1&quot;,title = &quot;quantiles&quot;) +
+  theme_cowplot(font_size = 12)
+plot_grid(p1,p2,p3,nrow = 1,ncol = 3)</code></pre>
+<p><img src="figure/alpha_for_single_cell.Rmd/ash.plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Plot likelihood vs. alpha.
+p1 &lt;- ggplot(loglik, aes(x = alpha,y = loglik.point.normal)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;loglik vs. alpha&quot;) +
+  theme_cowplot(font_size = 12)
+
+# Plot posterior estimates for best fit vs. worst fit.
+p2 &lt;- ggplot(pdat, aes(x = beta.post.pn.0, y = beta.post.pn.1, color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = &quot;black&quot;,linetype = &quot;dotted&quot;) +
+  scale_color_gradient2(
+    low = &quot;lightskyblue&quot;,mid = &quot;gold&quot;, high = &quot;orangered&quot;, midpoint = 3) +
+  labs(
+    x = &quot;alpha = 0&quot;,
+    y = &quot;alpha = 1&quot;,
+    color = &quot;s.e.&quot;,
+    title = &quot;posterior estimates&quot;) +
+  theme_cowplot(font_size = 12)
+
+# Compare the distributions of the estimated coefs.
+x &lt;- with(quantiles,c(q.pn.0,q.pn.1))
+p3 &lt;- ggplot(quantiles, aes(x = q.pn.0, y = q.pn.1)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = &quot;skyblue&quot;, linetype = &quot;dashed&quot;) +
+  coord_cartesian(xlim = range(x), ylim = range(x)) +
+  labs(x = &quot;alpha = 0&quot;,y = &quot;alpha = 1&quot;,title = &quot;quantiles&quot;) +
+  theme_cowplot(font_size = 12)
+plot_grid(p1,p2,p3,nrow = 1,ncol = 3)</code></pre>
+<p><img src="figure/alpha_for_single_cell.Rmd/point.normal.plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(loglik %&gt;% filter(alpha &lt; 0.75), aes(x = alpha,y = loglik.point.normal)) +
+  geom_point() +
+  geom_line() +
+  ggtitle(&quot;point normal: loglik vs. alpha&quot;) +
+  theme_cowplot(font_size = 12)</code></pre>
+<p><img src="figure/alpha_for_single_cell.Rmd/loglike.vs.alpha.point.normal-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>For large <span class="math inline">\(\alpha\)</span> the point normal is not behaving very well. We estimate a large <span class="math inline">\(\hat \pi_0\)</span> and a large <span class="math inline">\(\sigma_0\)</span>. Effects that the model is confident are non-zero experience virtually no shrinkage.</p>
+<pre class="r"><code>library(latex2exp)
+ggplot(params, aes(x=pi0.pn, y=sigma0.pn, color=alpha)) +
+  geom_point() +
+  geom_line() + 
+  scale_color_gradient2(
+    low = &quot;lightskyblue&quot;,mid = &quot;gold&quot;, high = &quot;orangered&quot;, midpoint = 0.5) +
+  labs(
+    y = TeX(&#39;$\\sigma_0$&#39;),
+    x = TeX(&#39;$\\hat{\\pi}_0&#39;)
+  )</code></pre>
+<p><img src="figure/alpha_for_single_cell.Rmd/alpha.v.sigma0-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p1 &lt;- ggplot(pdat, aes(x=resp.pn.0, y=1 - (beta.hat - beta.post.pn.0) / beta.hat, color=se)) +
+  geom_point() +
+  scale_color_gradient2(
+    low = &quot;lightskyblue&quot;,mid = &quot;gold&quot;, high = &quot;orangered&quot;, midpoint = 3) +
+  labs(
+    x=TeX(&#39;p(\\beta != 0 | D)&#39;),
+    y=&#39;Prop shrinkage&#39;,
+    title=&#39;Point normal alpha=0&#39;
+  )
+
+
+p2 &lt;- ggplot(pdat, aes(x=resp.pn.1, y=1 - (beta.hat - beta.post.pn.1)/beta.hat, color=se)) + 
+  geom_point() + 
+  scale_color_gradient2(
+    low = &quot;lightskyblue&quot;,mid = &quot;gold&quot;, high = &quot;orangered&quot;, midpoint = 3)+
+  labs(
+    x=TeX(&#39;p(\\beta != 0 | D)&#39;),
+    y=&#39;Prop shrinkage&#39;,
+    title=&#39;Point normal alpha=1&#39;
+  )
+
+cowplot::plot_grid(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/alpha_for_single_cell.Rmd/shirnkage.vs.responsibility-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>se.quantile &lt;- quantile(se, seq(0, 1, by=0.25))
+bins &lt;- cut(se, breaks=se.quantile, labels=paste0(seq(25, 100, by=25), &#39;%&#39;))
+
+p1 &lt;- pdat %&gt;%
+  mutate(se.bin = bins) %&gt;%
+  ggplot(aes(x=resp.pn.0, fill=se.bin)) +
+  geom_histogram(alpha=0.5) +
+  labs(
+    x=TeX(&#39;p(\\beta != 0 | D)&#39;),
+    title=TeX(&#39;\\alpha = 0&#39;)
+  )
+p2 &lt;- pdat %&gt;%
+  mutate(se.bin = bins) %&gt;%
+  ggplot(aes(x=resp.pn.1, fill=se.bin)) +
+  geom_histogram(alpha=0.5) +
+  labs(
+    x=TeX(&#39;p(\\beta != 0 | D)&#39;),
+    title=TeX(&#39;\\alpha = 1&#39;)
+  )
+cowplot::plot_grid(p1, p2, ncol=2)</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="figure/alpha_for_single_cell.Rmd/se.quantile.hist-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>knitr::knit_exit()</code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
