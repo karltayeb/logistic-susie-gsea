@@ -516,16 +516,16 @@ data/de-droplet/de-droplet-noshrink.RData
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree67d1eb8196052a3a8b32926b54cbaa843f159bf4targetblank67d1eb8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/67d1eb8196052a3a8b32926b54cbaa843f159bf4" target="_blank">67d1eb8</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree67092ad1a4d4690a0614eac60587946e101c580ctargetblank67092ada"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/67092ad1a4d4690a0614eac60587946e101c580c" target="_blank">67092ad</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree67d1eb8196052a3a8b32926b54cbaa843f159bf4targetblank67d1eb8a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree67092ad1a4d4690a0614eac60587946e101c580ctargetblank67092ada" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/67d1eb8196052a3a8b32926b54cbaa843f159bf4" target="_blank">67d1eb8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/67092ad1a4d4690a0614eac60587946e101c580c" target="_blank">67092ad</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -642,6 +642,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/67092ad1a4d4690a0614eac60587946e101c580c/analysis/alpha_for_single_cell.Rmd" target="_blank">67092ad</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+<td>
+wflow_publish(“analysis/alpha_for_single_cell.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/690723cd37813f460aee4c07daafcbbc04264ee8/docs/alpha_for_single_cell.html" target="_blank">690723c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -809,6 +843,43 @@ p3 &lt;- ggplot(quantiles, aes(x = q.ash.0,y = q.ash.1)) +
   theme_cowplot(font_size = 12)
 plot_grid(p1,p2,p3,nrow = 1,ncol = 3)</code></pre>
 <p><img src="figure/alpha_for_single_cell.Rmd/ash.plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ash.plot-1">
+Past versions of ash.plot-1.png
+</button>
+</p>
+<div id="fig-ash.plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/690723cd37813f460aee4c07daafcbbc04264ee8/docs/figure/alpha_for_single_cell.Rmd/ash.plot-1.png" target="_blank">690723c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># Plot likelihood vs. alpha.
 p1 &lt;- ggplot(loglik, aes(x = alpha,y = loglik.point.normal)) +
   geom_point() +
@@ -839,12 +910,86 @@ p3 &lt;- ggplot(quantiles, aes(x = q.pn.0, y = q.pn.1)) +
   theme_cowplot(font_size = 12)
 plot_grid(p1,p2,p3,nrow = 1,ncol = 3)</code></pre>
 <p><img src="figure/alpha_for_single_cell.Rmd/point.normal.plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-point.normal.plot-1">
+Past versions of point.normal.plot-1.png
+</button>
+</p>
+<div id="fig-point.normal.plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/690723cd37813f460aee4c07daafcbbc04264ee8/docs/figure/alpha_for_single_cell.Rmd/point.normal.plot-1.png" target="_blank">690723c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(loglik %&gt;% filter(alpha &lt; 0.75), aes(x = alpha,y = loglik.point.normal)) +
   geom_point() +
   geom_line() +
   ggtitle(&quot;point normal: loglik vs. alpha&quot;) +
   theme_cowplot(font_size = 12)</code></pre>
 <p><img src="figure/alpha_for_single_cell.Rmd/loglike.vs.alpha.point.normal-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-loglike.vs.alpha.point.normal-1">
+Past versions of loglike.vs.alpha.point.normal-1.png
+</button>
+</p>
+<div id="fig-loglike.vs.alpha.point.normal-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/690723cd37813f460aee4c07daafcbbc04264ee8/docs/figure/alpha_for_single_cell.Rmd/loglike.vs.alpha.point.normal-1.png" target="_blank">690723c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>For large <span class="math inline">\(\alpha\)</span> the point normal is not behaving very well. We estimate a large <span class="math inline">\(\hat \pi_0\)</span> and a large <span class="math inline">\(\sigma_0\)</span>. Effects that the model is confident are non-zero experience virtually no shrinkage.</p>
 <pre class="r"><code>library(latex2exp)
 ggplot(params, aes(x=pi0.pn, y=sigma0.pn, color=alpha)) +
@@ -857,6 +1002,43 @@ ggplot(params, aes(x=pi0.pn, y=sigma0.pn, color=alpha)) +
     x = TeX(&#39;$\\hat{\\pi}_0&#39;)
   )</code></pre>
 <p><img src="figure/alpha_for_single_cell.Rmd/alpha.v.sigma0-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-alpha.v.sigma0-1">
+Past versions of alpha.v.sigma0-1.png
+</button>
+</p>
+<div id="fig-alpha.v.sigma0-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/690723cd37813f460aee4c07daafcbbc04264ee8/docs/figure/alpha_for_single_cell.Rmd/alpha.v.sigma0-1.png" target="_blank">690723c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>p1 &lt;- ggplot(pdat, aes(x=resp.pn.0, y=1 - (beta.hat - beta.post.pn.0) / beta.hat, color=se)) +
   geom_point() +
   scale_color_gradient2(
@@ -878,8 +1060,55 @@ p2 &lt;- ggplot(pdat, aes(x=resp.pn.1, y=1 - (beta.hat - beta.post.pn.1)/beta.ha
     title=&#39;Point normal alpha=1&#39;
   )
 
-cowplot::plot_grid(p1, p2, ncol=2)</code></pre>
+p3 &lt;- ggplot(pdat, aes(x=resp.pn.1, y=resp.pn.0, color=se)) +
+  geom_point() +
+  scale_color_gradient2(
+    low = &quot;lightskyblue&quot;,mid = &quot;gold&quot;, high = &quot;orangered&quot;, midpoint = 3)+
+  labs(
+    x=TeX(&#39;\\alpha = 1&#39;),
+    y=TeX(&#39;\\alpha = 0&#39;),
+    title=TeX(&#39;p(\\beta != 0 | D)&#39;)
+  )  
+
+cowplot::plot_grid(p1, p2, p3, ncol=3)</code></pre>
 <p><img src="figure/alpha_for_single_cell.Rmd/shirnkage.vs.responsibility-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-shirnkage.vs.responsibility-1">
+Past versions of shirnkage.vs.responsibility-1.png
+</button>
+</p>
+<div id="fig-shirnkage.vs.responsibility-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/690723cd37813f460aee4c07daafcbbc04264ee8/docs/figure/alpha_for_single_cell.Rmd/shirnkage.vs.responsibility-1.png" target="_blank">690723c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>se.quantile &lt;- quantile(se, seq(0, 1, by=0.25))
 bins &lt;- cut(se, breaks=se.quantile, labels=paste0(seq(25, 100, by=25), &#39;%&#39;))
 
@@ -903,6 +1132,58 @@ cowplot::plot_grid(p1, p2, ncol=2)</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="figure/alpha_for_single_cell.Rmd/se.quantile.hist-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-se.quantile.hist-1">
+Past versions of se.quantile.hist-1.png
+</button>
+</p>
+<div id="fig-se.quantile.hist-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/690723cd37813f460aee4c07daafcbbc04264ee8/docs/figure/alpha_for_single_cell.Rmd/se.quantile.hist-1.png" target="_blank">690723c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>ash.fits[[1]]$result %&gt;% head()</code></pre>
+<pre><code>      betahat sebetahat NegativeProb PositiveProb      lfsr    svalue      lfdr
+1  2.58212791 1.1732159    0.1215613    0.3500913 0.6499087 0.2084865 0.5283474
+2  0.32558790 1.0531090    0.1819386    0.2068794 0.7931206 0.6581300 0.6111820
+3 -0.06576014 1.5470965    0.1991641    0.1964864 0.8008359 0.6851297 0.6043494
+4 -0.14578994 0.4899848    0.1983269    0.1632234 0.8016731 0.6879907 0.6384496
+5 -0.35677658 0.8606319    0.2111434    0.1734764 0.7888566 0.6406771 0.6153802
+6  1.08295035 1.4687935    0.1752071    0.2245623 0.7754377 0.5314872 0.6002306
+     qvalue PosteriorMean PosteriorSD
+1 0.1530132   0.239437038   0.6330393
+2 0.4864695   0.013693219   0.2192425
+3 0.4496810  -0.001836154   0.2585854
+4 0.5555032  -0.011684457   0.1410027
+5 0.5081373  -0.018360590   0.2008356
+6 0.3961148   0.034677048   0.2840269</code></pre>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
 </div>
 
