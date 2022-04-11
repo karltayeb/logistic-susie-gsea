@@ -11,7 +11,8 @@ calc_Q = function(X, Sigma2, Mu, Alpha, Z, delta) {
   # Z is matrix of covariates (e.g. column for intercept, top 10 PCs, etc)
   # delta is current estimate for effects of Z variables
   ASU2 = Alpha * (Sigma2 + Mu^2) # [j, l] = alpha[j, l] * (Sigma2[j, l] + Mu[j, l]^2)
-  Q = rowSums(X^2 %*% ASU2) # start w/ sum_l E_(ql)[(x_i' b_l)^2]
+  browser()
+  Q = BiocGenerics::rowSums(X^2 %*% ASU2) # start w/ sum_l E_(ql)[(x_i' b_l)^2]
 
   # now add 2 sum_l sum_{k>l} (x_i' b_l_post)(x_i' b_k_post)
   b_post_mat = Mu * Alpha # each column is posterior mean for b_l, p x L
