@@ -214,8 +214,8 @@ report_susie_credible_sets = function(tbl,
 
 ```{r fit.nfm.gsea}
 ix  <- order(nmf$fl$pve[-1], decreasing = T) + 1  # exclude first topic
-Y <- purrr::map(ix[1:5], ~get_y(nmf$fl$L.lfsr[,.x], 1e-5))
-names(Y) = paste0('topic_', ix[1:5])
+Y <- purrr::map(ix, ~get_y(nmf$fl$L.lfsr[,.x], 1e-5))
+names(Y) = paste0('topic_', ix)
 
 nmf.gobp <- xfun::cache_rds({
   susie.args <- list(L=10, maxit=200, verbose=T)
@@ -289,8 +289,8 @@ for(topic in names(Y)){
 
 ```{r fit.snfm.gsea}
 ix  <- order(snmf$fl$pve[-1], decreasing = T) + 1  # exclude first topic
-Y.snmf <- purrr::map(ix[1:5], ~get_y(snmf$fl$L.lfsr[,.x], 1e-5))
-names(Y.snmf) = paste0('topic_', ix[1:5])
+Y.snmf <- purrr::map(ix, ~get_y(snmf$fl$L.lfsr[,.x], 1e-5))
+names(Y.snmf) = paste0('topic_', ix)
 
 snmf.gobp <- xfun::cache_rds({
   susie.args <- list(L=10, maxit=200, verbose=T)
