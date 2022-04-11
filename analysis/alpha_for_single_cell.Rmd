@@ -1,0 +1,481 @@
+---
+title: "alpha_for_single_cell"
+author: "karltayeb"
+date: "2022-04-09"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Most GSEA methods operate on z-score/p-values
+Methods like `ash` use effect sizes and standard errors
+Both make implicit assumptions about the relationship between standard error and effect size. z-score model implies that larger standard errors imply larger effects on average. The summary stat model assumes standard errors and effect sizes are independent.
+
+A family of
+
+
+$$
+\hat \beta_i | s_i \sim \mathcal{N}(\beta, s_i^2)\\
+\beta_i | s_i \sim \pi_0 \delta_0 + \sum_k \pi_k \mathcal{N}(0, s_i^{2\alpha} \sigma^2_{0k})
+$$
+
+
+Before getting into the enrichment problem, we can explore how well the data support different values of
+$\alpha$. Peter's already shown for the droplet DE data that when we fit ASH with a grid of $\alpha$ values we strongly prefer $\alpha=0$. That is reproduced below.
+
+We also carry out the same analysis with a point normal (where the normal component has variation $\sigma_i = s_i^\alpha \sigma_0$). For the point normal we estimate $\pi_0$ and $\sigma_0$ across a grid of $\alpha$ values.
+
+While the point normal also prefers small $\alpha$ I think it is not really behaving the way we want to. Almost all the shrinkage from $\alpha=1$ model comes from the point mass, which almost exclusively emphasizes tests with small standard errors. Almost all the shrinkage from $\alpha=0$ comes from small estimate of $\hat \sigma_0$, which could cause overly aggressive shrinkage of large effects.
+
+
+```{r load.data}
+load("~/Research/logistic-susie-gsea/data/de-droplet/de-droplet-noshrink.RData")
+```
+
+
+## Fit ASH and Point normal
+
+```{r fit.ash}
+library(fastTopics)
+library(ashr)
+library(ggplot2)
+library(cowplot)
+library(tidyverse)
+set.seed(1)
+
+# Load the results of the DE analysis.
+load("data/de-droplet/de-droplet-noshrink.RData")
+b  <- c(de_merged$postmean)
+se <- c(with(de_merged,postmean/z))
+
+#b <- de_merged$postmean[, 1]
+#se <- de_merged$postmean[,1] / de_merged$z[,1]
+
+i  <- which(!is.na(se))
+b  <- b[i]
+se <- se[i]
+
+# Run adaptive shrinkage for different settings of alpha.
+a <- seq(0,1,0.05)
+n <- length(a)
+ash.fits <- xfun::cache_rds({
+  vector("list",n)
+  for (i in 1:n) {
+    cat(i,"")
+    fits[[i]] <- ash(b,se,alpha = a[i])
+  }
+  cat("\n")
+  fits
+}, dir='cache/alpha_for_single_cell', file='ash.fits')
+```
+
+```{r fit.point.normal}
+source('code/marginal_sumstat_gsea.R')
+
+fit.fixed.alpha = function(a){
+  cat(a,"")
+  x <- rbinom(length(b), 1, 0.5)
+  gsea <- summary.stat.gsea(x=x, beta=b.mod, se=se)
+  params.init = list(
+    theta = c(0, 0),
+    alpha = a,
+    sigma0 = 1.0
+  )
+  res <- gsea$expectation.maximiztion(params.init, tol=1e-6, update.theta1 = F, update.alpha = F)
+  res$loglik <- tail(res$lik.history, 1)
+  
+  # compute posterior mean
+  pi1.post <- res$responsibilities
+  var.post <- 1 / (1/se^2 + 1/res$sigma0^2)
+  mu.post  <- var.post * b / se^2
+  res$PosteriorMean <- mu.post * pi1.post
+  return(res)
+}
+point.normal.fits <- xfun::cache_rds({
+  map(a, ~ fit.fixed.alpha(.x))
+}, dir='cache/alpha_for_single_cell', file='point.normal.fits')
+```
+
+
+```{r collect.results}
+pdat <- data.frame(
+  beta.hat = b,
+  se = se,
+  beta.post.ash.0 = ash.fits[[1]]$result$PosteriorMean,
+  beta.post.ash.1 = ash.fits[[n]]$result$PosteriorMean,
+  beta.post.pn.0 = point.normal.fits[[1]]$PosteriorMean,
+  resp.pn.0 = point.normal.fits[[1]]$responsibilities,
+  beta.post.pn.1 = point.normal.fits[[n]]$PosteriorMean,
+  resp.pn.1 = point.normal.fits[[n]]$responsibilities
+)
+
+q.ash.0 = quantile(ash.fits[[1]]$result$PosteriorMean, seq(0.05,0.95,0.01))
+q.ash.1 = quantile(ash.fits[[n]]$result$PosteriorMean, seq(0.05,0.95,0.01))
+q.pn.0 = quantile(point.normal.fits[[1]]$PosteriorMean, seq(0.05,0.95,0.01))
+q.pn.1 = quantile(point.normal.fits[[n]]$PosteriorMean, seq(0.05,0.95,0.01))
+quantiles <- as.data.frame(cbind(q.ash.0, q.ash.1, q.pn.0, q.pn.1))
+
+loglik.ash <- map_dbl(ash.fits, ~pluck(.x, 'loglik'))
+loglik.pn <- map_dbl(point.normal.fits, ~pluck(.x, 'loglik'))
+loglik <- data.frame(
+  alpha=a,
+  loglik.ash = loglik.ash,
+  loglik.point.normal = loglik.pn
+)
+
+pi0.ash <- map_dbl(ash.fits, ~pluck(.x, 'fitted_g', 'pi', 1))
+theta0.pn <- map_dbl(point.normal.fits, ~pluck(.x, 'theta', 1))
+sigma0.pn <- map_dbl(point.normal.fits, ~pluck(.x, 'sigma0'))
+params <- data.frame(
+  alpha=a,
+  pi0.ash = pi0.ash,
+  pi0.pn = 1 - 1/(1+exp(-theta0.pn)),
+  sigma0.pn = sigma0.pn
+)
+```
+
+
+```{r ash.plot}
+# Plot likelihood vs. alpha.
+p1 <- ggplot(loglik, aes(x = alpha,y = loglik.ash)) +
+  geom_point() +
+  geom_line() +
+  ggtitle("loglik vs. alpha") +
+  theme_cowplot(font_size = 12)
+
+# Plot posterior estimates for best fit vs. worst fit.
+p2 <- ggplot(pdat, aes(x = beta.post.ash.0, y = beta.post.ash.1, color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(
+    low = "lightskyblue",mid = "gold", high = "orangered", midpoint = 3) +
+  labs(
+    x = "alpha = 0",
+    y = "alpha = 1",
+    color = "s.e.",
+    title = "posterior estimates") +
+  theme_cowplot(font_size = 12)
+
+# Compare the distributions of the estimated coefs.
+
+x <- with(quantiles,c(q.ash.0,q.ash.1))
+p3 <- ggplot(quantiles, aes(x = q.ash.0,y = q.ash.1)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = "skyblue", linetype = "dashed") +
+  coord_cartesian(xlim = range(x), ylim = range(x)) +
+  labs(x = "alpha = 0",y = "alpha = 1",title = "quantiles") +
+  theme_cowplot(font_size = 12)
+plot_grid(p1,p2,p3,nrow = 1,ncol = 3)
+```
+
+
+```{r point.normal.plot}
+# Plot likelihood vs. alpha.
+p1 <- ggplot(loglik, aes(x = alpha,y = loglik.point.normal)) +
+  geom_point() +
+  geom_line() +
+  ggtitle("loglik vs. alpha") +
+  theme_cowplot(font_size = 12)
+
+# Plot posterior estimates for best fit vs. worst fit.
+p2 <- ggplot(pdat, aes(x = beta.post.pn.0, y = beta.post.pn.1, color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(
+    low = "lightskyblue",mid = "gold", high = "orangered", midpoint = 3) +
+  labs(
+    x = "alpha = 0",
+    y = "alpha = 1",
+    color = "s.e.",
+    title = "posterior estimates") +
+  theme_cowplot(font_size = 12)
+
+# Compare the distributions of the estimated coefs.
+x <- with(quantiles,c(q.pn.0,q.pn.1))
+p3 <- ggplot(quantiles, aes(x = q.pn.0, y = q.pn.1)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, color = "skyblue", linetype = "dashed") +
+  coord_cartesian(xlim = range(x), ylim = range(x)) +
+  labs(x = "alpha = 0",y = "alpha = 1",title = "quantiles") +
+  theme_cowplot(font_size = 12)
+plot_grid(p1,p2,p3,nrow = 1,ncol = 3)
+```
+
+
+```{r loglike.vs.alpha.point.normal}
+ggplot(loglik %>% filter(alpha < 0.75), aes(x = alpha,y = loglik.point.normal)) +
+  geom_point() +
+  geom_line() +
+  ggtitle("point normal: loglik vs. alpha") +
+  theme_cowplot(font_size = 12)
+```
+
+For large $\alpha$ the point normal is not behaving very well. We estimate a large $\hat \pi_0$ and a large $\sigma_0$. Effects that the model is confident are non-zero experience virtually no shrinkage.
+
+
+```{r alpha.v.sigma0}
+library(latex2exp)
+ggplot(params, aes(x=pi0.pn, y=sigma0.pn, color=alpha)) +
+  geom_point() +
+  geom_line() + 
+  scale_color_gradient2(
+    low = "lightskyblue",mid = "gold", high = "orangered", midpoint = 0.5) +
+  labs(
+    y = TeX('$\\sigma_0$'),
+    x = TeX('$\\hat{\\pi}_0')
+  )
+```
+
+```{r shirnkage.vs.responsibility}
+p1 <- ggplot(pdat, aes(x=resp.pn.0, y=1 - (beta.hat - beta.post.pn.0) / beta.hat, color=se)) +
+  geom_point() +
+  scale_color_gradient2(
+    low = "lightskyblue",mid = "gold", high = "orangered", midpoint = 3) +
+  labs(
+    x=TeX('p(\\beta != 0 | D)'),
+    y='Prop shrinkage',
+    title='Point normal alpha=0'
+  )
+
+
+p2 <- ggplot(pdat, aes(x=resp.pn.1, y=1 - (beta.hat - beta.post.pn.1)/beta.hat, color=se)) + 
+  geom_point() + 
+  scale_color_gradient2(
+    low = "lightskyblue",mid = "gold", high = "orangered", midpoint = 3)+
+  labs(
+    x=TeX('p(\\beta != 0 | D)'),
+    y='Prop shrinkage',
+    title='Point normal alpha=1'
+  )
+
+p3 <- ggplot(pdat, aes(x=resp.pn.1, y=resp.pn.0, color=se)) +
+  geom_point() +
+  scale_color_gradient2(
+    low = "lightskyblue",mid = "gold", high = "orangered", midpoint = 3)+
+  labs(
+    x=TeX('\\alpha = 1'),
+    y=TeX('\\alpha = 0'),
+    title=TeX('p(\\beta != 0 | D)')
+  )  
+
+cowplot::plot_grid(p1, p2, p3, ncol=3)
+```
+
+
+```{r se.quantile.hist}
+se.quantile <- quantile(se, seq(0, 1, by=0.25))
+bins <- cut(se, breaks=se.quantile, labels=paste0(seq(25, 100, by=25), '%'))
+
+p1 <- pdat %>%
+  mutate(se.bin = bins) %>%
+  ggplot(aes(x=resp.pn.0, fill=se.bin)) +
+  geom_histogram(alpha=0.5) +
+  labs(
+    x=TeX('p(\\beta != 0 | D)'),
+    title=TeX('\\alpha = 0')
+  )
+p2 <- pdat %>%
+  mutate(se.bin = bins) %>%
+  ggplot(aes(x=resp.pn.1, fill=se.bin)) +
+  geom_histogram(alpha=0.5) +
+  labs(
+    x=TeX('p(\\beta != 0 | D)'),
+    title=TeX('\\alpha = 1')
+  )
+cowplot::plot_grid(p1, p2, ncol=2)
+```
+
+
+```{r}
+ash.fits[[1]]$result %>% head()
+```
+
+```{r}
+knitr::knit_exit()
+```
+
+
+
+
+
+
+```{r}
+ggplot(pdat, aes(x=se, y=pi0.pn.1)) + geom_point()
+
+ggplot(pdat, aes(x=resp.pn.1)) + geom_histogram()
+ggplot(pdat, aes(x=resp.pn.0)) + geom_histogram()
+
+
+```
+
+```{r}
+cor(quantiles)
+
+pdat %>%
+  select(contains('post')) %>%
+  cor()
+
+pdat %>% head
+```
+
+```{r ash.and.point.normal}
+# Plot posterior estimates for best fit vs. worst fit.
+pdat1 <- data.frame(b1 = b,
+                    b2 = gsea.fits[[1]]$PosteriorMean,
+                    se = se)
+p1 <- ggplot(pdat2,aes(x = b1,y = b2,color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(low = "lightskyblue",mid = "gold",high = "orangered",
+                        midpoint = 3) +
+  labs(x = "beta hat",y = "beta post",color = "s.e.",
+       title = "alpha=0 (Point normal)") +
+  theme_cowplot(font_size = 12)
+
+pdat2 <- data.frame(b1 = b,
+                    b2 = gsea.fits[[n]]$PosteriorMean,
+                    se = se)
+p2 <- ggplot(pdat2, aes(x = b1,y = b2,color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(low = "lightskyblue",mid = "gold",high = "orangered",
+                        midpoint = 3) +
+  labs(x = "beta hat",y = "beta post",color = "s.e.",
+       title = "alpha = 1 (Point normal)") +
+  theme_cowplot(font_size = 12)
+
+
+pdat3 <- data.frame(b1 = b,
+                    b2 = fits[[1]]$result$PosteriorMean,
+                    se = se)
+p3 <- ggplot(pdat3,aes(x = b1,y = b2,color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(low = "lightskyblue",mid = "gold",high = "orangered",
+                        midpoint = 3) +
+  labs(x = "beta hat",y = "beta post",color = "s.e.",
+       title = "alpha=0 (ASH)") +
+  theme_cowplot(font_size = 12)
+
+pdat4 <- data.frame(b1 = b,
+                    b2 = fits[[n]]$result$PosteriorMean,
+                    se = se)
+p4 <- ggplot(pdat4,aes(x = b1,y = b2,color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(low = "lightskyblue",mid = "gold",high = "orangered",
+                        midpoint = 3) +
+  labs(x = "beta hat",y = "beta post",color = "s.e.",
+       title = "alpha=1 (ASH)") +
+  theme_cowplot(font_size = 12)
+
+plot_grid(p1,p2,p3,p4, nrow = 2)
+```
+
+
+
+
+```{r ash.and.point.normal2}
+# Compare the distributions of the estimated coefs.
+pdat1 <-
+  data.frame(q1 = quantile(gsea.fits[[1]]$PosteriorMean,seq(0.05,0.95,0.01)),
+             q2 = quantile(fits[[1]]$result$PosteriorMean,seq(0.05,0.95,0.01)))
+x <- with(pdat1,c(q1,q2))
+p1 <- ggplot(pdat1,aes(x = q1,y = q2)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "skyblue",linetype = "dashed") +
+  coord_cartesian(xlim = range(x),ylim = range(x)) +
+  labs(x = "Point normal",y = "Ash",title = "quantiles, alpha=0") +
+  theme_cowplot(font_size = 12)
+
+pdat2 <-
+  data.frame(q1 = quantile(gsea.fits[[n]]$PosteriorMean,seq(0.05,0.95,0.01)),
+             q2 = quantile(fits[[n]]$result$PosteriorMean,seq(0.05,0.95,0.01)))
+x <- with(pdat2,c(q1,q2))
+p2 <- ggplot(pdat2,aes(x = q1,y = q2)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "skyblue",linetype = "dashed") +
+  coord_cartesian(xlim = range(x),ylim = range(x)) +
+  labs(x = "Point normal",y = "Ash",title = "quantiles, alpha=1") +
+  theme_cowplot(font_size = 12)
+
+pdat2 <-
+  data.frame(q1 = quantile(gsea.fits[[1]]$PosteriorMean,seq(0.05,0.95,0.01)),
+             q2 = quantile(fits[[n]]$result$PosteriorMean,seq(0.05,0.95,0.01)))
+x <- with(pdat2,c(q1,q2))
+p3 <- ggplot(pdat2,aes(x = q1,y = q2)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "skyblue",linetype = "dashed") +
+  coord_cartesian(xlim = range(x),ylim = range(x)) +
+  labs(x = "Point normal (alpha=0)",y = "Ash (alpha=1)",title = "quantiles") +
+  theme_cowplot(font_size = 12)
+plot_grid(p1,p2,p3, nrow = 1)
+```
+
+
+```{r}
+# Plot posterior estimates for best fit vs. worst fit.
+pdat1 <- data.frame(b1 = b,
+                    b2 = gsea.fits[[1]]$PosteriorMean,
+                    se = se)
+p1 <- ggplot(pdat1,aes(y = b1 - b2, x = b1, color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(low = "lightskyblue",mid = "gold",high = "orangered",
+                        midpoint = 3) +
+  labs(y = "beta hat - beta_post", x = "beta post",color = "s.e.",
+       title = "alpha=0 (Point normal)") +
+  theme_cowplot(font_size = 12)
+
+pdat1 <- data.frame(b1 = b,
+                    b2 = gsea.fits[[n]]$PosteriorMean,
+                    se = se)
+p2 <- ggplot(pdat1,aes(y = b1 - b2, x = b1, color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(low = "lightskyblue",mid = "gold",high = "orangered",
+                        midpoint = 3) +
+  labs(y = "beta hat - beta_post", x = "beta post",color = "s.e.",
+       title = "alpha=1 (Point normal)") +
+  theme_cowplot(font_size = 12)
+
+cowplot::plot_grid(p1, p2, nrow = 1)
+```
+
+```{r}
+pdat1 <- data.frame(b1 = b,
+                    b2 = gsea.fits[[1]]$PosteriorMean,
+                    gamma = gsea.fits[[1]]$responsibilities,
+                    se = se)
+
+pdat1
+p1 <- ggplot(pdat1,aes(y = b1 - b2, x = b1, color = se)) +
+  geom_point() +
+  geom_abline(intercept = 0,slope = 1,color = "black",linetype = "dotted") +
+  scale_color_gradient2(low = "lightskyblue",mid = "gold",high = "orangered",
+                        midpoint = 3) +
+  labs(y = "beta hat - beta_post", x = "beta post",color = "s.e.",
+       title = "alpha=0 (Point normal)") +
+  theme_cowplot(font_size = 12)
+```
+
+
+```{r}
+
+```
+
+
+```{r}
+pis <- map(fits, ~pluck(.x, 'fitted_g', 'pi'))
+
+map_int(pis, ~ length(.x))
+
+do.call('cbind', pis) %>% dim
+```
+
+
+

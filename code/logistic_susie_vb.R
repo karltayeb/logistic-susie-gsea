@@ -3,6 +3,8 @@
 ### NOTE: This is basic code, and I did not attempt to mirror the level of numerical sophistication in the susie functions
 ### If this idea is worth pursuing further, then this code can be improved
 
+library(BiocGenerics)  # TODO: don't pollute global namespace with this
+
 calc_Q = function(X, Sigma2, Mu, Alpha, Z, delta) {
   # X is data matrix
   # Sigma2[j, l] is the posterior variance for b_l when entry j is selected, p x L
@@ -11,13 +13,12 @@ calc_Q = function(X, Sigma2, Mu, Alpha, Z, delta) {
   # Z is matrix of covariates (e.g. column for intercept, top 10 PCs, etc)
   # delta is current estimate for effects of Z variables
   ASU2 = Alpha * (Sigma2 + Mu^2) # [j, l] = alpha[j, l] * (Sigma2[j, l] + Mu[j, l]^2)
-  browser()
   Q = BiocGenerics::rowSums(X^2 %*% ASU2) # start w/ sum_l E_(ql)[(x_i' b_l)^2]
 
   # now add 2 sum_l sum_{k>l} (x_i' b_l_post)(x_i' b_k_post)
   b_post_mat = Mu * Alpha # each column is posterior mean for b_l, p x L
   X_b_post = X %*% b_post_mat # [i, l] = x_i' b_l_post
-  Q = Q + rowSums(X_b_post)^2 - rowSums(X_b_post^2)
+  Q = Q + BiocGenerics::rowSums(X_b_post)^2 - BiocGenerics::rowSums(X_b_post^2)
 
   # now, add other terms with Z and delta
   Q = Q + as.numeric(2 * (X %*% rowSums(b_post_mat)) * (Z %*% delta)) + as.numeric((Z %*% delta)^2)
@@ -195,7 +196,7 @@ logistic.susie = function(
   X, y, L = 10, V = 1, prior_weights = NULL,
   init.intercept = NULL, intercept = TRUE, Z = NULL,
   estimate_prior_variance = TRUE, share_prior_variance = FALSE,
-  standardize=TRUE,
+  standardize=FALSE,
   tol = 1e-3, maxit = 1000, verbose=0) {
 
   res <- logistic.susie.init(
