@@ -7,7 +7,9 @@ logistic.susie.veb.boost <- function(X, y, L=10){
     family='binomial',
     include_stumps = F,
     growTree=F,
-    changeToConstant=F
+    changeToConstant=F,
+    max_log_prior_var = 35,
+    scale_X = 'NA'
   )
   alpha <- t(do.call(cbind, lapply(veb.fit$leaves, function(x) x$currentFit$alpha)))
   mu <- t(do.call(cbind, lapply(veb.fit$leaves, function(x) x$currentFit$mu)))
