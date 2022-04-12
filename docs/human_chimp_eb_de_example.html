@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="karltayeb" />
+
+<meta name="date" content="2022-04-11" />
+
+<title>Human Chimp EB Differential Expression</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Human Chimp EB Differential Expression</h1>
+<h4 class="author">karltayeb</h4>
+<h4 class="date">2022-04-11</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-04-12
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree5e3a4e3372da7da07eece5d21a34c754b8718ce0targetblank5e3a4e3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/5e3a4e3372da7da07eece5d21a34c754b8718ce0" target="_blank">5e3a4e3</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree5e3a4e3372da7da07eece5d21a34c754b8718ce0targetblank5e3a4e3a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/5e3a4e3372da7da07eece5d21a34c754b8718ce0" target="_blank">5e3a4e3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    library/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+    Ignored:    staging/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Untitled.ipynb
+    Untracked:  _targets.R
+    Untracked:  _targets.html
+    Untracked:  _targets.md
+    Untracked:  _targets/
+    Untracked:  _targets_r/
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/libra_setup.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  baboon_diet_cache/
+    Untracked:  build_site.R
+    Untracked:  cache/
+    Untracked:  code/enrichment_pipeline.R
+    Untracked:  code/html_tables.R
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  code/susie_gsea_queries.R
+    Untracked:  data/adipose_2yr_topsnp.txt
+    Untracked:  data/de-droplet/
+    Untracked:  data/deng/
+    Untracked:  data/fetal_reference_cellid_gene_sets.RData
+    Untracked:  data/human_chimp_eb/
+    Untracked:  data/pbmc-purified/
+    Untracked:  data/wenhe_baboon_diet/
+    Untracked:  deng_example_cache/
+    Untracked:  docs.zip
+    Untracked:  human_chimp_eb_de_example_cache/
+    Untracked:  index.md
+    Untracked:  latent_logistic_susie_cache/
+    Untracked:  simulation_targets/
+    Untracked:  single_cell_pbmc_cache/
+    Untracked:  single_cell_pbmc_l1_cache/
+    Untracked:  summary_stat_gsea_exploration_cache/
+    Untracked:  summary_stat_gsea_sim_cache/
+
+Unstaged changes:
+    Modified:   _simulation_targets.R
+    Modified:   _targets.Rmd
+    Modified:   analysis/alpha_for_single_cell.Rmd
+    Modified:   analysis/deng_example.Rmd
+    Modified:   analysis/gseabenchmark_tcga.Rmd
+    Modified:   analysis/single_cell_pbmc.Rmd
+    Modified:   analysis/single_cell_pbmc_l1.Rmd
+    Deleted:    analysis/summary_stat_gsea_univariate_simulations.Rmd
+    Modified:   code/fit_baselines.R
+    Modified:   code/fit_logistic_susie.R
+    Modified:   code/fit_mr_ash.R
+    Modified:   code/fit_susie.R
+    Modified:   code/load_gene_sets.R
+    Modified:   code/marginal_sumstat_gsea.R
+    Modified:   code/simulate_gene_lists.R
+    Modified:   target_components/factories.R
+    Modified:   target_components/methods.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/human_chimp_eb_de_example.Rmd</code>) and HTML (<code>docs/human_chimp_eb_de_example.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/5e3a4e3372da7da07eece5d21a34c754b8718ce0/analysis/human_chimp_eb_de_example.Rmd" target="_blank">5e3a4e3</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-12
+</td>
+<td>
+wflow_publish(c(“analysis/index.Rmd”, “analysis/baboon_diet.Rmd”,
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/8d47637953fba63fc5dcf4cc709a829ac16d3e95/analysis/human_chimp_eb_de_example.Rmd" target="_blank">8d47637</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-11
+</td>
+<td>
+run human chimp EB with new standardized input/output
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<pre class="r"><code>library(tidyverse)
+library(htmltools)
+source(&#39;code/utils.R&#39;)
+source(&#39;code/logistic_susie_vb.R&#39;)
+source(&#39;code/logistic_susie_veb_boost.R&#39;)
+source(&#39;code/load_gene_sets.R&#39;)
+source(&#39;code/enrichment_pipeline.R&#39;)</code></pre>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<div id="format" class="section level3">
+<h3>Format</h3>
+<pre class="r"><code>de &lt;- readRDS(&#39;data/human_chimp_eb/big.df.rds&#39;)
+genesets &lt;- load_gene_sets()
+
+hs &lt;- org.Hs.eg.db::org.Hs.eg.db
+gene_symbols &lt;- unique(de$gene)
+symbol2entrez &lt;- AnnotationDbi::select(
+  hs, keys=gene_symbols,
+  columns=c(&#39;ENTREZID&#39;, &#39;SYMBOL&#39;),
+  keytype = &#39;SYMBOL&#39;)
+
+add_names = function(l, n){
+  names(l) &lt;- n
+  return(l)
+}
+
+data &lt;- de %&gt;%
+  rename(SYMBOL=gene) %&gt;%
+  left_join(symbol2entrez, by=&#39;SYMBOL&#39;) %&gt;%
+  relocate(ENTREZID, .after=SYMBOL) %&gt;%
+  mutate(  # set default columns
+    beta = dream.logFC,
+    se = dream.SE,
+    threshold.on = dream.p.val
+  ) %&gt;%
+  group_by(celltype) %&gt;%
+  group_map(~ .x, .keep = T) %&gt;%
+  add_names(map_chr(., ~pluck(.x, &#39;celltype&#39;)[1]))</code></pre>
+</div>
+<div id="fit" class="section level3">
+<h3>Fit</h3>
+<pre class="r"><code># fit logistic susie
+do_logistic_susie_cached = function(data,
+                                    db,
+                                    thresh,
+                                    prefix=&#39;&#39;){
+  res &lt;- xfun::cache_rds({
+    purrr::map_dfr(
+      names(data),
+      ~do_logistic_susie(.x, db, thresh, genesets, data))
+  },
+  dir = params$cache_dir,
+  file=paste0(prefix, &#39;logistic_susie_&#39;, db, &#39;_&#39;, thresh),
+  hash = list(data, db, thresh, prefix))
+}
+
+params.genesets &lt;- eval(parse(text=params$genesets))
+params.thresh &lt;- eval(parse(text=params$thresh))
+fits &lt;- map_dfr(params.genesets, ~do_logistic_susie_cached(data, .x, params.thresh))
+
+# fit ora
+do_ora_cached = function(data, db, thresh, prefix=&#39;&#39;, ...){
+  res &lt;- xfun::cache_rds({
+    purrr::map_dfr(names(data), ~do_ora(.x, db, thresh, genesets, data))
+  }, dir = params$cache_dir, file=paste0(prefix, &#39;ora_&#39;, db, &#39;_&#39;, thresh), ...)
+}
+ora &lt;- map_dfr(params.genesets, ~do_ora_cached(data, .x, params.thresh))</code></pre>
+</div>
+</div>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<div id="threshold-sensitivity" class="section level3">
+<h3>Threshold sensitivity</h3>
+<pre class="r"><code>mean.gene.prop = function(l){
+  purrr::map_dbl(3:10, ~get_y(l, 10^(-.x)) %&gt;% mean())
+}
+
+thresh &lt;- map_dbl(1:10, ~10**-.x)
+
+.prop.ones = function(experiment){
+  map_dbl(thresh, ~ prep_binary_data(
+  genesets[[&#39;gobp&#39;]], data[[experiment]], thresh=.x)$y %&gt;% mean())
+}
+
+prop.ones &lt;- xfun::cache_rds({map_dfc(names(data), ~.prop.ones(.x))},
+                             dir=params$cache_dir,
+                             file=&#39;threshold_sensitivity&#39;)
+colnames(prop.ones) &lt;- names(data)
+prop.ones &lt;- prop.ones %&gt;% mutate(thresh = thresh)
+
+prop.ones %&gt;%
+  pivot_longer(one_of(names(data))) %&gt;%
+  group_by(name) %&gt;%
+  mutate(value = value) %&gt;%
+  ggplot(aes(x=factor(-log10(thresh)), y=value)) +
+  geom_boxplot() +
+  labs(
+    y = &#39;Proportions of genes in gene list&#39;,
+    title = &#39;Sensitivity to thresholding&#39;
+  )</code></pre>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/threshold.sensitivity-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="big-volcano-plot" class="section level3">
+<h3>Big volcano plot</h3>
+<p>Colors represent enrichment/depletion detected by Fishers exact test (Benjamini Hochberg corrected p-values &lt; <span class="math inline">\(0.05\)</span>). Gene sets that belong to a SuSiE credible set are circled.</p>
+<pre class="r"><code>get_ora_enrichments = function(tbl){
+   tbl %&gt;% mutate(
+    padj = p.adjust(pFishersExact),
+    result = case_when(
+      padj &lt; 0.05 &amp; oddsRatio &lt; 1 ~ &#39;depleted&#39;,
+      padj &lt; 0.05 &amp; oddsRatio &gt; 1 ~ &#39;enriched&#39;,
+      TRUE ~ &#39;not significant&#39;
+    )
+  )
+}
+
+# plot all enrichments, highlight gene sets in credible set
+csdat &lt;- res2 %&gt;% 
+  filter(in_cs, active_cs)
+
+res %&gt;% 
+  group_by(experiment, db) %&gt;%
+  get_ora_enrichments %&gt;%
+  ggplot(aes(x=log10(oddsRatio), y=-log10(pFishersExact), color=result)) +
+  geom_point() +
+  geom_point(
+    csdat, 
+    mapping=aes(x=log10(oddsRatio), y=-log10(pFishersExact)),
+    color=&#39;black&#39;, pch=21, size=5) +
+  scale_color_manual(values = c(&#39;depleted&#39; = &#39;coral&#39;,
+                                &#39;enriched&#39; = &#39;dodgerblue&#39;,
+                                &#39;not significant&#39; = &#39;grey&#39;)) +
+  facet_wrap(vars(db))</code></pre>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/big.volcano.plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="enrichment-results" class="section level2">
+<h2>Enrichment results</h2>
+<div id="glossary" class="section level3">
+<h3>Glossary</h3>
+<ul>
+<li><code>alpha</code> is the posterior probability of SuSiE including this gene set <strong>in this component</strong> which is different from PIP (probability of SuSiE including this gene set in ANY component)</li>
+<li><code>beta</code> posterior mean/standard error of posterior mean for effect size. Standard errors are likely too small.</li>
+<li><code>oddsRatio, pHypergeometric, pFishersExact</code> construct a contingency table (gene list membersip) x (gene set membership), estimate the <code>oddsRatio</code> gives the odds of being in the gene list conditional on being in the gene set / odds of being in the gene list conditional on NOT being in the gene set. <code>pHypergeometric</code> and <code>pFishersExact</code> are pvalues from 1 and 2 sided test respectively.</li>
+</ul>
+<pre class="r"><code>experiments &lt;- unique(res$experiment)
+
+do.experiment.volcano = function(this_experiment){
+  res %&gt;% 
+    filter(experiment == this_experiment) %&gt;%
+    group_by(db) %&gt;%
+    get_ora_enrichments %&gt;%
+    ggplot(aes(x=log10(oddsRatio), y=-log10(pFishersExact), color=result)) +
+    geom_point() +
+    geom_point(
+      csdat %&gt;% filter(experiment == this_experiment), 
+      mapping=aes(x=log10(oddsRatio), y=-log10(pFishersExact)),
+      color=&#39;black&#39;, pch=21, size=5) +
+    scale_color_manual(values = c(&#39;depleted&#39; = &#39;coral&#39;,
+                                  &#39;enriched&#39; = &#39;dodgerblue&#39;,
+                                  &#39;not significant&#39; = &#39;grey&#39;)) +
+    facet_wrap(vars(db)) +
+    labs(title = this_experiment)
+}
+
+for (i in 1:length(experiments)){
+  this_experiment &lt;- experiments[i]
+  cat(&quot;\n&quot;) 
+  cat(&quot;###&quot;, this_experiment, &quot;\n&quot;) # Create second level headings with the names.
+  do.experiment.volcano(this_experiment) %&gt;% print()
+  cat(&quot;\n\n&quot;) 
+
+  for(db in names(html_tables[[this_experiment]])){
+    cat(&quot;####&quot;, db, &quot;\n&quot;) # Create second level headings with the names.
+    to_print &lt;- html_tables[[this_experiment]][[db]] %&gt;% distinct()
+    to_print %&gt;% report_susie_credible_sets() %&gt;% htmltools::HTML() %&gt;% print()
+    cat(&quot;\n&quot;)
+  }}</code></pre>
+</div>
+<div id="acinar-cells" class="section level3">
+<h3>Acinar cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="adrenocortical-cells" class="section level3">
+<h3>Adrenocortical cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="amacrine-cells" class="section level3">
+<h3>Amacrine cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="antigen-presenting-cells" class="section level3">
+<h3>Antigen presenting cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="astrocytes" class="section level3">
+<h3>Astrocytes</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="bipolar-cells" class="section level3">
+<h3>Bipolar cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="bronchiolar-and-alveolar-epithelial-cells" class="section level3">
+<h3>Bronchiolar and alveolar epithelial cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cardiomyocytes" class="section level3">
+<h3>Cardiomyocytes</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="chromaffin-cells" class="section level3">
+<h3>Chromaffin cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ciliated-epithelial-cells" class="section level3">
+<h3>Ciliated epithelial cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-10.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="clc_il5ra-positive-cells" class="section level3">
+<h3>CLC_IL5RA positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-11.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="corneal-and-conjunctival-epithelial-cells" class="section level3">
+<h3>Corneal and conjunctival epithelial cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-12.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ductal-cells" class="section level3">
+<h3>Ductal cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-13.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="early-ectoderm-1" class="section level3">
+<h3>Early Ectoderm 1</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-14.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="gobp_nr" class="section level4">
+<h4>gobp_nr</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006260" class="uri">GO:0006260</a>
+</td>
+<td style="text-align:left;">
+DNA replication
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.58
+</td>
+<td style="text-align:left;">
+0.134
+</td>
+<td style="text-align:left;">
+7.85e-18
+</td>
+<td style="text-align:left;">
+7.85e-18
+</td>
+<td style="text-align:left;">
+53
+</td>
+<td style="text-align:left;">
+252
+</td>
+<td style="text-align:left;">
+5.23
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="kegg" class="section level4">
+<h4>kegg</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+hsa03030
+</td>
+<td style="text-align:left;">
+DNA replication
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+2.93
+</td>
+<td style="text-align:left;">
+0.333
+</td>
+<td style="text-align:left;">
+5.67e-15
+</td>
+<td style="text-align:left;">
+5.67e-15
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+36
+</td>
+<td style="text-align:left;">
+20.7
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="early-ectoderm-2" class="section level3">
+<h3>Early Ectoderm 2</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-15.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="early-ectoderm-3" class="section level3">
+<h3>Early Ectoderm 3</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-16.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="early-ectoderm-4" class="section level3">
+<h3>Early Ectoderm 4</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-17.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="early-endoderm-1" class="section level3">
+<h3>Early Endoderm 1</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-18.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="early-mesoderm-1" class="section level3">
+<h3>Early Mesoderm 1</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-19.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="elf3_agbl2-positive-cells" class="section level3">
+<h3>ELF3_AGBL2 positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-20.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ens-glia" class="section level3">
+<h3>ENS glia</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-21.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ens-neurons" class="section level3">
+<h3>ENS neurons</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-22.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="epicardial-fat-cells" class="section level3">
+<h3>Epicardial fat cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-23.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="erythroblasts" class="section level3">
+<h3>Erythroblasts</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-24.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="extravillous-trophoblasts" class="section level3">
+<h3>Extravillous trophoblasts</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-25.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="gobp_nr-1" class="section level4">
+<h4>gobp_nr</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0007059" class="uri">GO:0007059</a>
+</td>
+<td style="text-align:left;">
+chromosome segregation
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.78
+</td>
+<td style="text-align:left;">
+0.186
+</td>
+<td style="text-align:left;">
+3.07e-10
+</td>
+<td style="text-align:left;">
+3.07e-10
+</td>
+<td style="text-align:left;">
+23
+</td>
+<td style="text-align:left;">
+140
+</td>
+<td style="text-align:left;">
+6.41
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="ganglion-cells" class="section level3">
+<h3>Ganglion cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-26.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="goblet-cells" class="section level3">
+<h3>Goblet cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-27.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="granule-neurons" class="section level3">
+<h3>Granule neurons</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-28.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="gobp_nr-2" class="section level4">
+<h4>gobp_nr</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070972" class="uri">GO:0070972</a>
+</td>
+<td style="text-align:left;">
+protein localization to endoplasmic reticulum
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+2.17
+</td>
+<td style="text-align:left;">
+0.205
+</td>
+<td style="text-align:left;">
+2.91e-11
+</td>
+<td style="text-align:left;">
+2.91e-11
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+115
+</td>
+<td style="text-align:left;">
+9.41
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="hematopoietic-stem-cells" class="section level3">
+<h3>Hematopoietic stem cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-29.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hepatoblasts" class="section level3">
+<h3>Hepatoblasts</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-30.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="horizontal-cells" class="section level3">
+<h3>Horizontal cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-31.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="igfbp1_dkk1-positive-cells" class="section level3">
+<h3>IGFBP1_DKK1 positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-32.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="inhibitory-interneurons" class="section level3">
+<h3>Inhibitory interneurons</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-33.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="islet-endocrine-cells" class="section level3">
+<h3>Islet endocrine cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-34.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lens-fibre-cells" class="section level3">
+<h3>Lens fibre cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-35.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="limbic-system-neurons" class="section level3">
+<h3>Limbic system neurons</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-36.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="megakaryocytes" class="section level3">
+<h3>Megakaryocytes</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-37.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mesangial-cells" class="section level3">
+<h3>Mesangial cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-38.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mesothelial-cells" class="section level3">
+<h3>Mesothelial cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-39.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="metanephric-cells" class="section level3">
+<h3>Metanephric cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-40.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="microglia" class="section level3">
+<h3>Microglia</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-41.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="muc13_dmbt1-positive-cells" class="section level3">
+<h3>MUC13_DMBT1 positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-42.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="gobp_nr-3" class="section level4">
+<h4>gobp_nr</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0045165" class="uri">GO:0045165</a>
+</td>
+<td style="text-align:left;">
+cell fate commitment
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.74
+</td>
+<td style="text-align:left;">
+0.228
+</td>
+<td style="text-align:left;">
+1.36e-08
+</td>
+<td style="text-align:left;">
+1.36e-08
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+87
+</td>
+<td style="text-align:left;">
+6.26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="neuroendocrine-cells" class="section level3">
+<h3>Neuroendocrine cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-43.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="oligodendrocytes" class="section level3">
+<h3>Oligodendrocytes</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-44.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="paep_mecom-positive-cells" class="section level3">
+<h3>PAEP_MECOM positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-45.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="parietal-and-chief-cells" class="section level3">
+<h3>Parietal and chief cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-46.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pde11a_fam19a2-positive-cells" class="section level3">
+<h3>PDE11A_FAM19A2 positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-47.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="pde1c_acsm3-positive-cells" class="section level3">
+<h3>PDE1C_ACSM3 positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-48.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="photoreceptor-cells" class="section level3">
+<h3>Photoreceptor cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-49.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="retinal-pigment-cells" class="section level3">
+<h3>Retinal pigment cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-50.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="retinal-progenitors-and-muller-glia" class="section level3">
+<h3>Retinal progenitors and Muller glia</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-51.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="satb2_lrrc7-positive-cells" class="section level3">
+<h3>SATB2_LRRC7 positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-52.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="schwann-cells" class="section level3">
+<h3>Schwann cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-53.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="skeletal-muscle-cells" class="section level3">
+<h3>Skeletal muscle cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-54.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="skor2_npsr1-positive-cells" class="section level3">
+<h3>SKOR2_NPSR1 positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-55.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="slc24a4_pex5l-positive-cells" class="section level3">
+<h3>SLC24A4_PEX5L positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-56.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="slc26a4_paep-positive-cells" class="section level3">
+<h3>SLC26A4_PAEP positive cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-57.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="smooth-muscle-cells" class="section level3">
+<h3>Smooth muscle cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-58.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="squamous-epithelial-cells" class="section level3">
+<h3>Squamous epithelial cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-59.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="stellate-cells" class="section level3">
+<h3>Stellate cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-60.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="stromal-cells" class="section level3">
+<h3>Stromal cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-61.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sympathoblasts" class="section level3">
+<h3>Sympathoblasts</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-62.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="syncytiotrophoblasts-and-villous-cytotrophoblasts" class="section level3">
+<h3>Syncytiotrophoblasts and villous cytotrophoblasts</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-63.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="gobp_nr-4" class="section level4">
+<h4>gobp_nr</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0007059" class="uri">GO:0007059</a>
+</td>
+<td style="text-align:left;">
+chromosome segregation
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.43
+</td>
+<td style="text-align:left;">
+0.134
+</td>
+<td style="text-align:left;">
+1.32e-17
+</td>
+<td style="text-align:left;">
+1.32e-17
+</td>
+<td style="text-align:left;">
+61
+</td>
+<td style="text-align:left;">
+243
+</td>
+<td style="text-align:left;">
+4.81
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="kegg-1" class="section level4">
+<h4>kegg</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+hsa03030
+</td>
+<td style="text-align:left;">
+DNA replication
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+2.21
+</td>
+<td style="text-align:left;">
+0.346
+</td>
+<td style="text-align:left;">
+1.13e-08
+</td>
+<td style="text-align:left;">
+1.13e-08
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+33
+</td>
+<td style="text-align:left;">
+10.5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="thymic-epithelial-cells" class="section level3">
+<h3>Thymic epithelial cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-64.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="thymocytes" class="section level3">
+<h3>Thymocytes</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-65.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="trophoblast-giant-cells" class="section level3">
+<h3>Trophoblast giant cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-66.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="undifferentiated-1" class="section level3">
+<h3>Undifferentiated 1</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-67.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="undifferentiated-2" class="section level3">
+<h3>Undifferentiated 2</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-68.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="unipolar-brush-cells" class="section level3">
+<h3>Unipolar brush cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-69.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ureteric-bud-cells" class="section level3">
+<h3>Ureteric bud cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-70.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="vascular-endothelial-cells" class="section level3">
+<h3>Vascular endothelial cells</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-71.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="visceral-neurons" class="section level3">
+<h3>Visceral neurons</h3>
+<p><img src="figure/human_chimp_eb_de_example.Rmd/experiment.level.results-72.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>#&gt; R version 4.1.2 (2021-11-01)
+#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)
+#&gt; Running under: macOS Big Sur 10.16
+#&gt; 
+#&gt; Matrix products: default
+#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+#&gt; 
+#&gt; locale:
+#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+#&gt; 
+#&gt; attached base packages:
+#&gt; [1] stats     graphics  grDevices datasets  utils     methods   base     
+#&gt; 
+#&gt; other attached packages:
+#&gt;  [1] kableExtra_1.3.4    BiocGenerics_0.40.0 htmltools_0.5.2    
+#&gt;  [4] forcats_0.5.1       stringr_1.4.0       dplyr_1.0.8        
+#&gt;  [7] purrr_0.3.4         readr_2.1.2         tidyr_1.2.0        
+#&gt; [10] tibble_3.1.6        ggplot2_3.3.5       tidyverse_1.3.1    
+#&gt; 
+#&gt; loaded via a namespace (and not attached):
+#&gt;   [1] colorspace_2.0-3       ellipsis_0.3.2         rprojroot_2.0.2       
+#&gt;   [4] XVector_0.34.0         fs_1.5.2               rstudioapi_0.13       
+#&gt;   [7] farver_2.1.0           bit64_4.0.5            AnnotationDbi_1.56.2  
+#&gt;  [10] fansi_1.0.2            lubridate_1.8.0        xml2_1.3.3            
+#&gt;  [13] codetools_0.2-18       doParallel_1.0.17      cachem_1.0.6          
+#&gt;  [16] knitr_1.38             jsonlite_1.8.0         workflowr_1.7.0       
+#&gt;  [19] apcluster_1.4.9        WebGestaltR_0.4.4      broom_0.7.12          
+#&gt;  [22] dbplyr_2.1.1           png_0.1-7              BiocManager_1.30.16   
+#&gt;  [25] compiler_4.1.2         httr_1.4.2             backports_1.4.1       
+#&gt;  [28] assertthat_0.2.1       Matrix_1.4-0           fastmap_1.1.0         
+#&gt;  [31] cli_3.2.0              later_1.3.0            tools_4.1.2           
+#&gt;  [34] igraph_1.2.11          gtable_0.3.0           glue_1.6.2            
+#&gt;  [37] GenomeInfoDbData_1.2.7 doRNG_1.8.2            Rcpp_1.0.8.2          
+#&gt;  [40] Biobase_2.54.0         cellranger_1.1.0       jquerylib_0.1.4       
+#&gt;  [43] vctrs_0.3.8            Biostrings_2.62.0      svglite_2.1.0         
+#&gt;  [46] iterators_1.0.14       xfun_0.30              rvest_1.0.2           
+#&gt;  [49] lifecycle_1.0.1        renv_0.15.4            rngtools_1.5.2        
+#&gt;  [52] org.Hs.eg.db_3.14.0    zlibbioc_1.40.0        scales_1.1.1          
+#&gt;  [55] vroom_1.5.7            hms_1.1.1              promises_1.2.0.1      
+#&gt;  [58] parallel_4.1.2         yaml_2.3.5             curl_4.3.2            
+#&gt;  [61] memoise_2.0.1          sass_0.4.0             stringi_1.7.6         
+#&gt;  [64] RSQLite_2.2.10         highr_0.9              S4Vectors_0.32.3      
+#&gt;  [67] foreach_1.5.2          GenomeInfoDb_1.30.1    rlang_1.0.2           
+#&gt;  [70] pkgconfig_2.0.3        systemfonts_1.0.4      bitops_1.0-7          
+#&gt;  [73] evaluate_0.15          lattice_0.20-45        labeling_0.4.2        
+#&gt;  [76] bit_4.0.4              tidyselect_1.1.2       magrittr_2.0.2        
+#&gt;  [79] R6_2.5.1               IRanges_2.28.0         generics_0.1.2        
+#&gt;  [82] DBI_1.1.2              pillar_1.7.0           haven_2.4.3           
+#&gt;  [85] whisker_0.4            withr_2.5.0            KEGGREST_1.34.0       
+#&gt;  [88] RCurl_1.98-1.6         modelr_0.1.8           crayon_1.5.0          
+#&gt;  [91] utf8_1.2.2             tzdb_0.2.0             rmarkdown_2.13        
+#&gt;  [94] grid_4.1.2             readxl_1.3.1           blob_1.2.2            
+#&gt;  [97] git2r_0.29.0           webshot_0.5.2          reprex_2.0.1          
+#&gt; [100] digest_0.6.29          httpuv_1.6.5           stats4_4.1.2          
+#&gt; [103] munsell_0.5.0          viridisLite_0.4.0      bslib_0.3.1</code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

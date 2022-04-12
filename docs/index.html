@@ -309,7 +309,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-04-07
+<strong>Last updated:</strong> 2022-04-12
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -340,16 +340,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree38e14a2cb193d882cefa140baad670a8717e2200targetblank38e14a2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/38e14a2cb193d882cefa140baad670a8717e2200" target="_blank">38e14a2</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree5e3a4e3372da7da07eece5d21a34c754b8718ce0targetblank5e3a4e3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/5e3a4e3372da7da07eece5d21a34c754b8718ce0" target="_blank">5e3a4e3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree38e14a2cb193d882cefa140baad670a8717e2200targetblank38e14a2a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree5e3a4e3372da7da07eece5d21a34c754b8718ce0targetblank5e3a4e3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/38e14a2cb193d882cefa140baad670a8717e2200" target="_blank">38e14a2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/5e3a4e3372da7da07eece5d21a34c754b8718ce0" target="_blank">5e3a4e3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -373,7 +373,6 @@ Untracked files:
     Untracked:  _targets.md
     Untracked:  _targets/
     Untracked:  _targets_r/
-    Untracked:  analysis/deng_example.Rmd
     Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
     Untracked:  analysis/fixed_intercept.Rmd
     Untracked:  analysis/iDEA_examples.Rmd
@@ -386,20 +385,26 @@ Untracked files:
     Untracked:  analysis/references.bib
     Untracked:  analysis/simulations.Rmd
     Untracked:  analysis/test.Rmd
-    Untracked:  analysis/wenhe_baboon_example.Rmd
     Untracked:  baboon_diet_cache/
     Untracked:  build_site.R
     Untracked:  cache/
+    Untracked:  code/enrichment_pipeline.R
+    Untracked:  code/html_tables.R
     Untracked:  code/latent_logistic_susie.R
     Untracked:  code/logistic_susie_data_driver.R
     Untracked:  code/marginal_sumstat_gsea_collapsed.R
     Untracked:  code/sumstat_gsea.py
+    Untracked:  code/susie_gsea_queries.R
     Untracked:  data/adipose_2yr_topsnp.txt
+    Untracked:  data/de-droplet/
     Untracked:  data/deng/
     Untracked:  data/fetal_reference_cellid_gene_sets.RData
+    Untracked:  data/human_chimp_eb/
     Untracked:  data/pbmc-purified/
     Untracked:  data/wenhe_baboon_diet/
+    Untracked:  deng_example_cache/
     Untracked:  docs.zip
+    Untracked:  human_chimp_eb_de_example_cache/
     Untracked:  index.md
     Untracked:  latent_logistic_susie_cache/
     Untracked:  simulation_targets/
@@ -411,18 +416,19 @@ Untracked files:
 Unstaged changes:
     Modified:   _simulation_targets.R
     Modified:   _targets.Rmd
-    Modified:   analysis/baboon_diet.Rmd
+    Modified:   analysis/alpha_for_single_cell.Rmd
+    Modified:   analysis/deng_example.Rmd
     Modified:   analysis/gseabenchmark_tcga.Rmd
     Modified:   analysis/single_cell_pbmc.Rmd
+    Modified:   analysis/single_cell_pbmc_l1.Rmd
     Deleted:    analysis/summary_stat_gsea_univariate_simulations.Rmd
     Modified:   code/fit_baselines.R
     Modified:   code/fit_logistic_susie.R
     Modified:   code/fit_mr_ash.R
     Modified:   code/fit_susie.R
     Modified:   code/load_gene_sets.R
-    Modified:   code/logistic_susie_vb.R
+    Modified:   code/marginal_sumstat_gsea.R
     Modified:   code/simulate_gene_lists.R
-    Modified:   code/utils.R
     Modified:   target_components/factories.R
     Modified:   target_components/methods.R
 
@@ -463,6 +469,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/5e3a4e3372da7da07eece5d21a34c754b8718ce0/analysis/index.Rmd" target="_blank">5e3a4e3</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-12
+</td>
+<td>
+wflow_publish(c(“analysis/index.Rmd”, “analysis/baboon_diet.Rmd”,
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/3a471fe873180e65c39e7144c03adc825a4d55bf/docs/index.html" target="_blank">3a471fe</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -886,7 +926,7 @@ Start workflowr project.
 <div id="single-cell-pbmcs" class="section level3">
 <h3>Single cell PBMCs</h3>
 <ul>
-<li><a href="single_cell_pbmc.html">Single cell PBMCs</a></li>
+<li><a href="single_cell_pbmc_standardized.html">Single cell PBMCs</a></li>
 <li><a href="single_cell_pbmc_l1.html">Shared intercept explains differences to univariate enrichment tests</a></li>
 </ul>
 </div>
@@ -898,7 +938,9 @@ Start workflowr project.
 </div>
 <div id="kenneths-humanchimp-ebs" class="section level3">
 <h3>Kenneths Human/Chimp EBs</h3>
-<p>Coming soon….</p>
+<ul>
+<li><a href="human_chimp_eb_de_example.html">Human-Chimp EB</a></li>
+</ul>
 </div>
 </div>
 <div id="gsea-from-summary-statistics" class="section level2">
