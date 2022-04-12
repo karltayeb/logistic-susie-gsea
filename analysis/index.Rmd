@@ -17,14 +17,14 @@ Welcome to my research website.
 ## Logistic SuSiE GSEA examples
 
 ### Single cell PBMCs
-* [Single cell PBMCs](single_cell_pbmc.html)
+* [Single cell PBMCs](single_cell_pbmc_standardized.html)
 * [Shared intercept explains differences to univariate enrichment tests](single_cell_pbmc_l1.html)
 
 ### Wenhe's Baboom Diet Example
 * [Wenhe Baboon Diet](baboon_diet.html)
 
 ### Kenneths Human/Chimp EBs
-Coming soon....
+* [Human-Chimp EB](human_chimp_eb_de_example.html)
 
 ## GSEA from summary statistics
 * [Two component model, initial exploration](summary_stat_gsea_exploration.html)

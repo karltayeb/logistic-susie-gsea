@@ -1,19 +1,17 @@
 ---
-title: "Human Chimp EB Differential Expression"
+title: "Single Cell PBMC 2"
 author: "karltayeb"
-date: "2022-04-11"
+date: "2022-04-12"
 output:
   workflowr::wflow_html:
     code_folding: hide
 editor_options:
   chunk_output_type: console
 params:
-  cache_dir: 'cache/human_chimp_eb/'
-  genesets: c('kegg', 'gomf', 'gobp_nr')
+  cache_dir: 'cache/sc_pbmc/'
+  genesets: c('kegg', 'gomf', 'gobp')
   thresh: 1e-4
 ---
-
-## Introduction
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -33,17 +31,22 @@ source('code/enrichment_pipeline.R')
 ```
 
 ## Setup
-### Format
 ```{r load.and.standardize.data}
-de <- readRDS('data/human_chimp_eb/big.df.rds')
 genesets <- load_gene_sets()
+load('data/pbmc-purified/deseq2-pbmc-purified.RData')
+
+names(deseq)
+
+de <- map_dfr(names(deseq), ~ deseq[[.x]] %>%
+    as.data.frame %>%
+    rownames_to_column(var = 'gene') %>% mutate(celltype = .x))
 
 hs <- org.Hs.eg.db::org.Hs.eg.db
 gene_symbols <- unique(de$gene)
 symbol2entrez <- AnnotationDbi::select(
   hs, keys=gene_symbols,
-  columns=c('ENTREZID', 'SYMBOL'),
-  keytype = 'SYMBOL')
+  columns=c('ENTREZID', 'ENSEMBL'),
+  keytype = 'ENSEMBL')
 
 add_names = function(l, n){
   names(l) <- n
@@ -51,13 +54,13 @@ add_names = function(l, n){
 }
 
 data <- de %>%
-  rename(SYMBOL=gene) %>%
-  left_join(symbol2entrez, by='SYMBOL') %>%
-  relocate(ENTREZID, .after=SYMBOL) %>%
+  dplyr::rename('ENSEMBL' = gene) %>%
+  left_join(symbol2entrez, by='ENSEMBL') %>%
+  relocate(ENTREZID, .after=ENSEMBL) %>%
   mutate(  # set default columns
-    beta = dream.logFC,
-    se = dream.SE,
-    threshold.on = dream.p.val
+    beta = log2FoldChange,
+    se = lfcSE,
+    threshold.on = padj
   ) %>%
   group_by(celltype) %>%
   group_map(~ .x, .keep = T) %>%
@@ -236,3 +239,8 @@ for (i in 1:length(experiments)){
     cat("\n")
   }}
 ```
+
+
+
+
+
