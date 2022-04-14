@@ -5,6 +5,9 @@
 
 library(BiocGenerics)  # TODO: don't pollute global namespace with this
 
+fast_matmul_X = function(X, A){
+
+}
 calc_Q = function(X, Sigma2, Mu, Alpha, Z, delta) {
   # X is data matrix
   # Sigma2[j, l] is the posterior variance for b_l when entry j is selected, p x L
@@ -116,6 +119,7 @@ update_delta = function(X, y, xi, Mu, Alpha, Z) {
 }
 
 update_all = function(X,
+  X,
                       y,
                       xi,
                       prior_weights,
@@ -196,12 +200,12 @@ logistic.susie = function(
   X, y, L = 10, V = 1, prior_weights = NULL,
   init.intercept = NULL, intercept = TRUE, Z = NULL,
   estimate_prior_variance = TRUE, share_prior_variance = FALSE,
-  standardize=FALSE,
+  standardize=FALSE, center_X=TRUE,
   tol = 1e-3, maxit = 1000, verbose=0) {
 
   res <- logistic.susie.init(
     X, y, L, V, prior_weights, init.intercept, intercept, Z,
-    estimate_prior_variance, share_prior_variance, standardize)
+    estimate_prior_variance, share_prior_variance, standardize, center_X)
   if(verbose > 0){
     pb <- progress::progress_bar$new(
       format = "[:bar] :current/:total (:percent)", total=maxit
@@ -230,19 +234,18 @@ logistic.susie.init = function(
   X, y, L = 10, V = 1, prior_weights = NULL,
   init.intercept = NULL, intercept = TRUE, Z = NULL,
   estimate_prior_variance = TRUE, share_prior_variance = FALSE,
-  standardize=TRUE) {
+  standardize=FALSE, center=TRUE) {
 
   p = ncol(X)
   n = nrow(X)
-  se = rep(1, p)
+
+  X.shift <- colMeans(X)
+  X.scale <- sqrt(sparseMatrixStats::colVars(X))
+
   if(standardize){
-    se <- sqrt(sparseMatrixStats::colVars(X))
-    se[is.na(se)] <- 1
-    se[se < 1e-5] <- 1e-5  # clip small values for stability
-    X <- wordspace::scaleMargins(X, cols = 1/se)  # TODO: weird dependency, reimpliment
-  }
-  else{
-    se <- rep(1, p)
+    X <- scale(X)
+  }else if(center){
+    X <- scale(X, scale=F)
   }
 
   if (is.null(Z)) {
@@ -273,11 +276,14 @@ logistic.susie.init = function(
   xi = update_xi(X, Sigma2, Mu, Alpha, Z, delta)
 
   post_info = list(Sigma2 = Sigma2, Mu = Mu, Alpha = Alpha, delta = delta, xi = xi, V = V)
-  dat <- list(
-    X=X, X.scale=se, y=y, Z=Z, prior_weights=prior_weights,
+    X=X, X.scale=X.scale, X.shift=shift,
+    X=X, X.scale=X.scale, X.shift=X.shift,
+    y=y, Z=Z, prior_weights=prior_weights,
     intercept=intercept,
     estimate_prior_variance=estimate_prior_variance,
-    share_prior_variance=share_prior_variance
+    share_prior_variance=share_prior_variance,
+    standardize=standardize,
+    scale=scale
   )
   elbo <- calc_ELBO(
     dat$y, dat$X, post_info$Alpha, post_info$Mu, post_info$Sigma2, post_info$V,
@@ -287,7 +293,6 @@ logistic.susie.init = function(
   return(res)
 }
 
-logistic.susie.iteration = function(res, compute_elbo=T){
   dat <- res$dat
   post_info <- res$post_info
   post_info  <- update_all(
@@ -296,12 +301,13 @@ logistic.susie.iteration = function(res, compute_elbo=T){
     post_info$Alpha, dat$Z, post_info$delta,
     dat$estimate_prior_variance, dat$share_prior_variance, dat$intercept)
   res$post_info <- post_info
-  if(compute_elbo){
+  res$post_info <- update_all(res)
     elbo <- calc_ELBO(
       dat$y, dat$X, post_info$Alpha, post_info$Mu, post_info$Sigma2, post_info$V,
       dat$prior_weights, dat$Z, post_info$delta, post_info$xi
     )
     res$elbo <- c(res$elbo, elbo)
+    res$elbo <- c(res$elbo, new.elbo)
   }
   return(res)
 }
