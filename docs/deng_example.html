@@ -492,16 +492,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree862ad9bbb033424acf1136db25fa70f732e5d7dbtargetblank862ad9ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/862ad9bbb033424acf1136db25fa70f732e5d7db" target="_blank">862ad9b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree9d6fcad7085ba3837bab88ee1636d4fef2c8a3d8targetblank9d6fcada"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/9d6fcad7085ba3837bab88ee1636d4fef2c8a3d8" target="_blank">9d6fcad</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree862ad9bbb033424acf1136db25fa70f732e5d7dbtargetblank862ad9ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree9d6fcad7085ba3837bab88ee1636d4fef2c8a3d8targetblank9d6fcada" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/862ad9bbb033424acf1136db25fa70f732e5d7db" target="_blank">862ad9b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/9d6fcad7085ba3837bab88ee1636d4fef2c8a3d8" target="_blank">9d6fcad</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -512,7 +512,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    library/
     Ignored:    renv/library/
     Ignored:    renv/staging/
@@ -634,6 +633,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/9d6fcad7085ba3837bab88ee1636d4fef2c8a3d8/analysis/deng_example.Rmd" target="_blank">9d6fcad</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+<td>
+wflow_publish(“analysis/deng_example.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/deng_example.html" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/862ad9bbb033424acf1136db25fa70f732e5d7db/analysis/deng_example.Rmd" target="_blank">862ad9b</a>
 </td>
 <td>
@@ -723,12 +756,127 @@ fits &lt;- map_dfr(params.genesets, ~do_logistic_susie_cached(data, .x, params.t
 snmf.data &lt;- data[grep(&#39;^SNMF*&#39;, names(data))]
 positive.fits &lt;- map_dfr(
   params.genesets,
-  ~do_logistic_susie_cached(snmf.data, .x, params.thresh, c(1), &#39;positive&#39;))
-negative.fits &lt;- map_dfr(
+  ~do_logistic_susie_cached(snmf.data, .x, params.thresh, c(1), &#39;positive_&#39;))</code></pre>
+<pre><code>Fitting logistic susie...
+    Experiment = SNMF_Topic2
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic3
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic4
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic5
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic6
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic7
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic8
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic9
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic10
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic11
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic12
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic13
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic14
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic15
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic16
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic17
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic18
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic19
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic20
+    Database = gobp_nr
+    thresh = 1e-04</code></pre>
+<pre class="r"><code>negative.fits &lt;- map_dfr(
   params.genesets,
-  ~do_logistic_susie_cached(snmf.data, .x, params.thresh, c(1), &#39;negative&#39;))
-
-do_ora_cached = function(data, db, thresh, .sign=c(1, -1), prefix=&#39;&#39;){
+  ~do_logistic_susie_cached(snmf.data, .x, params.thresh, c(-1), &#39;negative_&#39;))</code></pre>
+<pre><code>Fitting logistic susie...
+    Experiment = SNMF_Topic2
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic3
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic4
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic5
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic6
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic7
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic8
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic9
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic10
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic11
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic12
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic13
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic14
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic15
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic16
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic17
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic18
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic19
+    Database = gobp_nr
+    thresh = 1e-04Fitting logistic susie...
+    Experiment = SNMF_Topic20
+    Database = gobp_nr
+    thresh = 1e-04</code></pre>
+<pre class="r"><code>do_ora_cached = function(data, db, thresh, .sign=c(1, -1), prefix=&#39;&#39;){
   res &lt;- xfun::cache_rds({
     purrr::map_dfr(names(data), ~do_ora(.x, db, thresh, genesets, data, .sign=.sign))
   },
@@ -740,10 +888,10 @@ do_ora_cached = function(data, db, thresh, .sign=c(1, -1), prefix=&#39;&#39;){
 ora &lt;- map_dfr(params.genesets, ~do_ora_cached(data, .x, params.thresh))
 positive.ora &lt;- map_dfr(
   params.genesets,
-  ~do_ora_cached(snmf.data, .x, params.thresh, c(1), &#39;positive&#39;))
+  ~do_ora_cached(snmf.data, .x, params.thresh, c(1), &#39;positive_&#39;))
 negative.ora &lt;- map_dfr(
   params.genesets,
-  ~do_ora_cached(snmf.data, .x, params.thresh, c(-1), &#39;negative&#39;))</code></pre>
+  ~do_ora_cached(snmf.data, .x, params.thresh, c(-1), &#39;negative_&#39;))</code></pre>
 <pre class="r"><code># take credible set summary, return &quot;best&quot; row for each gene set
 get_cs_summary_condensed = function(fit){
   fit %&gt;%
@@ -867,6 +1015,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/threshold.sensitivity-1.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/72fad289dc91bafe7d2cec10a0516bda89fe80be/docs/figure/deng_example.Rmd/threshold.sensitivity-1.png" target="_blank">72fad28</a>
 </td>
 <td>
@@ -921,6 +1080,43 @@ for (i in 1:length(experiments)){
 <div id="nmf_topic2" class="section level3">
 <h3>NMF_Topic2</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-1">
+Past versions of nmf.results-1.png
+</button>
+</p>
+<div id="fig-nmf.results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-1.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -1562,6 +1758,43 @@ peptidyl-threonine modification
 <div id="nmf_topic3" class="section level3">
 <h3>NMF_Topic3</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-2">
+Past versions of nmf.results-2.png
+</button>
+</p>
+<div id="fig-nmf.results-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-2.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-1" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -2073,6 +2306,43 @@ tRNA metabolic process
 <div id="nmf_topic4" class="section level3">
 <h3>NMF_Topic4</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-3">
+Past versions of nmf.results-3.png
+</button>
+</p>
+<div id="fig-nmf.results-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-3.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-2" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -2483,6 +2753,43 @@ snRNA metabolic process
 <div id="nmf_topic5" class="section level3">
 <h3>NMF_Topic5</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-4">
+Past versions of nmf.results-4.png
+</button>
+</p>
+<div id="fig-nmf.results-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-4.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-3" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -2703,10 +3010,84 @@ nucleoside monophosphate metabolic process
 <div id="nmf_topic6" class="section level3">
 <h3>NMF_Topic6</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-5">
+Past versions of nmf.results-5.png
+</button>
+</p>
+<div id="fig-nmf.results-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-5.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="nmf_topic7" class="section level3">
 <h3>NMF_Topic7</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-6">
+Past versions of nmf.results-6.png
+</button>
+</p>
+<div id="fig-nmf.results-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-6.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-4" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -3181,6 +3562,43 @@ nucleotide-excision repair
 <div id="nmf_topic8" class="section level3">
 <h3>NMF_Topic8</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-7">
+Past versions of nmf.results-7.png
+</button>
+</p>
+<div id="fig-nmf.results-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-7.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-5" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -3374,6 +3792,43 @@ ribonucleoprotein complex biogenesis
 <div id="nmf_topic9" class="section level3">
 <h3>NMF_Topic9</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-8">
+Past versions of nmf.results-8.png
+</button>
+</p>
+<div id="fig-nmf.results-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-8.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-6" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -3493,6 +3948,43 @@ leukocyte differentiation
 <div id="nmf_topic10" class="section level3">
 <h3>NMF_Topic10</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-9">
+Past versions of nmf.results-9.png
+</button>
+</p>
+<div id="fig-nmf.results-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-9.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-7" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -4011,6 +4503,43 @@ phospholipase C-activating G protein-coupled receptor signaling pathway
 <div id="nmf_topic11" class="section level3">
 <h3>NMF_Topic11</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-10">
+Past versions of nmf.results-10.png
+</button>
+</p>
+<div id="fig-nmf.results-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-10.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-8" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -4236,6 +4765,43 @@ membrane lipid metabolic process
 <div id="nmf_topic12" class="section level3">
 <h3>NMF_Topic12</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-11">
+Past versions of nmf.results-11.png
+</button>
+</p>
+<div id="fig-nmf.results-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-11.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-9" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -4355,6 +4921,43 @@ translational initiation
 <div id="nmf_topic13" class="section level3">
 <h3>NMF_Topic13</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-12">
+Past versions of nmf.results-12.png
+</button>
+</p>
+<div id="fig-nmf.results-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-12.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-10" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -4437,6 +5040,43 @@ protein localization to endoplasmic reticulum
 <div id="nmf_topic14" class="section level3">
 <h3>NMF_Topic14</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-13">
+Past versions of nmf.results-13.png
+</button>
+</p>
+<div id="fig-nmf.results-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-13.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-11" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -4588,14 +5228,125 @@ granulocyte activation
 <div id="nmf_topic15" class="section level3">
 <h3>NMF_Topic15</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-14">
+Past versions of nmf.results-14.png
+</button>
+</p>
+<div id="fig-nmf.results-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-14.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="nmf_topic16" class="section level3">
 <h3>NMF_Topic16</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-15">
+Past versions of nmf.results-15.png
+</button>
+</p>
+<div id="fig-nmf.results-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-15.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="nmf_topic17" class="section level3">
 <h3>NMF_Topic17</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-16">
+Past versions of nmf.results-16.png
+</button>
+</p>
+<div id="fig-nmf.results-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-16.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-12" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -5011,6 +5762,43 @@ protein-DNA complex subunit organization
 <div id="nmf_topic18" class="section level3">
 <h3>NMF_Topic18</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-17.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-17">
+Past versions of nmf.results-17.png
+</button>
+</p>
+<div id="fig-nmf.results-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-17.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-13" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -5167,10 +5955,84 @@ nucleoside triphosphate metabolic process
 <div id="nmf_topic19" class="section level3">
 <h3>NMF_Topic19</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-18.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-18">
+Past versions of nmf.results-18.png
+</button>
+</p>
+<div id="fig-nmf.results-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-18.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="nmf_topic20" class="section level3">
 <h3>NMF_Topic20</h3>
 <p><img src="figure/deng_example.Rmd/nmf.results-19.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-nmf.results-19">
+Past versions of nmf.results-19.png
+</button>
+</p>
+<div id="fig-nmf.results-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/nmf.results-19.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-14" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -5353,6 +6215,43 @@ for (i in 1:length(experiments)){
 <div id="snmf_topic2" class="section level3">
 <h3>SNMF_Topic2</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-1">
+Past versions of snmf.results-1.png
+</button>
+</p>
+<div id="fig-snmf.results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-1.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-15" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -5435,6 +6334,43 @@ translational initiation
 <div id="snmf_topic3" class="section level3">
 <h3>SNMF_Topic3</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-2">
+Past versions of snmf.results-2.png
+</button>
+</p>
+<div id="fig-snmf.results-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-2.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-16" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -5734,6 +6670,43 @@ translational elongation
 <div id="snmf_topic4" class="section level3">
 <h3>SNMF_Topic4</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-3">
+Past versions of snmf.results-3.png
+</button>
+</p>
+<div id="fig-snmf.results-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-3.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-17" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -5848,6 +6821,43 @@ protein localization to endoplasmic reticulum
 <div id="snmf_topic5" class="section level3">
 <h3>SNMF_Topic5</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-4">
+Past versions of snmf.results-4.png
+</button>
+</p>
+<div id="fig-snmf.results-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-4.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-18" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -5930,6 +6940,43 @@ translational initiation
 <div id="snmf_topic6" class="section level3">
 <h3>SNMF_Topic6</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-5">
+Past versions of snmf.results-5.png
+</button>
+</p>
+<div id="fig-snmf.results-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-5.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-19" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -6049,6 +7096,43 @@ adaptive immune response
 <div id="snmf_topic7" class="section level3">
 <h3>SNMF_Topic7</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-6">
+Past versions of snmf.results-6.png
+</button>
+</p>
+<div id="fig-snmf.results-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-6.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-20" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -6688,6 +7772,43 @@ covalent chromatin modification
 <div id="snmf_topic8" class="section level3">
 <h3>SNMF_Topic8</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-7">
+Past versions of snmf.results-7.png
+</button>
+</p>
+<div id="fig-snmf.results-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-7.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-21" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -6955,6 +8076,43 @@ protein targeting
 <div id="snmf_topic9" class="section level3">
 <h3>SNMF_Topic9</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-8">
+Past versions of snmf.results-8.png
+</button>
+</p>
+<div id="fig-snmf.results-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-8.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-22" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -7074,6 +8232,43 @@ cellular amino acid metabolic process
 <div id="snmf_topic10" class="section level3">
 <h3>SNMF_Topic10</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-9">
+Past versions of snmf.results-9.png
+</button>
+</p>
+<div id="fig-snmf.results-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-9.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-23" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -7550,10 +8745,84 @@ modified amino acid transport
 <div id="snmf_topic11" class="section level3">
 <h3>SNMF_Topic11</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-10">
+Past versions of snmf.results-10.png
+</button>
+</p>
+<div id="fig-snmf.results-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-10.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic12" class="section level3">
 <h3>SNMF_Topic12</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-11">
+Past versions of snmf.results-11.png
+</button>
+</p>
+<div id="fig-snmf.results-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-11.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-24" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -7747,6 +9016,43 @@ protein-DNA complex subunit organization
 <div id="snmf_topic13" class="section level3">
 <h3>SNMF_Topic13</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-12">
+Past versions of snmf.results-12.png
+</button>
+</p>
+<div id="fig-snmf.results-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-12.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-25" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -7829,18 +9135,166 @@ protein localization to endoplasmic reticulum
 <div id="snmf_topic14" class="section level3">
 <h3>SNMF_Topic14</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-13">
+Past versions of snmf.results-13.png
+</button>
+</p>
+<div id="fig-snmf.results-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-13.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic15" class="section level3">
 <h3>SNMF_Topic15</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-14">
+Past versions of snmf.results-14.png
+</button>
+</p>
+<div id="fig-snmf.results-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-14.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic16" class="section level3">
 <h3>SNMF_Topic16</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-15">
+Past versions of snmf.results-15.png
+</button>
+</p>
+<div id="fig-snmf.results-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-15.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic17" class="section level3">
 <h3>SNMF_Topic17</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-16">
+Past versions of snmf.results-16.png
+</button>
+</p>
+<div id="fig-snmf.results-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-16.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-26" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -7992,14 +9446,125 @@ granulocyte activation
 <div id="snmf_topic18" class="section level3">
 <h3>SNMF_Topic18</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-17.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-17">
+Past versions of snmf.results-17.png
+</button>
+</p>
+<div id="fig-snmf.results-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-17.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic19" class="section level3">
 <h3>SNMF_Topic19</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-18.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-18">
+Past versions of snmf.results-18.png
+</button>
+</p>
+<div id="fig-snmf.results-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-18.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic20" class="section level3">
 <h3>SNMF_Topic20</h3>
 <p><img src="figure/deng_example.Rmd/snmf.results-19.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-snmf.results-19">
+Past versions of snmf.results-19.png
+</button>
+</p>
+<div id="fig-snmf.results-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/snmf.results-19.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="snmf---positive-loadings" class="section level2">
@@ -8035,6 +9600,43 @@ for (i in 1:length(experiments)){
 <div id="snmf_topic2-1" class="section level3">
 <h3>SNMF_Topic2</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-1">
+Past versions of positive.snmf.results-1.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-1.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-27" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -8092,7 +9694,7 @@ ribonucleoprotein complex biogenesis
 -1.15
 </td>
 <td style="text-align:left;">
-0.115
+0.117
 </td>
 <td style="text-align:left;">
 1
@@ -8166,7 +9768,7 @@ nucleoside monophosphate metabolic process
 -0.781
 </td>
 <td style="text-align:left;">
-0.135
+0.136
 </td>
 <td style="text-align:left;">
 1
@@ -8192,13 +9794,13 @@ nucleoside monophosphate metabolic process
 nucleoside triphosphate metabolic process
 </td>
 <td style="text-align:left;">
-0.0891
+0.0892
 </td>
 <td style="text-align:left;color: red !important;">
--0.735
+-0.734
 </td>
 <td style="text-align:left;">
-0.137
+0.138
 </td>
 <td style="text-align:left;">
 1
@@ -8229,13 +9831,13 @@ nucleoside triphosphate metabolic process
 neutrophil mediated immunity
 </td>
 <td style="text-align:left;">
-0.805
+0.803
 </td>
 <td style="text-align:left;color: red !important;">
--0.571
+-0.57
 </td>
 <td style="text-align:left;">
-0.107
+0.108
 </td>
 <td style="text-align:left;">
 1
@@ -8264,10 +9866,10 @@ granulocyte activation
 0.192
 </td>
 <td style="text-align:left;color: red !important;">
--0.542
+-0.541
 </td>
 <td style="text-align:left;">
-0.107
+0.109
 </td>
 <td style="text-align:left;">
 1
@@ -8292,6 +9894,43 @@ granulocyte activation
 <div id="snmf_topic3-1" class="section level3">
 <h3>SNMF_Topic3</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-2">
+Past versions of positive.snmf.results-2.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-2.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-28" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -8346,10 +9985,10 @@ translational initiation
 1
 </td>
 <td style="text-align:left;color: green !important;">
-2.15
+2.14
 </td>
 <td style="text-align:left;">
-0.156
+0.158
 </td>
 <td style="text-align:left;">
 4.42e-57
@@ -8367,7 +10006,7 @@ translational initiation
 16.6
 </td>
 </tr>
-<tr grouplength="2">
+<tr grouplength="1">
 <td colspan="10" style="border-bottom: 1px solid;">
 <strong>L2</strong>
 </td>
@@ -8380,10 +10019,10 @@ translational initiation
 NADH dehydrogenase complex assembly
 </td>
 <td style="text-align:left;">
-0.983
+0.998
 </td>
 <td style="text-align:left;color: green !important;">
-2.57
+2.63
 </td>
 <td style="text-align:left;">
 0.306
@@ -8404,38 +10043,6 @@ NADH dehydrogenase complex assembly
 30.6
 </td>
 </tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0033108" class="uri">GO:0033108</a>
-</td>
-<td style="text-align:left;">
-mitochondrial respiratory chain complex assembly
-</td>
-<td style="text-align:left;">
-0.0175
-</td>
-<td style="text-align:left;color: green !important;">
-2.13
-</td>
-<td style="text-align:left;">
-0.268
-</td>
-<td style="text-align:left;">
-4.16e-24
-</td>
-<td style="text-align:left;">
-4.16e-24
-</td>
-<td style="text-align:left;">
-35
-</td>
-<td style="text-align:left;">
-64
-</td>
-<td style="text-align:left;">
-17.9
-</td>
-</tr>
 <tr grouplength="1">
 <td colspan="10" style="border-bottom: 1px solid;">
 <strong>L3</strong>
@@ -8452,10 +10059,10 @@ protein localization to endoplasmic reticulum
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.92
+1.96
 </td>
 <td style="text-align:left;">
-0.183
+0.184
 </td>
 <td style="text-align:left;">
 2.42e-51
@@ -8480,34 +10087,34 @@ protein localization to endoplasmic reticulum
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0009141" class="uri">GO:0009141</a>
+<a href="GO:0006091" class="uri">GO:0006091</a>
 </td>
 <td style="text-align:left;">
-nucleoside triphosphate metabolic process
+generation of precursor metabolites and energy
 </td>
 <td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.55
+1.43
 </td>
 <td style="text-align:left;">
-0.137
+0.115
 </td>
 <td style="text-align:left;">
-8.34e-28
+2.58e-27
 </td>
 <td style="text-align:left;">
-8.34e-28
+2.58e-27
 </td>
 <td style="text-align:left;">
-73
+91
 </td>
 <td style="text-align:left;">
-244
+371
 </td>
 <td style="text-align:left;">
-6.61
+5.11
 </td>
 </tr>
 <tr grouplength="1">
@@ -8526,10 +10133,10 @@ translational elongation
 1
 </td>
 <td style="text-align:left;color: green !important;">
-2.05
+2.08
 </td>
 <td style="text-align:left;">
-0.189
+0.19
 </td>
 <td style="text-align:left;">
 5.8e-15
@@ -8563,10 +10170,10 @@ response to interleukin-12
 1
 </td>
 <td style="text-align:left;color: green !important;">
-2.41
+2.43
 </td>
 <td style="text-align:left;">
-0.306
+0.307
 </td>
 <td style="text-align:left;">
 2.64e-11
@@ -8597,13 +10204,13 @@ response to interleukin-12
 neutrophil mediated immunity
 </td>
 <td style="text-align:left;">
-0.795
+0.75
 </td>
 <td style="text-align:left;color: green !important;">
-0.997
+0.987
 </td>
 <td style="text-align:left;">
-0.114
+0.117
 </td>
 <td style="text-align:left;">
 1.36e-09
@@ -8629,13 +10236,13 @@ neutrophil mediated immunity
 granulocyte activation
 </td>
 <td style="text-align:left;">
-0.205
+0.25
 </td>
 <td style="text-align:left;color: green !important;">
-0.982
+0.975
 </td>
 <td style="text-align:left;">
-0.115
+0.117
 </td>
 <td style="text-align:left;">
 2.91e-09
@@ -8669,10 +10276,10 @@ protein localization to mitochondrion
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.57
+1.62
 </td>
 <td style="text-align:left;">
-0.197
+0.198
 </td>
 <td style="text-align:left;">
 1.38e-09
@@ -8706,10 +10313,10 @@ post-translational protein modification
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.03
+1.05
 </td>
 <td style="text-align:left;">
-0.128
+0.13
 </td>
 <td style="text-align:left;">
 2.38e-06
@@ -8734,6 +10341,43 @@ post-translational protein modification
 <div id="snmf_topic4-1" class="section level3">
 <h3>SNMF_Topic4</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-3">
+Past versions of positive.snmf.results-3.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-3.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-29" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -8788,10 +10432,10 @@ rRNA metabolic process
 1
 </td>
 <td style="text-align:left;color: green !important;">
-0.93
+0.929
 </td>
 <td style="text-align:left;">
-0.14
+0.141
 </td>
 <td style="text-align:left;">
 1.58e-11
@@ -8825,10 +10469,10 @@ translational initiation
 0.998
 </td>
 <td style="text-align:left;color: green !important;">
-0.873
+0.872
 </td>
 <td style="text-align:left;">
-0.152
+0.154
 </td>
 <td style="text-align:left;">
 1.54e-09
@@ -8853,6 +10497,43 @@ translational initiation
 <div id="snmf_topic5-1" class="section level3">
 <h3>SNMF_Topic5</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-4">
+Past versions of positive.snmf.results-4.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-4.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-30" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -8910,7 +10591,7 @@ translational initiation
 1.38
 </td>
 <td style="text-align:left;">
-0.153
+0.154
 </td>
 <td style="text-align:left;">
 1.18e-32
@@ -8947,7 +10628,7 @@ protein localization to endoplasmic reticulum
 1.33
 </td>
 <td style="text-align:left;">
-0.177
+0.178
 </td>
 <td style="text-align:left;">
 3.96e-30
@@ -8972,6 +10653,43 @@ protein localization to endoplasmic reticulum
 <div id="snmf_topic6-1" class="section level3">
 <h3>SNMF_Topic6</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-5">
+Past versions of positive.snmf.results-5.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-5.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-31" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -9029,7 +10747,7 @@ leukocyte differentiation
 1.19
 </td>
 <td style="text-align:left;">
-0.113
+0.115
 </td>
 <td style="text-align:left;">
 8.42e-22
@@ -9066,7 +10784,7 @@ adaptive immune response
 1.19
 </td>
 <td style="text-align:left;">
-0.135
+0.137
 </td>
 <td style="text-align:left;">
 5.43e-20
@@ -9091,10 +10809,84 @@ adaptive immune response
 <div id="snmf_topic7-1" class="section level3">
 <h3>SNMF_Topic7</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-6">
+Past versions of positive.snmf.results-6.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-6.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic8-1" class="section level3">
 <h3>SNMF_Topic8</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-7">
+Past versions of positive.snmf.results-7.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-7.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-32" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -9152,7 +10944,7 @@ protein localization to endoplasmic reticulum
 1.8
 </td>
 <td style="text-align:left;">
-0.182
+0.183
 </td>
 <td style="text-align:left;">
 1.74e-45
@@ -9189,7 +10981,7 @@ translational elongation
 1.65
 </td>
 <td style="text-align:left;">
-0.184
+0.185
 </td>
 <td style="text-align:left;">
 3.5e-16
@@ -9226,7 +11018,7 @@ ribonucleoprotein complex biogenesis
 0.866
 </td>
 <td style="text-align:left;">
-0.107
+0.109
 </td>
 <td style="text-align:left;">
 6.33e-24
@@ -9263,7 +11055,7 @@ NADH dehydrogenase complex assembly
 1.93
 </td>
 <td style="text-align:left;">
-0.294
+0.295
 </td>
 <td style="text-align:left;">
 8.01e-09
@@ -9289,13 +11081,13 @@ NADH dehydrogenase complex assembly
 mitochondrial respiratory chain complex assembly
 </td>
 <td style="text-align:left;">
-0.0173
+0.0174
 </td>
 <td style="text-align:left;color: green !important;">
 1.54
 </td>
 <td style="text-align:left;">
-0.258
+0.259
 </td>
 <td style="text-align:left;">
 7.55e-08
@@ -9332,7 +11124,7 @@ translational initiation
 1.26
 </td>
 <td style="text-align:left;">
-0.156
+0.158
 </td>
 <td style="text-align:left;">
 4.36e-43
@@ -9369,7 +11161,7 @@ protein localization to mitochondrion
 1.3
 </td>
 <td style="text-align:left;">
-0.189
+0.19
 </td>
 <td style="text-align:left;">
 2.14e-08
@@ -9394,6 +11186,43 @@ protein localization to mitochondrion
 <div id="snmf_topic9-1" class="section level3">
 <h3>SNMF_Topic9</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-8">
+Past versions of positive.snmf.results-8.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-8.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-33" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -9451,7 +11280,7 @@ double-strand break repair
 0.821
 </td>
 <td style="text-align:left;">
-0.152
+0.153
 </td>
 <td style="text-align:left;">
 2.03e-07
@@ -9488,7 +11317,7 @@ cellular amino acid metabolic process
 0.697
 </td>
 <td style="text-align:left;">
-0.126
+0.128
 </td>
 <td style="text-align:left;">
 1.89e-07
@@ -9513,6 +11342,43 @@ cellular amino acid metabolic process
 <div id="snmf_topic10-1" class="section level3">
 <h3>SNMF_Topic10</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-9">
+Past versions of positive.snmf.results-9.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-9.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-34" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -9567,10 +11433,10 @@ actin filament organization
 1
 </td>
 <td style="text-align:left;color: green !important;">
-0.781
+0.78
 </td>
 <td style="text-align:left;">
-0.113
+0.115
 </td>
 <td style="text-align:left;">
 3.54e-13
@@ -9607,7 +11473,7 @@ ribonucleoprotein complex biogenesis
 -1.31
 </td>
 <td style="text-align:left;">
-0.13
+0.132
 </td>
 <td style="text-align:left;">
 1
@@ -9644,7 +11510,7 @@ ephrin receptor signaling pathway
 1.28
 </td>
 <td style="text-align:left;">
-0.23
+0.231
 </td>
 <td style="text-align:left;">
 1.34e-10
@@ -9669,42 +11535,412 @@ ephrin receptor signaling pathway
 <div id="snmf_topic11-1" class="section level3">
 <h3>SNMF_Topic11</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-10">
+Past versions of positive.snmf.results-10.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-10.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic12-1" class="section level3">
 <h3>SNMF_Topic12</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-11">
+Past versions of positive.snmf.results-11.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-11.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic13-1" class="section level3">
 <h3>SNMF_Topic13</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-12">
+Past versions of positive.snmf.results-12.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-12.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic14-1" class="section level3">
 <h3>SNMF_Topic14</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-13">
+Past versions of positive.snmf.results-13.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-13.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic15-1" class="section level3">
 <h3>SNMF_Topic15</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-14">
+Past versions of positive.snmf.results-14.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-14.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic16-1" class="section level3">
 <h3>SNMF_Topic16</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-15">
+Past versions of positive.snmf.results-15.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-15.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic17-1" class="section level3">
 <h3>SNMF_Topic17</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-16">
+Past versions of positive.snmf.results-16.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-16.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic18-1" class="section level3">
 <h3>SNMF_Topic18</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-17.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-17">
+Past versions of positive.snmf.results-17.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-17.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic19-1" class="section level3">
 <h3>SNMF_Topic19</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-18.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-18">
+Past versions of positive.snmf.results-18.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-18.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic20-1" class="section level3">
 <h3>SNMF_Topic20</h3>
 <p><img src="figure/deng_example.Rmd/positive.snmf.results-19.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-positive.snmf.results-19">
+Past versions of positive.snmf.results-19.png
+</button>
+</p>
+<div id="fig-positive.snmf.results-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/positive.snmf.results-19.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="snmf---negative-loadings" class="section level2">
@@ -9740,6 +11976,43 @@ for (i in 1:length(experiments)){
 <div id="snmf_topic2-2" class="section level3">
 <h3>SNMF_Topic2</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-1">
+Past versions of negative.snmf.results-1.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-1.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-35" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -9785,6 +12058,80 @@ oddsRatio
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006413" class="uri">GO:0006413</a>
+</td>
+<td style="text-align:left;">
+translational initiation
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.62
+</td>
+<td style="text-align:left;">
+0.163
+</td>
+<td style="text-align:left;">
+1.49e-58
+</td>
+<td style="text-align:left;">
+1.49e-58
+</td>
+<td style="text-align:left;">
+110
+</td>
+<td style="text-align:left;">
+177
+</td>
+<td style="text-align:left;">
+15.3
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L10</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006520" class="uri">GO:0006520</a>
+</td>
+<td style="text-align:left;">
+cellular amino acid metabolic process
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.979
+</td>
+<td style="text-align:left;">
+0.136
+</td>
+<td style="text-align:left;">
+8.19e-06
+</td>
+<td style="text-align:left;">
+1.09e-05
+</td>
+<td style="text-align:left;">
+54
+</td>
+<td style="text-align:left;">
+254
+</td>
+<td style="text-align:left;">
+2.36
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 <a href="GO:0022613" class="uri">GO:0022613</a>
 </td>
 <td style="text-align:left;">
@@ -9793,11 +12140,11 @@ ribonucleoprotein complex biogenesis
 <td style="text-align:left;">
 1
 </td>
-<td style="text-align:left;color: red !important;">
--1.15
+<td style="text-align:left;color: green !important;">
+1.61
 </td>
 <td style="text-align:left;">
-0.115
+0.108
 </td>
 <td style="text-align:left;">
 1.24e-53
@@ -9817,44 +12164,150 @@ ribonucleoprotein complex biogenesis
 </tr>
 <tr grouplength="1">
 <td colspan="10" style="border-bottom: 1px solid;">
-<strong>L2</strong>
+<strong>L3</strong>
 </td>
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0140053" class="uri">GO:0140053</a>
+<a href="GO:0006414" class="uri">GO:0006414</a>
 </td>
 <td style="text-align:left;">
-mitochondrial gene expression
+translational elongation
 </td>
 <td style="text-align:left;">
 1
 </td>
-<td style="text-align:left;color: red !important;">
--1.66
+<td style="text-align:left;color: green !important;">
+2.25
 </td>
 <td style="text-align:left;">
-0.206
+0.185
 </td>
 <td style="text-align:left;">
-2.53e-17
+9.03e-27
 </td>
 <td style="text-align:left;">
-2.53e-17
+9.03e-27
 </td>
 <td style="text-align:left;">
-55
+62
 </td>
 <td style="text-align:left;">
-139
+121
 </td>
 <td style="text-align:left;">
-5.8
+9.38
 </td>
 </tr>
 <tr grouplength="2">
 <td colspan="10" style="border-bottom: 1px solid;">
-<strong>L3</strong>
+<strong>L4</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0010257" class="uri">GO:0010257</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase complex assembly
+</td>
+<td style="text-align:left;">
+0.912
+</td>
+<td style="text-align:left;color: green !important;">
+2.17
+</td>
+<td style="text-align:left;">
+0.301
+</td>
+<td style="text-align:left;">
+1.3e-17
+</td>
+<td style="text-align:left;">
+1.3e-17
+</td>
+<td style="text-align:left;">
+30
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+16.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0033108" class="uri">GO:0033108</a>
+</td>
+<td style="text-align:left;">
+mitochondrial respiratory chain complex assembly
+</td>
+<td style="text-align:left;">
+0.0881
+</td>
+<td style="text-align:left;color: green !important;">
+1.81
+</td>
+<td style="text-align:left;">
+0.262
+</td>
+<td style="text-align:left;">
+7.73e-17
+</td>
+<td style="text-align:left;">
+7.73e-17
+</td>
+<td style="text-align:left;">
+35
+</td>
+<td style="text-align:left;">
+64
+</td>
+<td style="text-align:left;">
+10.6
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L5</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070972" class="uri">GO:0070972</a>
+</td>
+<td style="text-align:left;">
+protein localization to endoplasmic reticulum
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.96
+</td>
+<td style="text-align:left;">
+0.19
+</td>
+<td style="text-align:left;">
+2.36e-52
+</td>
+<td style="text-align:left;">
+2.36e-52
+</td>
+<td style="text-align:left;">
+89
+</td>
+<td style="text-align:left;">
+131
+</td>
+<td style="text-align:left;">
+19.4
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L6</strong>
 </td>
 </tr>
 <tr>
@@ -9865,13 +12318,13 @@ mitochondrial gene expression
 nucleoside monophosphate metabolic process
 </td>
 <td style="text-align:left;">
-0.906
+1
 </td>
-<td style="text-align:left;color: red !important;">
--0.781
+<td style="text-align:left;color: green !important;">
+1.11
 </td>
 <td style="text-align:left;">
-0.135
+0.133
 </td>
 <td style="text-align:left;">
 1.45e-18
@@ -9889,73 +12342,9 @@ nucleoside monophosphate metabolic process
 4.26
 </td>
 </tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0009141" class="uri">GO:0009141</a>
-</td>
-<td style="text-align:left;">
-nucleoside triphosphate metabolic process
-</td>
-<td style="text-align:left;">
-0.0891
-</td>
-<td style="text-align:left;color: red !important;">
--0.735
-</td>
-<td style="text-align:left;">
-0.137
-</td>
-<td style="text-align:left;">
-5.64e-17
-</td>
-<td style="text-align:left;">
-5.64e-17
-</td>
-<td style="text-align:left;">
-77
-</td>
-<td style="text-align:left;">
-244
-</td>
-<td style="text-align:left;">
-4.12
-</td>
-</tr>
 <tr grouplength="2">
 <td colspan="10" style="border-bottom: 1px solid;">
-<strong>L5</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0002446" class="uri">GO:0002446</a>
-</td>
-<td style="text-align:left;">
-neutrophil mediated immunity
-</td>
-<td style="text-align:left;">
-0.805
-</td>
-<td style="text-align:left;color: red !important;">
--0.571
-</td>
-<td style="text-align:left;">
-0.107
-</td>
-<td style="text-align:left;">
-3.72e-09
-</td>
-<td style="text-align:left;">
-6.04e-09
-</td>
-<td style="text-align:left;">
-85
-</td>
-<td style="text-align:left;">
-386
-</td>
-<td style="text-align:left;">
-2.51
+<strong>L7</strong>
 </td>
 </tr>
 <tr>
@@ -9966,13 +12355,13 @@ neutrophil mediated immunity
 granulocyte activation
 </td>
 <td style="text-align:left;">
-0.192
+0.528
 </td>
-<td style="text-align:left;color: red !important;">
--0.542
+<td style="text-align:left;color: green !important;">
+0.955
 </td>
 <td style="text-align:left;">
-0.107
+0.112
 </td>
 <td style="text-align:left;">
 2.86e-09
@@ -9990,6 +12379,112 @@ granulocyte activation
 2.53
 </td>
 </tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0002446" class="uri">GO:0002446</a>
+</td>
+<td style="text-align:left;">
+neutrophil mediated immunity
+</td>
+<td style="text-align:left;">
+0.472
+</td>
+<td style="text-align:left;color: green !important;">
+0.952
+</td>
+<td style="text-align:left;">
+0.111
+</td>
+<td style="text-align:left;">
+3.72e-09
+</td>
+<td style="text-align:left;">
+6.04e-09
+</td>
+<td style="text-align:left;">
+85
+</td>
+<td style="text-align:left;">
+386
+</td>
+<td style="text-align:left;">
+2.51
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L8</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070585" class="uri">GO:0070585</a>
+</td>
+<td style="text-align:left;">
+protein localization to mitochondrion
+</td>
+<td style="text-align:left;">
+0.991
+</td>
+<td style="text-align:left;color: green !important;">
+1.32
+</td>
+<td style="text-align:left;">
+0.193
+</td>
+<td style="text-align:left;">
+2.58e-08
+</td>
+<td style="text-align:left;">
+2.58e-08
+</td>
+<td style="text-align:left;">
+36
+</td>
+<td style="text-align:left;">
+117
+</td>
+<td style="text-align:left;">
+3.87
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L9</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070646" class="uri">GO:0070646</a>
+</td>
+<td style="text-align:left;">
+protein modification by small protein removal
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.973
+</td>
+<td style="text-align:left;">
+0.137
+</td>
+<td style="text-align:left;">
+6.59e-08
+</td>
+<td style="text-align:left;">
+7.53e-08
+</td>
+<td style="text-align:left;">
+59
+</td>
+<td style="text-align:left;">
+249
+</td>
+<td style="text-align:left;">
+2.73
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -9997,6 +12492,43 @@ granulocyte activation
 <div id="snmf_topic3-2" class="section level3">
 <h3>SNMF_Topic3</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-2">
+Past versions of negative.snmf.results-2.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-2.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-36" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -10042,394 +12574,34 @@ oddsRatio
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0006413" class="uri">GO:0006413</a>
+<a href="GO:0051321" class="uri">GO:0051321</a>
 </td>
 <td style="text-align:left;">
-translational initiation
+meiotic cell cycle
 </td>
 <td style="text-align:left;">
-1
+0.998
 </td>
 <td style="text-align:left;color: green !important;">
-2.15
+0.935
 </td>
 <td style="text-align:left;">
-0.156
+0.153
 </td>
 <td style="text-align:left;">
-0.909
+5.46e-08
 </td>
 <td style="text-align:left;">
-0.269
-</td>
-<td style="text-align:left;">
-14
-</td>
-<td style="text-align:left;">
-177
-</td>
-<td style="text-align:left;">
-0.806
-</td>
-</tr>
-<tr grouplength="2">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L2</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0010257" class="uri">GO:0010257</a>
-</td>
-<td style="text-align:left;">
-NADH dehydrogenase complex assembly
-</td>
-<td style="text-align:left;">
-0.983
-</td>
-<td style="text-align:left;color: green !important;">
-2.57
-</td>
-<td style="text-align:left;">
-0.306
-</td>
-<td style="text-align:left;">
-0.994
-</td>
-<td style="text-align:left;">
-0.0131
-</td>
-<td style="text-align:left;">
-0
+6.52e-08
 </td>
 <td style="text-align:left;">
 46
 </td>
 <td style="text-align:left;">
-0
+190
 </td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0033108" class="uri">GO:0033108</a>
-</td>
-<td style="text-align:left;">
-mitochondrial respiratory chain complex assembly
-</td>
-<td style="text-align:left;">
-0.0175
-</td>
-<td style="text-align:left;color: green !important;">
-2.13
-</td>
-<td style="text-align:left;">
-0.268
-</td>
-<td style="text-align:left;">
-0.999
-</td>
-<td style="text-align:left;">
-0.00157
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-64
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L3</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0070972" class="uri">GO:0070972</a>
-</td>
-<td style="text-align:left;">
-protein localization to endoplasmic reticulum
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-1.92
-</td>
-<td style="text-align:left;">
-0.183
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-0.00239
-</td>
-<td style="text-align:left;">
-4
-</td>
-<td style="text-align:left;">
-131
-</td>
-<td style="text-align:left;">
-0.294
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L4</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0009141" class="uri">GO:0009141</a>
-</td>
-<td style="text-align:left;">
-nucleoside triphosphate metabolic process
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-1.55
-</td>
-<td style="text-align:left;">
-0.137
-</td>
-<td style="text-align:left;">
-0.688
-</td>
-<td style="text-align:left;">
-0.753
-</td>
-<td style="text-align:left;">
-24
-</td>
-<td style="text-align:left;">
-244
-</td>
-<td style="text-align:left;">
-1.03
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L5</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0006414" class="uri">GO:0006414</a>
-</td>
-<td style="text-align:left;">
-translational elongation
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-2.05
-</td>
-<td style="text-align:left;">
-0.189
-</td>
-<td style="text-align:left;">
-0.991
-</td>
-<td style="text-align:left;">
-0.0378
-</td>
-<td style="text-align:left;">
-6
-</td>
-<td style="text-align:left;">
-121
-</td>
-<td style="text-align:left;">
-0.488
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L6</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0070671" class="uri">GO:0070671</a>
-</td>
-<td style="text-align:left;">
-response to interleukin-12
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-2.41
-</td>
-<td style="text-align:left;">
-0.306
-</td>
-<td style="text-align:left;">
-0.993
-</td>
-<td style="text-align:left;">
-0.0832
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-44
-</td>
-<td style="text-align:left;">
-0.218
-</td>
-</tr>
-<tr grouplength="2">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L7</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0002446" class="uri">GO:0002446</a>
-</td>
-<td style="text-align:left;">
-neutrophil mediated immunity
-</td>
-<td style="text-align:left;">
-0.795
-</td>
-<td style="text-align:left;color: green !important;">
-0.997
-</td>
-<td style="text-align:left;">
-0.114
-</td>
-<td style="text-align:left;">
-0.991
-</td>
-<td style="text-align:left;">
-0.0284
-</td>
-<td style="text-align:left;">
-28
-</td>
-<td style="text-align:left;">
-386
-</td>
-<td style="text-align:left;">
-0.73
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0036230" class="uri">GO:0036230</a>
-</td>
-<td style="text-align:left;">
-granulocyte activation
-</td>
-<td style="text-align:left;">
-0.205
-</td>
-<td style="text-align:left;color: green !important;">
-0.982
-</td>
-<td style="text-align:left;">
-0.115
-</td>
-<td style="text-align:left;">
-0.994
-</td>
-<td style="text-align:left;">
-0.0181
-</td>
-<td style="text-align:left;">
-27
-</td>
-<td style="text-align:left;">
-384
-</td>
-<td style="text-align:left;">
-0.705
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L8</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0070585" class="uri">GO:0070585</a>
-</td>
-<td style="text-align:left;">
-protein localization to mitochondrion
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-1.57
-</td>
-<td style="text-align:left;">
-0.197
-</td>
-<td style="text-align:left;">
-0.972
-</td>
-<td style="text-align:left;">
-0.129
-</td>
-<td style="text-align:left;">
-7
-</td>
-<td style="text-align:left;">
-117
-</td>
-<td style="text-align:left;">
-0.596
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L9</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0043687" class="uri">GO:0043687</a>
-</td>
-<td style="text-align:left;">
-post-translational protein modification
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-1.03
-</td>
-<td style="text-align:left;">
-0.128
-</td>
-<td style="text-align:left;">
-0.523
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-33
-</td>
-<td style="text-align:left;">
-310
-</td>
 <td style="text-align:left;">
-1.12
+3.09
 </td>
 </tr>
 </tbody>
@@ -10439,6 +12611,43 @@ post-translational protein modification
 <div id="snmf_topic4-2" class="section level3">
 <h3>SNMF_Topic4</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-3">
+Past versions of negative.snmf.results-3.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-3.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-37" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -10484,71 +12693,34 @@ oddsRatio
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0016072" class="uri">GO:0016072</a>
+<a href="GO:0072350" class="uri">GO:0072350</a>
 </td>
 <td style="text-align:left;">
-rRNA metabolic process
+tricarboxylic acid metabolic process
 </td>
 <td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;color: green !important;">
-0.93
+2.35
 </td>
 <td style="text-align:left;">
-0.14
+0.338
 </td>
 <td style="text-align:left;">
-0.994
+7.25e-09
 </td>
 <td style="text-align:left;">
-0.0358
+7.25e-09
 </td>
 <td style="text-align:left;">
-4
+13
 </td>
 <td style="text-align:left;">
-210
+36
 </td>
 <td style="text-align:left;">
-0.389
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L2</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0006413" class="uri">GO:0006413</a>
-</td>
-<td style="text-align:left;">
-translational initiation
-</td>
-<td style="text-align:left;">
-0.998
-</td>
-<td style="text-align:left;color: green !important;">
-0.873
-</td>
-<td style="text-align:left;">
-0.152
-</td>
-<td style="text-align:left;">
-0.00653
-</td>
-<td style="text-align:left;">
-0.00777
-</td>
-<td style="text-align:left;">
-17
-</td>
-<td style="text-align:left;">
-177
-</td>
-<td style="text-align:left;">
-2.19
+11.7
 </td>
 </tr>
 </tbody>
@@ -10558,6 +12730,43 @@ translational initiation
 <div id="snmf_topic5-2" class="section level3">
 <h3>SNMF_Topic5</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-4">
+Past versions of negative.snmf.results-4.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-4.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-38" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -10603,10 +12812,10 @@ oddsRatio
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0006413" class="uri">GO:0006413</a>
+<a href="GO:0006414" class="uri">GO:0006414</a>
 </td>
 <td style="text-align:left;">
-translational initiation
+translational elongation
 </td>
 <td style="text-align:left;">
 1
@@ -10615,59 +12824,22 @@ translational initiation
 1.38
 </td>
 <td style="text-align:left;">
-0.153
+0.193
 </td>
 <td style="text-align:left;">
-0.0488
+1.93e-08
 </td>
 <td style="text-align:left;">
-0.0676
+1.93e-08
 </td>
 <td style="text-align:left;">
-18
+27
 </td>
 <td style="text-align:left;">
-177
+121
 </td>
 <td style="text-align:left;">
-1.71
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L2</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0070972" class="uri">GO:0070972</a>
-</td>
-<td style="text-align:left;">
-protein localization to endoplasmic reticulum
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-1.33
-</td>
-<td style="text-align:left;">
-0.177
-</td>
-<td style="text-align:left;">
-0.781
-</td>
-<td style="text-align:left;">
-0.723
-</td>
-<td style="text-align:left;">
-7
-</td>
-<td style="text-align:left;">
-131
-</td>
-<td style="text-align:left;">
-0.843
+4.43
 </td>
 </tr>
 </tbody>
@@ -10677,6 +12849,84 @@ protein localization to endoplasmic reticulum
 <div id="snmf_topic6-2" class="section level3">
 <h3>SNMF_Topic6</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-5">
+Past versions of negative.snmf.results-5.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-5.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="snmf_topic7-2" class="section level3">
+<h3>SNMF_Topic7</h3>
+<p><img src="figure/deng_example.Rmd/negative.snmf.results-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-6">
+Past versions of negative.snmf.results-6.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-6.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-39" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -10722,34 +12972,71 @@ oddsRatio
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0002521" class="uri">GO:0002521</a>
+<a href="GO:0022613" class="uri">GO:0022613</a>
 </td>
 <td style="text-align:left;">
-leukocyte differentiation
+ribonucleoprotein complex biogenesis
 </td>
 <td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.19
+1.58
 </td>
 <td style="text-align:left;">
-0.113
+0.106
 </td>
 <td style="text-align:left;">
-0.0362
+2.03e-80
 </td>
 <td style="text-align:left;">
-1
+2.03e-80
 </td>
 <td style="text-align:left;">
-0
+232
 </td>
 <td style="text-align:left;">
-390
+391
 </td>
 <td style="text-align:left;">
-0
+9.4
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L10</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006403" class="uri">GO:0006403</a>
+</td>
+<td style="text-align:left;">
+RNA localization
+</td>
+<td style="text-align:left;">
+0.999
+</td>
+<td style="text-align:left;color: green !important;">
+0.926
+</td>
+<td style="text-align:left;">
+0.143
+</td>
+<td style="text-align:left;">
+3.68e-28
+</td>
+<td style="text-align:left;">
+3.68e-28
+</td>
+<td style="text-align:left;">
+106
+</td>
+<td style="text-align:left;">
+211
+</td>
+<td style="text-align:left;">
+6.07
 </td>
 </tr>
 <tr grouplength="1">
@@ -10759,48 +13046,532 @@ leukocyte differentiation
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0002250" class="uri">GO:0002250</a>
+<a href="GO:0006397" class="uri">GO:0006397</a>
 </td>
 <td style="text-align:left;">
-adaptive immune response
+mRNA processing
 </td>
 <td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.19
+1.09
 </td>
 <td style="text-align:left;">
-0.135
+0.102
 </td>
 <td style="text-align:left;">
-0.0244
+9.02e-48
+</td>
+<td style="text-align:left;">
+9.02e-48
+</td>
+<td style="text-align:left;">
+201
+</td>
+<td style="text-align:left;">
+425
+</td>
+<td style="text-align:left;">
+5.64
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L3</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006413" class="uri">GO:0006413</a>
+</td>
+<td style="text-align:left;">
+translational initiation
 </td>
 <td style="text-align:left;">
 1
 </td>
-<td style="text-align:left;">
-0
+<td style="text-align:left;color: green !important;">
+1.63
 </td>
 <td style="text-align:left;">
-263
+0.157
 </td>
 <td style="text-align:left;">
-0
+6.03e-39
+</td>
+<td style="text-align:left;">
+6.03e-39
+</td>
+<td style="text-align:left;">
+108
+</td>
+<td style="text-align:left;">
+177
+</td>
+<td style="text-align:left;">
+9.45
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L4</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0071824" class="uri">GO:0071824</a>
+</td>
+<td style="text-align:left;">
+protein-DNA complex subunit organization
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.07
+</td>
+<td style="text-align:left;">
+0.153
+</td>
+<td style="text-align:left;">
+1.09e-15
+</td>
+<td style="text-align:left;">
+1.82e-15
+</td>
+<td style="text-align:left;">
+77
+</td>
+<td style="text-align:left;">
+180
+</td>
+<td style="text-align:left;">
+4.42
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L5</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0007059" class="uri">GO:0007059</a>
+</td>
+<td style="text-align:left;">
+chromosome segregation
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.965
+</td>
+<td style="text-align:left;">
+0.13
+</td>
+<td style="text-align:left;">
+1.02e-12
+</td>
+<td style="text-align:left;">
+1.14e-12
+</td>
+<td style="text-align:left;">
+91
+</td>
+<td style="text-align:left;">
+254
+</td>
+<td style="text-align:left;">
+3.31
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L6</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070646" class="uri">GO:0070646</a>
+</td>
+<td style="text-align:left;">
+protein modification by small protein removal
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.07
+</td>
+<td style="text-align:left;">
+0.131
+</td>
+<td style="text-align:left;">
+2.71e-13
+</td>
+<td style="text-align:left;">
+3.07e-13
+</td>
+<td style="text-align:left;">
+91
+</td>
+<td style="text-align:left;">
+249
+</td>
+<td style="text-align:left;">
+3.42
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L7</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0010257" class="uri">GO:0010257</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase complex assembly
+</td>
+<td style="text-align:left;">
+0.927
+</td>
+<td style="text-align:left;color: green !important;">
+1.96
+</td>
+<td style="text-align:left;">
+0.293
+</td>
+<td style="text-align:left;">
+8.37e-08
+</td>
+<td style="text-align:left;">
+8.37e-08
+</td>
+<td style="text-align:left;">
+24
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+6.32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0033108" class="uri">GO:0033108</a>
+</td>
+<td style="text-align:left;">
+mitochondrial respiratory chain complex assembly
+</td>
+<td style="text-align:left;">
+0.0723
+</td>
+<td style="text-align:left;color: green !important;">
+1.62
+</td>
+<td style="text-align:left;">
+0.257
+</td>
+<td style="text-align:left;">
+8.19e-07
+</td>
+<td style="text-align:left;">
+8.19e-07
+</td>
+<td style="text-align:left;">
+28
+</td>
+<td style="text-align:left;">
+64
+</td>
+<td style="text-align:left;">
+4.51
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L8</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0098781" class="uri">GO:0098781</a>
+</td>
+<td style="text-align:left;">
+ncRNA transcription
+</td>
+<td style="text-align:left;">
+0.996
+</td>
+<td style="text-align:left;color: green !important;">
+1.46
+</td>
+<td style="text-align:left;">
+0.219
+</td>
+<td style="text-align:left;">
+5e-16
+</td>
+<td style="text-align:left;">
+5e-16
+</td>
+<td style="text-align:left;">
+49
+</td>
+<td style="text-align:left;">
+88
+</td>
+<td style="text-align:left;">
+7.36
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L9</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0061919" class="uri">GO:0061919</a>
+</td>
+<td style="text-align:left;">
+process utilizing autophagic mechanism
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.689
+</td>
+<td style="text-align:left;">
+0.106
+</td>
+<td style="text-align:left;">
+6.65e-07
+</td>
+<td style="text-align:left;">
+9.1e-07
+</td>
+<td style="text-align:left;">
+109
+</td>
+<td style="text-align:left;">
+403
+</td>
+<td style="text-align:left;">
+2.19
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="snmf_topic7-2" class="section level3">
-<h3>SNMF_Topic7</h3>
-<p><img src="figure/deng_example.Rmd/negative.snmf.results-6.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
 <div id="snmf_topic8-2" class="section level3">
 <h3>SNMF_Topic8</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-7">
+Past versions of negative.snmf.results-7.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-7.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="snmf_topic9-2" class="section level3">
+<h3>SNMF_Topic9</h3>
+<p><img src="figure/deng_example.Rmd/negative.snmf.results-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-8">
+Past versions of negative.snmf.results-8.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-8.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-40" class="section level4">
+<h4>gobp_nr</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006413" class="uri">GO:0006413</a>
+</td>
+<td style="text-align:left;">
+translational initiation
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.73
+</td>
+<td style="text-align:left;">
+0.163
+</td>
+<td style="text-align:left;">
+1.36e-14
+</td>
+<td style="text-align:left;">
+1.36e-14
+</td>
+<td style="text-align:left;">
+36
+</td>
+<td style="text-align:left;">
+177
+</td>
+<td style="text-align:left;">
+6.03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="snmf_topic10-2" class="section level3">
+<h3>SNMF_Topic10</h3>
+<p><img src="figure/deng_example.Rmd/negative.snmf.results-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-9">
+Past versions of negative.snmf.results-9.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-9.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="gobp_nr-41" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
@@ -10854,25 +13625,25 @@ protein localization to endoplasmic reticulum
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.8
+1.78
 </td>
 <td style="text-align:left;">
-0.182
+0.183
 </td>
 <td style="text-align:left;">
-0.919
+8.46e-37
 </td>
 <td style="text-align:left;">
-0.523
+8.46e-37
 </td>
 <td style="text-align:left;">
-1
+48
 </td>
 <td style="text-align:left;">
 131
 </td>
 <td style="text-align:left;">
-0.403
+18.8
 </td>
 </tr>
 <tr grouplength="1">
@@ -10882,145 +13653,39 @@ protein localization to endoplasmic reticulum
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0006414" class="uri">GO:0006414</a>
+<a href="GO:1990823" class="uri">GO:1990823</a>
 </td>
 <td style="text-align:left;">
-translational elongation
+response to leukemia inhibitory factor
 </td>
 <td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.65
+2.08
 </td>
 <td style="text-align:left;">
-0.184
+0.229
 </td>
 <td style="text-align:left;">
-0.902
+1.65e-10
 </td>
 <td style="text-align:left;">
-0.731
+1.65e-10
 </td>
 <td style="text-align:left;">
-1
+19
 </td>
 <td style="text-align:left;">
-121
+89
 </td>
 <td style="text-align:left;">
-0.437
+8.12
 </td>
 </tr>
 <tr grouplength="1">
 <td colspan="10" style="border-bottom: 1px solid;">
 <strong>L3</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0022613" class="uri">GO:0022613</a>
-</td>
-<td style="text-align:left;">
-ribonucleoprotein complex biogenesis
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-0.866
-</td>
-<td style="text-align:left;">
-0.107
-</td>
-<td style="text-align:left;">
-0.068
-</td>
-<td style="text-align:left;">
-0.0874
-</td>
-<td style="text-align:left;">
-12
-</td>
-<td style="text-align:left;">
-391
-</td>
-<td style="text-align:left;">
-1.71
-</td>
-</tr>
-<tr grouplength="2">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L4</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0010257" class="uri">GO:0010257</a>
-</td>
-<td style="text-align:left;">
-NADH dehydrogenase complex assembly
-</td>
-<td style="text-align:left;">
-0.983
-</td>
-<td style="text-align:left;color: green !important;">
-1.93
-</td>
-<td style="text-align:left;">
-0.294
-</td>
-<td style="text-align:left;">
-0.586
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-46
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0033108" class="uri">GO:0033108</a>
-</td>
-<td style="text-align:left;">
-mitochondrial respiratory chain complex assembly
-</td>
-<td style="text-align:left;">
-0.0173
-</td>
-<td style="text-align:left;color: green !important;">
-1.54
-</td>
-<td style="text-align:left;">
-0.258
-</td>
-<td style="text-align:left;">
-0.707
-</td>
-<td style="text-align:left;">
-0.636
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-64
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L5</strong>
 </td>
 </tr>
 <tr>
@@ -11034,190 +13699,112 @@ translational initiation
 1
 </td>
 <td style="text-align:left;color: green !important;">
-1.26
+1.71
 </td>
 <td style="text-align:left;">
-0.156
+0.161
 </td>
 <td style="text-align:left;">
-0.655
+1.51e-36
 </td>
 <td style="text-align:left;">
-1
+1.51e-36
 </td>
 <td style="text-align:left;">
-3
+54
 </td>
 <td style="text-align:left;">
 177
 </td>
 <td style="text-align:left;">
-0.91
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L6</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0070585" class="uri">GO:0070585</a>
-</td>
-<td style="text-align:left;">
-protein localization to mitochondrion
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;color: green !important;">
-1.3
-</td>
-<td style="text-align:left;">
-0.189
-</td>
-<td style="text-align:left;">
-0.653
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-117
-</td>
-<td style="text-align:left;">
-0.918
+14.5
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="snmf_topic9-2" class="section level3">
-<h3>SNMF_Topic9</h3>
-<p><img src="figure/deng_example.Rmd/negative.snmf.results-8.png" width="672" style="display: block; margin: auto;" /></p>
-<div id="gobp_nr-41" class="section level4">
-<h4>gobp_nr</h4>
-<table class="table" style="margin-left: auto; margin-right: auto;">
+<div id="snmf_topic11-2" class="section level3">
+<h3>SNMF_Topic11</h3>
+<p><img src="figure/deng_example.Rmd/negative.snmf.results-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-10">
+Past versions of negative.snmf.results-10.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
 <thead>
 <tr>
-<th style="text-align:left;">
-geneSet
+<th>
+Version
 </th>
-<th style="text-align:left;">
-description
+<th>
+Author
 </th>
-<th style="text-align:left;">
-alpha
-</th>
-<th style="text-align:left;">
-beta
-</th>
-<th style="text-align:left;">
-beta.se
-</th>
-<th style="text-align:left;">
-pHypergeometric
-</th>
-<th style="text-align:left;">
-pFishersExact
-</th>
-<th style="text-align:left;">
-overlap
-</th>
-<th style="text-align:left;">
-geneSetSize
-</th>
-<th style="text-align:left;">
-oddsRatio
+<th>
+Date
 </th>
 </tr>
 </thead>
 <tbody>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L1</strong>
-</td>
-</tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0006302" class="uri">GO:0006302</a>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-10.png" target="_blank">a102c2d</a>
 </td>
-<td style="text-align:left;">
-double-strand break repair
+<td>
+karltayeb
 </td>
-<td style="text-align:left;">
-0.996
-</td>
-<td style="text-align:left;color: green !important;">
-0.821
-</td>
-<td style="text-align:left;">
-0.152
-</td>
-<td style="text-align:left;">
-0.997
-</td>
-<td style="text-align:left;">
-0.0254
-</td>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-173
-</td>
-<td style="text-align:left;">
-0.256
-</td>
-</tr>
-<tr grouplength="1">
-<td colspan="10" style="border-bottom: 1px solid;">
-<strong>L2</strong>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0006520" class="uri">GO:0006520</a>
-</td>
-<td style="text-align:left;">
-cellular amino acid metabolic process
-</td>
-<td style="text-align:left;">
-0.994
-</td>
-<td style="text-align:left;color: green !important;">
-0.697
-</td>
-<td style="text-align:left;">
-0.126
-</td>
-<td style="text-align:left;">
-0.174
-</td>
-<td style="text-align:left;">
-0.281
-</td>
-<td style="text-align:left;">
-15
-</td>
-<td style="text-align:left;">
-254
-</td>
-<td style="text-align:left;">
-1.4
+<td>
+2022-04-13
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="snmf_topic10-2" class="section level3">
-<h3>SNMF_Topic10</h3>
-<p><img src="figure/deng_example.Rmd/negative.snmf.results-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="snmf_topic12-2" class="section level3">
+<h3>SNMF_Topic12</h3>
+<p><img src="figure/deng_example.Rmd/negative.snmf.results-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-11">
+Past versions of negative.snmf.results-11.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-11.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="gobp_nr-42" class="section level4">
 <h4>gobp_nr</h4>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -11263,34 +13850,34 @@ oddsRatio
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0007015" class="uri">GO:0007015</a>
+<a href="GO:0006414" class="uri">GO:0006414</a>
 </td>
 <td style="text-align:left;">
-actin filament organization
+translational elongation
 </td>
 <td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;color: green !important;">
-0.781
+1.78
 </td>
 <td style="text-align:left;">
-0.113
+0.189
 </td>
 <td style="text-align:left;">
-0.999
+5.07e-15
 </td>
 <td style="text-align:left;">
-0.00543
+5.07e-15
 </td>
 <td style="text-align:left;">
-3
+36
 </td>
 <td style="text-align:left;">
-329
+121
 </td>
 <td style="text-align:left;">
-0.257
+6.7
 </td>
 </tr>
 <tr grouplength="1">
@@ -11308,26 +13895,26 @@ ribonucleoprotein complex biogenesis
 <td style="text-align:left;">
 1
 </td>
-<td style="text-align:left;color: red !important;">
--1.31
+<td style="text-align:left;color: green !important;">
+1.1
 </td>
 <td style="text-align:left;">
-0.13
+0.113
 </td>
 <td style="text-align:left;">
-3.72e-17
+2.27e-15
 </td>
 <td style="text-align:left;">
-3.72e-17
+2.27e-15
 </td>
 <td style="text-align:left;">
-52
+71
 </td>
 <td style="text-align:left;">
 391
 </td>
 <td style="text-align:left;">
-4.93
+3.62
 </td>
 </tr>
 <tr grouplength="1">
@@ -11337,79 +13924,523 @@ ribonucleoprotein complex biogenesis
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-<a href="GO:0048013" class="uri">GO:0048013</a>
+<a href="GO:0071824" class="uri">GO:0071824</a>
 </td>
 <td style="text-align:left;">
-ephrin receptor signaling pathway
-</td>
-<td style="text-align:left;">
-0.999
-</td>
-<td style="text-align:left;color: green !important;">
-1.28
-</td>
-<td style="text-align:left;">
-0.23
-</td>
-<td style="text-align:left;">
-0.744
+protein-DNA complex subunit organization
 </td>
 <td style="text-align:left;">
 1
 </td>
-<td style="text-align:left;">
-2
+<td style="text-align:left;color: green !important;">
+1.26
 </td>
 <td style="text-align:left;">
-75
+0.162
 </td>
 <td style="text-align:left;">
-0.782
+5.58e-09
+</td>
+<td style="text-align:left;">
+5.58e-09
+</td>
+<td style="text-align:left;">
+35
+</td>
+<td style="text-align:left;">
+180
+</td>
+<td style="text-align:left;">
+3.79
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="snmf_topic11-2" class="section level3">
-<h3>SNMF_Topic11</h3>
-<p><img src="figure/deng_example.Rmd/negative.snmf.results-10.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-<div id="snmf_topic12-2" class="section level3">
-<h3>SNMF_Topic12</h3>
-<p><img src="figure/deng_example.Rmd/negative.snmf.results-11.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
 <div id="snmf_topic13-2" class="section level3">
 <h3>SNMF_Topic13</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-12">
+Past versions of negative.snmf.results-12.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-12.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="gobp_nr-43" class="section level4">
+<h4>gobp_nr</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070972" class="uri">GO:0070972</a>
+</td>
+<td style="text-align:left;">
+protein localization to endoplasmic reticulum
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+4.8
+</td>
+<td style="text-align:left;">
+0.182
+</td>
+<td style="text-align:left;">
+3.21e-58
+</td>
+<td style="text-align:left;">
+3.21e-58
+</td>
+<td style="text-align:left;">
+40
+</td>
+<td style="text-align:left;">
+131
+</td>
+<td style="text-align:left;">
+127
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="snmf_topic14-2" class="section level3">
 <h3>SNMF_Topic14</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-13">
+Past versions of negative.snmf.results-13.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-13.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic15-2" class="section level3">
 <h3>SNMF_Topic15</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-14">
+Past versions of negative.snmf.results-14.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-14.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic16-2" class="section level3">
 <h3>SNMF_Topic16</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-15">
+Past versions of negative.snmf.results-15.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-15.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic17-2" class="section level3">
 <h3>SNMF_Topic17</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-16">
+Past versions of negative.snmf.results-16.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-16.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="gobp_nr-44" class="section level4">
+<h4>gobp_nr</h4>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0034976" class="uri">GO:0034976</a>
+</td>
+<td style="text-align:left;">
+response to endoplasmic reticulum stress
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.45
+</td>
+<td style="text-align:left;">
+0.147
+</td>
+<td style="text-align:left;">
+3.72e-11
+</td>
+<td style="text-align:left;">
+3.72e-11
+</td>
+<td style="text-align:left;">
+34
+</td>
+<td style="text-align:left;">
+239
+</td>
+<td style="text-align:left;">
+4.58
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="snmf_topic18-2" class="section level3">
 <h3>SNMF_Topic18</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-17.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-17">
+Past versions of negative.snmf.results-17.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-17.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic19-2" class="section level3">
 <h3>SNMF_Topic19</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-18.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-18">
+Past versions of negative.snmf.results-18.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-18.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="snmf_topic20-2" class="section level3">
 <h3>SNMF_Topic20</h3>
 <p><img src="figure/deng_example.Rmd/negative.snmf.results-19.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-negative.snmf.results-19">
+Past versions of negative.snmf.results-19.png
+</button>
+</p>
+<div id="fig-negative.snmf.results-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a102c2d08bb451754b0dfc55a95b6ebbfc03dd01/docs/figure/deng_example.Rmd/negative.snmf.results-19.png" target="_blank">a102c2d</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
 </div>
 </div>
