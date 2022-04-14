@@ -69,10 +69,10 @@ fits <- map_dfr(params.genesets, ~do_logistic_susie_cached(data, .x, params.thre
 snmf.data <- data[grep('^SNMF*', names(data))]
 positive.fits <- map_dfr(
   params.genesets,
-  ~do_logistic_susie_cached(snmf.data, .x, params.thresh, c(1), 'positive'))
+  ~do_logistic_susie_cached(snmf.data, .x, params.thresh, c(1), 'positive_'))
 negative.fits <- map_dfr(
   params.genesets,
-  ~do_logistic_susie_cached(snmf.data, .x, params.thresh, c(1), 'negative'))
+  ~do_logistic_susie_cached(snmf.data, .x, params.thresh, c(-1), 'negative_'))
 
 do_ora_cached = function(data, db, thresh, .sign=c(1, -1), prefix=''){
   res <- xfun::cache_rds({
@@ -86,10 +86,10 @@ do_ora_cached = function(data, db, thresh, .sign=c(1, -1), prefix=''){
 ora <- map_dfr(params.genesets, ~do_ora_cached(data, .x, params.thresh))
 positive.ora <- map_dfr(
   params.genesets,
-  ~do_ora_cached(snmf.data, .x, params.thresh, c(1), 'positive'))
+  ~do_ora_cached(snmf.data, .x, params.thresh, c(1), 'positive_'))
 negative.ora <- map_dfr(
   params.genesets,
-  ~do_ora_cached(snmf.data, .x, params.thresh, c(-1), 'negative'))
+  ~do_ora_cached(snmf.data, .x, params.thresh, c(-1), 'negative_'))
 ```
 
 ```{r summarise.fits}
