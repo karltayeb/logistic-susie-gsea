@@ -31,5 +31,9 @@ Welcome to my research website.
 * [Two component model, simulations](summary_stat_gsea_sim.html)
 * [Two component model, multivariate (SuSiE prior)](latent_logistic_susie.html)
 
+### Deng NMF/SNMF
+* [NMF + SNMF](deng_example.html)
+
+
 <!-- [Two component model, multiple regression]() -->
 
