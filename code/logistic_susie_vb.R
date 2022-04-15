@@ -24,6 +24,23 @@ centeredmatmul = function(dat, A){
   return(res)
 }
 
+centeredmatmul2 = function(dat, A){
+  n <- dim(dat$X.raw)[1]
+  res <- dat$X2.raw %*% A
+  if(dat$center){
+    if(is.null(dim(A))){
+      res <- res -
+        (2 * dat$X.raw %*% (diag(dat$X.shift) %*% A)) + 
+        sum(dat$X.shift^2 * A)
+    } else{
+      XDA <- dat$X.raw %*% (diag(dat$X.shift) %*% A)
+      res <- res - 2*XDA
+      res <- t(t(res) + (dat$X.shift^2 %*% A)[1,])
+    }
+  }
+  return(res)
+}
+
 test_cmm = function(dat){
   p <- dim(dat$X)[2]
   A <- matrix(rnorm(10*p), nrow = p)
@@ -40,15 +57,16 @@ calc_Q = function(dat, Sigma2, Mu, Alpha, Z, delta) {
   # Z is matrix of covariates (e.g. column for intercept, top 10 PCs, etc)
   # delta is current estimate for effects of Z variables
   ASU2 = Alpha * (Sigma2 + Mu^2) # [j, l] = alpha[j, l] * (Sigma2[j, l] + Mu[j, l]^2)
-  Q = BiocGenerics::rowSums(dat$X2 %*% ASU2) # start w/ sum_l E_(ql)[(x_i' b_l)^2]
+  # Q = BiocGenerics::rowSums(dat$X2 %*% ASU2) # start w/ sum_l E_(ql)[(x_i' b_l)^2]
+  Q = centeredmatmul2(dat, rowSums(ASU2))[,1]
 
   # now add 2 sum_l sum_{k>l} (x_i' b_l_post)(x_i' b_k_post)
   b_post_mat = Mu * Alpha # each column is posterior mean for b_l, p x L
-  X_b_post = dat$X %*% b_post_mat # [i, l] = x_i' b_l_post
+  X_b_post = centeredmatmul(dat, b_post_mat) # [i, l] = x_i' b_l_post
   Q = Q + BiocGenerics::rowSums(X_b_post)^2 - BiocGenerics::rowSums(X_b_post^2)
 
   # now, add other terms with Z and delta
-  Q = Q + as.numeric(2 * (dat$X %*% rowSums(b_post_mat)) * (Z %*% delta)) + as.numeric((Z %*% delta)^2)
+  Q = Q + as.numeric(2 * centeredmatmul(dat, rowSums(b_post_mat)) * (Z %*% delta)) + as.numeric((Z %*% delta)^2)
   return(Q)
 }
 
@@ -74,7 +92,15 @@ update_xi = function(dat, Sigma2, Mu, Alpha, Z, delta) {
 }
 
 
-update_b_l = function(dat, xi, prior_weights, V, Sigma2, Mu, Alpha, l, Z, delta) {
+compute_g_xi = function(dat, xi){
+  g_xi = g(xi) # vector of g(xi_i), pre-compute once
+  g_xi_5_xi = ((g_xi - .5) / xi) # vector of (g(xi_i) - .5) / xi_i, pre-compute once
+  g_xi_5_xi[xi == 0] = .25 # case of 0/0 (e.g. x_i is all 0), use L'Hopital
+  common_denoms = g_xi_5_xi %*% dat$X2 # appears many times, compute once, posterior precisions
+  return(list(g_xi, g_xi_5_xi = g_xi_5_xi, common_denoms = common_denoms))
+}
+
+update_b_l = function(dat, xi, prior_weights, V, Sigma2, Mu, Alpha, l, Z, delta, g_xi_precomp) {
   # X is data matrix
   # y is binary response
   # xi is lower-bound approximation parameters
@@ -86,15 +112,15 @@ update_b_l = function(dat, xi, prior_weights, V, Sigma2, Mu, Alpha, l, Z, delta)
   # l is index to update
   # Z is matrix of covariates (e.g. column for intercept, top 10 PCs, etc)
   # delta is current estimate for effects of Z variables
+  if(is.null(g_xi_precomp)){
+    g_xi_precomp <- compute_g_xi(dat, xi, V)
+  }
+  g_xi_5_xi <- g_xi_precomp$g_xi_5_xi
+  common_denoms <- g_xi_precomp$common_denoms + (1 / V)
 
   b_post_mat = Mu * Alpha # each column is posterior mean for b_l, p x L
   b_post_not_l = rowSums(as.matrix(b_post_mat[, -l], nrow = nrow(Mu))) # posterior, sum_(k != l) b_k_post
-  g_xi = g(xi) # vector of g(xi_i), pre-compute once
-  g_xi_5_xi = ((g_xi - .5) / xi) # vector of (g(xi_i) - .5) / xi_i, pre-compute once
-  g_xi_5_xi[xi == 0] = .25 # case of 0/0 (e.g. x_i is all 0), use L'Hopital
 
-  # common_denoms = (1 / V) + (t(X^2) %*% g_xi_5_xi) # appears many times, compute once, posterior precisions
-  common_denoms = (1 / V) + g_xi_5_xi %*% dat$X2 # appears many times, compute once, posterior precisions
 
   # update Alpha[, l]
   tmp <- centeredmatmul(dat, b_post_not_l)[,1]
@@ -127,7 +153,7 @@ update_delta = function(dat, xi, Mu, Alpha, Z) {
   #D = Matrix::Diagonal(x = g_xi_5_xi / 2)
   D = Matrix::Diagonal(x = g_xi_5_xi)
   ZtDZ = (t(Z) * g_xi_5_xi) %*% Z  # D %*% Z
-  DXB = colScale(dat$X %*% rowSums(Mu * Alpha), g_xi_5_xi)#  %*% rowSums(Mu * Alpha)
+  DXB = colScale(centeredmatmul(dat, rowSums(Mu * Alpha)), g_xi_5_xi)#  %*% rowSums(Mu * Alpha)
   RHS = t(Z) %*% (dat$y - .5 - DXB) # RHS of system LL'delta = RHS
 
   # NOTE: the below system can/should be solved w/ Cholesky and forward/backward substitution (but if Z has small # of columns, shouldn't matter)
@@ -183,8 +209,9 @@ update_all = function(dat,
   }
 
   # now, iterate over l = 1:L
+  g_xi_precomp <- compute_g_xi(dat, xi)
   for (l in 1:L) {
-    res_l = update_b_l(dat, xi, prior_weights, prior_vars[l], Sigma2, Mu, Alpha, l, Z, delta)
+    res_l = update_b_l(dat, xi, prior_weights, prior_vars[l], Sigma2, Mu, Alpha, l, Z, delta, g_xi_precomp)
     Sigma2 = res_l$Sigma2
     Mu = res_l$Mu
     Alpha = res_l$Alpha
@@ -371,7 +398,7 @@ calc_ELBO = function(dat, Alpha, Mu, Sigma2, V, prior_weights, Z, delta, xi) {
 
   V = matrix(V, nrow = p, ncol = L, byrow = T) # for proper arithmetic, either if V is a scalar or a vector of length L
 
-  expected_log_lik = sum(log(g(xi)) + (dat$y - .5) * as.numeric(((dat$X %*% b_post) + (Z %*% delta))) - (xi / 2))
+  expected_log_lik = sum(log(g(xi)) + (dat$y - .5) * as.numeric(centeredmatmul(dat, b_post) + (Z %*% delta)) - (xi / 2))
   KL_div_vb_prior = Alpha * (log(Alpha) - log(P) + (log(V) / 2) - (log(Sigma2) / 2) - .5 + ((Sigma2 + Mu^2) / (2 * V)))
   KL_div_vb_prior[Alpha == 0] = 0
   KL_div_vb_prior = sum(KL_div_vb_prior)
