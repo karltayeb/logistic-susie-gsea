@@ -337,10 +337,7 @@ logistic.susie.init = function(
 
   post_info = list(Sigma2 = Sigma2, Mu = Mu, Alpha = Alpha, delta = delta, xi = xi, V = V)
 
-  elbo <- calc_ELBO(
-    dat, post_info$Alpha, post_info$Mu, post_info$Sigma2, post_info$V,
-    dat$prior_weights, dat$Z, post_info$delta, post_info$xi
-  )
+  elbo <- calc_ELBO(dat, post_info)
   res = list(dat=dat, post_info=post_info, elbo=elbo)
   return(res)
 }
@@ -355,10 +352,7 @@ logistic.susie.iteration = function(res, compute_elbo=T){
     dat$estimate_prior_variance, dat$share_prior_variance, dat$intercept)
   res$post_info <- post_info
   if(compute_elbo){
-    elbo <- calc_ELBO(
-      dat, post_info$Alpha, post_info$Mu, post_info$Sigma2, post_info$V,
-      dat$prior_weights, dat$Z, post_info$delta, post_info$xi
-    )
+    elbo <- calc_ELBO(dat, post_info)
     res$elbo <- c(res$elbo, elbo)
   }
   return(res)
@@ -390,7 +384,17 @@ logistic.susie.wrapup = function(res){
 # CAREFUL: Not sure what to do when Alpha[j, l] = 0 (we get 0*ln(0)). I will set this to 0
 # Note: This expression is only valid when xi has been updated to be sqrt(Q), where Q is the
 # expectation of the square of the linear predictor under the variational posterior (what we update xi to nomrally)
-calc_ELBO = function(dat, Alpha, Mu, Sigma2, V, prior_weights, Z, delta, xi) {
+calc_ELBO = function(dat, post_info){
+  # unpack
+  Alpha <- post_info$AlphaMu
+  Mu <- post_info$MuSigma2
+  Sigma2 <- post_info$Sigma2V
+  V = post_info$V
+  prior_weights = dat$prior_weights
+  Z  <-  data$Z
+  delta  <- post_info$delta
+  xi  <-  post_info$xi
+
   p = nrow(Mu)
   L = ncol(Mu)
   P = matrix(prior_weights, nrow = p, ncol = L)
