@@ -1,0 +1,115 @@
+---
+title: "the_big_geneset"
+author: "karltayeb"
+date: "2022-04-18"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+editor_options:
+  chunk_output_type: console
+params:
+  cache_dir: 'cache/the_big_gene_set/'
+  thresh: 1e-4
+  rerun: FALSE
+---
+
+## Introduction
+
+Concatenate a bunch of gene set databases together and fit logistic SuSiE.
+What do we get?
+
+```{r process.params}
+params.thresh <- eval(parse(text=params$thresh))
+params.rerun <- eval(parse(text=params$rerun))
+cache_rds <- purrr::partial(xfun::cache_rds, dir=params$cache_dir, rerun=params.rerun)
+```
+
+```{r load.data}
+source('code/load_data.R')
+source('code/load_gene_sets.R')
+
+genesets <- load_gene_sets()
+data <- load_sc_pbmc()
+
+mf_genes <- genesets$gomf$X %>% rownames()
+bp_genes <- genesets$gobp$X %>% rownames()
+cc_genes <- genesets$gocc$X %>% rownames()
+
+common_genes <- intersect(intersect(mf_genes, bp_genes), cc_genes)
+
+# subset and order
+mf_sub <- with(genesets$gomf, X[rownames(X) %in% common_genes, ] %>% {.[order(rownames(.)),]})
+cc_sub <- with(genesets$gocc, X[rownames(X) %in% common_genes, ] %>% {.[order(rownames(.)),]})
+bp_sub <- with(genesets$gobp, X[rownames(X) %in% common_genes, ] %>% {.[order(rownames(.)),]})
+
+# add db to geneset name
+colnames(mf_sub) <- paste0('MF:', colnames(mf_sub))
+colnames(cc_sub) <- paste0('CC:', colnames(cc_sub))
+colnames(bp_sub) <- paste0('BP:', colnames(bp_sub))
+
+mf_des <- genesets$gomf$geneSet$geneSetDes %>% mutate(geneSet = paste0('MF:', geneSet))
+cc_des <- genesets$gocc$geneSet$geneSetDes %>% mutate(geneSet = paste0('CC:', geneSet))
+bp_des <- genesets$gobp$geneSet$geneSetDes %>% mutate(geneSet = paste0('BP:', geneSet))
+
+# concat into big geneset
+big_X <- cbind(mf_sub, cc_sub, bp_sub)
+big_des <- rbind(mf_des, cc_des, bp_des)
+
+# add to `genesets`
+genesets[['big']] <- list(X=big_X, geneSet=list(geneSetDes = big_des))
+```
+
+```{r fit}
+source('code/enrichment_pipeline.R')
+source('code/logistic_susie_vb.R')
+source('code/tccm_ebnm.R')
+
+do_logistic_susie_cached = function(data, db, thresh, .sign=c(1, -1), prefix=''){
+  res <- cache_rds({
+    purrr::map_dfr(
+      names(data),
+      ~do_logistic_susie(.x, db, thresh, genesets, data, .sign=.sign))},
+    file=paste0(prefix, 'logistic_susie_', db, '_', thresh))
+}
+
+fits <- do_logistic_susie_cached(data, 'big', 1e-4)
+
+do_ora_cached = function(data, db, thresh, .sign=c(1, -1), prefix=''){
+  res <- cache_rds({
+    purrr::map_dfr(names(data), ~do_ora(.x, db, thresh, genesets, data, .sign=.sign))
+  },
+  file=paste0(prefix, 'ora_', db, '_', thresh))
+}
+
+ora <- do_ora_cached(data, 'big', params.thresh)
+```
+
+```{r results, results='asis'}
+res <- fits %>%
+  get_plot_tbl(., ora)
+
+html_tables <- fits %>%
+  get_table_tbl(., ora)
+
+experiments <- unique(res$experiment)
+
+for (i in 1:length(experiments)){
+  this_experiment <- experiments[i]
+  cat("\n") 
+  cat("###", this_experiment, "\n") # Create second level headings with the names.
+  
+  # print volcano plot
+  p <- do.volcano(res %>% filter(experiment == this_experiment)) +
+    labs(title=this_experiment)
+  print(p)
+
+  cat("\n\n") 
+
+  # print table
+  for(db in names(html_tables[[this_experiment]])){
+    cat("####", db, "\n") # Create second level headings with the names.
+    to_print <- html_tables[[this_experiment]][[db]] %>% distinct()
+    to_print %>% report_susie_credible_sets() %>% htmltools::HTML() %>% print()
+    cat("\n")
+  }}
+```
