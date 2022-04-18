@@ -1,0 +1,138 @@
+---
+title: "logistic_susie_v_tccm_ebnm_susie"
+author: "karltayeb"
+date: "2022-04-17"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+params:
+  cache_dir: 'cache/logistics_vs_point_normal_susie/'
+  genesets: c('gobp_nr')
+  thresh: 1e-4
+  rerun: FALSE
+---
+
+## Introduction
+
+```{r}
+source('code/load_data.R')
+source('code/load_gene_sets.R')
+source('code/enrichment_pipeline.R')
+source('code/logistic_susie_vb.R')
+source('code/tccm_ebnm.R')
+
+params.genesets <- eval(parse(text=params$genesets))
+params.thresh <- eval(parse(text=params$thresh))
+params.rerun <- eval(parse(text=params$rerun))
+cache_rds <- purrr::partial(xfun::cache_rds, dir=params$cache_dir, rerun=params.rerun)
+```
+
+```{r load.data}
+genesets <- load_gene_sets()
+data <- load_sc_pbmc_noshrink()
+```
+
+```{r}
+# fit logistic susie
+do_logistic_susie_cached = function(data,
+                                    db,
+                                    thresh,
+                                    prefix=''){
+  res <- cache_rds({
+    purrr::map_dfr(names(data), ~do_logistic_susie(.x, db, thresh, genesets, data))},
+    file=paste0(prefix, 'logistic_susie_', db, '_', thresh))
+}
+
+thresh <- 10^(-(1:10))
+logistic_susie_fit <- cache_rds({map_dfr(thresh, ~do_logistic_susie(
+  'k1', 'gomf', .x, genesets = genesets, data=data))},
+  file='k1.logistic.susie.threshold')
+tccm_ebnm_susie_fit <- cache_rds({do_tccm_point_normal_susie(
+  'k1', 'gomf', genesets = genesets, data=data, susie.args = list(L=10, maxit=100, verbose=TRUE))},
+  file='k1.point_normal')
+
+ora <- map_dfr(thresh, ~do_ora('k1', 'gomf', .x, genesets = genesets, data=data))
+```
+
+
+```{r}
+par(mfrow = c(3, 3))
+pn_pip <- tccm_ebnm_susie_fit$fit[[1]]$pip
+for (i in 1:9){
+  plot(pn_pip + rnorm(length(pn_pip)) * 0.01, logistic_susie_fit$fit[[i]]$pip,
+       ylab = 'Logistic PIP', xlab='Point Normal PIP',
+       main=paste('thresh = ', logistic_susie_fit$thresh[[i]]))
+}
+```
+
+```{r, fig.asp=0.3}
+library(susieR)
+par(mfrow = c(1, 3))
+pn_pip <- tccm_ebnm_susie_fit$fit[[1]]$pip
+for (i in 1:9){
+  susie_plot(logistic_susie_fit$fit[[i]], 'PIP', main=paste('thresh = ', logistic_susie_fit$thresh[[i]]))
+  susie_plot(tccm_ebnm_susie_fit$fit[[1]]$h$params, 'PIP', main=paste('Point Normal'))
+  plot(pn_pip + rnorm(length(pn_pip)) * 0.01, logistic_susie_fit$fit[[i]]$pip,
+       ylab = 'Logistic PIP', xlab='Point Normal PIP',
+       main=paste('thresh = ', logistic_susie_fit$thresh[[i]]))
+}
+```
+
+## Fit Point Normal SuSiE
+```{r}
+source('code/tccm_ebnm.R')
+u <- prep_sumstat_data(genesets$gomf, data$k1)
+res <- tccm_point_normal_susie(
+u$beta, u$se, u$X, update.h=TRUE, update.f1=FALSE, verbose=F, maxit=10)
+
+par(mfrow = c(2, 2))
+plot(tail(res$elbo, -1), ylab='ELBO', xlab='iter')
+susie_plot(res$h$params, 'PIP', main=paste('Point-normal'))
+
+logit_pi <- with(res, h$get_prior_logits(data, h$params))
+hist(1/(1 + exp(-logit_pi)), xlab='prior', main='prior pi_1')
+hist(res$gamma, xlab='posterior', main='posterior pi_1')
+print(diff(res$elbo))
+```
+
+## Fit Point normal (no enrich)
+```{r}
+source('code/tccm_ebnm.R')
+par(mfrow=c(1,2))
+u <- prep_sumstat_data(genesets$gomf, data$k1)
+res <- tccm_point_normal(
+u$beta, u$se, u$X, update.h=TRUE, update.f1=FALSE, verbose=F, logit=-10)
+plot(1/(1+exp(-res$h$get_prior_logits(res$data, res$h$params))))
+hist(res$gamma)
+print(sum(res$gamma * log(res$gamma)))
+```
+
+
+
+
+
+
+```{r}
+res <- logistic_susie_fit %>%
+  get_plot_tbl(., ora)
+html_tables <- logistic_susie_fit %>%
+  get_table_tbl(., ora)
+
+html_tables$k1$gomf
+
+html_tables$k1$gomf %>%
+  report_susie_credible_sets() #%>% htmltools::HTML() %>% print()
+```
+
+
+```{r}
+res2 <- tccm_ebnm_susie_fit %>%
+  get_plot_tbl(., ora)
+html_tables2 <- tccm_ebnm_susie_fit %>%
+  get_table_tbl(., ora)
+
+html_tables2$k1$gomf %>%
+  report_susie_credible_sets()
+```
+
+
