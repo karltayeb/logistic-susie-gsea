@@ -1,0 +1,4949 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="karltayeb" />
+
+<meta name="date" content="2022-04-17" />
+
+<title>logistic_susie_v_tccm_ebnm_susie</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">logistic_susie_v_tccm_ebnm_susie</h1>
+<h4 class="author">karltayeb</h4>
+<h4 class="date">2022-04-17</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-04-18
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version 1.7.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeabceaee224cda48eb4137f9f3d7b3ed8ad895e16targetblankabceaeea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/abceaee224cda48eb4137f9f3d7b3ed8ad895e16" target="_blank">abceaee</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeabceaee224cda48eb4137f9f3d7b3ed8ad895e16targetblankabceaeea" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/abceaee224cda48eb4137f9f3d7b3ed8ad895e16" target="_blank">abceaee</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    library/
+    Ignored:    renv/library/
+    Ignored:    renv/staging/
+    Ignored:    staging/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Untitled.ipynb
+    Untracked:  _targets.R
+    Untracked:  _targets.html
+    Untracked:  _targets.md
+    Untracked:  _targets/
+    Untracked:  _targets_r/
+    Untracked:  analysis/alpha_ash_v_point_normal.Rmd
+    Untracked:  analysis/de_droplet_noshrink.Rmd
+    Untracked:  analysis/de_droplet_noshrink_logistic_susie.Rmd
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/scale_v_standardize_v_raw.Rmd
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  build_site.R
+    Untracked:  cache/
+    Untracked:  code/html_tables.R
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/load_data.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/point_normal.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  code/susie_gsea_queries.R
+    Untracked:  data/adipose_2yr_topsnp.txt
+    Untracked:  data/de-droplet/
+    Untracked:  data/deng/
+    Untracked:  data/fetal_reference_cellid_gene_sets.RData
+    Untracked:  data/human_chimp_eb/
+    Untracked:  data/pbmc-purified/
+    Untracked:  data/wenhe_baboon_diet/
+    Untracked:  docs.zip
+    Untracked:  export/
+    Untracked:  index.md
+    Untracked:  simulation_targets/
+
+Unstaged changes:
+    Modified:   _simulation_targets.R
+    Modified:   _targets.Rmd
+    Modified:   analysis/alpha_for_single_cell.Rmd
+    Modified:   analysis/baboon_diet.Rmd
+    Modified:   analysis/gseabenchmark_tcga.Rmd
+    Modified:   analysis/human_chimp_eb_de_example.Rmd
+    Modified:   analysis/single_cell_pbmc.Rmd
+    Modified:   analysis/single_cell_pbmc_l1.Rmd
+    Deleted:    analysis/summary_stat_gsea_univariate_simulations.Rmd
+    Modified:   analysis/the_big_geneset.Rmd
+    Modified:   code/enrichment_pipeline.R
+    Modified:   code/fit_baselines.R
+    Modified:   code/fit_logistic_susie.R
+    Modified:   code/fit_mr_ash.R
+    Modified:   code/fit_susie.R
+    Modified:   code/load_gene_sets.R
+    Modified:   code/logistic_susie_vb.R
+    Modified:   code/marginal_sumstat_gsea.R
+    Modified:   code/simulate_gene_lists.R
+    Modified:   code/tccm_ebnm.R
+    Modified:   target_components/factories.R
+    Modified:   target_components/methods.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/logistic_susie_v_tccm_ebnm_susie.Rmd</code>) and HTML (<code>docs/logistic_susie_v_tccm_ebnm_susie.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/abceaee224cda48eb4137f9f3d7b3ed8ad895e16/analysis/logistic_susie_v_tccm_ebnm_susie.Rmd" target="_blank">abceaee</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-04-18
+</td>
+<td>
+wflow_publish(“analysis/logistic_susie_v_tccm_ebnm_susie.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<pre class="r"><code>source(&#39;code/load_data.R&#39;)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+✓ tibble  3.1.6     ✓ dplyr   1.0.8
+✓ tidyr   1.2.0     ✓ stringr 1.4.0
+✓ readr   2.1.2     ✓ forcats 0.5.1</code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>source(&#39;code/load_gene_sets.R&#39;)
+source(&#39;code/enrichment_pipeline.R&#39;)
+source(&#39;code/logistic_susie_vb.R&#39;)</code></pre>
+<pre><code>
+Attaching package: &#39;BiocGenerics&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:dplyr&#39;:
+
+    combine, intersect, setdiff, union</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    IQR, mad, sd, var, xtabs</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    anyDuplicated, append, as.data.frame, basename, cbind, colnames,
+    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
+    grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
+    order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+    rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
+    union, unique, unsplit, which.max, which.min</code></pre>
+<pre><code>
+Attaching package: &#39;matrixStats&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:dplyr&#39;:
+
+    count</code></pre>
+<pre class="r"><code>source(&#39;code/tccm_ebnm.R&#39;)
+
+params.genesets &lt;- eval(parse(text=params$genesets))
+params.thresh &lt;- eval(parse(text=params$thresh))
+params.rerun &lt;- eval(parse(text=params$rerun))
+cache_rds &lt;- purrr::partial(xfun::cache_rds, dir=params$cache_dir, rerun=params.rerun)</code></pre>
+<pre class="r"><code>genesets &lt;- load_gene_sets()
+data &lt;- load_sc_pbmc_noshrink()</code></pre>
+<pre><code></code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<pre class="r"><code># fit logistic susie
+do_logistic_susie_cached = function(data,
+                                    db,
+                                    thresh,
+                                    prefix=&#39;&#39;){
+  res &lt;- cache_rds({
+    purrr::map_dfr(names(data), ~do_logistic_susie(.x, db, thresh, genesets, data))},
+    file=paste0(prefix, &#39;logistic_susie_&#39;, db, &#39;_&#39;, thresh))
+}
+
+thresh &lt;- 10^(-(1:10))
+logistic_susie_fit &lt;- cache_rds({map_dfr(thresh, ~do_logistic_susie(
+  &#39;k1&#39;, &#39;gomf&#39;, .x, genesets = genesets, data=data))},
+  file=&#39;k1.logistic.susie.threshold&#39;)
+tccm_ebnm_susie_fit &lt;- cache_rds({do_tccm_point_normal_susie(
+  &#39;k1&#39;, &#39;gomf&#39;, genesets = genesets, data=data, susie.args = list(L=10, maxit=100, verbose=TRUE))},
+  file=&#39;k1.point_normal&#39;)
+
+ora &lt;- map_dfr(thresh, ~do_ora(&#39;k1&#39;, &#39;gomf&#39;, .x, genesets = genesets, data=data))</code></pre>
+<pre class="r"><code>par(mfrow = c(3, 3))
+pn_pip &lt;- tccm_ebnm_susie_fit$fit[[1]]$pip
+for (i in 1:9){
+  plot(pn_pip + rnorm(length(pn_pip)) * 0.01, logistic_susie_fit$fit[[i]]$pip,
+       ylab = &#39;Logistic PIP&#39;, xlab=&#39;Point Normal PIP&#39;,
+       main=paste(&#39;thresh = &#39;, logistic_susie_fit$thresh[[i]]))
+}</code></pre>
+<p><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(susieR)
+par(mfrow = c(1, 3))
+pn_pip &lt;- tccm_ebnm_susie_fit$fit[[1]]$pip
+for (i in 1:9){
+  susie_plot(logistic_susie_fit$fit[[i]], &#39;PIP&#39;, main=paste(&#39;thresh = &#39;, logistic_susie_fit$thresh[[i]]))
+  susie_plot(tccm_ebnm_susie_fit$fit[[1]]$h$params, &#39;PIP&#39;, main=paste(&#39;Point Normal&#39;))
+  plot(pn_pip + rnorm(length(pn_pip)) * 0.01, logistic_susie_fit$fit[[i]]$pip,
+       ylab = &#39;Logistic PIP&#39;, xlab=&#39;Point Normal PIP&#39;,
+       main=paste(&#39;thresh = &#39;, logistic_susie_fit$thresh[[i]]))
+}</code></pre>
+<p><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-4-9.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fit-point-normal-susie" class="section level2">
+<h2>Fit Point Normal SuSiE</h2>
+<pre class="r"><code>source(&#39;code/tccm_ebnm.R&#39;)
+u &lt;- prep_sumstat_data(genesets$gomf, data$k1)
+res &lt;- tccm_point_normal_susie(
+u$beta, u$se, u$X, update.h=TRUE, update.f1=FALSE, verbose=F, maxit=10)</code></pre>
+<pre><code>Warning in logistic.susie(data$X, y.init, L = L, maxit = 2): did not converge
+after 2 iterations</code></pre>
+<pre><code>[1] &quot;E: Inf&quot;
+[1] &quot;M: 1996.20992343286&quot;
+[1] &quot;E: -45.7567882373914&quot;
+[1] &quot;M: 118.580937636059&quot;
+[1] &quot;E: -19.1347402753418&quot;
+[1] &quot;M: 34.3252498390248&quot;
+[1] &quot;E: -8.80233700290046&quot;
+[1] &quot;M: 13.1956734647974&quot;
+[1] &quot;E: -4.37734159467072&quot;
+[1] &quot;M: 5.90582243293102&quot;
+[1] &quot;E: -2.30714955990334&quot;
+[1] &quot;M: 2.90948883978126&quot;
+[1] &quot;E: -1.26709334069528&quot;
+[1] &quot;M: 1.52908784849205&quot;
+[1] &quot;E: -0.718071398445318&quot;
+[1] &quot;M: 0.842918223203014&quot;
+[1] &quot;E: -0.416770982177695&quot;
+[1] &quot;M: 0.481927339715185&quot;
+[1] &quot;E: -0.246228723473905&quot;
+[1] &quot;M: 0.283434062916058&quot;</code></pre>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(tail(res$elbo, -1), ylab=&#39;ELBO&#39;, xlab=&#39;iter&#39;)
+susie_plot(res$h$params, &#39;PIP&#39;, main=paste(&#39;Point-normal&#39;))
+
+logit_pi &lt;- with(res, h$get_prior_logits(data, h$params))
+hist(1/(1 + exp(-logit_pi)), xlab=&#39;prior&#39;, main=&#39;prior pi_1&#39;)
+hist(res$gamma, xlab=&#39;posterior&#39;, main=&#39;posterior pi_1&#39;)</code></pre>
+<p><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>print(diff(res$elbo))</code></pre>
+<pre><code> [1]          Inf 1996.2099234  -45.7567882  118.5809376  -19.1347403
+ [6]   34.3252498   -8.8023370   13.1956735   -4.3773416    5.9058224
+[11]   -2.3071496    2.9094888   -1.2670933    1.5290878   -0.7180714
+[16]    0.8429182   -0.4167710    0.4819273   -0.2462287    0.2834341</code></pre>
+</div>
+<div id="fit-point-normal-no-enrich" class="section level2">
+<h2>Fit Point normal (no enrich)</h2>
+<pre class="r"><code>source(&#39;code/tccm_ebnm.R&#39;)
+par(mfrow=c(1,2))
+u &lt;- prep_sumstat_data(genesets$gomf, data$k1)
+res &lt;- tccm_point_normal(
+u$beta, u$se, u$X, update.h=TRUE, update.f1=FALSE, verbose=F, logit=-10)</code></pre>
+<pre><code>[1] &quot;E: Inf&quot;
+[1] &quot;M: 1100.09895990487&quot;
+[1] &quot;E: 2559.99823503927&quot;
+[1] &quot;M: 301.897738590953&quot;
+[1] &quot;E: 59.8946926019016&quot;
+[1] &quot;M: 17.0090489452996&quot;
+[1] &quot;E: 2.89600951085595&quot;
+[1] &quot;M: 0.875793418133981&quot;
+[1] &quot;E: 0.147961754199059&quot;
+[1] &quot;M: 0.0448934179694334&quot;
+[1] &quot;E: 0.00758154546565493&quot;
+[1] &quot;M: 0.00230072331760311&quot;
+[1] &quot;E: 0.00038853541991557&quot;
+[1] &quot;M: 0.000117907391540939&quot;
+[1] &quot;E: 1.99116329895332e-05&quot;
+[1] &quot;M: 6.0425118135754e-06&quot;</code></pre>
+<pre class="r"><code>plot(1/(1+exp(-res$h$get_prior_logits(res$data, res$h$params))))
+hist(res$gamma)</code></pre>
+<p><img src="figure/logistic_susie_v_tccm_ebnm_susie.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>print(sum(res$gamma * log(res$gamma)))</code></pre>
+<pre><code>[1] -155.1482</code></pre>
+<pre class="r"><code>res &lt;- logistic_susie_fit %&gt;%
+  get_plot_tbl(., ora)</code></pre>
+<pre><code>Joining, by = c(&quot;experiment&quot;, &quot;db&quot;, &quot;thresh&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>html_tables &lt;- logistic_susie_fit %&gt;%
+  get_table_tbl(., ora)</code></pre>
+<pre><code>Joining, by = c(&quot;experiment&quot;, &quot;db&quot;, &quot;thresh&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>html_tables$k1$gomf</code></pre>
+<pre><code># A tibble: 2,107 × 23
+   experiment db    thresh susie.args       geneSet    component    alpha   beta
+   &lt;chr&gt;      &lt;chr&gt;  &lt;dbl&gt; &lt;list&gt;           &lt;chr&gt;      &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+ 1 k1         gomf     0.1 &lt;named list [5]&gt; GO:0003723 L1        1   e+ 0  0.689
+ 2 k1         gomf     0.1 &lt;named list [5]&gt; GO:0003676 L1        1.58e-21  0.315
+ 3 k1         gomf     0.1 &lt;named list [5]&gt; GO:1901363 L1        2.48e-26  0.224
+ 4 k1         gomf     0.1 &lt;named list [5]&gt; GO:0097159 L1        7.19e-27  0.216
+ 5 k1         gomf     0.1 &lt;named list [5]&gt; GO:0045296 L1        5.75e-30  0.502
+ 6 k1         gomf     0.1 &lt;named list [5]&gt; GO:0008135 L1        2.31e-30  0.791
+ 7 k1         gomf     0.1 &lt;named list [5]&gt; GO:0005509 L1        2.27e-30 -0.374
+ 8 k1         gomf     0.1 &lt;named list [5]&gt; GO:0003743 L1        2.04e-30  0.985
+ 9 k1         gomf     0.1 &lt;named list [5]&gt; GO:0009055 L1        6.26e-31  0.698
+10 k1         gomf     0.1 &lt;named list [5]&gt; GO:0140098 L1        6.11e-31  0.403
+# … with 2,097 more rows, and 15 more variables: beta.se &lt;dbl&gt;,
+#   alpha_rank &lt;int&gt;, cumalpha &lt;dbl&gt;, in_cs &lt;lgl&gt;, active_cs &lt;lgl&gt;,
+#   geneListSize &lt;int&gt;, geneSetSize &lt;dbl&gt;, overlap &lt;dbl&gt;, nGenes &lt;int&gt;,
+#   propInList &lt;dbl&gt;, propInSet &lt;dbl&gt;, oddsRatio &lt;dbl&gt;, pHypergeometric &lt;dbl&gt;,
+#   pFishersExact &lt;dbl&gt;, description &lt;chr&gt;</code></pre>
+<pre class="r"><code>html_tables$k1$gomf %&gt;%
+  report_susie_credible_sets() #%&gt;% htmltools::HTML() %&gt;% print()</code></pre>
+<pre><code>Loading required package: kableExtra
+
+Attaching package: &#39;kableExtra&#39;
+
+The following object is masked from &#39;package:dplyr&#39;:
+
+    group_rows</code></pre>
+<pre><code>Warning: `funs()` was deprecated in dplyr 0.8.0.
+Please use a list of either functions or lambdas: 
+
+  # Simple named list: 
+  list(mean = mean, median = median)
+
+  # Auto named with `tibble::lst()`: 
+  tibble::lst(mean, median)
+
+  # Using lambdas
+  list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="10">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.689
+</td>
+<td style="text-align:left;">
+0.0556
+</td>
+<td style="text-align:left;">
+4.19e-54
+</td>
+<td style="text-align:left;">
+7.8e-54
+</td>
+<td style="text-align:left;">
+662
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+3.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.756
+</td>
+<td style="text-align:left;">
+0.0563
+</td>
+<td style="text-align:left;">
+1.28e-48
+</td>
+<td style="text-align:left;">
+2.26e-48
+</td>
+<td style="text-align:left;">
+541
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+3.14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.712
+</td>
+<td style="text-align:left;">
+0.0572
+</td>
+<td style="text-align:left;">
+9.15e-43
+</td>
+<td style="text-align:left;">
+1.14e-42
+</td>
+<td style="text-align:left;">
+463
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.96
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.741
+</td>
+<td style="text-align:left;">
+0.0578
+</td>
+<td style="text-align:left;">
+1.61e-42
+</td>
+<td style="text-align:left;">
+2.75e-42
+</td>
+<td style="text-align:left;">
+421
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.97
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.67
+</td>
+<td style="text-align:left;">
+0.168
+</td>
+<td style="text-align:left;">
+2.04e-31
+</td>
+<td style="text-align:left;">
+2.04e-31
+</td>
+<td style="text-align:left;">
+80
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.73
+</td>
+<td style="text-align:left;">
+0.168
+</td>
+<td style="text-align:left;">
+7.99e-32
+</td>
+<td style="text-align:left;">
+7.99e-32
+</td>
+<td style="text-align:left;">
+77
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.83
+</td>
+<td style="text-align:left;">
+0.168
+</td>
+<td style="text-align:left;">
+2.31e-33
+</td>
+<td style="text-align:left;">
+2.31e-33
+</td>
+<td style="text-align:left;">
+76
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.79
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.81
+</td>
+<td style="text-align:left;">
+0.168
+</td>
+<td style="text-align:left;">
+1.49e-31
+</td>
+<td style="text-align:left;">
+1.49e-31
+</td>
+<td style="text-align:left;">
+72
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.74
+</td>
+<td style="text-align:left;">
+0.168
+</td>
+<td style="text-align:left;">
+6.86e-28
+</td>
+<td style="text-align:left;">
+6.86e-28
+</td>
+<td style="text-align:left;">
+66
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+8.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.8
+</td>
+<td style="text-align:left;">
+0.168
+</td>
+<td style="text-align:left;">
+3.73e-29
+</td>
+<td style="text-align:left;">
+3.73e-29
+</td>
+<td style="text-align:left;">
+66
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+8.92
+</td>
+</tr>
+<tr grouplength="10">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.51
+</td>
+<td style="text-align:left;">
+0.0407
+</td>
+<td style="text-align:left;">
+2.28e-28
+</td>
+<td style="text-align:left;">
+3.95e-28
+</td>
+<td style="text-align:left;">
+2910
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+3.63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.545
+</td>
+<td style="text-align:left;">
+0.042
+</td>
+<td style="text-align:left;">
+8.38e-26
+</td>
+<td style="text-align:left;">
+1.44e-25
+</td>
+<td style="text-align:left;">
+2280
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+3.16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.69
+</td>
+<td style="text-align:left;">
+0.169
+</td>
+<td style="text-align:left;">
+6.43e-33
+</td>
+<td style="text-align:left;">
+6.43e-33
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.51
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.579
+</td>
+<td style="text-align:left;">
+0.0438
+</td>
+<td style="text-align:left;">
+4.65e-24
+</td>
+<td style="text-align:left;">
+8.53e-24
+</td>
+<td style="text-align:left;">
+1690
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.86
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.646
+</td>
+<td style="text-align:left;">
+0.0445
+</td>
+<td style="text-align:left;">
+2.65e-25
+</td>
+<td style="text-align:left;">
+5.55e-25
+</td>
+<td style="text-align:left;">
+1560
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.88
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.696
+</td>
+<td style="text-align:left;">
+0.059
+</td>
+<td style="text-align:left;">
+1.24e-34
+</td>
+<td style="text-align:left;">
+1.67e-34
+</td>
+<td style="text-align:left;">
+348
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.78
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.681
+</td>
+<td style="text-align:left;">
+0.0457
+</td>
+<td style="text-align:left;">
+1.14e-23
+</td>
+<td style="text-align:left;">
+1.95e-23
+</td>
+<td style="text-align:left;">
+1300
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.78
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.725
+</td>
+<td style="text-align:left;">
+0.0463
+</td>
+<td style="text-align:left;">
+4.99e-26
+</td>
+<td style="text-align:left;">
+9.12e-26
+</td>
+<td style="text-align:left;">
+1240
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.709
+</td>
+<td style="text-align:left;">
+0.0466
+</td>
+<td style="text-align:left;">
+4.26e-24
+</td>
+<td style="text-align:left;">
+7.49e-24
+</td>
+<td style="text-align:left;">
+1160
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.81
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.706
+</td>
+<td style="text-align:left;">
+0.0469
+</td>
+<td style="text-align:left;">
+7.86e-23
+</td>
+<td style="text-align:left;">
+1.44e-22
+</td>
+<td style="text-align:left;">
+1100
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.76
+</td>
+</tr>
+<tr grouplength="10">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L3</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.583
+</td>
+<td style="text-align:left;">
+0.0431
+</td>
+<td style="text-align:left;">
+2.96e-26
+</td>
+<td style="text-align:left;">
+5.66e-26
+</td>
+<td style="text-align:left;">
+1930
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+3.02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.72
+</td>
+<td style="text-align:left;">
+0.168
+</td>
+<td style="text-align:left;">
+7.7e-34
+</td>
+<td style="text-align:left;">
+7.7e-34
+</td>
+<td style="text-align:left;">
+86
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.72
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.737
+</td>
+<td style="text-align:left;">
+0.0583
+</td>
+<td style="text-align:left;">
+1.67e-39
+</td>
+<td style="text-align:left;">
+2.65e-39
+</td>
+<td style="text-align:left;">
+387
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.91
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.662
+</td>
+<td style="text-align:left;">
+0.0452
+</td>
+<td style="text-align:left;">
+7.78e-24
+</td>
+<td style="text-align:left;">
+1.51e-23
+</td>
+<td style="text-align:left;">
+1410
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.673
+</td>
+<td style="text-align:left;">
+0.0596
+</td>
+<td style="text-align:left;">
+8.4e-32
+</td>
+<td style="text-align:left;">
+1.45e-31
+</td>
+<td style="text-align:left;">
+321
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.72
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.665
+</td>
+<td style="text-align:left;">
+0.06
+</td>
+<td style="text-align:left;">
+1.6e-30
+</td>
+<td style="text-align:left;">
+2.34e-30
+</td>
+<td style="text-align:left;">
+303
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.607
+</td>
+<td style="text-align:left;">
+0.0606
+</td>
+<td style="text-align:left;">
+3.08e-25
+</td>
+<td style="text-align:left;">
+5.27e-25
+</td>
+<td style="text-align:left;">
+275
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.53
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.597
+</td>
+<td style="text-align:left;">
+0.061
+</td>
+<td style="text-align:left;">
+2.11e-24
+</td>
+<td style="text-align:left;">
+2.61e-24
+</td>
+<td style="text-align:left;">
+263
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.52
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.58
+</td>
+<td style="text-align:left;">
+0.174
+</td>
+<td style="text-align:left;">
+1.17e-31
+</td>
+<td style="text-align:left;">
+1.17e-31
+</td>
+<td style="text-align:left;">
+107
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+10.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.52
+</td>
+<td style="text-align:left;">
+0.169
+</td>
+<td style="text-align:left;">
+2.63e-29
+</td>
+<td style="text-align:left;">
+2.63e-29
+</td>
+<td style="text-align:left;">
+93
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+8.65
+</td>
+</tr>
+<tr grouplength="33">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L4</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005164" class="uri">GO:0005164</a>
+</td>
+<td style="text-align:left;">
+tumor necrosis factor receptor binding
+</td>
+<td style="text-align:left;">
+0.975
+</td>
+<td style="text-align:left;color: green !important;">
+1.98
+</td>
+<td style="text-align:left;">
+0.363
+</td>
+<td style="text-align:left;">
+1.94e-07
+</td>
+<td style="text-align:left;">
+1.94e-07
+</td>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+30
+</td>
+<td style="text-align:left;">
+9.13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005164" class="uri">GO:0005164</a>
+</td>
+<td style="text-align:left;">
+tumor necrosis factor receptor binding
+</td>
+<td style="text-align:left;">
+0.967
+</td>
+<td style="text-align:left;color: green !important;">
+1.92
+</td>
+<td style="text-align:left;">
+0.363
+</td>
+<td style="text-align:left;">
+3.58e-07
+</td>
+<td style="text-align:left;">
+3.58e-07
+</td>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+30
+</td>
+<td style="text-align:left;">
+8.68
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005164" class="uri">GO:0005164</a>
+</td>
+<td style="text-align:left;">
+tumor necrosis factor receptor binding
+</td>
+<td style="text-align:left;">
+0.948
+</td>
+<td style="text-align:left;color: green !important;">
+1.85
+</td>
+<td style="text-align:left;">
+0.363
+</td>
+<td style="text-align:left;">
+8.04e-07
+</td>
+<td style="text-align:left;">
+8.04e-07
+</td>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+30
+</td>
+<td style="text-align:left;">
+8.13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0030545" class="uri">GO:0030545</a>
+</td>
+<td style="text-align:left;">
+receptor regulator activity
+</td>
+<td style="text-align:left;">
+0.861
+</td>
+<td style="text-align:left;color: red !important;">
+-0.941
+</td>
+<td style="text-align:left;">
+0.122
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+2.54e-09
+</td>
+<td style="text-align:left;">
+47
+</td>
+<td style="text-align:left;">
+345
+</td>
+<td style="text-align:left;">
+0.581
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0008137" class="uri">GO:0008137</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (ubiquinone) activity
+</td>
+<td style="text-align:left;">
+0.393
+</td>
+<td style="text-align:left;color: green !important;">
+1.74
+</td>
+<td style="text-align:left;">
+0.294
+</td>
+<td style="text-align:left;">
+6.03e-07
+</td>
+<td style="text-align:left;">
+6.03e-07
+</td>
+<td style="text-align:left;">
+25
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+5.74
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0050136" class="uri">GO:0050136</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (quinone) activity
+</td>
+<td style="text-align:left;">
+0.393
+</td>
+<td style="text-align:left;color: green !important;">
+1.74
+</td>
+<td style="text-align:left;">
+0.294
+</td>
+<td style="text-align:left;">
+6.03e-07
+</td>
+<td style="text-align:left;">
+6.03e-07
+</td>
+<td style="text-align:left;">
+25
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+5.74
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0008137" class="uri">GO:0008137</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (ubiquinone) activity
+</td>
+<td style="text-align:left;">
+0.356
+</td>
+<td style="text-align:left;color: green !important;">
+1.8
+</td>
+<td style="text-align:left;">
+0.298
+</td>
+<td style="text-align:left;">
+4.95e-06
+</td>
+<td style="text-align:left;">
+4.95e-06
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+5.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0050136" class="uri">GO:0050136</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (quinone) activity
+</td>
+<td style="text-align:left;">
+0.356
+</td>
+<td style="text-align:left;color: green !important;">
+1.8
+</td>
+<td style="text-align:left;">
+0.298
+</td>
+<td style="text-align:left;">
+4.95e-06
+</td>
+<td style="text-align:left;">
+4.95e-06
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+5.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0008137" class="uri">GO:0008137</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (ubiquinone) activity
+</td>
+<td style="text-align:left;">
+0.352
+</td>
+<td style="text-align:left;color: green !important;">
+1.67
+</td>
+<td style="text-align:left;">
+0.297
+</td>
+<td style="text-align:left;">
+2.09e-05
+</td>
+<td style="text-align:left;">
+2.09e-05
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+4.65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0050136" class="uri">GO:0050136</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (quinone) activity
+</td>
+<td style="text-align:left;">
+0.352
+</td>
+<td style="text-align:left;color: green !important;">
+1.67
+</td>
+<td style="text-align:left;">
+0.297
+</td>
+<td style="text-align:left;">
+2.09e-05
+</td>
+<td style="text-align:left;">
+2.09e-05
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+4.65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0008137" class="uri">GO:0008137</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (ubiquinone) activity
+</td>
+<td style="text-align:left;">
+0.334
+</td>
+<td style="text-align:left;color: green !important;">
+1.71
+</td>
+<td style="text-align:left;">
+0.3
+</td>
+<td style="text-align:left;">
+3.26e-05
+</td>
+<td style="text-align:left;">
+3.26e-05
+</td>
+<td style="text-align:left;">
+16
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+4.64
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0050136" class="uri">GO:0050136</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (quinone) activity
+</td>
+<td style="text-align:left;">
+0.334
+</td>
+<td style="text-align:left;color: green !important;">
+1.71
+</td>
+<td style="text-align:left;">
+0.3
+</td>
+<td style="text-align:left;">
+3.26e-05
+</td>
+<td style="text-align:left;">
+3.26e-05
+</td>
+<td style="text-align:left;">
+16
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+4.64
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003954" class="uri">GO:0003954</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase activity
+</td>
+<td style="text-align:left;">
+0.214
+</td>
+<td style="text-align:left;color: green !important;">
+1.63
+</td>
+<td style="text-align:left;">
+0.294
+</td>
+<td style="text-align:left;">
+2.95e-05
+</td>
+<td style="text-align:left;">
+2.95e-05
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+47
+</td>
+<td style="text-align:left;">
+4.48
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003954" class="uri">GO:0003954</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase activity
+</td>
+<td style="text-align:left;">
+0.211
+</td>
+<td style="text-align:left;color: green !important;">
+1.67
+</td>
+<td style="text-align:left;">
+0.298
+</td>
+<td style="text-align:left;">
+4.42e-05
+</td>
+<td style="text-align:left;">
+4.42e-05
+</td>
+<td style="text-align:left;">
+16
+</td>
+<td style="text-align:left;">
+47
+</td>
+<td style="text-align:left;">
+4.49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003954" class="uri">GO:0003954</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase activity
+</td>
+<td style="text-align:left;">
+0.21
+</td>
+<td style="text-align:left;color: green !important;">
+1.76
+</td>
+<td style="text-align:left;">
+0.295
+</td>
+<td style="text-align:left;">
+7.09e-06
+</td>
+<td style="text-align:left;">
+7.09e-06
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+47
+</td>
+<td style="text-align:left;">
+4.97
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003954" class="uri">GO:0003954</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase activity
+</td>
+<td style="text-align:left;">
+0.197
+</td>
+<td style="text-align:left;color: green !important;">
+1.69
+</td>
+<td style="text-align:left;">
+0.291
+</td>
+<td style="text-align:left;">
+1.03e-06
+</td>
+<td style="text-align:left;">
+1.03e-06
+</td>
+<td style="text-align:left;">
+25
+</td>
+<td style="text-align:left;">
+47
+</td>
+<td style="text-align:left;">
+5.48
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0048018" class="uri">GO:0048018</a>
+</td>
+<td style="text-align:left;">
+receptor ligand activity
+</td>
+<td style="text-align:left;">
+0.139
+</td>
+<td style="text-align:left;color: red !important;">
+-0.949
+</td>
+<td style="text-align:left;">
+0.127
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+8.83e-09
+</td>
+<td style="text-align:left;">
+43
+</td>
+<td style="text-align:left;">
+317
+</td>
+<td style="text-align:left;">
+0.578
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0016655" class="uri">GO:0016655</a>
+</td>
+<td style="text-align:left;">
+oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor
+</td>
+<td style="text-align:left;">
+0.117
+</td>
+<td style="text-align:left;color: green !important;">
+1.53
+</td>
+<td style="text-align:left;">
+0.277
+</td>
+<td style="text-align:left;">
+3.62e-05
+</td>
+<td style="text-align:left;">
+3.62e-05
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+56
+</td>
+<td style="text-align:left;">
+4.12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0016655" class="uri">GO:0016655</a>
+</td>
+<td style="text-align:left;">
+oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor
+</td>
+<td style="text-align:left;">
+0.0768
+</td>
+<td style="text-align:left;color: green !important;">
+1.6
+</td>
+<td style="text-align:left;">
+0.275
+</td>
+<td style="text-align:left;">
+7.74e-06
+</td>
+<td style="text-align:left;">
+7.74e-06
+</td>
+<td style="text-align:left;">
+20
+</td>
+<td style="text-align:left;">
+56
+</td>
+<td style="text-align:left;">
+4.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0016655" class="uri">GO:0016655</a>
+</td>
+<td style="text-align:left;">
+oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor
+</td>
+<td style="text-align:left;">
+0.0755
+</td>
+<td style="text-align:left;color: green !important;">
+1.47
+</td>
+<td style="text-align:left;">
+0.274
+</td>
+<td style="text-align:left;">
+3.57e-05
+</td>
+<td style="text-align:left;">
+3.57e-05
+</td>
+<td style="text-align:left;">
+20
+</td>
+<td style="text-align:left;">
+56
+</td>
+<td style="text-align:left;">
+4.02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0032813" class="uri">GO:0032813</a>
+</td>
+<td style="text-align:left;">
+tumor necrosis factor receptor superfamily binding
+</td>
+<td style="text-align:left;">
+0.0233
+</td>
+<td style="text-align:left;color: green !important;">
+1.39
+</td>
+<td style="text-align:left;">
+0.319
+</td>
+<td style="text-align:left;">
+1.83e-05
+</td>
+<td style="text-align:left;">
+1.83e-05
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+42
+</td>
+<td style="text-align:left;">
+5.16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0032813" class="uri">GO:0032813</a>
+</td>
+<td style="text-align:left;">
+tumor necrosis factor receptor superfamily binding
+</td>
+<td style="text-align:left;">
+0.0217
+</td>
+<td style="text-align:left;color: green !important;">
+1.45
+</td>
+<td style="text-align:left;">
+0.319
+</td>
+<td style="text-align:left;">
+8.25e-06
+</td>
+<td style="text-align:left;">
+8.25e-06
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+42
+</td>
+<td style="text-align:left;">
+5.51
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0032813" class="uri">GO:0032813</a>
+</td>
+<td style="text-align:left;">
+tumor necrosis factor receptor superfamily binding
+</td>
+<td style="text-align:left;">
+0.0202
+</td>
+<td style="text-align:left;color: green !important;">
+1.51
+</td>
+<td style="text-align:left;">
+0.319
+</td>
+<td style="text-align:left;">
+4.49e-06
+</td>
+<td style="text-align:left;">
+4.49e-06
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+42
+</td>
+<td style="text-align:left;">
+5.79
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0016655" class="uri">GO:0016655</a>
+</td>
+<td style="text-align:left;">
+oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor
+</td>
+<td style="text-align:left;">
+0.0154
+</td>
+<td style="text-align:left;color: green !important;">
+1.45
+</td>
+<td style="text-align:left;">
+0.27
+</td>
+<td style="text-align:left;">
+4.64e-06
+</td>
+<td style="text-align:left;">
+6.59e-06
+</td>
+<td style="text-align:left;">
+27
+</td>
+<td style="text-align:left;">
+56
+</td>
+<td style="text-align:left;">
+4.49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0036402" class="uri">GO:0036402</a>
+</td>
+<td style="text-align:left;">
+proteasome-activating ATPase activity
+</td>
+<td style="text-align:left;">
+0.00248
+</td>
+<td style="text-align:left;color: green !important;">
+2.95
+</td>
+<td style="text-align:left;">
+0.834
+</td>
+<td style="text-align:left;">
+8.18e-05
+</td>
+<td style="text-align:left;">
+8.18e-05
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+46.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0036402" class="uri">GO:0036402</a>
+</td>
+<td style="text-align:left;">
+proteasome-activating ATPase activity
+</td>
+<td style="text-align:left;">
+0.00131
+</td>
+<td style="text-align:left;color: green !important;">
+3.08
+</td>
+<td style="text-align:left;">
+0.847
+</td>
+<td style="text-align:left;">
+5.93e-05
+</td>
+<td style="text-align:left;">
+5.93e-05
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+49.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0008137" class="uri">GO:0008137</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (ubiquinone) activity
+</td>
+<td style="text-align:left;">
+0.000569
+</td>
+<td style="text-align:left;color: green !important;">
+1.15
+</td>
+<td style="text-align:left;">
+0.343
+</td>
+<td style="text-align:left;">
+6.24e-05
+</td>
+<td style="text-align:left;">
+6.24e-05
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+4.49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0050136" class="uri">GO:0050136</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (quinone) activity
+</td>
+<td style="text-align:left;">
+0.000569
+</td>
+<td style="text-align:left;color: green !important;">
+1.15
+</td>
+<td style="text-align:left;">
+0.343
+</td>
+<td style="text-align:left;">
+6.24e-05
+</td>
+<td style="text-align:left;">
+6.24e-05
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+4.49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003954" class="uri">GO:0003954</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase activity
+</td>
+<td style="text-align:left;">
+0.000434
+</td>
+<td style="text-align:left;color: green !important;">
+1.11
+</td>
+<td style="text-align:left;">
+0.339
+</td>
+<td style="text-align:left;">
+8.25e-05
+</td>
+<td style="text-align:left;">
+8.25e-05
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+47
+</td>
+<td style="text-align:left;">
+4.35
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0004911" class="uri">GO:0004911</a>
+</td>
+<td style="text-align:left;">
+interleukin-2 receptor activity
+</td>
+<td style="text-align:left;">
+0.000413
+</td>
+<td style="text-align:left;color: green !important;">
+3.15
+</td>
+<td style="text-align:left;">
+1.09
+</td>
+<td style="text-align:left;">
+0.00128
+</td>
+<td style="text-align:left;">
+0.00128
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+Inf
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0019976" class="uri">GO:0019976</a>
+</td>
+<td style="text-align:left;">
+interleukin-2 binding
+</td>
+<td style="text-align:left;">
+0.000413
+</td>
+<td style="text-align:left;color: green !important;">
+3.15
+</td>
+<td style="text-align:left;">
+1.09
+</td>
+<td style="text-align:left;">
+0.00128
+</td>
+<td style="text-align:left;">
+0.00128
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+Inf
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0016655" class="uri">GO:0016655</a>
+</td>
+<td style="text-align:left;">
+oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor
+</td>
+<td style="text-align:left;">
+0.000408
+</td>
+<td style="text-align:left;color: green !important;">
+1.02
+</td>
+<td style="text-align:left;">
+0.31
+</td>
+<td style="text-align:left;">
+5.78e-05
+</td>
+<td style="text-align:left;">
+5.78e-05
+</td>
+<td style="text-align:left;">
+17
+</td>
+<td style="text-align:left;">
+56
+</td>
+<td style="text-align:left;">
+4.05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0046933" class="uri">GO:0046933</a>
+</td>
+<td style="text-align:left;">
+proton-transporting ATP synthase activity, rotational mechanism
+</td>
+<td style="text-align:left;">
+0.000387
+</td>
+<td style="text-align:left;color: green !important;">
+1.75
+</td>
+<td style="text-align:left;">
+0.567
+</td>
+<td style="text-align:left;">
+0.000826
+</td>
+<td style="text-align:left;">
+0.000826
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+16
+</td>
+<td style="text-align:left;">
+7.19
+</td>
+</tr>
+<tr grouplength="5">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L5</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0015267" class="uri">GO:0015267</a>
+</td>
+<td style="text-align:left;">
+channel activity
+</td>
+<td style="text-align:left;">
+0.401
+</td>
+<td style="text-align:left;color: red !important;">
+-0.893
+</td>
+<td style="text-align:left;">
+0.129
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6.69e-12
+</td>
+<td style="text-align:left;">
+36
+</td>
+<td style="text-align:left;">
+319
+</td>
+<td style="text-align:left;">
+0.467
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0022803" class="uri">GO:0022803</a>
+</td>
+<td style="text-align:left;">
+passive transmembrane transporter activity
+</td>
+<td style="text-align:left;">
+0.401
+</td>
+<td style="text-align:left;color: red !important;">
+-0.893
+</td>
+<td style="text-align:left;">
+0.129
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6.69e-12
+</td>
+<td style="text-align:left;">
+36
+</td>
+<td style="text-align:left;">
+319
+</td>
+<td style="text-align:left;">
+0.467
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0022838" class="uri">GO:0022838</a>
+</td>
+<td style="text-align:left;">
+substrate-specific channel activity
+</td>
+<td style="text-align:left;">
+0.111
+</td>
+<td style="text-align:left;color: red !important;">
+-0.892
+</td>
+<td style="text-align:left;">
+0.133
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+2.82e-11
+</td>
+<td style="text-align:left;">
+34
+</td>
+<td style="text-align:left;">
+302
+</td>
+<td style="text-align:left;">
+0.466
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005216" class="uri">GO:0005216</a>
+</td>
+<td style="text-align:left;">
+ion channel activity
+</td>
+<td style="text-align:left;">
+0.0606
+</td>
+<td style="text-align:left;color: red !important;">
+-0.893
+</td>
+<td style="text-align:left;">
+0.134
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+5.68e-11
+</td>
+<td style="text-align:left;">
+33
+</td>
+<td style="text-align:left;">
+293
+</td>
+<td style="text-align:left;">
+0.467
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005261" class="uri">GO:0005261</a>
+</td>
+<td style="text-align:left;">
+cation channel activity
+</td>
+<td style="text-align:left;">
+0.0171
+</td>
+<td style="text-align:left;color: red !important;">
+-0.985
+</td>
+<td style="text-align:left;">
+0.153
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+7.97e-11
+</td>
+<td style="text-align:left;">
+21
+</td>
+<td style="text-align:left;">
+223
+</td>
+<td style="text-align:left;">
+0.383
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L6</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0000981" class="uri">GO:0000981</a>
+</td>
+<td style="text-align:left;">
+DNA-binding transcription factor activity, RNA polymerase II-specific
+</td>
+<td style="text-align:left;">
+0.978
+</td>
+<td style="text-align:left;color: red !important;">
+-0.44
+</td>
+<td style="text-align:left;">
+0.0625
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6.62e-13
+</td>
+<td style="text-align:left;">
+244
+</td>
+<td style="text-align:left;">
+1300
+</td>
+<td style="text-align:left;">
+0.847
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003700" class="uri">GO:0003700</a>
+</td>
+<td style="text-align:left;">
+DNA-binding transcription factor activity
+</td>
+<td style="text-align:left;">
+0.0224
+</td>
+<td style="text-align:left;color: red !important;">
+-0.392
+</td>
+<td style="text-align:left;">
+0.0604
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1.37e-10
+</td>
+<td style="text-align:left;">
+277
+</td>
+<td style="text-align:left;">
+1390
+</td>
+<td style="text-align:left;">
+0.915
+</td>
+</tr>
+<tr grouplength="10">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L7</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0008137" class="uri">GO:0008137</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (ubiquinone) activity
+</td>
+<td style="text-align:left;">
+0.362
+</td>
+<td style="text-align:left;color: green !important;">
+1.48
+</td>
+<td style="text-align:left;">
+0.293
+</td>
+<td style="text-align:left;">
+5.59e-06
+</td>
+<td style="text-align:left;">
+6.11e-06
+</td>
+<td style="text-align:left;">
+27
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+5.31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0050136" class="uri">GO:0050136</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase (quinone) activity
+</td>
+<td style="text-align:left;">
+0.362
+</td>
+<td style="text-align:left;color: green !important;">
+1.48
+</td>
+<td style="text-align:left;">
+0.293
+</td>
+<td style="text-align:left;">
+5.59e-06
+</td>
+<td style="text-align:left;">
+6.11e-06
+</td>
+<td style="text-align:left;">
+27
+</td>
+<td style="text-align:left;">
+46
+</td>
+<td style="text-align:left;">
+5.31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003954" class="uri">GO:0003954</a>
+</td>
+<td style="text-align:left;">
+NADH dehydrogenase activity
+</td>
+<td style="text-align:left;">
+0.184
+</td>
+<td style="text-align:left;color: green !important;">
+1.42
+</td>
+<td style="text-align:left;">
+0.29
+</td>
+<td style="text-align:left;">
+9.77e-06
+</td>
+<td style="text-align:left;">
+1.69e-05
+</td>
+<td style="text-align:left;">
+27
+</td>
+<td style="text-align:left;">
+47
+</td>
+<td style="text-align:left;">
+5.04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0016655" class="uri">GO:0016655</a>
+</td>
+<td style="text-align:left;">
+oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor
+</td>
+<td style="text-align:left;">
+0.0427
+</td>
+<td style="text-align:left;color: green !important;">
+1.23
+</td>
+<td style="text-align:left;">
+0.268
+</td>
+<td style="text-align:left;">
+2.09e-05
+</td>
+<td style="text-align:left;">
+2.62e-05
+</td>
+<td style="text-align:left;">
+30
+</td>
+<td style="text-align:left;">
+56
+</td>
+<td style="text-align:left;">
+4.31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0009055" class="uri">GO:0009055</a>
+</td>
+<td style="text-align:left;">
+electron transfer activity
+</td>
+<td style="text-align:left;">
+0.0201
+</td>
+<td style="text-align:left;color: green !important;">
+0.939
+</td>
+<td style="text-align:left;">
+0.209
+</td>
+<td style="text-align:left;">
+9.18e-06
+</td>
+<td style="text-align:left;">
+1.15e-05
+</td>
+<td style="text-align:left;">
+47
+</td>
+<td style="text-align:left;">
+99
+</td>
+<td style="text-align:left;">
+3.39
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0016651" class="uri">GO:0016651</a>
+</td>
+<td style="text-align:left;">
+oxidoreductase activity, acting on NAD(P)H
+</td>
+<td style="text-align:left;">
+0.00767
+</td>
+<td style="text-align:left;color: green !important;">
+0.886
+</td>
+<td style="text-align:left;">
+0.207
+</td>
+<td style="text-align:left;">
+9.41e-05
+</td>
+<td style="text-align:left;">
+0.000133
+</td>
+<td style="text-align:left;">
+44
+</td>
+<td style="text-align:left;">
+98
+</td>
+<td style="text-align:left;">
+3.05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005164" class="uri">GO:0005164</a>
+</td>
+<td style="text-align:left;">
+tumor necrosis factor receptor binding
+</td>
+<td style="text-align:left;">
+0.00117
+</td>
+<td style="text-align:left;color: green !important;">
+1.38
+</td>
+<td style="text-align:left;">
+0.378
+</td>
+<td style="text-align:left;">
+0.000551
+</td>
+<td style="text-align:left;">
+0.000632
+</td>
+<td style="text-align:left;">
+17
+</td>
+<td style="text-align:left;">
+30
+</td>
+<td style="text-align:left;">
+4.88
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0032813" class="uri">GO:0032813</a>
+</td>
+<td style="text-align:left;">
+tumor necrosis factor receptor superfamily binding
+</td>
+<td style="text-align:left;">
+0.000626
+</td>
+<td style="text-align:left;color: green !important;">
+1.13
+</td>
+<td style="text-align:left;">
+0.32
+</td>
+<td style="text-align:left;">
+0.000398
+</td>
+<td style="text-align:left;">
+0.000648
+</td>
+<td style="text-align:left;">
+22
+</td>
+<td style="text-align:left;">
+42
+</td>
+<td style="text-align:left;">
+4.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0016675" class="uri">GO:0016675</a>
+</td>
+<td style="text-align:left;">
+oxidoreductase activity, acting on a heme group of donors
+</td>
+<td style="text-align:left;">
+0.000602
+</td>
+<td style="text-align:left;color: green !important;">
+1.39
+</td>
+<td style="text-align:left;">
+0.404
+</td>
+<td style="text-align:left;">
+0.000509
+</td>
+<td style="text-align:left;">
+0.000899
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+25
+</td>
+<td style="text-align:left;">
+5.59
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0019206" class="uri">GO:0019206</a>
+</td>
+<td style="text-align:left;">
+nucleoside kinase activity
+</td>
+<td style="text-align:left;">
+0.000331
+</td>
+<td style="text-align:left;color: green !important;">
+1.63
+</td>
+<td style="text-align:left;">
+0.51
+</td>
+<td style="text-align:left;">
+0.00148
+</td>
+<td style="text-align:left;">
+0.00148
+</td>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+7.45
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L8</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0004888" class="uri">GO:0004888</a>
+</td>
+<td style="text-align:left;">
+transmembrane signaling receptor activity
+</td>
+<td style="text-align:left;">
+0.913
+</td>
+<td style="text-align:left;color: red !important;">
+-0.554
+</td>
+<td style="text-align:left;">
+0.0904
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+3.27e-11
+</td>
+<td style="text-align:left;">
+96
+</td>
+<td style="text-align:left;">
+609
+</td>
+<td style="text-align:left;">
+0.687
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0004930" class="uri">GO:0004930</a>
+</td>
+<td style="text-align:left;">
+G protein-coupled receptor activity
+</td>
+<td style="text-align:left;">
+0.0627
+</td>
+<td style="text-align:left;color: red !important;">
+-0.722
+</td>
+<td style="text-align:left;">
+0.129
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1.09e-10
+</td>
+<td style="text-align:left;">
+33
+</td>
+<td style="text-align:left;">
+289
+</td>
+<td style="text-align:left;">
+0.474
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0038023" class="uri">GO:0038023</a>
+</td>
+<td style="text-align:left;">
+signaling receptor activity
+</td>
+<td style="text-align:left;">
+0.0126
+</td>
+<td style="text-align:left;color: red !important;">
+-0.427
+</td>
+<td style="text-align:left;">
+0.0789
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1.24e-09
+</td>
+<td style="text-align:left;">
+143
+</td>
+<td style="text-align:left;">
+796
+</td>
+<td style="text-align:left;">
+0.806
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0060089" class="uri">GO:0060089</a>
+</td>
+<td style="text-align:left;">
+molecular transducer activity
+</td>
+<td style="text-align:left;">
+0.0117
+</td>
+<td style="text-align:left;color: red !important;">
+-0.412
+</td>
+<td style="text-align:left;">
+0.0763
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1.87e-09
+</td>
+<td style="text-align:left;">
+156
+</td>
+<td style="text-align:left;">
+850
+</td>
+<td style="text-align:left;">
+0.828
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L9</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005201" class="uri">GO:0005201</a>
+</td>
+<td style="text-align:left;">
+extracellular matrix structural constituent
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: red !important;">
+-1.57
+</td>
+<td style="text-align:left;">
+0.233
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+5.72e-08
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+110
+</td>
+<td style="text-align:left;">
+0.251
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>res2 &lt;- tccm_ebnm_susie_fit %&gt;%
+  get_plot_tbl(., ora)</code></pre>
+<pre><code>Joining, by = c(&quot;experiment&quot;, &quot;db&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>html_tables2 &lt;- tccm_ebnm_susie_fit %&gt;%
+  get_table_tbl(., ora)</code></pre>
+<pre><code>Joining, by = c(&quot;experiment&quot;, &quot;db&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;
+Joining, by = &quot;geneSet&quot;</code></pre>
+<pre class="r"><code>html_tables2$k1$gomf %&gt;%
+  report_susie_credible_sets()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+beta.se
+</th>
+<th style="text-align:left;">
+pHypergeometric
+</th>
+<th style="text-align:left;">
+pFishersExact
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+oddsRatio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="10">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+4.19e-54
+</td>
+<td style="text-align:left;">
+7.8e-54
+</td>
+<td style="text-align:left;">
+662
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+3.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+1.28e-48
+</td>
+<td style="text-align:left;">
+2.26e-48
+</td>
+<td style="text-align:left;">
+541
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+3.14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+9.15e-43
+</td>
+<td style="text-align:left;">
+1.14e-42
+</td>
+<td style="text-align:left;">
+463
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.96
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+1.61e-42
+</td>
+<td style="text-align:left;">
+2.75e-42
+</td>
+<td style="text-align:left;">
+421
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.97
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+1.67e-39
+</td>
+<td style="text-align:left;">
+2.65e-39
+</td>
+<td style="text-align:left;">
+387
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.91
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+1.24e-34
+</td>
+<td style="text-align:left;">
+1.67e-34
+</td>
+<td style="text-align:left;">
+348
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.78
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+8.4e-32
+</td>
+<td style="text-align:left;">
+1.45e-31
+</td>
+<td style="text-align:left;">
+321
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.72
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+1.6e-30
+</td>
+<td style="text-align:left;">
+2.34e-30
+</td>
+<td style="text-align:left;">
+303
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+3.08e-25
+</td>
+<td style="text-align:left;">
+5.27e-25
+</td>
+<td style="text-align:left;">
+275
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.53
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003723" class="uri">GO:0003723</a>
+</td>
+<td style="text-align:left;">
+RNA binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.414
+</td>
+<td style="text-align:left;">
+0.055
+</td>
+<td style="text-align:left;">
+2.11e-24
+</td>
+<td style="text-align:left;">
+2.61e-24
+</td>
+<td style="text-align:left;">
+263
+</td>
+<td style="text-align:left;">
+1490
+</td>
+<td style="text-align:left;">
+2.52
+</td>
+</tr>
+<tr grouplength="10">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+2.28e-28
+</td>
+<td style="text-align:left;">
+3.95e-28
+</td>
+<td style="text-align:left;">
+2910
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+3.63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+8.38e-26
+</td>
+<td style="text-align:left;">
+1.44e-25
+</td>
+<td style="text-align:left;">
+2280
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+3.16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+2.96e-26
+</td>
+<td style="text-align:left;">
+5.66e-26
+</td>
+<td style="text-align:left;">
+1930
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+3.02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+4.65e-24
+</td>
+<td style="text-align:left;">
+8.53e-24
+</td>
+<td style="text-align:left;">
+1690
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.86
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+2.65e-25
+</td>
+<td style="text-align:left;">
+5.55e-25
+</td>
+<td style="text-align:left;">
+1560
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.88
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+7.78e-24
+</td>
+<td style="text-align:left;">
+1.51e-23
+</td>
+<td style="text-align:left;">
+1410
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+1.14e-23
+</td>
+<td style="text-align:left;">
+1.95e-23
+</td>
+<td style="text-align:left;">
+1300
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.78
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+4.99e-26
+</td>
+<td style="text-align:left;">
+9.12e-26
+</td>
+<td style="text-align:left;">
+1240
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+4.26e-24
+</td>
+<td style="text-align:left;">
+7.49e-24
+</td>
+<td style="text-align:left;">
+1160
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.81
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005515" class="uri">GO:0005515</a>
+</td>
+<td style="text-align:left;">
+protein binding
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+0.494
+</td>
+<td style="text-align:left;">
+0.0384
+</td>
+<td style="text-align:left;">
+7.86e-23
+</td>
+<td style="text-align:left;">
+1.44e-22
+</td>
+<td style="text-align:left;">
+1100
+</td>
+<td style="text-align:left;">
+9870
+</td>
+<td style="text-align:left;">
+2.76
+</td>
+</tr>
+<tr grouplength="10">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L3</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+1.17e-31
+</td>
+<td style="text-align:left;">
+1.17e-31
+</td>
+<td style="text-align:left;">
+107
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+10.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+2.63e-29
+</td>
+<td style="text-align:left;">
+2.63e-29
+</td>
+<td style="text-align:left;">
+93
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+8.65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+6.43e-33
+</td>
+<td style="text-align:left;">
+6.43e-33
+</td>
+<td style="text-align:left;">
+90
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.51
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+7.7e-34
+</td>
+<td style="text-align:left;">
+7.7e-34
+</td>
+<td style="text-align:left;">
+86
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.72
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+2.04e-31
+</td>
+<td style="text-align:left;">
+2.04e-31
+</td>
+<td style="text-align:left;">
+80
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+7.99e-32
+</td>
+<td style="text-align:left;">
+7.99e-32
+</td>
+<td style="text-align:left;">
+77
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+2.31e-33
+</td>
+<td style="text-align:left;">
+2.31e-33
+</td>
+<td style="text-align:left;">
+76
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.79
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+1.49e-31
+</td>
+<td style="text-align:left;">
+1.49e-31
+</td>
+<td style="text-align:left;">
+72
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+9.37
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+6.86e-28
+</td>
+<td style="text-align:left;">
+6.86e-28
+</td>
+<td style="text-align:left;">
+66
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+8.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0003735" class="uri">GO:0003735</a>
+</td>
+<td style="text-align:left;">
+structural constituent of ribosome
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;color: green !important;">
+1.31
+</td>
+<td style="text-align:left;">
+0.178
+</td>
+<td style="text-align:left;">
+3.73e-29
+</td>
+<td style="text-align:left;">
+3.73e-29
+</td>
+<td style="text-align:left;">
+66
+</td>
+<td style="text-align:left;">
+146
+</td>
+<td style="text-align:left;">
+8.92
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.2 (2021-11-01)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+ [1] kableExtra_1.3.4    susieR_0.11.92      matrixStats_0.61.0 
+ [4] BiocGenerics_0.40.0 forcats_0.5.1       stringr_1.4.0      
+ [7] dplyr_1.0.8         purrr_0.3.4         readr_2.1.2        
+[10] tidyr_1.2.0         tibble_3.1.6        ggplot2_3.3.5      
+[13] tidyverse_1.3.1    
+
+loaded via a namespace (and not attached):
+  [1] colorspace_2.0-3        ellipsis_0.3.2          rprojroot_2.0.2        
+  [4] XVector_0.34.0          fs_1.5.2                rstudioapi_0.13        
+  [7] bit64_4.0.5             AnnotationDbi_1.56.2    fansi_1.0.2            
+ [10] lubridate_1.8.0         xml2_1.3.3              sparseMatrixStats_1.6.0
+ [13] codetools_0.2-18        doParallel_1.0.17       cachem_1.0.6           
+ [16] knitr_1.38              jsonlite_1.8.0          workflowr_1.7.0        
+ [19] apcluster_1.4.9         WebGestaltR_0.4.4       broom_0.7.12           
+ [22] dbplyr_2.1.1            png_0.1-7               BiocManager_1.30.16    
+ [25] compiler_4.1.2          httr_1.4.2              backports_1.4.1        
+ [28] RcppZiggurat_0.1.6      assertthat_0.2.1        Matrix_1.4-0           
+ [31] fastmap_1.1.0           cli_3.2.0               later_1.3.0            
+ [34] htmltools_0.5.2         tools_4.1.2             igraph_1.2.11          
+ [37] gtable_0.3.0            glue_1.6.2              GenomeInfoDbData_1.2.7 
+ [40] doRNG_1.8.2             Rcpp_1.0.8.2            Biobase_2.54.0         
+ [43] cellranger_1.1.0        jquerylib_0.1.4         vctrs_0.3.8            
+ [46] Biostrings_2.62.0       svglite_2.1.0           iterators_1.0.14       
+ [49] xfun_0.30               rvest_1.0.2             irlba_2.3.5            
+ [52] lifecycle_1.0.1         renv_0.15.4             rngtools_1.5.2         
+ [55] org.Hs.eg.db_3.14.0     zlibbioc_1.40.0         scales_1.1.1           
+ [58] vroom_1.5.7             MatrixGenerics_1.6.0    hms_1.1.1              
+ [61] promises_1.2.0.1        parallel_4.1.2          yaml_2.3.5             
+ [64] curl_4.3.2              memoise_2.0.1           sass_0.4.0             
+ [67] reshape_0.8.8           stringi_1.7.6           RSQLite_2.2.10         
+ [70] highr_0.9               S4Vectors_0.32.3        foreach_1.5.2          
+ [73] GenomeInfoDb_1.30.1     rlang_1.0.2             pkgconfig_2.0.3        
+ [76] systemfonts_1.0.4       bitops_1.0-7            evaluate_0.15          
+ [79] lattice_0.20-45         Rfast_2.0.6             bit_4.0.4              
+ [82] tidyselect_1.1.2        plyr_1.8.6              magrittr_2.0.2         
+ [85] R6_2.5.1                IRanges_2.28.0          generics_0.1.2         
+ [88] DBI_1.1.2               pillar_1.7.0            haven_2.4.3            
+ [91] whisker_0.4             withr_2.5.0             KEGGREST_1.34.0        
+ [94] RCurl_1.98-1.6          mixsqp_0.3-43           modelr_0.1.8           
+ [97] crayon_1.5.0            utf8_1.2.2              tzdb_0.2.0             
+[100] rmarkdown_2.13          grid_4.1.2              readxl_1.3.1           
+[103] blob_1.2.2              git2r_0.29.0            webshot_0.5.2          
+[106] reprex_2.0.1            digest_0.6.29           httpuv_1.6.5           
+[109] stats4_4.1.2            munsell_0.5.0           viridisLite_0.4.0      
+[112] bslib_0.3.1            </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
