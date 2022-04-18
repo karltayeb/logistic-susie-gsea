@@ -1,0 +1,188 @@
+---
+title: "scale_v_standardize_v_raw"
+author: "karltayeb"
+date: "2022-04-13"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+The way VEB.boost handles the intercept is better than estimating a fixed intercept.
+Here we try:
+* scaled X
+* centered X
+* untrasnformed X
+
+
+## Why does centering help?
+
+For a univariate regression we can think of centering/shifting $x$ as just shifting the intercept.
+
+That is the regression coefficients we estimate using a centered version of $x$,
+$\tilde x = x - \bar x$ will be 
+
+$$
+\tilde\beta_0 = \hat\beta_0 - \tilde\beta_1 \bar x\\
+\tilde \beta_1 = \hat \beta_1
+$$
+
+Where $(\hat\beta_0, \hat\beta_1)$ are the coefficients estimated from the un-centered $x$.
+
+Although a bit harder to visualize, the same holds true for multivariate $X$, where we center each column of $X$, the offsets get absorbed into the intercept in a deterministic way.
+
+So why would centering have an impact? I suppose when the model treats the slope and intercept differently there could be a difference. That is if we have a flat prior on the intercept and a regularized coefficient? But that doesn't quite line up for me since the coefficient estimates should be the same?
+
+```{r load.data}
+library(tidyverse)
+source('code/load_gene_sets.R')
+source('code/load_data.R')
+
+genesets <- load_gene_sets()
+data <- load_sc_pbmc()
+```
+
+```{r fit.l1}
+library(tictoc)
+source('code/logistic_susie_vb.R')
+source('code/enrichment_pipeline.R')
+
+do_logistic_susie2 = partial(do_logistic_susie, genesets=genesets, data=data)
+do_ora2 = partial(do_ora, genesets=genesets, data=data)
+
+tic('Logistic SuSiE Sparse X')
+susie.args = list(L=1, standardize=F, center=F, verbose=T)
+l1 <- do_logistic_susie2('CD19+ B','gomf',1e-4,susie.args = susie.args)
+toc()
+
+tic('Logistic SuSiE Centered X')
+susie.args = list(L=1, standardize=F, center=T, verbose=T)
+l1.centered <- do_logistic_susie2('CD19+ B','gomf',1e-4,susie.args = susie.args)
+toc()
+
+tic('Logistic SuSiE Standardized X')
+susie.args = list(L=1, standardize=T, center=T, verbose=T)
+l1.standardized <- do_logistic_susie2('CD19+ B','gomf',1e-4,susie.args = susie.args)
+toc()
+
+l1.combined <- rbind(l1, l1.centered, l1.standardized)
+l1.combined <- l1.combined %>%
+  mutate(X = c('X', 'X.centered', 'X.standardized'))
+ora = do_ora2('CD19+ B','gomf',1e-4)
+```
+
+```{r l10}
+tic('Logistic SuSiE Sparse X')
+susie.args = list(L=10, standardize=F, center=F, verbose=T)
+l10 <- do_logistic_susie2('CD19+ B','gomf',1e-4,susie.args = susie.args)
+toc()
+
+tic('Logistic SuSiE Standardized X')
+susie.args = list(L=10, standardize=F, center=T, verbose=T)
+l10.centered <- do_logistic_susie2('CD19+ B','gomf',1e-4,susie.args = susie.args)
+toc()
+
+tic('Logistic SuSiE Standardized X')
+susie.args = list(L=10, standardize=T, center=T, verbose=T)
+l10.standardized <- do_logistic_susie2('CD19+ B','gomf',1e-4,susie.args = susie.args)
+toc()
+
+l10.combined <- rbind(l10, l10.centered, l10.standardized)
+l10.combined <- l10.combined %>%
+  mutate(X = c('X', 'X.centered', 'X.standardized'))
+```
+
+
+```{r}
+get_cs_summary_condensed = function(fit){
+  fit %>%
+    get_credible_set_summary() %>%
+    group_by(geneSet) %>%
+    arrange(desc(alpha)) %>%
+    filter(row_number() == 1)
+}
+
+fits <- l1.combined
+
+# gene set summary
+res <- fits %>%
+  left_join(ora) %>%
+  mutate(
+    gs_summary = map(fit, get_gene_set_summary),
+    cs_summary = map(fit, get_cs_summary_condensed),
+    res = map2(gs_summary, cs_summary, ~ left_join(.x, .y, by='geneSet')),
+    res = map2(res, ora, ~ left_join(.x, .y))
+  ) %>%
+  select(-c(fit, susie.args, ora, gs_summary, cs_summary)) %>%
+  unnest(res)
+
+# gene set summary
+res.l10 <- l10.combined %>%
+  left_join(ora) %>%
+  mutate(
+    gs_summary = map(fit, get_gene_set_summary),
+    cs_summary = map(fit, get_cs_summary_condensed),
+    res = map2(gs_summary, cs_summary, ~ left_join(.x, .y, by='geneSet')),
+    res = map2(res, ora, ~ left_join(.x, .y))
+  ) %>%
+  select(-c(fit, susie.args, ora, gs_summary, cs_summary)) %>%
+  unnest(res)
+```
+
+```{r}
+plot(l1$fit[[1]]$mu, l1.centered$fit[[1]]$mu)
+```
+
+
+```{r susie.plots}
+library(susieR)
+par(mfrow=c(1,3))
+susie_plot(l1$fit[[1]], 'PIP')
+susie_plot(l1.centered$fit[[1]], 'PIP')
+susie_plot(l1.standardized$fit[[1]], 'PIP')
+```
+
+```{r}
+l1.combined$fit[[1]]$set$cs
+l1.combined$fit[[2]]$set$cs
+l1.combined$fit[[3]]$set$cs
+```
+
+
+
+
+```{r volcano.plots}
+get_ora_enrichments = function(tbl){
+   tbl %>% mutate(
+    padj = p.adjust(pFishersExact),
+    result = case_when(
+      padj < 0.05 & oddsRatio < 1 ~ 'depleted',
+      padj < 0.05 & oddsRatio > 1 ~ 'enriched',
+      TRUE ~ 'not significant'
+    )
+  )
+}
+
+do.volcano = function(res){
+  res %>% 
+    get_ora_enrichments %>%
+    ggplot(aes(x=log10(oddsRatio), y=-log10(pFishersExact), color=result)) +
+    geom_point() +
+    geom_point(
+      res %>% filter(in_cs, active_cs), 
+      mapping=aes(x=log10(oddsRatio), y=-log10(pFishersExact)),
+      color='black', pch=21, size=5) +
+    scale_color_manual(values = c('depleted' = 'coral',
+                                  'enriched' = 'dodgerblue',
+                                  'not significant' = 'grey'))
+}
+
+do.volcano(res) + facet_wrap('X')
+do.volcano(res.l10) + facet_wrap('X')
+```
+
+
+
+
+
