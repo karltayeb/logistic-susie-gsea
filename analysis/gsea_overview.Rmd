@@ -1,5 +1,5 @@
 ---
-title: "gsea_overview"
+title: "Exposition"
 author: "karltayeb"
 date: "2022-04-27"
 output: workflowr::wflow_html

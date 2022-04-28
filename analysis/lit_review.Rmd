@@ -1,5 +1,5 @@
 ---
-title: "lit_review"
+title: "Existing GSEA Methods"
 author: "karltayeb"
 date: "2022-04-27"
 output: workflowr::wflow_html
