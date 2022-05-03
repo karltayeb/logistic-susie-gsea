@@ -4,6 +4,7 @@ output:
   html_document: default
   pdf_document: default
 ---
+## Setup 
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
@@ -15,16 +16,16 @@ tar_unscript()
 options(clustermq.scheduler = "multiprocess")
 ```
 
-```{targets globals, tar_globals=TRUE}
+```{targets global-imports, tar_globals=TRUE}
+library(targets)
 library(tidyverse)
-library(tidyr)
 library(glue)
 library(tarchetypes)
 library(clustermq)
 library(conflicted)
+library(gseareg)
 
 # Manage naming conflicts
-
 conflict_prefer("select", "dplyr", "AnnotationDbi")
 conflict_prefer("filter", "dplyr")
 conflict_prefer("rename", "dplyr")
@@ -37,11 +38,9 @@ conflict_prefer("desc", "dplyr")
 require(GSEABenchmarkeR, quietly = T)
 require(EnrichmentBrowser, quietly = T)
 
-source('code/load_gene_sets.R')
-source('code/simulate_gene_lists.R')
-source('code/score_simulations.R')
-source('target_components/methods.R')
-source('target_components/factories.R')
+source('code/target_factories.R')
+source('code/target_simulate_gene_lists.R')
+source('code/target_score_simulation.R')
 
 options(clustermq.scheduler = "multiprocess")
 tar_option_set(workspace_on_error = TRUE)
@@ -52,25 +51,63 @@ tar_option_set(packages = c(
   "mr.ash.alpha", "VEB.Boost", "fastglm"))
 tar_option_set(memory='transient', garbage_collection = T, error='workspace')
 
-REP <- tar_toggle(1, 20)
-BATCH <- 1 #tar_toggle(1, 10)
+REP <- tar_toggle(1, 2)
+BATCH <- tar_toggle(1, 10)
 ```
 
-Near the top of the document, you may also wish to remove the `_targets_r` directory previously written by non-interactive runs of the report. Otherwise, your pipeline may contain superfluous targets.
+## Methods
 
+To add a method add a row to `method_lookup` and `score_lookup`
+`method_function` should take arguments `X` and `y`
+`score_function` should take arguments `fit` and `sim`
 
-## Get gene sets
-```{targets load-genesets}
-list(
-  tar_target(X.gonr, load.webGestalt.X())
-  #tar_target(X.gobp, load.gobp())
+```{targets method_bank, tar_globals=TRUE}
+fit_logistic_susie_l1 = function(X, y){
+  gseareg::fit_logistic_susie(X, y, L=1)
+}
+fit_linear_susie_l1 = function(X, y){
+  susieR::susie(X, y, L=1)
+}
+fit_logistic_susie_l10 = function(X, y){
+  gseareg::fit_logistic_susie(X, y, L=10)
+}
+fit_linear_susie_l10 = function(X, y){
+  susieR::susie(X, y, L=10)
+}
+
+method_lookup <- tribble(
+  ~method_name, ~method_function, ~method_args,
+  'ora', gseareg::fit_ora, list(),
+  'logistic_susie.l1', fit_logistic_susie_l1, list(L=1),
+  'linear_susie.l1', fit_linear_susie_l1, list(L=1),
+  'logistic_susie.l10', fit_logistic_susie_l10, list(L=1),
+  'linear_susie.l10', fit_linear_susie_l10, list(L=1),
+)
+
+score_ora = function(fit, sim){return(list(a=c(1, 2, 3)))}
+score_susie = function(fit, sim){return(list(a=c(1, 2, 3)))}
+
+score_lookup <- tribble(
+  ~method_name, ~score_function,
+  'ora', score_phyper,
+  'logistic_susie.l1', score_pip,
+  'linear_susie.l1', score_pip,
+  'logistic_susie.l10', score_pip,
+  'linear_susie.l10', score_pip
 )
 ```
 
+## Targets
 
-## Simulations
+### Get gene sets
+```{targets load-genesets}
+list(
+  tar_target(X.gonr, gseareg::load.webGestalt.X()),
+  tar_target(genesets, gseareg::load_gene_sets())
+)
+```
 
-## L1 Sim
+## L1 Simulation
 
 Simulate a single active gene set from `GO-BP no redundnant`
 
@@ -78,29 +115,70 @@ Simulate a single active gene set from `GO-BP no redundnant`
 ## set simulation parameters
 get.l1.sim.params <- function(){
   params <- crossing(
+<<<<<<< HEAD
     background.logit=c(-8, -6, -4, -2),
     active.logit=c(-2, -1, 0, 1, 2),
+=======
+    #background.logit=c(-8, -6, -4, -2),
+    #active.logit=c(-4, -2, 0, 2, 4),
+    background.logit=c(-2),
+    active.logit=c(0),
+>>>>>>> 689eb11fb5dbc931eb8b6b4a5c5efa65bad315c1
     sim_function = c('simulate.constant.sim'),
     X='X.gonr')
 
+  simulate.constant.sim
   params <- params %>% mutate(
     param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
   ) %>% rowwise() %>% mutate(
     params = list(setNames(c_across(!c(X, sim_function, param_names)), param_names))
   )
 }
-l1.gonr.sim.params <- get.l1.sim.params()
 
+# target metadata/specification
+l1.gonr.sim.params <- get.l1.sim.params()
+l1.gonr.methods <- method_lookup
+l1.gonr.score_lookup <- l1.gonr.methods %>%
+  left_join(score_lookup)
+
+# execute pipeline
+list(
+  make_sim_spec('l1.gonr', l1.gonr.sim.params, BATCH, REP),
+  sim_factory('l1.gonr', X.gonr, l1.gonr.spec),
+  fit_factory('l1.gonr', X.gonr, l1.gonr.sim, l1.gonr.methods),
+  score_factory('l1.gonr', l1.gonr.score_lookup)
+)
+```
+
+```{r}
+tar_visnetwork()
+```
+```{r}
+knitr::knit_exit()
+```
+
+
+
+```{targets l1.sim.old}
 ## pick methods to include in this sim
 l1.gonr.methods <- method_bank %>% dplyr::filter(
   method.name %in% c(
     'fet',
     'susie.10',
+<<<<<<< HEAD
+=======
+    'logistic.susie.10',
+>>>>>>> 689eb11fb5dbc931eb8b6b4a5c5efa65bad315c1
     'logistic.susie.veb.boost.10',
     'lasso.gaussian',
     'elastic.net.gaussian',
     'lasso.binomial',
+<<<<<<< HEAD
     'elastic.net.binomial'
+=======
+    'elastic.net.binomial',
+    'mr.ash.lasso'
+>>>>>>> 689eb11fb5dbc931eb8b6b4a5c5efa65bad315c1
   )) %>%
   mutate(ma_names = map(method_args, names))
 
@@ -137,6 +215,7 @@ constant.gonr.methods <- method_bank %>% dplyr::filter(
     'fet',
     'susie.10',
     'susie.20',
+    'logistic.susie.10',
     'logistic.susie.veb.boost.10',
     'logistic.susie.veb.boost.20',
     'lasso.gaussian',
@@ -146,12 +225,11 @@ constant.gonr.methods <- method_bank %>% dplyr::filter(
   )) %>%
   mutate(ma_names = map(method_args, names))
 
-
 list(
   make_sim_spec('constant.gonr', constant.gonr.sim.params, BATCH, REP),
   sim_factory('constant.gonr', X.gonr, constant.gonr.spec),
   fit_factory('constant.gonr', X.gonr, constant.gonr.sim, constant.gonr.methods),
-  score_factory('constant.gonr', constant.gonr.methods)
+  #score_factory('constant.gonr', constant.gonr.methods)
 )
 ```
 
@@ -187,6 +265,7 @@ constant.additive.gonr.methods <- method_bank %>% dplyr::filter(
     'fet',
     'susie.10',
     'susie.20',
+    'logistic.susie.10',
     'logistic.susie.veb.boost.10',
     'logistic.susie.veb.boost.20',
     'lasso.gaussian',

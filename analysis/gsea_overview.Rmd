@@ -1,0 +1,25 @@
+---
+title: "Exposition"
+author: "karltayeb"
+date: "2022-04-27"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Given a set of gene level statistics, GSEA seeks to test for the **enrichment** of "interesting" or "significant" genes in a **pre-defined set of genes**. Gene sets are typically groups of genes known to belong to the same biological pathway, implicated in disease, etc. There are many sources of gene sets: the Gene Ontology (GO), Molecular Signatures of Disease Database (MSigDB), Kyoto Encylopedia of Genes and Genomes, etc.
+
+Researches are typically interested in conducting GSEA to characterize the biological signal in their experiment. Consequently, GSEA is carried out in a highly parallel fashion across thousands of gene-sets from multiple databases, often leading to hundreds (or thousands!) of enrichments. Often enrichment results will exhibit considerable redundancy where many overlapping/nested gene sets are significantly enriched.
+
+Interpretation of these results are challenging. Given a long list of enriched gene sets, it can be difficult to pick out unique enrichment among many redundant gene sets. Worse, when tasked with manually curating and summarizing results a researcher might inadvertently select "nice" enrichments that confirm their prior beliefs about their experiment, giving an incomplete description of the results at best. Methods to avoid this include (1) curating a smaller set gene sets before conducting GSEA (see GO Slims) to avoid abundant and redundant results and (2) post-hoc clustering of enriched gene sets (DAVID, WebGESTALT, etc).
+
+Here, we propose a different approach. Rather than testing for enrichment in each gene set separately, we compete gene sets against each other in a (sparse) multiple regression. Among many overlapping gene sets, all which would have significant *marginal* enrichment, out model can identify the single best gene set to describe the enrichment signal. In the presence of multiple unrelated enrichment, we can clearly identify the combination of gene sets with the strongest evidence of enrichment in a principled fashion.
+
+
+## Accomodating different input data
+
+The gene level statistics we have access to will depend on the particular analysis upstream of GSEA. For example in differential expression experiments we might have effect sizes (log fold changes) and standard errors for each gene. If we wished to perform enrichment analysis on clusters of genes we only have access binary indicators of gene membership in each cluster. Further still, the adventurous quantitative biologist might concoct a more exotic analysis yielding gene level statistics for which there is no straight forward way of attaching uncertainty estimates to. In this case performing GSEA with gene ranks would be most appropriate.
+
+Regardless of the input data, one can often binarize their inputs into a gene list (e.g by thresholding on p-value or taking the top $k$ genes from a rank). Indeed among the most common approach to GSEA are simple contingency table tests on binary gene lists. We treat the binary case with a sparse multivariate logistic regression. We extend this basic model to accommodate summary statistics, recovering a covariate moderated version of the EBNM problem. I still need to decide how (or if) to address rankings...

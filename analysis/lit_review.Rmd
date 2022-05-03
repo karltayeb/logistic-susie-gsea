@@ -1,0 +1,13 @@
+---
+title: "Existing GSEA Methods"
+author: "karltayeb"
+date: "2022-04-27"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Here we provide an editorial review of existing methods for GSEA.
+Coming soon... 

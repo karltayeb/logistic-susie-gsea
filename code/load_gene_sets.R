@@ -127,3 +127,29 @@ loadGeneSetX = function(db, min.size=50){
   return(list(geneSet = gs, X=X, db=db, min.size=min.size))
 }
 
+#' load a bunch of genesets
+load_gene_sets = function() {
+  # load genesets
+  gobp <- loadGeneSetX('geneontology_Biological_Process', min.size=50)  # just huge number of gene sets
+  gobp_nr <- loadGeneSetX('geneontology_Biological_Process_noRedundant', min.size=1)
+  gomf <- loadGeneSetX('geneontology_Molecular_Function', min.size=1)
+  gocc <- loadGeneSetX('geneontology_Cellular_Component', min.size=1)
+  kegg <- loadGeneSetX('pathway_KEGG', min.size=1)
+  reactome <- loadGeneSetX('pathway_Reactome', min.size=1)
+  wikipathway_cancer <- loadGeneSetX('pathway_Wikipathway_cancer', min.size=1)
+  wikipathway <- loadGeneSetX('pathway_Wikipathway', min.size=1)
+    
+  genesets <- list(
+    gobp=gobp,
+    gobp_nr=gobp_nr,
+    gomf=gomf,
+    gocc=gocc,
+    kegg=kegg,
+    reactome=reactome,
+    wikipathway_cancer=wikipathway_cancer,
+    wikipathway=wikipathway
+  )
+
+  return(genesets)
+}
+

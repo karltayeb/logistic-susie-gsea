@@ -8,27 +8,34 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+This website documents the development of sparse multiple regression methods for gene set enrichment analysis (GSEA), as well as analysis demonstrating their utility in comparison to typical marginal (one gene set at a time) GSEA techniques. Additionally we provide [exposition on GSEA](gsea_overview.html), a [review of existing tools for GSEA, and related problems](lit_review.html) and the ideas motivating the development of these new methods.
+
+## Simulations
+
+## Analysis
 
 Packages managed with `renv`
 [GSEA should be done jointly, not marginally]
-[Why logistic may be better for GSEA](linear_v_logistic_start.html)
 
 ## Logistic SuSiE GSEA examples
 
 ### Single cell PBMCs
-* [Single cell PBMCs](single_cell_pbmc.html)
+* [Single cell PBMCs](single_cell_pbmc_standardized.html)
 * [Shared intercept explains differences to univariate enrichment tests](single_cell_pbmc_l1.html)
 
 ### Wenhe's Baboom Diet Example
 * [Wenhe Baboon Diet](baboon_diet.html)
 
 ### Kenneths Human/Chimp EBs
-Coming soon....
+* [Human-Chimp EB](human_chimp_eb_de_example.html)
 
 ## GSEA from summary statistics
 * [Two component model, initial exploration](summary_stat_gsea_exploration.html)
 * [Two component model, simulations](summary_stat_gsea_sim.html)
 * [Two component model, multivariate (SuSiE prior)](latent_logistic_susie.html)
+
+### Deng NMF/SNMF
+* [NMF + SNMF](deng_example.html)
+
 
 <!-- [Two component model, multiple regression]() -->
