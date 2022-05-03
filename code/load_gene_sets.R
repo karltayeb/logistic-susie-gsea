@@ -119,8 +119,8 @@ geneSet2X <- function(gs){
 }
 
 loadGeneSetX = function(db, min.size=50){
-  gs <- load.webGestalt.geneSet(db)
   X <- xfun::cache_rds({
+      gs <- load.webGestalt.geneSet(db)
       gs %>% convertGeneSet(min.size=min.size) %>% geneSet2X
     }, dir='cache/resources/', file=paste0(db, '.', min.size, '.X.rds')
   )

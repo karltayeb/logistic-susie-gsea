@@ -7,9 +7,20 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_knit$set(
+  root.dir = '/project2/gilad/ktayeb/logistic-susie-gsea/'
+)
+knitr::opts_chunk$set(
+  comment = '',
+  message=FALSE, warning=FALSE,
+  root.dir = '/project2/gilad/ktayeb/logistic-susie-gsea/'
+)
+```
+
 ## Introduction
 
-```{r setup}
+```{r imports}
 library(tidyverse)
 source('code/utils.R')
 source('code/logistic_susie_vb.R')
