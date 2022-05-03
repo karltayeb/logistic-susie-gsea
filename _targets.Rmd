@@ -115,15 +115,10 @@ Simulate a single active gene set from `GO-BP no redundnant`
 ## set simulation parameters
 get.l1.sim.params <- function(){
   params <- crossing(
-<<<<<<< HEAD
-    background.logit=c(-8, -6, -4, -2),
-    active.logit=c(-2, -1, 0, 1, 2),
-=======
     #background.logit=c(-8, -6, -4, -2),
     #active.logit=c(-4, -2, 0, 2, 4),
     background.logit=c(-2),
     active.logit=c(0),
->>>>>>> 689eb11fb5dbc931eb8b6b4a5c5efa65bad315c1
     sim_function = c('simulate.constant.sim'),
     X='X.gonr')
 
@@ -165,20 +160,13 @@ l1.gonr.methods <- method_bank %>% dplyr::filter(
   method.name %in% c(
     'fet',
     'susie.10',
-<<<<<<< HEAD
-=======
     'logistic.susie.10',
->>>>>>> 689eb11fb5dbc931eb8b6b4a5c5efa65bad315c1
     'logistic.susie.veb.boost.10',
     'lasso.gaussian',
     'elastic.net.gaussian',
     'lasso.binomial',
-<<<<<<< HEAD
-    'elastic.net.binomial'
-=======
     'elastic.net.binomial',
     'mr.ash.lasso'
->>>>>>> 689eb11fb5dbc931eb8b6b4a5c5efa65bad315c1
   )) %>%
   mutate(ma_names = map(method_args, names))
 
