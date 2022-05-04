@@ -63,16 +63,22 @@ To add a method add a row to `method_lookup` and `score_lookup`
 
 ```{targets method_bank, tar_globals=TRUE}
 fit_logistic_susie_l1 = function(X, y){
-  gseareg::fit_logistic_susie(X, y, L=1)
+  gseareg::fit_logistic_susie(X, y, L=1, maxit=100)
 }
 fit_linear_susie_l1 = function(X, y){
   susieR::susie(X, y, L=1)
 }
 fit_logistic_susie_l10 = function(X, y){
-  gseareg::fit_logistic_susie(X, y, L=10)
+  gseareg::fit_logistic_susie(X, y, L=10, maxit=100)
 }
 fit_linear_susie_l10 = function(X, y){
   susieR::susie(X, y, L=10)
+}
+fit_linear_lasso = function(X, y){
+  glmnet::cv.glmnet(X, y, family='gaussian', alpha=1)
+}
+fit_logistic_lasso = function(X, y){
+  glmnet::cv.glmnet(X, y, family='binomial', alpha=1)
 }
 
 method_lookup <- tribble(
@@ -82,6 +88,8 @@ method_lookup <- tribble(
   'linear_susie.l1', fit_linear_susie_l1, list(L=1),
   'logistic_susie.l10', fit_logistic_susie_l10, list(L=1),
   'linear_susie.l10', fit_linear_susie_l10, list(L=1),
+  'linear_lasso', fit_linear_lasso, list(),
+  'logistic_lasso', fit_logistic_lasso, list()
 )
 
 score_ora = function(fit, sim){return(list(a=c(1, 2, 3)))}
@@ -93,7 +101,9 @@ score_lookup <- tribble(
   'logistic_susie.l1', score_pip,
   'linear_susie.l1', score_pip,
   'logistic_susie.l10', score_pip,
-  'linear_susie.l10', score_pip
+  'linear_susie.l10', score_pip,
+  'linear_lasso', score_cvglmnet,
+  'logistic_lasso', score_cvglmnet
 )
 ```
 
@@ -102,8 +112,8 @@ score_lookup <- tribble(
 ### Get gene sets
 ```{targets load-genesets}
 list(
-  tar_target(X.gonr, gseareg::load.webGestalt.X()),
-  tar_target(genesets, gseareg::load_gene_sets())
+  tar_target(genesets, gseareg::load_gene_sets()),
+  tar_target(X.gonr, genesets$gobp$X)
 )
 ```
 
@@ -117,8 +127,8 @@ get.l1.sim.params <- function(){
   params <- crossing(
     #background.logit=c(-8, -6, -4, -2),
     #active.logit=c(-4, -2, 0, 2, 4),
-    background.logit=c(-2),
-    active.logit=c(0),
+    background.logit = c(-4),
+    active.logit = c(0),
     sim_function = c('simulate.constant.sim'),
     X='X.gonr')
 
