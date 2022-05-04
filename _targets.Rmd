@@ -13,7 +13,6 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```{r}
 library(targets)
 tar_unscript()
-options(clustermq.scheduler = "multiprocess")
 ```
 
 ```{targets global-imports, tar_globals=TRUE}
@@ -42,6 +41,7 @@ source('code/target_factories.R')
 source('code/target_simulate_gene_lists.R')
 source('code/target_score_simulation.R')
 
+# options(clustermq.scheduler = "slurm", clustermq.template="clustermq_slurm.sh")
 options(clustermq.scheduler = "multiprocess")
 tar_option_set(workspace_on_error = TRUE)
 
@@ -49,10 +49,10 @@ tar_option_set(packages = c(
   "tidyverse", "WebGestaltR",
   "Matrix", "susieR", "glmnet",
   "mr.ash.alpha", "VEB.Boost", "fastglm"))
-tar_option_set(memory='transient', garbage_collection = T, error='workspace')
+tar_option_set(memory='transient', garbage_collection = T)
 
-REP <- tar_toggle(1, 2)
-BATCH <- tar_toggle(1, 10)
+REP <- 10 # tar_goggle(1, 2)
+BATCH <- 1 #tar_toggle(1, 10)
 ```
 
 ## Methods
@@ -74,10 +74,13 @@ fit_logistic_susie_l10 = function(X, y){
 fit_linear_susie_l10 = function(X, y){
   susieR::susie(X, y, L=10)
 }
+fit_ora = function(X, y){
+  gseareg::fit_ora(X, y)
+}
 
 method_lookup <- tribble(
   ~method_name, ~method_function, ~method_args,
-  'ora', gseareg::fit_ora, list(),
+  'ora', fit_ora, list(),
   'logistic_susie.l1', fit_logistic_susie_l1, list(L=1),
   'linear_susie.l1', fit_linear_susie_l1, list(L=1),
   'logistic_susie.l10', fit_logistic_susie_l10, list(L=1),
@@ -102,8 +105,8 @@ score_lookup <- tribble(
 ### Get gene sets
 ```{targets load-genesets}
 list(
-  tar_target(X.gonr, gseareg::load.webGestalt.X()),
-  tar_target(genesets, gseareg::load_gene_sets())
+  tar_target(genesets, gseareg::load_gene_sets()),
+  tar_target(X.gonr, genesets$gobp_nr$X)
 )
 ```
 
@@ -115,10 +118,8 @@ Simulate a single active gene set from `GO-BP no redundnant`
 ## set simulation parameters
 get.l1.sim.params <- function(){
   params <- crossing(
-    #background.logit=c(-8, -6, -4, -2),
-    #active.logit=c(-4, -2, 0, 2, 4),
-    background.logit=c(-2),
-    active.logit=c(0),
+    background.logit=c(-8, -6, -4, -2),
+    active.logit=c(-4, -2, 0, 2, 4),
     sim_function = c('simulate.constant.sim'),
     X='X.gonr')
 
@@ -145,9 +146,14 @@ list(
 )
 ```
 
-```{r}
+```{r tar_visnetwork, eval=FALSE}
 tar_visnetwork()
 ```
+
+```{r tar_make, eval=FALSE}
+tar_make()
+```
+
 ```{r}
 knitr::knit_exit()
 ```
