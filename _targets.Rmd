@@ -51,7 +51,7 @@ tar_option_set(packages = c(
   "mr.ash.alpha", "VEB.Boost", "fastglm"))
 tar_option_set(memory='transient', garbage_collection = T)
 
-REP <- 10 # tar_goggle(1, 2)
+REP <- 1 # tar_goggle(1, 2)
 BATCH <- 1 #tar_toggle(1, 10)
 ```
 
@@ -63,28 +63,35 @@ To add a method add a row to `method_lookup` and `score_lookup`
 
 ```{targets method_bank, tar_globals=TRUE}
 fit_logistic_susie_l1 = function(X, y){
-  gseareg::fit_logistic_susie(X, y, L=1)
+  gseareg::fit_logistic_susie(X, y, L=1, maxit=100)
 }
 fit_linear_susie_l1 = function(X, y){
   susieR::susie(X, y, L=1)
 }
 fit_logistic_susie_l10 = function(X, y){
-  gseareg::fit_logistic_susie(X, y, L=10)
+  gseareg::fit_logistic_susie(X, y, L=10, maxit=100)
 }
 fit_linear_susie_l10 = function(X, y){
   susieR::susie(X, y, L=10)
 }
-fit_ora = function(X, y){
+fit_ora2 = function(X, y){
   gseareg::fit_ora(X, y)
+fit_linear_lasso = function(X, y){
+  glmnet::cv.glmnet(X, y, family='gaussian', alpha=1)
+}
+fit_logistic_lasso = function(X, y){
+  glmnet::cv.glmnet(X, y, family='binomial', alpha=1)
 }
 
 method_lookup <- tribble(
   ~method_name, ~method_function, ~method_args,
-  'ora', fit_ora, list(),
+  'ora', fit_ora2, list(),
   'logistic_susie.l1', fit_logistic_susie_l1, list(L=1),
   'linear_susie.l1', fit_linear_susie_l1, list(L=1),
   'logistic_susie.l10', fit_logistic_susie_l10, list(L=1),
   'linear_susie.l10', fit_linear_susie_l10, list(L=1),
+  'linear_lasso', fit_linear_lasso, list(),
+  'logistic_lasso', fit_logistic_lasso, list()
 )
 
 score_ora = function(fit, sim){return(list(a=c(1, 2, 3)))}
@@ -96,7 +103,9 @@ score_lookup <- tribble(
   'logistic_susie.l1', score_pip,
   'linear_susie.l1', score_pip,
   'logistic_susie.l10', score_pip,
-  'linear_susie.l10', score_pip
+  'linear_susie.l10', score_pip,
+  'linear_lasso', score_cvglmnet,
+  'logistic_lasso', score_cvglmnet
 )
 ```
 
