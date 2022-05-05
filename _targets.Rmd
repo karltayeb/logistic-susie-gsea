@@ -127,10 +127,8 @@ Simulate a single active gene set from `GO-BP no redundnant`
 ## set simulation parameters
 get.l1.sim.params <- function(){
   params <- crossing(
-    #background.logit=c(-8, -6, -4, -2),
-    #active.logit=c(-4, -2, 0, 2, 4),
-    background.logit = c(-4),
-    active.logit = c(0),
+    background.logit=c(-8, -6, -4, -2),
+    active.logit=c(-4, -2, 0, 2, 4),
     sim_function = c('simulate.constant.sim'),
     X='X.gonr')
 
@@ -158,16 +156,15 @@ list(
 )
 ```
 
-```{r}
+```{targets additive.l5.sim}
 ## set simulation parameters
-get.constant.additive.sim.params <- function(){
+get.additive.l5.sim.params <- function(){
   params <- crossing(
     background.logit=seq(-8, -2, 2),
     active.logit=seq(1, 4, 1),
     sim_function = 'simulate.constant.additive.sim',
-    L = c(5, 10),
+    L = c(5),
     X='X.gonr')
-
   params <- params %>% mutate(
     param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
   ) %>% rowwise() %>% mutate(
@@ -176,18 +173,18 @@ get.constant.additive.sim.params <- function(){
 }
 
 # target metadata/specification
-constant.additive.gonr.sim.params <- get.constant.additive.sim.params()
-constant.additive.gonr.methods <- method_lookup
-constant.additive.gonr.score_lookup <- constant.additive.gonr.methods %>%
+additive.l5.gonr.sim.params <- get.additive.l5.sim.params() %>% head(1)
+additive.l5.gonr.methods <- method_lookup
+additive.l5.gonr.score_lookup <- additive.l5.gonr.methods %>%
   left_join(score_lookup)
 
 # execute pipeline
 list(
-  make_sim_spec('constant.additive.gonr.sim.params', constant.additive.gonr.sim.params, BATCH, REP),
-  sim_factory('constant.additive.gonr.sim.params', X.gonr, constant.additive.gonr.spec),
-  fit_factory('constant.additive.gonr.sim.params', X.gonr, constant.additive.gonr.sim, constant.additive.gonr.methods),
-  score_factory('constant.additive.gonr.sim.params', constant.additive.gonr.score_lookup),
-  aggegate_score_factory('constant.additive.gonr.sim.params', constant.additive.gonr.score_lookup)
+  make_sim_spec('additive.l5.gonr', additive.l5.gonr.sim.params, BATCH, REP),
+  sim_factory('additive.l5.gonr', X.gonr, additive.l5.gonr.spec),
+  fit_factory('additive.l5.gonr', X.gonr, additive.l5.gonr.sim, additive.l5.gonr.methods),
+  score_factory('additive.l5.gonr', additive.l5.gonr.score_lookup),
+  aggegate_score_factory('additive.l5.gonr', additive.l5.gonr.score_lookup)
 )
 ```
 
