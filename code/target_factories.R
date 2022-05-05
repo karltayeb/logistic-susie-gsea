@@ -142,9 +142,11 @@ score_factory <- function(prefix, methods){
   return(lapply(tar_eval(generate_score_target(prefix, method_name, score_function), values = methods), eval))
 }
 
-
-foo = function(a){
-  a <- quote(!!a)
-  return(a)
+#' pull out minimal data for plotting, etc
+aggegate_score_factory = function(prefix, methods){
+  agg_target_name <- paste0(prefix, '.aggregate.scores')
+  score_target_names <- map(methods$method_name, ~sym(paste0(prefix, '.score_', .x)))
+  agg_expression <- expr(bind_rows(!!!score_target_names) %>% dplyr::select(-c(sim, fit)))
+  tar_target_raw(agg_target_name, agg_expression)
 }
-foo(score_ora)
+
