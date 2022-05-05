@@ -47,12 +47,11 @@ tar_option_set(workspace_on_error = TRUE)
 
 tar_option_set(packages = c(
   "tidyverse", "WebGestaltR",
-  "Matrix", "susieR", "glmnet",
-  "mr.ash.alpha", "VEB.Boost", "fastglm"))
+  "Matrix", "susieR", "glmnet"))
 tar_option_set(memory='transient', garbage_collection = T, error='workspace')
 
-REP <- tar_toggle(1, 2)
-BATCH <- tar_toggle(1, 10)
+REP <- tar_toggle(1, 10)
+BATCH <- tar_toggle(1, 1)
 ```
 
 ## Methods
@@ -75,10 +74,16 @@ fit_linear_susie_l10 = function(X, y){
   susieR::susie(X, y, L=10)
 }
 fit_linear_lasso = function(X, y){
-  glmnet::cv.glmnet(X, y, family='gaussian', alpha=1)
+  glmnet::glmnet(X, y, family='gaussian', alpha=1)
 }
 fit_logistic_lasso = function(X, y){
-  glmnet::cv.glmnet(X, y, family='binomial', alpha=1)
+  # hack to make it not fail for rare simulations
+  if(sum(y) < 2){
+    y[sample(length(y), 2)] <- 1
+  } else if (sum(y) > length(y) - 2){
+    y[sample(length(y), 2)] <- 0
+  }
+  glmnet::glmnet(X, y, family='binomial', alpha=1)
 }
 
 method_lookup <- tribble(
@@ -92,9 +97,6 @@ method_lookup <- tribble(
   'logistic_lasso', fit_logistic_lasso, list()
 )
 
-score_ora = function(fit, sim){return(list(a=c(1, 2, 3)))}
-score_susie = function(fit, sim){return(list(a=c(1, 2, 3)))}
-
 score_lookup <- tribble(
   ~method_name, ~score_function,
   'ora', score_phyper,
@@ -102,8 +104,8 @@ score_lookup <- tribble(
   'linear_susie.l1', score_pip,
   'logistic_susie.l10', score_pip,
   'linear_susie.l10', score_pip,
-  'linear_lasso', score_cvglmnet,
-  'logistic_lasso', score_cvglmnet
+  'linear_lasso', score_glm,
+  'logistic_lasso', score_glm
 )
 ```
 
@@ -113,7 +115,7 @@ score_lookup <- tribble(
 ```{targets load-genesets}
 list(
   tar_target(genesets, gseareg::load_gene_sets()),
-  tar_target(X.gonr, genesets$gobp$X)
+  tar_target(X.gonr, genesets$gobp_nr$X)
 )
 ```
 
@@ -151,7 +153,8 @@ list(
   make_sim_spec('l1.gonr', l1.gonr.sim.params, BATCH, REP),
   sim_factory('l1.gonr', X.gonr, l1.gonr.spec),
   fit_factory('l1.gonr', X.gonr, l1.gonr.sim, l1.gonr.methods),
-  score_factory('l1.gonr', l1.gonr.score_lookup)
+  score_factory('l1.gonr', l1.gonr.score_lookup),
+  aggegate_score_factory('l1.gonr', l1.gonr.score_lookup)
 )
 ```
 
