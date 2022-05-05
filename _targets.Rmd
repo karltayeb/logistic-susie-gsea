@@ -165,7 +165,39 @@ list(
 )
 ```
 
-```{r tar_visnetwork, eval=FALSE}
+```{targets additive.l5.sim}
+## set simulation parameters
+get.additive.l5.sim.params <- function(){
+  params <- crossing(
+    background.logit=seq(-8, -2, 2),
+    active.logit=seq(2, 6, 1),
+    sim_function = 'simulate.constant.additive.sim',
+    L = c(5),
+    X='X.gonr')
+  params <- params %>% mutate(
+    param_names = list((params %>% select(!c(X, sim_function)) %>% colnames()))
+  ) %>% rowwise() %>% mutate(
+    params = list(setNames(c_across(!c(X, sim_function, param_names)), param_names))
+  )
+}
+
+# target metadata/specification
+additive.l5.gonr.sim.params <- get.additive.l5.sim.params()
+additive.l5.gonr.methods <- method_lookup
+additive.l5.gonr.score_lookup <- additive.l5.gonr.methods %>%
+  left_join(score_lookup)
+
+# execute pipeline
+list(
+  make_sim_spec('additive.l5.gonr', additive.l5.gonr.sim.params, BATCH, REP),
+  sim_factory('additive.l5.gonr', X.gonr, additive.l5.gonr.spec),
+  fit_factory('additive.l5.gonr', X.gonr, additive.l5.gonr.sim, additive.l5.gonr.methods),
+  score_factory('additive.l5.gonr', additive.l5.gonr.score_lookup),
+  aggegate_score_factory('additive.l5.gonr', additive.l5.gonr.score_lookup)
+)
+```
+
+```{r}
 tar_visnetwork()
 ```
 
@@ -177,6 +209,43 @@ tar_make()
 knitr::knit_exit()
 ```
 
+
+```{r}
+l1.sim.aggregate.scores <- read_tsv('l1.sim.aggregate.scores')
+
+# TPR vs FPR
+plotdat <- l1.sim.aggregate.scores %>%
+  filter(!(method_name %in% c('linear_lasso', 'logistic_lasso'))) %>%
+  filter(active.logit > -4, thresh > 0.05, thresh < 0.999) %>%
+  group_by(method_name, thresh) %>%
+  summarise(TP = sum(TP), FP = sum(FP), TN = sum(TN), FN = sum(FN)) %>%
+  mutate(TPR = TP/(TP + FN), FDP  = FP/(TP + FP)) 
+
+plotdat %>%
+  filter(method_name == 'logistic_susie.l10') %>%
+  arrange(desc(thresh))
+
+plotdat %>%
+  ggplot(aes(x=FDP, y=TPR, color=method_name)) + 
+  geom_line()
+```
+
+
+```{r}
+l1.sim.aggregate.scores %>%
+  filter(thresh == 0.95) %>%
+  group_by(method_name, background.logit, active.logit) %>%
+  summarise(TP = sum(TP), FP = sum(FP), TN = sum(TN), FN = sum(FN)) %>%
+  mutate(
+    recall = TP / (TP + FN),
+    precision = TP / (TP + FP),
+    specificity = TN / (TN + FP)
+  ) %>%
+  pivot_longer(c(recall, precision, specificity), names_to= 'metric') %>%
+  ggplot(aes(x=background.logit, y=active.logit, fill=value)) + 
+  geom_tile() + facet_grid(vars(metric), vars(method_name)) + theme(aspect.ratio = 1)
+  ggplot(aes(x=background.logit, y=active.logit, fill=TPR)) + geom_tile()
+```
 
 
 ```{targets l1.sim.old}
