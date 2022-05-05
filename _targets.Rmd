@@ -56,8 +56,8 @@ tar_option_set(packages = c(
   "Matrix", "susieR", "glmnet"))
 tar_option_set(memory='transient', garbage_collection = T)
 
-REP <- 10 # tar_goggle(1, 2)
-BATCH <- 1 #tar_toggle(1, 10)
+REP <- tar_toggle(1, 10)
+BATCH <- tar_toggle(1, 1)
 ```
 
 ## Methods
@@ -83,10 +83,16 @@ fit_ora2 = function(X, y){
   gseareg::fit_ora(X, y)
 }
 fit_linear_lasso = function(X, y){
-  glmnet::cv.glmnet(X, y, family='gaussian', alpha=1)
+  glmnet::glmnet(X, y, family='gaussian', alpha=1)
 }
 fit_logistic_lasso = function(X, y){
-  glmnet::cv.glmnet(X, y, family='binomial', alpha=1)
+  # hack to make it not fail for rare simulations
+  if(sum(y) < 2){
+    y[sample(length(y), 2)] <- 1
+  } else if (sum(y) > length(y) - 2){
+    y[sample(length(y), 2)] <- 0
+  }
+  glmnet::glmnet(X, y, family='binomial', alpha=1)
 }
 
 method_lookup <- tribble(
@@ -107,8 +113,8 @@ score_lookup <- tribble(
   'linear_susie.l1', score_pip,
   'logistic_susie.l10', score_pip,
   'linear_susie.l10', score_pip,
-  'linear_lasso', score_cvglmnet,
-  'logistic_lasso', score_cvglmnet
+  'linear_lasso', score_glm,
+  'logistic_lasso', score_glm
 )
 ```
 
@@ -154,7 +160,8 @@ list(
   make_sim_spec('l1.gonr', l1.gonr.sim.params, BATCH, REP),
   sim_factory('l1.gonr', X.gonr, l1.gonr.spec),
   fit_factory('l1.gonr', X.gonr, l1.gonr.sim, l1.gonr.methods),
-  score_factory('l1.gonr', l1.gonr.score_lookup)
+  score_factory('l1.gonr', l1.gonr.score_lookup),
+  aggegate_score_factory('l1.gonr', l1.gonr.score_lookup)
 )
 ```
 
