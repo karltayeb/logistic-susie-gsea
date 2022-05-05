@@ -131,7 +131,8 @@ generate_score_target <- function(prefix, method_name, score_function){
       expr(
         !!target_fit %>%
           rowwise() %>%
-          mutate(scores = list((!!score_function)(fit, sim)))
+          dplyr::mutate(scores = list((!!score_function)(fit, sim))) %>%
+          dplyr::select(-c(sim, fit))
       ), pattern=expr(!!target_pattern))
   )
   return(score_expression)
@@ -146,7 +147,7 @@ score_factory <- function(prefix, methods){
 aggegate_score_factory = function(prefix, methods){
   agg_target_name <- paste0(prefix, '.aggregate.scores')
   score_target_names <- map(methods$method_name, ~sym(paste0(prefix, '.score_', .x)))
-  agg_expression <- expr(bind_rows(!!!score_target_names) %>% dplyr::select(-c(sim, fit)))
+  agg_expression <- expr(bind_rows(!!!score_target_names))
   tar_target_raw(agg_target_name, agg_expression)
 }
 
