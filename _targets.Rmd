@@ -20,9 +20,16 @@ library(targets)
 library(tidyverse)
 library(glue)
 library(tarchetypes)
-library(clustermq)
 library(conflicted)
 library(gseareg)
+
+
+#library(clustermq)
+#options(clustermq.scheduler = "multiprocess")
+
+library(future)
+library(future.callr)
+plan(callr)
 
 # Manage naming conflicts
 conflict_prefer("select", "dplyr", "AnnotationDbi")
@@ -42,16 +49,14 @@ source('code/target_simulate_gene_lists.R')
 source('code/target_score_simulation.R')
 
 # options(clustermq.scheduler = "slurm", clustermq.template="clustermq_slurm.sh")
-options(clustermq.scheduler = "multiprocess")
 tar_option_set(workspace_on_error = TRUE)
 
 tar_option_set(packages = c(
   "tidyverse", "WebGestaltR",
-  "Matrix", "susieR", "glmnet",
-  "mr.ash.alpha", "VEB.Boost", "fastglm"))
+  "Matrix", "susieR", "glmnet"))
 tar_option_set(memory='transient', garbage_collection = T)
 
-REP <- 1 # tar_goggle(1, 2)
+REP <- 10 # tar_goggle(1, 2)
 BATCH <- 1 #tar_toggle(1, 10)
 ```
 
@@ -76,6 +81,7 @@ fit_linear_susie_l10 = function(X, y){
 }
 fit_ora2 = function(X, y){
   gseareg::fit_ora(X, y)
+}
 fit_linear_lasso = function(X, y){
   glmnet::cv.glmnet(X, y, family='gaussian', alpha=1)
 }
@@ -93,9 +99,6 @@ method_lookup <- tribble(
   'linear_lasso', fit_linear_lasso, list(),
   'logistic_lasso', fit_logistic_lasso, list()
 )
-
-score_ora = function(fit, sim){return(list(a=c(1, 2, 3)))}
-score_susie = function(fit, sim){return(list(a=c(1, 2, 3)))}
 
 score_lookup <- tribble(
   ~method_name, ~score_function,
