@@ -15,3 +15,6 @@ analysis/*png
 analysis/*html
 analysis/*_cache
 analysis/site_libs
+data/*
+cache/*
+_targets_r/*
