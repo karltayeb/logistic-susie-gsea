@@ -1,6 +1,3 @@
 targets:
   script: _targets.R
   store: _targets
-simulation_targets:
-  script: _simulation_targets.R
-  store: simulation_targets

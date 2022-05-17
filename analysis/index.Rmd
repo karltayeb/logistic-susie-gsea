@@ -10,6 +10,8 @@ editor_options:
 
 This website documents the development of sparse multiple regression methods for gene set enrichment analysis (GSEA), as well as analysis demonstrating their utility in comparison to typical marginal (one gene set at a time) GSEA techniques. Additionally we provide [exposition on GSEA](gsea_overview.html), a [review of existing tools for GSEA, and related problems](lit_review.html) and the ideas motivating the development of these new methods.
 
+The analysis on this website depends on the [gseasusie package](github.com/karltayeb/gseasusie). If you wan't to use `gseasusie` [here's how to get started](getting_started.html)
+
 ## Simulations
 
 ## Analysis
