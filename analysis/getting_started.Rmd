@@ -1,5 +1,5 @@
 ---
-title: "getting_started"
+title: "Getting started"
 author: "karltayeb"
 date: "2022-05-16"
 output: workflowr::wflow_html
