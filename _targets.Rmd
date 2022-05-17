@@ -128,8 +128,9 @@ score_lookup <- tribble(
 
 ### Get gene sets
 ```{targets load-genesets}
+ALL_GENESETS <- c('c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'all_msigdb', 'gobp', 'gomf', 'gocc', 'all_go', 'pathways')
 list(
-  tar_target(genesets, gseasusie::load_gene_sets()),
+  tar_target(genesets, gseasusie::load_gene_sets(ALL_GENESETS)),
   tar_target(X.gonr, genesets$gobp_nr$X)
 )
 ```
@@ -204,6 +205,99 @@ list(
 )
 ```
 
+## Real Data
+
+```{targets pbmc.deseq}
+run_enrichment = function(db, experiment, thresh, genesets, data){
+  message(paste0('Fitting logistic susie...',
+    '\n\tExperiment = ', experiment,
+    '\n\tDatabase = ', db,
+    '\n\tthresh = ', thresh))
+  
+  bin.data <- gseasusie::prep_binary_data(genesets[[db]], data[[experiment]], thresh)
+  X <- bin.data$X
+  y <- bin.data$y
+  
+  logistic.fit <- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)
+  ora <- gseasusie::fit_ora(X, y)
+  
+  linear.fit <- susieR::susie(X, y)
+  marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
+  residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
+  
+  res <- tibble(
+    db = db,
+    experiment = experiment,
+    thresh = thresh,
+    fit=list(logistic.fit),
+    linear.fit = list(linear.fit),
+    ora=list(ora),
+    marginal_reg = list(marginal_regression),
+    residual_reg = list(residual_regression)
+  )
+  return(res)
+}
+
+summarise_enrichment = function(fit, ora, marginal_reg, residual_reg, geneSetDes){
+  # put everything into one table
+  gssum <- get_gene_set_summary(fit)
+  cssum <- get_cs_summary_condensed(fit)
+  
+  reg <- left_join(
+    marginal_reg,
+    residual_reg,
+    by="geneSet", suffix=c('_marginal', '_residual'))
+
+  gene_set_summary <- 
+    gssum %>%
+    dplyr::left_join(cssum) %>%
+    dplyr::left_join(ora) %>%
+    left_join(reg) %>%
+    left_join(geneSetDes)
+  return(gene_set_summary)
+}
+
+GENESETS <- c('c1')
+THRESHOLDS <- c(1e-4) # c(1e-2, 1e-4, 1e-6, 1e-8)
+PREFIX <- 'sc_pbmc_deseq'
+DATALOADER <- load_sc_pbmc_deseq2
+
+target_list <- list(
+  # get data
+  tar_target(sc_pbmc_deseq_data, DATALOADER()),
+  # make meta table
+  tar_target(sc_pbmc_deseq_meta, crossing(
+    db=names(genesets),
+    experiment=names(sc_pbmc_deseq_data),
+    threshold = THRESHOLDS)),
+  # fit enrichment for each row of meta
+  tar_target(
+    sc_pbmc_deseq_enrichment_fit,
+    run_enrichment(
+      sc_pbmc_deseq_meta$db,
+      sc_pbmc_deseq_meta$experiment,
+      sc_pbmc_deseq_meta$threshold,
+      genesets,
+      sc_pbmc_deseq_data),
+    pattern = map(sc_pbmc_deseq_meta)
+  ),
+  # summarise enrichment (lightweight, used for plotting, etc)
+  tar_target(
+    sc_pbmc_deseq_enrichment_summary,
+    sc_pbmc_deseq_enrichment_fit %>%
+      rowwise() %>% 
+      mutate(
+        enrichment_summary = list(summarise_enrichment(
+          fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
+      select(db, experiment, thresh, enrichment_summary),
+    pattern = map(sc_pbmc_deseq_enrichment_fit)
+  )
+)
+target_list
+```
+
+
+## BREAK
 ```{r tar_make, eval=FALSE}
 tar_make()
 ```
@@ -440,97 +534,7 @@ list(
 
 
 
-## Real Data
 
-```{targets pbmc.deseq}
-run_enrichment = function(db, experiment, thresh, genesets, data){
-  message(paste0('Fitting logistic susie...',
-    '\n\tExperiment = ', experiment,
-    '\n\tDatabase = ', db,
-    '\n\tthresh = ', thresh))
-  
-  bin.data <- gseasusie::prep_binary_data(genesets[[db]], data[[experiment]], thresh)
-  X <- bin.data$X
-  y <- bin.data$y
-  
-  logistic.fit <- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)
-  ora <- gseasusie::fit_ora(X, y)
-  
-  linear.fit <- susieR::susie(X, y)
-  marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
-  residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
-  
-  res <- tibble(
-    db = db,
-    experiment = experiment,
-    thresh = thresh,
-    fit=list(logistic.fit),
-    linear.fit = list(linear.fit),
-    ora=list(ora),
-    marginal_reg = list(marginal_regression),
-    residual_reg = list(residual_regression)
-  )
-  return(res)
-}
-
-summarise_enrichment = function(fit, ora, marginal_reg, residual_reg, geneSetDes){
-  # put everything into one table
-  gssum <- get_gene_set_summary(fit)
-  cssum <- get_cs_summary_condensed(fit)
-  
-  reg <- left_join(
-    marginal_reg,
-    residual_reg,
-    by="geneSet", suffix=c('_marginal', '_residual'))
-
-  gene_set_summary <- 
-    gssum %>%
-    dplyr::left_join(cssum) %>%
-    dplyr::left_join(ora) %>%
-    left_join(reg) %>%
-    left_join(geneSetDes)
-  return(gene_set_summary)
-}
-
-GENESETS <- c('c1')
-THRESHOLDS <- c(1e-4) # c(1e-2, 1e-4, 1e-6, 1e-8)
-PREFIX <- 'sc_pbmc_deseq'
-DATALOADER <- load_sc_pbmc_deseq2
-
-list(
-  # get gene sets
-  tar_target(genesets, gseasusie::load_gene_sets(GENESETS)),
-  # get data
-  tar_target(sc_pbmc_deseq_data, DATALOADER()),
-  # make meta table
-  tar_target(sc_pbmc_deseq_meta, crossing(
-    db=names(genesets),
-    experiment=names(sc_pbmc_deseq_data),
-    threshold = THRESHOLDS)),
-  # fit enrichment for each row of meta
-  tar_target(
-    sc_pbmc_deseq_enrichment_fit,
-    run_enrichment(
-      sc_pbmc_deseq_meta$db,
-      sc_pbmc_deseq_meta$experiment,
-      sc_pbmc_deseq_meta$threshold,
-      genesets,
-      sc_pbmc_deseq_data),
-    pattern = map(sc_pbmc_deseq_meta)
-  ),
-  # summarise enrichment (lightweight, used for plotting, etc)
-  tar_target(
-    sc_pbmc_deseq_enrichment_summary,
-    sc_pbmc_deseq_enrichment_fit %>%
-      rowwise() %>% 
-      mutate(
-        enrichment_summary = list(summarise_enrichment(
-          fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
-      select(db, experiment, thresh, enrichment_summary),
-    pattern = map(sc_pbmc_deseq_enrichment_fit)
-  )
-)
-```
 
 ## Pipeline
 
