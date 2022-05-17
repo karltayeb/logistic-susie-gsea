@@ -13,7 +13,7 @@
 
 <meta name="date" content="2022-05-16" />
 
-<title>getting_started</title>
+<title>Getting started</title>
 
 <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -368,7 +368,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">getting_started</h1>
+<h1 class="title toc-ignore">Getting started</h1>
 <h4 class="author">karltayeb</h4>
 <h4 class="date">2022-05-16</h4>
 
@@ -486,16 +486,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree814cab6ab2c82c0449267b6d05cf7d75c7278121targetblank814cab6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/814cab6ab2c82c0449267b6d05cf7d75c7278121" target="_blank">814cab6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreee98ae6bdd13b2f1a0370f6547c9b4e0d91d5fe51targetblanke98ae6ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/e98ae6bdd13b2f1a0370f6547c9b4e0d91d5fe51" target="_blank">e98ae6b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree814cab6ab2c82c0449267b6d05cf7d75c7278121targetblank814cab6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreee98ae6bdd13b2f1a0370f6547c9b4e0d91d5fe51targetblanke98ae6ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/814cab6ab2c82c0449267b6d05cf7d75c7278121" target="_blank">814cab6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/e98ae6bdd13b2f1a0370f6547c9b4e0d91d5fe51" target="_blank">e98ae6b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -506,7 +506,6 @@ Ignored files:
     Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
     Ignored:    cache/
     Ignored:    library/
     Ignored:    renv/library/
@@ -633,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/e98ae6bdd13b2f1a0370f6547c9b4e0d91d5fe51/analysis/getting_started.Rmd" target="_blank">e98ae6b</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-05-16
+</td>
+<td>
+wflow_publish(“analysis/getting_started.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/dca08061612ef6e220316c0c6dd3e9eb88ea75b7/docs/getting_started.html" target="_blank">dca0806</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-05-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -887,7 +920,7 @@ y &lt;- bin.data$y</code></pre>
 logistic.fit &lt;- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)</code></pre>
 <pre><code>fitting logistic susie (via VEB.Boost</code></pre>
 <pre><code>ELBO: -9062.304
-9.019 sec elapsed</code></pre>
+9.759 sec elapsed</code></pre>
 <pre class="r"><code># fit linear susie
 # (all of the functions that work with logistic susie fits should work with regular susie fits)
 linear.fit &lt;- susieR::susie(X, y)
@@ -895,16 +928,16 @@ linear.fit &lt;- susieR::susie(X, y)
 # compute odds ratios, and pvalues under hypergeometric (one-sided) and fishers exact (two-sided) tests
 ora &lt;- gseasusie::fit_ora(X, y)</code></pre>
 <pre><code>computin ORA statistics...</code></pre>
-<pre><code>4.092 sec elapsed</code></pre>
+<pre><code>4.017 sec elapsed</code></pre>
 <pre class="r"><code># like ORA but performed implimented as a univariate logistic regression
 marginal_regression &lt;- gseasusie::fit_marginal_regression_jax(X, y)</code></pre>
 <pre><code>fitting marginal logistic regressions...</code></pre>
-<pre><code>34.585 sec elapsed</code></pre>
+<pre><code>34.283 sec elapsed</code></pre>
 <pre class="r"><code># redo the logistic regression ORA, conditional on enrichments found by logistic susie
 # in practice, we introduce logistic susie predictions as an offset in the new model
 residual_regression &lt;- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)</code></pre>
 <pre><code>fitting residual logistic regressions...</code></pre>
-<pre><code>29.936 sec elapsed</code></pre>
+<pre><code>30.791 sec elapsed</code></pre>
 <pre class="r"><code>res = list(
   fit=logistic.fit,
   ora=ora,
@@ -921,10 +954,84 @@ Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
 Joining, by = c(&quot;geneSet&quot;, &quot;component&quot;)
 Joining, by = &quot;geneSet&quot;</code></pre>
 <p><img src="figure/getting_started.Rmd/make.volcano-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-make.volcano-1">
+Past versions of make.volcano-1.png
+</button>
+</p>
+<div id="fig-make.volcano-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/dca08061612ef6e220316c0c6dd3e9eb88ea75b7/docs/figure/getting_started.Rmd/make.volcano-1.png" target="_blank">dca0806</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>If we account for the predictions made by (logitic) SuSiE, we can see that a lot (but not all of) the enrichment signal has been accounted for.</p>
 <pre class="r"><code>gseasusie::residual_enrichment_histogram(marginal_regression, residual_regression)</code></pre>
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="figure/getting_started.Rmd/make.residual.hist-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-make.residual.hist-1">
+Past versions of make.residual.hist-1.png
+</button>
+</p>
+<div id="fig-make.residual.hist-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/dca08061612ef6e220316c0c6dd3e9eb88ea75b7/docs/figure/getting_started.Rmd/make.residual.hist-1.png" target="_blank">dca0806</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-05-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="interactive-tables" class="section level2">
 <h2>Interactive tables</h2>
