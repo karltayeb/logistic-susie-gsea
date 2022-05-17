@@ -197,10 +197,6 @@ list(
 )
 ```
 
-```{r}
-tar_visnetwork()
-```
-
 ```{r tar_make, eval=FALSE}
 tar_make()
 ```
