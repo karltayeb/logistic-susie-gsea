@@ -4,6 +4,7 @@ cellar/
 lock/
 python/
 staging/
+cache/
 .Rproj.user
 .Rhistory
 .RData
@@ -15,6 +16,11 @@ analysis/*png
 analysis/*html
 analysis/*_cache
 analysis/site_libs
+renv/*
 data/*
 cache/*
+presentations/2022_05_06_PCB/*
+_targets.html
+_targets.R
+_targets.md
 _targets_r/*
