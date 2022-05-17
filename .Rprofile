@@ -1,5 +1,5 @@
 ## Activate the renv package to manage the project's package library
-source("renv/activate.R")
+# source("renv/activate.R")
 
 ## clustermq
 options(

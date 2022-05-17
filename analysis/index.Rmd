@@ -16,6 +16,7 @@ The analysis on this website depends on the [gseasusie package](github.com/karlt
 
 ## Analysis
 
+Packages managed with `renv`
 [GSEA should be done jointly, not marginally]
 
 ## Logistic SuSiE GSEA examples
@@ -40,4 +41,3 @@ The analysis on this website depends on the [gseasusie package](github.com/karlt
 
 
 <!-- [Two component model, multiple regression]() -->
-
