@@ -185,3 +185,43 @@ load_human_chimp_eb  = function(){
     add_names(map_chr(., ~pluck(.x, 'celltype')[1]))
   return(data)
 }
+
+
+load_baboon_diet = function(){
+  de.adipose <- read.table('data/wenhe_baboon_diet/DE_lrt_adipose.txt')
+  de.liver <- read.table('data/wenhe_baboon_diet/DE_lrt_liver.txt')
+  de.muscle <- read.table('data/wenhe_baboon_diet/DE_lrt_muscle.txt')
+
+  de <- bind_rows(
+    rownames_to_column(de.adipose) %>% mutate(tissue='Adipose'),
+    rownames_to_column(de.liver) %>% mutate(tissue='Liver'),
+    rownames_to_column(de.muscle) %>% mutate(tissue='Muscle')) %>%
+    rename(gene=rowname)
+
+  hs <- org.Hs.eg.db::org.Hs.eg.db
+  gene_symbols <- unique(de$gene)
+  symbol2entrez <- AnnotationDbi::select(
+    hs, keys=gene_symbols,
+    columns=c('ENTREZID', 'SYMBOL'),
+    keytype = 'SYMBOL')
+
+  add_names = function(l, n){
+    names(l) <- n
+    return(l)
+  }
+
+  data <- de %>%
+    rename(SYMBOL=gene) %>%
+    left_join(symbol2entrez, by='SYMBOL') %>%
+    relocate(ENTREZID, .after=SYMBOL) %>%
+    mutate(  # set default columns
+      beta = logFC,
+      se = 0,
+      threshold.on = PValue
+    ) %>%
+    group_by(tissue) %>%
+    group_map(~ .x, .keep = T) %>%
+    add_names(map_chr(., ~pluck(.x, 'tissue')[1]))
+
+  return(data)
+}
