@@ -11,14 +11,17 @@ editor_options:
 
 Here we demonstrate the basics of how to use the `gseasusie` package.
 
-```{r}
-devtools::install_github('karltayeb/gseasusie', force=TRUE)
-library(gseasusie)
-
-library(tidyverse)
-devtools::load_all('~/R/gseasusie/')
+```{r, eval=FALSE}
+devtools::install_github('karltayeb/gseasusie')
 ```
 
+
+```{r, message=FALSE, results='hide'}
+library(gseasusie)
+library(tidyverse)
+```
+
+## Loading gene sets
 `gseasusie` ships with lots of gene set databases!
 There are other packages that curate geneset databases `WebGestaltR`, `msigdbr`, and `stephenslab/pathways`
 All I did here was write a few functions to load them into a standard format.
@@ -32,13 +35,16 @@ Each gene set list contains three elements:
 
 eventually, the package will ship with some data
 
-```{r load.data, include=FALSE}
+```{r load.gene.sets}
 genesets <- gseasusie::load_gene_sets(c('c2', 'all_msigbd'))
 genesets$c2$geneSet %>% head()
 genesets$c2$geneSetDes %>% head()
 dim(genesets$c2$X)
 ```
 
+## How to format data
+
+### Managing multiple experiment
 
 If you have multiple experiments that you want to run enrichment for, I've found it useful to format as follows.
 `data` is a list of data frames, one for each experiment. The dataframes can have whatever information you'd like, but they must have the following columns: 
@@ -47,16 +53,21 @@ If you have multiple experiments that you want to run enrichment for, I've found
 * and `beta`:: right now this is only used for sign information, so if you don't care specifically about up or down regulated genes just make a dummy column with 1s.
 
 Eventually, `beta` and `se` columns will be important for the summary stat enrichment analaysis.
-```{r}
+
+```{r load.data}
 source('code/load_data.R')
 data <- load_sc_pbmc_deseq2()
 data$`CD19+ B` %>% head()
 ```
 
 
-Now we will binarize the data by thresholding on `threshold.on`
-We also need to format our gene set matrix and our gene list: (subset to intersection genes, check genes are consistently ordered, etc). `gseasusie::prep_binary_data` helps us with this!
-```{r}
+### Binarizing the data
+
+At the end of the day, you're going to need a binary gene x gene set matrix `X` and a binary gene list `y`. However you want to get those is fine.
+
+One benefit of organizing your data as in the previous section, `gseasusie` ships with some helpful functions to format/prepare the data. `gseasusie::prep_binary_data` will binarize the data by thresholding on `threshold.on`.
+
+```{r binarize.data}
 db <- 'c2'  # name of gene set database to use in `genesets`
 experiment = 'CD19+ B'  # name of experiment to use in `data`
 thresh = 1e-4  # threshold for binarizing the data
@@ -67,10 +78,12 @@ y <- bin.data$y
 ```
 
 
-Now we can fit our enrichment models.
-NOTE: The marginal regressions are implimented in python (`basilisk` will spin up a conda environment with necessary dependencies, which will take some time the first time you run it, but will run quickly after!)
+## Fitting different enrichment models/methods
 
-```{r}
+Now we can fit our enrichment models.
+NOTE: The marginal regressions are implemented in python (`basilisk` will spin up a conda environment with necessary dependencies, which will take some time the first time you run it, but will run quickly after!)
+
+```{r fit.models}
 # fit logistic susie
 logistic.fit <- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)
 
@@ -97,22 +110,26 @@ res = list(
 ```
 
 
-We can visualize our results with a volcano plot (more plots coming)
+## Visualizations
 
+We can visualize our results with a volcano plot (more plots coming)
 The large circles highlight gene sets in a 95% credible set. The color indicates which SuSiE component)
-```{r}
+
+```{r make.volcano}
 gseasusie::enrichment_volcano(logistic.fit, ora)
 ```
 
 If we account for the predictions made by (logitic) SuSiE, we can see that a lot (but not all of) the enrichment signal has been accounted for.
 
-```{r}
+```{r make.residual.hist}
 gseasusie::residual_enrichment_histogram(marginal_regression, residual_regression)
 ```
 
-We can produce an interactive table to explore the enrichment results.s
+## Interactive tables
 
-```{r}
+We can produce an interactive table to explore the enrichment results:
+
+```{r make.itable}
 gseasusie::interactive_table(logistic.fit, ora)
 ```
 
