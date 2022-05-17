@@ -1,0 +1,119 @@
+---
+title: "getting_started"
+author: "karltayeb"
+date: "2022-05-16"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Here we demonstrate the basics of how to use the `gseasusie` package.
+
+```{r}
+devtools::install_github('karltayeb/gseasusie', force=TRUE)
+library(gseasusie)
+
+library(tidyverse)
+devtools::load_all('~/R/gseasusie/')
+```
+
+`gseasusie` ships with lots of gene set databases!
+There are other packages that curate geneset databases `WebGestaltR`, `msigdbr`, and `stephenslab/pathways`
+All I did here was write a few functions to load them into a standard format.
+
+Each gene set list contains three elements: 
+ * `X`: a gene x gene set indicator matrx
+ * `geneSet`: a two column `data.frame` (`geneSet` and `gene`) mapping genes to gene sets 
+ * `geneSetDes`: a written description of what the gene set does
+ 
+`gseasusie::load_gene_sets` lets you load multiple gene sets. Note: the first time you try to load gene sets it might take a while because we need to build the indicator matrices (and the implimentation is far from optimized). After your fit it onces it will cache to a folder `./cache/resources/` relative to your working directory/project directory
+
+eventually, the package will ship with some data
+
+```{r load.data, include=FALSE}
+genesets <- gseasusie::load_gene_sets(c('c2', 'all_msigbd'))
+genesets$c2$geneSet %>% head()
+genesets$c2$geneSetDes %>% head()
+dim(genesets$c2$X)
+```
+
+
+If you have multiple experiments that you want to run enrichment for, I've found it useful to format as follows.
+`data` is a list of data frames, one for each experiment. The dataframes can have whatever information you'd like, but they must have the following columns: 
+* `ENTREZID`: the gene sets above use `ENTREZID`, so map your gene names to this!
+* `threshold.on`: this might be a p-value, adjusted pvalue, effect size, etc
+* and `beta`:: right now this is only used for sign information, so if you don't care specifically about up or down regulated genes just make a dummy column with 1s.
+
+Eventually, `beta` and `se` columns will be important for the summary stat enrichment analaysis.
+```{r}
+source('code/load_data.R')
+data <- load_sc_pbmc_deseq2()
+data$`CD19+ B` %>% head()
+```
+
+
+Now we will binarize the data by thresholding on `threshold.on`
+We also need to format our gene set matrix and our gene list: (subset to intersection genes, check genes are consistently ordered, etc). `gseasusie::prep_binary_data` helps us with this!
+```{r}
+db <- 'c2'  # name of gene set database to use in `genesets`
+experiment = 'CD19+ B'  # name of experiment to use in `data`
+thresh = 1e-4  # threshold for binarizing the data
+bin.data <- gseasusie::prep_binary_data(genesets[[db]], data[[experiment]], thresh)
+
+X <- bin.data$X
+y <- bin.data$y
+```
+
+
+Now we can fit our enrichment models.
+NOTE: The marginal regressions are implimented in python (`basilisk` will spin up a conda environment with necessary dependencies, which will take some time the first time you run it, but will run quickly after!)
+
+```{r}
+# fit logistic susie
+logistic.fit <- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)
+
+# fit linear susie
+# (all of the functions that work with logistic susie fits should work with regular susie fits)
+linear.fit <- susieR::susie(X, y)
+
+# compute odds ratios, and pvalues under hypergeometric (one-sided) and fishers exact (two-sided) tests
+ora <- gseasusie::fit_ora(X, y)
+
+# like ORA but performed implimented as a univariate logistic regression
+marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
+
+# redo the logistic regression ORA, conditional on enrichments found by logistic susie
+# in practice, we introduce logistic susie predictions as an offset in the new model
+residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
+
+res = list(
+  fit=logistic.fit,
+  ora=ora,
+  marginal_reg = marginal_regression,
+  residual_reg = residual_regression
+)
+```
+
+
+We can visualize our results with a volcano plot (more plots coming)
+
+The large circles highlight gene sets in a 95% credible set. The color indicates which SuSiE component)
+```{r}
+gseasusie::enrichment_volcano(logistic.fit, ora)
+```
+
+If we account for the predictions made by (logitic) SuSiE, we can see that a lot (but not all of) the enrichment signal has been accounted for.
+
+```{r}
+gseasusie::residual_enrichment_histogram(marginal_regression, residual_regression)
+```
+
+We can produce an interactive table to explore the enrichment results.s
+
+```{r}
+gseasusie::interactive_table(logistic.fit, ora)
+```
+
+
