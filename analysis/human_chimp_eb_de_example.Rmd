@@ -37,7 +37,7 @@ knitr::opts_chunk$set(
 ```{r load.libraries, include=FALSE}
 library(tidyverse)
 library(htmltools)
-library(gseareg)
+library(gseasusie)
 source('code/utils.R')
 
 
@@ -52,9 +52,36 @@ cache_rds <- partial(xfun::cache_rds, dir=params.cache_dir, rerun=params.rerun)
 
 ```{r load.data, include=FALSE}
 source('code/load_data.R')
-genesets <- gseareg::load_gene_sets()
+genesets <- gseasusie::load_gene_sets()
 data <- load_human_chimp_eb()
 ```
+
+### Single example
+
+```{r}
+exp <- 'Acinar cells'
+db <- 'kegg'
+thresh <- 1e-2
+
+logistic.fit <- gseasusie::do_logistic_susie(exp, db, thresh, genesets, data)
+linear.fit <- gseasusie::do_linear_susie(exp, db, thresh, genesets, data)
+ora <- gseasusie::do_ora(exp, db, thresh, genesets, data)
+#sumstat.fit <- gseasusie::do_tccm_point_normal_susie(exp, db, genesets, data, list(maxit=50))
+
+
+par(mfrow=c(1, 2))
+logistic.fit$fit[[1]] %>% susieR::susie_plot('PIP', main='logistic')
+linear.fit$fit[[1]] %>% susieR::susie_plot('PIP', main='linear')
+
+ora$ora[[1]] %>% left_join(
+  tibble(geneSet=names(linear.fit$fit[[1]]$pip), pip=linear.fit$fit[[1]]$pip)
+) %>% arrange(pHypergeometric)
+```
+
+```{r}
+par(m)
+```
+
 
 ```{r}
 pvals <- map(data, ~pluck(.x, 'threshold.on'))
