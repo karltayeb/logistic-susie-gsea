@@ -29,7 +29,7 @@ library(gseasusie)
 
 library(future)
 library(future.callr)
-plan(callr)
+plan(multisession)
 
 # Manage naming conflicts
 conflict_prefer("select", "dplyr", "AnnotationDbi")
@@ -221,13 +221,13 @@ run_enrichment = function(db, experiment, thresh, genesets, data){
   logistic.fit <- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)
   ora <- gseasusie::fit_ora(X, y)
   
-  linear.fit <- susieR::susie(X, y)
+  # linear.fit <- susieR::susie(X, y)
   marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
   residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
   
   res <- tibble(
     fit=list(logistic.fit),
-    linear.fit = list(linear.fit),
+    # linear.fit = list(linear.fit),
     ora=list(ora),
     marginal_reg = list(marginal_regression),
     residual_reg = list(residual_regression)
@@ -237,8 +237,8 @@ run_enrichment = function(db, experiment, thresh, genesets, data){
 
 summarise_enrichment = function(fit, ora, marginal_reg, residual_reg, geneSetDes){
   # put everything into one table
-  gssum <- get_gene_set_summary(fit)
-  cssum <- get_cs_summary_condensed(fit)
+  gssum <- gseasusie:::get_gene_set_summary(fit)
+  cssum <- gseasusie:::get_cs_summary_condensed(fit)
   
   reg <- left_join(
     marginal_reg,
@@ -254,19 +254,17 @@ summarise_enrichment = function(fit, ora, marginal_reg, residual_reg, geneSetDes
   return(gene_set_summary)
 }
 
-GENESETS <- c('c1')
-THRESHOLDS <- c(1e-2, 1e-4) # c(1e-2, 1e-4, 1e-6, 1e-8)
+GENESETS <- c('all_msigdb', 'all_go', 'pathways')
+THRESHOLDS <- c(1e-4) # c(1e-2, 1e-4, 1e-6, 1e-8)
 DATALOADER <- load_sc_pbmc_deseq2
 target_list <- list(
-  # get gene sets
-  tar_target(genesets, gseasusie::load_gene_sets(GENESETS)),
   # get data
   tar_target(sc_pbmc_deseq_data, DATALOADER()),
   # make meta table (group over experiment, all db and threshold get evaluated in one target)
   tarchetypes::tar_group_by(
     sc_pbmc_deseq_meta,
     crossing(
-      db=names(genesets),
+      db=GENESETS,
       experiment=names(sc_pbmc_deseq_data)[1:2],
       threshold = THRESHOLDS), experiment),
   # fit enrichment for each row of meta
