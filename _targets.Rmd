@@ -22,6 +22,7 @@ library(glue)
 library(tarchetypes)
 library(conflicted)
 library(gseasusie)
+library(DESeq2)
 
 
 #library(clustermq)
@@ -37,6 +38,8 @@ conflict_prefer("filter", "dplyr")
 conflict_prefer("rename", "dplyr")
 conflict_prefer("lag", "dplyr")
 conflict_prefer("desc", "dplyr")
+conflict_prefer("colSums", "BiocGenerics")
+
 
 # callr cant find these when used in 'tar_option_set'
 # but these imports would be better placed there
@@ -47,6 +50,7 @@ require(EnrichmentBrowser, quietly = T)
 source('code/target_factories.R')
 source('code/target_simulate_gene_lists.R')
 source('code/target_score_simulation.R')
+source('code/target_run_enrichment.R')
 source('code/load_data.R')
 
 # options(clustermq.scheduler = "slurm", clustermq.template="clustermq_slurm.sh")
@@ -207,73 +211,29 @@ list(
 
 ## Real Data
 
+### PBMC
+
 ```{targets pbmc.deseq}
-run_enrichment = function(db, experiment, thresh, genesets, data){
-  message(paste0('Fitting logistic susie...',
-    '\n\tExperiment = ', experiment,
-    '\n\tDatabase = ', db,
-    '\n\tthresh = ', thresh))
-  
-  bin.data <- gseasusie::prep_binary_data(genesets[[db]], data[[experiment]], thresh)
-  X <- bin.data$X
-  y <- bin.data$y
-  
-  logistic.fit <- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)
-  ora <- gseasusie::fit_ora(X, y)
-  
-  # linear.fit <- susieR::susie(X, y)
-  marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
-  residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
-  
-  res <- tibble(
-    fit=list(logistic.fit),
-    # linear.fit = list(linear.fit),
-    ora=list(ora),
-    marginal_reg = list(marginal_regression),
-    residual_reg = list(residual_regression)
-  )
-  return(res)
-}
+GENESETS <- c('c2') #c('all_msigdb', 'all_go', 'pathways')
+PROPGENES <- c(0.05, 0.1, 0.2, 0.5) # c(1e-2, 1e-4, 1e-6, 1e-8)
 
-summarise_enrichment = function(fit, ora, marginal_reg, residual_reg, geneSetDes){
-  # put everything into one table
-  gssum <- gseasusie:::get_gene_set_summary(fit)
-  cssum <- gseasusie:::get_cs_summary_condensed(fit)
-  
-  reg <- left_join(
-    marginal_reg,
-    residual_reg,
-    by="geneSet", suffix=c('_marginal', '_residual'))
-
-  gene_set_summary <- 
-    gssum %>%
-    dplyr::left_join(cssum) %>%
-    dplyr::left_join(ora) %>%
-    left_join(reg) %>%
-    left_join(geneSetDes)
-  return(gene_set_summary)
-}
-
-GENESETS <- c('all_msigdb', 'all_go', 'pathways')
-THRESHOLDS <- c(1e-4) # c(1e-2, 1e-4, 1e-6, 1e-8)
-DATALOADER <- load_sc_pbmc_deseq2
 target_list <- list(
   # get data
-  tar_target(sc_pbmc_deseq_data, DATALOADER()),
+  tar_target(sc_pbmc_deseq_data, load_sc_pbmc_deseq2()),
   # make meta table (group over experiment, all db and threshold get evaluated in one target)
   tarchetypes::tar_group_by(
     sc_pbmc_deseq_meta,
     crossing(
       db=GENESETS,
       experiment=names(sc_pbmc_deseq_data)[1:2],
-      threshold = THRESHOLDS), experiment),
+      ptop = PROPGENES), experiment),
   # fit enrichment for each row of meta
   tar_target(
     sc_pbmc_deseq_enrichment_fit,
     sc_pbmc_deseq_meta %>% 
       rowwise() %>%
       mutate(
-        enrichment = list(run_enrichment(db, experiment, threshold, genesets, sc_pbmc_deseq_data))
+        enrichment = list(run_enrichment(db, experiment, ptop, genesets, sc_pbmc_deseq_data))
       ) %>% ungroup() %>% unnest(enrichment),
     pattern = map(sc_pbmc_deseq_meta)
   ),
@@ -285,8 +245,80 @@ target_list <- list(
       mutate(
         enrichment_summary = list(summarise_enrichment(
           fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
-      select(db, experiment, threshold, enrichment_summary),
+      select(db, experiment, ptop, enrichment_summary),
     pattern = map(sc_pbmc_deseq_enrichment_fit)
+  )
+)
+target_list
+```
+
+```{targets human.chimp.eb}
+target_list <- list(
+  # get data
+  tar_target(human_chimp_eb_data, load_human_chimp_eb()),
+  # make meta table (group over experiment, all db and threshold get evaluated in one target)
+  tarchetypes::tar_group_by(
+    human_chimp_eb_meta,
+    crossing(
+      db=GENESETS,
+      experiment=names(human_chimp_eb_data)[1:2],
+      ptop = PROPGENES), experiment),
+  # fit enrichment for each row of meta
+  tar_target(
+    human_chimp_eb_enrichment_fit,
+    human_chimp_eb_meta %>% 
+      rowwise() %>%
+      mutate(
+        enrichment = list(run_enrichment(db, experiment, ptop, genesets, human_chimp_eb_data))
+      ) %>% ungroup() %>% unnest(enrichment),
+    pattern = map(human_chimp_eb_meta)
+  ),
+  # summarise enrichment (lightweight, used for plotting, etc)
+  tar_target(
+    human_chimp_eb_enrichment_summary,
+    human_chimp_eb_enrichment_fit %>%
+      rowwise() %>% 
+      mutate(
+        enrichment_summary = list(summarise_enrichment(
+          fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
+      select(db, experiment, ptop, enrichment_summary),
+    pattern = map(human_chimp_eb_enrichment_fit)
+  )
+)
+target_list
+```
+
+```{targets baboon.diet}
+target_list <- list(
+  # get data
+  tar_target(baboon_diet_data, load_baboon_diet()),
+  # make meta table (group over experiment, all db and threshold get evaluated in one target)
+  tarchetypes::tar_group_by(
+    baboon_diet_meta,
+    crossing(
+      db=GENESETS,
+      experiment=names(baboon_diet_data)[1:2],
+      ptop = PROPGENES), experiment),
+  # fit enrichment for each row of meta
+  tar_target(
+    baboon_diet_enrichment_fit,
+    baboon_diet_meta %>% 
+      rowwise() %>%
+      mutate(
+        enrichment = list(run_enrichment(db, experiment, ptop, genesets, baboon_diet_data))
+      ) %>% ungroup() %>% unnest(enrichment),
+    pattern = map(baboon_diet_meta)
+  ),
+  # summarise enrichment (lightweight, used for plotting, etc)
+  tar_target(
+    baboon_diet_enrichment_summary,
+    baboon_diet_enrichment_fit %>%
+      rowwise() %>% 
+      mutate(
+        enrichment_summary = list(summarise_enrichment(
+          fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
+      select(db, experiment, ptop, enrichment_summary),
+    pattern = map(baboon_diet_enrichment_fit)
   )
 )
 target_list
