@@ -15,9 +15,13 @@ params:
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_knit$set(
+  root.dir = '/project2/gilad/ktayeb/logistic-susie-gsea/'
+)
 knitr::opts_chunk$set(
   comment = '',
-  message=FALSE, warning=FALSE
+  message=FALSE, warning=FALSE,
+  root.dir = '/project2/gilad/ktayeb/logistic-susie-gsea/'
 )
 ```
 
