@@ -451,9 +451,6 @@ run_enrichment = function(db, experiment, thresh, genesets, data){
   residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
   
   res <- tibble(
-    db = db,
-    experiment = experiment,
-    thresh = thresh,
     fit=list(logistic.fit),
     linear.fit = list(linear.fit),
     ora=list(ora),
@@ -483,29 +480,28 @@ summarise_enrichment = function(fit, ora, marginal_reg, residual_reg, geneSetDes
 }
 
 GENESETS <- c('c1')
-THRESHOLDS <- c(1e-4) # c(1e-2, 1e-4, 1e-6, 1e-8)
-PREFIX <- 'sc_pbmc_deseq'
+THRESHOLDS <- c(1e-2, 1e-4) # c(1e-2, 1e-4, 1e-6, 1e-8)
 DATALOADER <- load_sc_pbmc_deseq2
-
 list(
   # get gene sets
   tar_target(genesets, gseasusie::load_gene_sets(GENESETS)),
   # get data
   tar_target(sc_pbmc_deseq_data, DATALOADER()),
-  # make meta table
-  tar_target(sc_pbmc_deseq_meta, crossing(
-    db=names(genesets),
-    experiment=names(sc_pbmc_deseq_data),
-    threshold = THRESHOLDS)),
+  # make meta table (group over experiment, all db and threshold get evaluated in one target)
+  tarchetypes::tar_group_by(
+    sc_pbmc_deseq_meta,
+    crossing(
+      db=names(genesets),
+      experiment=names(sc_pbmc_deseq_data)[1:2],
+      threshold = THRESHOLDS), experiment),
   # fit enrichment for each row of meta
   tar_target(
     sc_pbmc_deseq_enrichment_fit,
-    run_enrichment(
-      sc_pbmc_deseq_meta$db,
-      sc_pbmc_deseq_meta$experiment,
-      sc_pbmc_deseq_meta$threshold,
-      genesets,
-      sc_pbmc_deseq_data),
+    sc_pbmc_deseq_meta %>% 
+      rowwise() %>%
+      mutate(
+        enrichment = list(run_enrichment(db, experiment, threshold, genesets, sc_pbmc_deseq_data))
+      ) %>% ungroup() %>% unnest(enrichment),
     pattern = map(sc_pbmc_deseq_meta)
   ),
   # summarise enrichment (lightweight, used for plotting, etc)
@@ -516,11 +512,31 @@ list(
       mutate(
         enrichment_summary = list(summarise_enrichment(
           fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
-      select(db, experiment, thresh, enrichment_summary),
+      select(db, experiment, threshold, enrichment_summary),
     pattern = map(sc_pbmc_deseq_enrichment_fit)
   )
 )
 ```
+```{targets}
+list(
+  # fit enrichment for each row of meta
+  tar_target(
+    sc_pbmc_deseq_enrichment_fit, sc_pbmc_deseq_enrichment_fit,
+  ),
+  # summarise enrichment (lightweight, used for plotting, etc)
+  tar_target(
+    sc_pbmc_deseq_enrichment_summary,
+    sc_pbmc_deseq_enrichment_fit %>%
+      rowwise() %>% 
+      mutate(
+        enrichment_summary = list(summarise_enrichment(
+          fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
+      select(db, experiment, threshold, enrichment_summary),
+    pattern = map(sc_pbmc_deseq_enrichment_fit)
+  )
+)
+```
+
 
 ## Pipeline
 
