@@ -23,7 +23,7 @@ library(glue)
 library(tarchetypes)
 library(clustermq)
 library(conflicted)
-library(gseareg)
+library(gseasusie)
 
 # Manage naming conflicts
 conflict_prefer("select", "dplyr", "AnnotationDbi")
@@ -41,6 +41,7 @@ require(EnrichmentBrowser, quietly = T)
 source('code/target_factories.R')
 source('code/target_simulate_gene_lists.R')
 source('code/target_score_simulation.R')
+source('code/load_data.R')
 
 options(clustermq.scheduler = "multiprocess")
 tar_option_set(workspace_on_error = TRUE)
@@ -62,13 +63,16 @@ To add a method add a row to `method_lookup` and `score_lookup`
 
 ```{targets method_bank, tar_globals=TRUE}
 fit_logistic_susie_l1 = function(X, y){
-  gseareg::fit_logistic_susie(X, y, L=1, maxit=100)
+  gseasusie::fit_logistic_susie(X, y, L=1, maxit=500)
 }
 fit_linear_susie_l1 = function(X, y){
   susieR::susie(X, y, L=1)
 }
 fit_logistic_susie_l10 = function(X, y){
-  gseareg::fit_logistic_susie(X, y, L=10, maxit=100)
+  gseasusie::fit_logistic_susie(X, y, L=10, maxit=500)
+}
+fit_logistic_susie_veb_boost_l10 = function(X, y){
+  gseasusie::fit_logistic_susie_veb_boost(X, y, L=10, maxit=500)
 }
 fit_linear_susie_l10 = function(X, y){
   susieR::susie(X, y, L=10)
@@ -88,11 +92,12 @@ fit_logistic_lasso = function(X, y){
 
 method_lookup <- tribble(
   ~method_name, ~method_function, ~method_args,
-  'ora', gseareg::fit_ora, list(),
-  'logistic_susie.l1', fit_logistic_susie_l1, list(L=1),
-  'linear_susie.l1', fit_linear_susie_l1, list(L=1),
-  'logistic_susie.l10', fit_logistic_susie_l10, list(L=1),
-  'linear_susie.l10', fit_linear_susie_l10, list(L=1),
+  'ora', gseasusie::fit_ora, list(),
+  'logistic_susie.l1', fit_logistic_susie_l1, list(),
+  'linear_susie.l1', fit_linear_susie_l1, list(),
+  'logistic_susie.l10', fit_logistic_susie_l10, list(),
+  'logistic_susie_veb_boost.l10', fit_logistic_susie_veb_boost_l10, list(),
+  'linear_susie.l10', fit_linear_susie_l10, list(),
   'linear_lasso', fit_linear_lasso, list(),
   'logistic_lasso', fit_logistic_lasso, list()
 )
@@ -103,6 +108,7 @@ score_lookup <- tribble(
   'logistic_susie.l1', score_pip,
   'linear_susie.l1', score_pip,
   'logistic_susie.l10', score_pip,
+  'logistic_susie_veb_boost.l10', score_pip,
   'linear_susie.l10', score_pip,
   'linear_lasso', score_glm,
   'logistic_lasso', score_glm
@@ -114,7 +120,7 @@ score_lookup <- tribble(
 ### Get gene sets
 ```{targets load-genesets}
 list(
-  tar_target(genesets, gseareg::load_gene_sets()),
+  tar_target(genesets, gseasusie::load_gene_sets()),
   tar_target(X.gonr, genesets$gobp_nr$X)
 )
 ```
@@ -170,10 +176,11 @@ get.additive.l5.sim.params <- function(){
   ) %>% rowwise() %>% mutate(
     params = list(setNames(c_across(!c(X, sim_function, param_names)), param_names))
   )
+  return(params)
 }
 
 # target metadata/specification
-additive.l5.gonr.sim.params <- get.additive.l5.sim.params() %>% head(1)
+additive.l5.gonr.sim.params <- get.additive.l5.sim.params()
 additive.l5.gonr.methods <- method_lookup
 additive.l5.gonr.score_lookup <- additive.l5.gonr.methods %>%
   left_join(score_lookup)
@@ -195,6 +202,7 @@ tar_visnetwork()
 knitr::knit_exit()
 ```
 
+## L1 Sim plots
 
 ```{r}
 l1.sim.aggregate.scores <- read_tsv('l1.sim.aggregate.scores')
@@ -218,8 +226,8 @@ plotdat %>%
 
 
 ```{r}
-l1.sim.aggregate.scores %>%
-  filter(thresh == 0.95) %>%
+a <- l1.sim.aggregate.scores %>%
+  filter(method_name != 'ora', near(thresh, 0.95)) %>%
   group_by(method_name, background.logit, active.logit) %>%
   summarise(TP = sum(TP), FP = sum(FP), TN = sum(TN), FN = sum(FN)) %>%
   mutate(
@@ -227,7 +235,65 @@ l1.sim.aggregate.scores %>%
     precision = TP / (TP + FP),
     specificity = TN / (TN + FP)
   ) %>%
-  pivot_longer(c(recall, precision, specificity), names_to= 'metric') %>%
+  pivot_longer(c(recall, precision, specificity), names_to= 'metric') 
+
+b <- l1.sim.aggregate.scores %>%
+  filter(method_name == 'ora', near(thresh, 0.999, 1e-10)) %>%
+  group_by(method_name, background.logit, active.logit) %>%
+  summarise(TP = sum(TP), FP = sum(FP), TN = sum(TN), FN = sum(FN)) %>%
+  mutate(
+    recall = TP / (TP + FN),
+    precision = TP / (TP + FP),
+    specificity = TN / (TN + FP)
+  ) %>%
+  pivot_longer(c(recall, precision, specificity), names_to= 'metric') 
+
+bind_rows(a, b) %>%
+  ggplot(aes(x=background.logit, y=active.logit, fill=value)) + 
+  geom_tile() + facet_grid(vars(metric), vars(method_name)) + theme(aspect.ratio = 1)
+  ggplot(aes(x=background.logit, y=active.logit, fill=TPR)) + geom_tile()
+```
+
+
+## L5 Sim plots
+
+```{r}
+scores <- read_rds('additive.l5.gonr.aggregate.scores')
+scores <- scores %>% unnest(scores)
+
+# TPR vs FPR
+plotdat <- scores %>%
+  filter(!(method_name %in% c('linear_lasso', 'logistic_lasso'))) %>%
+  filter(thresh > 0.05, thresh < 0.999) %>%
+  group_by(method_name, thresh) %>%
+  summarise(TP = sum(TP), FP = sum(FP), TN = sum(TN), FN = sum(FN)) %>%
+  mutate(TPR = TP/(TP + FN), FDP  = FP/(TP + FP)) 
+
+plotdat %>%
+  filter(method_name == 'logistic_susie.l10') %>%
+  arrange(desc(thresh))
+
+plotdat %>%
+  ggplot(aes(x=FDP, y=TPR, color=method_name)) + 
+  geom_line()
+```
+
+
+```{r}
+plotdat <- scores %>%
+  filter(!(method_name %in% c('linear_lasso', 'logistic_lasso'))) %>%
+  filter(near(thresh, 0.99)) %>%
+  group_by(method_name, background.logit, active.logit) %>%
+  summarise(TP = sum(TP), FP = sum(FP), TN = sum(TN), FN = sum(FN)) %>%
+  mutate(
+    recall = TP / (TP + FN),
+    precision = TP / (TP + FP),
+    specificity = TN / (TN + FP)
+  ) %>%
+  pivot_longer(c(recall, precision, specificity), names_to= 'metric') 
+
+
+plotdat %>%
   ggplot(aes(x=background.logit, y=active.logit, fill=value)) + 
   geom_tile() + facet_grid(vars(metric), vars(method_name)) + theme(aspect.ratio = 1)
   ggplot(aes(x=background.logit, y=active.logit, fill=TPR)) + geom_tile()
@@ -301,6 +367,9 @@ list(
 )
 ```
 
+
+
+
 ## Constant Additive Sim
 
 Fixed background rate, fixed beta across $L$ active gene sets.
@@ -357,6 +426,64 @@ list(
 
 ```{r}
 
+```
+
+
+
+## Real Data
+
+```{targets pbmc.deseeq}
+run_enrichment = function(db, experiment, thresh, genesets, data){
+  message(paste0('Fitting logistic susie...',
+    '\n\tExperiment = ', experiment,
+    '\n\tDatabase = ', db,
+    '\n\tthresh = ', thresh))
+  
+  bin.data <- gseasusie::prep_binary_data(genesets[[db]], data[[experiment]], thresh)
+  X <- bin.data$X
+  y <- bin.data$y
+  
+  logistic.fit <- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)
+  ora <- gseasusie::fit_ora(X, y)
+  
+  linear.fit <- susieR::susie(X, y)
+  marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
+  residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
+  
+  res <- tibble(
+    db = db,
+    experiment = experiment,
+    thresh = thresh,
+    fit=list(logistic.fit),
+    linear.fit = list(linear.fit),
+    ora=list(ora),
+    marginal_reg = list(marginal_regression),
+    residual_reg = list(residual_regression)
+  )
+  return(res)
+}
+
+GENESETS <- c('c1')
+THRESHOLDS <- c(1e-4) # c(1e-2, 1e-4, 1e-6, 1e-8)
+
+list(
+  tar_target(genesets, gseasusie::load_gene_sets(GENESETS)),
+  tar_target(sc_pbmc_deseq_data, load_sc_pbmc_deseq2()),
+  tar_target(sc_pbmc_deseq_meta, crossing(
+    db=names(genesets),
+    experiment=names(sc_pbmc_deseq_data),
+    threshold = THRESHOLDS)),
+  tar_target(
+    sc_pbmc_deseq_enrichment,
+    run_enrichment(
+      sc_pbmc_deseq_meta$db,
+      sc_pbmc_deseq_meta$experiment,
+      sc_pbmc_deseq_meta$threshold,
+      genesets,
+      sc_pbmc_deseq_data),
+    pattern = map(sc_pbmc_deseq_meta)
+  )
+)
 ```
 
 ## Pipeline
