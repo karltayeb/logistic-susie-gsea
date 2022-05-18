@@ -1,5 +1,5 @@
 ---
-title: "Logistic SuSiE Report Template"
+title: "Single Cell PBMC Differential Expression"
 author: "karltayeb"
 date: "2022-04-11"
 output:
@@ -11,6 +11,7 @@ editor_options:
 
 ## Introduction
 
+PBMC data from Zheng et. al 2017.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
