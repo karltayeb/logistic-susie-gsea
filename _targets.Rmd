@@ -54,7 +54,8 @@ source('code/target_run_enrichment.R')
 source('code/load_data.R')
 
 # options(clustermq.scheduler = "slurm", clustermq.template="clustermq_slurm.sh")
-tar_option_set(workspace_on_error = TRUE)
+# tar_option_set(workspace_on_error = TRUE)
+tar_option_set(error = 'continue')
 
 tar_option_set(packages = c(
   "tidyverse", "WebGestaltR",
@@ -214,7 +215,7 @@ list(
 ### PBMC
 
 ```{targets pbmc.deseq}
-GENESETS <- c('c2') #c('all_msigdb', 'all_go', 'pathways')
+GENESETS <- c('all_msigdb') # c('all_msigdb', 'all_go', 'pathways')
 PROPGENES <- c(0.05, 0.1, 0.2, 0.5) # c(1e-2, 1e-4, 1e-6, 1e-8)
 
 target_list <- list(
@@ -225,8 +226,8 @@ target_list <- list(
     sc_pbmc_deseq_meta,
     crossing(
       db=GENESETS,
-      experiment=names(sc_pbmc_deseq_data)[1:2],
-      ptop = PROPGENES), experiment),
+      experiment=names(sc_pbmc_deseq_data),
+      ptop = PROPGENES), experiment, db),
   # fit enrichment for each row of meta
   tar_target(
     sc_pbmc_deseq_enrichment_fit,
@@ -252,6 +253,8 @@ target_list <- list(
 target_list
 ```
 
+### Human Chimp EB
+
 ```{targets human.chimp.eb}
 target_list <- list(
   # get data
@@ -261,7 +264,7 @@ target_list <- list(
     human_chimp_eb_meta,
     crossing(
       db=GENESETS,
-      experiment=names(human_chimp_eb_data)[1:2],
+      experiment=names(human_chimp_eb_data),
       ptop = PROPGENES), experiment),
   # fit enrichment for each row of meta
   tar_target(
@@ -287,6 +290,8 @@ target_list <- list(
 )
 target_list
 ```
+
+### Baboon Diet
 
 ```{targets baboon.diet}
 target_list <- list(
