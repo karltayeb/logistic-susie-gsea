@@ -7,11 +7,6 @@ output:
     code_folding: hide
 editor_options:
   chunk_output_type: console
-params:
-  cache_dir: 'cache/example_pbmc/'
-  genesets: c('gobp')
-  thresh: 1e-4
-  rerun: FALSE  # set to true to ignore cache
 ---
 
 ## Introduction
@@ -33,6 +28,7 @@ library(targets)
 tar_load(sc_pbmc_deseq_enrichment_summary)
 results <- sc_pbmc_deseq_enrichment_summary
 ```
+
 
 ```{r plot.function, hide=TRUE}
 color_sign <- gseasusie:::color_sign
@@ -80,8 +76,32 @@ residual_enrichment_histogram2 = function(res){
     ggplot2::ggplot(aes(x=pval)) +
       ggplot2::geom_histogram() + ggplot2::facet_wrap(vars(name))
 }
-```
 
+pack_group <- gseasusie:::pack_group
+
+static_table = function(res){
+  require(kableExtra)
+  tbl_filtered <-
+    res %>%
+    arrange(pFishersExact) %>%
+    mutate(fisherRank = row_number()) %>%
+    filter(in_cs, active_cs) %>%
+    group_by(component) %>%
+    arrange(component, desc(alpha)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(logOddsRatio = log10(oddsRatio))
+
+  tbl_filtered %>%
+    dplyr::select(
+      component, geneSet, description, geneSetSize, overlap,
+      logOddsRatio, conditional_beta, conditional_beta_se,
+      alpha, pip, pFishersExact, fisherRank) %>%
+    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %>%
+    pack_group %>%
+    column_spec(c(4), color=ifelse(tbl_filtered$beta > 0, 'green', 'red')) %>%
+    kableExtra::kable_styling()
+}
+```
 
 ## Enrichment results
 
@@ -102,8 +122,8 @@ for (i in 1:N){
   print(volcano)
   print(hist)
 
-  cat("\n\n") 
-  print(shiny::tagList(interactive_table2(res)))
+  cat("\n\n")
+  print(static_table(res))
 }
 ```
 
@@ -112,35 +132,3 @@ for (i in 1:N){
 * `alpha` is the posterior probability of SuSiE including this gene set **in this component** which is different from PIP (probability of SuSiE including this gene set in ANY component)
 * `beta` posterior mean/standard error of posterior mean for effect size. Standard errors are likely too small. 
 * `oddsRatio, pHypergeometric, pFishersExact` construct a contingency table (gene list membersip) x (gene set membership), estimate the `oddsRatio` gives the odds of being in the gene list conditional on being in the gene set / odds of being in the gene list conditional on NOT being in the gene set. `pHypergeometric` and `pFishersExact` are pvalues from 1 and 2 sided test respectively. 
-
-
-```{r}
-#' @param tbl output of \alias{get_credible_set_summary} to be formatted
-#' @param target_coverage the coverage of the credible sets to be reported
-#' @param max_coverage report SNPs that are not in the target_coverage c.s. up this value
-#' @param max_sets maximum number of gene sets to report for a single credible set
-#'    this is useful for large credible sets
-#' @return A styled kable table suitable for rendering in an HTML document
-#' @export
-report_susie_credible_sets = function(tbl,
-                                      target_coverage=0.95,
-                                      max_coverage=0.99,
-                                      max_sets=10){
-  require(kableExtra)
-  tbl_filtered <-
-    tbl %>%
-    group_by(component) %>%
-    arrange(component, desc(alpha)) %>%
-    dplyr::filter(cumalpha <= max_coverage, alpha_rank <= max_sets) %>%
-    dplyr::mutate(in_cs = cumalpha <= target_coverage) %>% 
-    dplyr::ungroup() %>%
-    dplyr::mutate(logOddsRatio = log10(oddsRatio))
-
-  tbl_filtered %>%
-    dplyr::select(component, geneSet, description, geneSetSize, overlap, logOddsRatio, beta, beta.se, alpha, pFishersExact) %>%
-    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %>%
-    pack_group %>%
-    column_spec(c(5, 6), color=ifelse(tbl_filtered$beta > 0, 'green', 'red')) %>%
-    kableExtra::kable_styling()
-}
-```
