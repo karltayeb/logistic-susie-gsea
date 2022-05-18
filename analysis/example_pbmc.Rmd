@@ -105,27 +105,31 @@ static_table = function(res){
 }
 ```
 
-## Enrichment results
-
 ```{r experiment.level.results, results='asis'}
 results <- results %>% arrange(experiment, ptop, db)
-N <- dim(results)[1]
-for (i in 1:N){
-  this_experiment <- results$experiment[[i]]
-  this_db <- results$db[[i]]
-  this_ptop <- results$ptop[[i]]
-  res <- results$enrichment_summary[[i]]
+experiments <- results$experiment %>% unique()
 
-  cat("\n") 
-  cat("###", this_experiment, ' ', this_ptop, ' ', this_db, "\n") # Create second level headings with the names.
+for(this_experiment in experiments){
+  cat('\n')
+  cat('##', this_experiment)
 
-  volcano <- res %>% gseasusie::enrichment_volcano2()
-  hist <- res %>% filter(overlap > 0) %>% residual_enrichment_histogram2() 
-  print(volcano)
-  print(hist)
+  sub_res <- results %>% filter(experiment == this_experiment)
 
-  cat("\n\n")
-  print(static_table(res))
+  N <- dim(sub_res)[1]
+  for (i in 1:N){
+    this_db <- sub_res$db[[i]]
+    this_ptop <- sub_res$ptop[[i]]
+    res <- sub_res$enrichment_summary[[i]]
+
+    cat("\n") 
+    cat("### prop genes = ", this_ptop, ', db = ', this_db, "\n") # Create second level headings with the names.
+    volcano <- res %>% gseasusie::enrichment_volcano2()
+    hist <- res %>% filter(overlap > 0) %>% residual_enrichment_histogram2() 
+    print(volcano)
+    print(hist)
+    cat("\n\n")
+    print(static_table(res))
+  }
 }
 ```
 
