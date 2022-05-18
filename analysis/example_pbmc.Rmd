@@ -29,6 +29,7 @@ tar_load(sc_pbmc_deseq_enrichment_summary)
 results <- sc_pbmc_deseq_enrichment_summary
 ```
 
+## Enrichment results
 
 ```{r plot.function, hide=TRUE}
 color_sign <- gseasusie:::color_sign
