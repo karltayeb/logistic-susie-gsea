@@ -488,16 +488,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree76aceb2350b53965aa915b25fea1d96a53008293targetblank76aceb2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/76aceb2350b53965aa915b25fea1d96a53008293" target="_blank">76aceb2</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree711d052996812f9b42eecb607a235f74a11cea12targetblank711d052a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/711d052996812f9b42eecb607a235f74a11cea12" target="_blank">711d052</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree76aceb2350b53965aa915b25fea1d96a53008293targetblank76aceb2a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree711d052996812f9b42eecb607a235f74a11cea12targetblank711d052a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/76aceb2350b53965aa915b25fea1d96a53008293" target="_blank">76aceb2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/karltayeb/logistic-susie-gsea/tree/711d052996812f9b42eecb607a235f74a11cea12" target="_blank">711d052</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -568,6 +568,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/711d052996812f9b42eecb607a235f74a11cea12/analysis/example_pbmc.Rmd" target="_blank">711d052</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-05-17
+</td>
+<td>
+wflow_publish(“analysis/example_pbmc.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/91d68fc120ef74009bc661f9edf0680c5a55c415/docs/example_pbmc.html" target="_blank">91d68fc</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-05-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -811,30 +845,36 @@ static_table = function(res){
     column_spec(c(4), color=ifelse(tbl_filtered$beta &gt; 0, &#39;green&#39;, &#39;red&#39;)) %&gt;%
     kableExtra::kable_styling()
 }</code></pre>
-</div>
-<div id="enrichment-results-1" class="section level2">
-<h2>Enrichment results</h2>
 <pre class="r"><code>results &lt;- results %&gt;% arrange(experiment, ptop, db)
-N &lt;- dim(results)[1]
-for (i in 1:N){
-  this_experiment &lt;- results$experiment[[i]]
-  this_db &lt;- results$db[[i]]
-  this_ptop &lt;- results$ptop[[i]]
-  res &lt;- results$enrichment_summary[[i]]
+experiments &lt;- results$experiment %&gt;% unique()
 
-  cat(&quot;\n&quot;) 
-  cat(&quot;###&quot;, this_experiment, &#39; &#39;, this_ptop, &#39; &#39;, this_db, &quot;\n&quot;) # Create second level headings with the names.
+for(this_experiment in experiments){
+  cat(&#39;\n&#39;)
+  cat(&#39;##&#39;, this_experiment)
 
-  volcano &lt;- res %&gt;% gseasusie::enrichment_volcano2()
-  hist &lt;- res %&gt;% filter(overlap &gt; 0) %&gt;% residual_enrichment_histogram2() 
-  print(volcano)
-  print(hist)
+  sub_res &lt;- results %&gt;% filter(experiment == this_experiment)
 
-  cat(&quot;\n\n&quot;)
-  print(static_table(res))
+  N &lt;- dim(sub_res)[1]
+  for (i in 1:N){
+    this_db &lt;- sub_res$db[[i]]
+    this_ptop &lt;- sub_res$ptop[[i]]
+    res &lt;- sub_res$enrichment_summary[[i]]
+
+    cat(&quot;\n&quot;) 
+    cat(&quot;### prop genes = &quot;, this_ptop, &#39;, db = &#39;, this_db, &quot;\n&quot;) # Create second level headings with the names.
+    volcano &lt;- res %&gt;% gseasusie::enrichment_volcano2()
+    hist &lt;- res %&gt;% filter(overlap &gt; 0) %&gt;% residual_enrichment_histogram2() 
+    print(volcano)
+    print(hist)
+    cat(&quot;\n\n&quot;)
+    print(static_table(res))
+  }
 }</code></pre>
-<div id="cd14-monocyte-0.05-all_msigdb" class="section level3">
-<h3>CD14+ Monocyte 0.05 all_msigdb</h3>
+</div>
+<div id="cd14-monocyte" class="section level2">
+<h2>CD14+ Monocyte</h2>
+<div id="prop-genes-0.05-db-all_msigdb" class="section level3">
+<h3>prop genes = 0.05 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-1">
@@ -1437,8 +1477,8 @@ Genes up-regulated in kidney biopsies from patients with acute transplant reject
 </tbody>
 </table>
 </div>
-<div id="cd14-monocyte-0.1-all_msigdb" class="section level3">
-<h3>CD14+ Monocyte 0.1 all_msigdb</h3>
+<div id="prop-genes-0.1-db-all_msigdb" class="section level3">
+<h3>prop genes = 0.1 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-3">
@@ -2431,8 +2471,8 @@ Oxidative phosphorylation
 </tbody>
 </table>
 </div>
-<div id="cd14-monocyte-0.2-all_msigdb" class="section level3">
-<h3>CD14+ Monocyte 0.2 all_msigdb</h3>
+<div id="prop-genes-0.2-db-all_msigdb" class="section level3">
+<h3>prop genes = 0.2 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-5.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-5">
@@ -3350,8 +3390,8 @@ Electron transport chain: OXPHOS system in mitochondria
 </tbody>
 </table>
 </div>
-<div id="cd14-monocyte-0.5-all_msigdb" class="section level3">
-<h3>CD14+ Monocyte 0.5 all_msigdb</h3>
+<div id="prop-genes-0.5-db-all_msigdb" class="section level3">
+<h3>prop genes = 0.5 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-7.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-7">
@@ -4349,8 +4389,11 @@ Genes whose expression increases with age in normal kidney.
 </tbody>
 </table>
 </div>
-<div id="cd19-b-0.05-all_msigdb" class="section level3">
-<h3>CD19+ B 0.05 all_msigdb</h3>
+</div>
+<div id="cd19-b" class="section level2">
+<h2>CD19+ B</h2>
+<div id="prop-genes-0.05-db-all_msigdb-1" class="section level3">
+<h3>prop genes = 0.05 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-9.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-9">
@@ -4993,8 +5036,8 @@ Neighborhood of LYN
 </tbody>
 </table>
 </div>
-<div id="cd19-b-0.1-all_msigdb" class="section level3">
-<h3>CD19+ B 0.1 all_msigdb</h3>
+<div id="prop-genes-0.1-db-all_msigdb-1" class="section level3">
+<h3>prop genes = 0.1 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-11.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-11">
@@ -5748,8 +5791,8 @@ Genes in the cancer module 14.
 </tbody>
 </table>
 </div>
-<div id="cd19-b-0.2-all_msigdb" class="section level3">
-<h3>CD19+ B 0.2 all_msigdb</h3>
+<div id="prop-genes-0.2-db-all_msigdb-1" class="section level3">
+<h3>prop genes = 0.2 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-13.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-13">
@@ -6668,8 +6711,8 @@ Genes up-regulated in ITNK cells (T-lymphocyte progenitors (DN3 cells) reprogram
 </tbody>
 </table>
 </div>
-<div id="cd19-b-0.5-all_msigdb" class="section level3">
-<h3>CD19+ B 0.5 all_msigdb</h3>
+<div id="prop-genes-0.5-db-all_msigdb-1" class="section level3">
+<h3>prop genes = 0.5 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-15.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-15">
@@ -7503,8 +7546,11 @@ Genes down-regulated in prefrontal cortex (PFC) of mice carrying a hemizygotic m
 </tbody>
 </table>
 </div>
-<div id="cd34-0.05-all_msigdb" class="section level3">
-<h3>CD34+ 0.05 all_msigdb</h3>
+</div>
+<div id="cd34" class="section level2">
+<h2>CD34+</h2>
+<div id="prop-genes-0.05-db-all_msigdb-2" class="section level3">
+<h3>prop genes = 0.05 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-17.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-17">
@@ -8178,8 +8224,8 @@ Top 100 probe sets for pediatric acute myeloid leukemia (AML) subtype FAB M7 (al
 </tbody>
 </table>
 </div>
-<div id="cd34-0.1-all_msigdb" class="section level3">
-<h3>CD34+ 0.1 all_msigdb</h3>
+<div id="prop-genes-0.1-db-all_msigdb-2" class="section level3">
+<h3>prop genes = 0.1 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-19.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-19">
@@ -9078,8 +9124,8 @@ Genes down-regulated at early stages of progenitor T lymphocyte maturation compa
 </tbody>
 </table>
 </div>
-<div id="cd34-0.2-all_msigdb" class="section level3">
-<h3>CD34+ 0.2 all_msigdb</h3>
+<div id="prop-genes-0.2-db-all_msigdb-2" class="section level3">
+<h3>prop genes = 0.2 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-21.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-21">
@@ -9793,8 +9839,8 @@ Genes enriched at every T lymphocyte differentiation stage compared to the early
 </tbody>
 </table>
 </div>
-<div id="cd34-0.5-all_msigdb" class="section level3">
-<h3>CD34+ 0.5 all_msigdb</h3>
+<div id="prop-genes-0.5-db-all_msigdb-2" class="section level3">
+<h3>prop genes = 0.5 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-23.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-23">
@@ -10658,8 +10704,11 @@ Genes up-regulated in the normal-like subtype of breast cancer.
 </tbody>
 </table>
 </div>
-<div id="cd56-nk-0.05-all_msigdb" class="section level3">
-<h3>CD56+ NK 0.05 all_msigdb</h3>
+</div>
+<div id="cd56-nk" class="section level2">
+<h2>CD56+ NK</h2>
+<div id="prop-genes-0.05-db-all_msigdb-3" class="section level3">
+<h3>prop genes = 0.05 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-25.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-25">
@@ -11218,8 +11267,8 @@ Genes up-regulated in the normal-like subtype of breast cancer.
 </tbody>
 </table>
 </div>
-<div id="cd56-nk-0.1-all_msigdb" class="section level3">
-<h3>CD56+ NK 0.1 all_msigdb</h3>
+<div id="prop-genes-0.1-db-all_msigdb-3" class="section level3">
+<h3>prop genes = 0.1 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-27.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-27">
@@ -11978,8 +12027,8 @@ Genes down-regulated in normal hematopoietic progenitors by RUNX1-RUNX1T1 [GeneI
 </tbody>
 </table>
 </div>
-<div id="cd56-nk-0.2-all_msigdb" class="section level3">
-<h3>CD56+ NK 0.2 all_msigdb</h3>
+<div id="prop-genes-0.2-db-all_msigdb-3" class="section level3">
+<h3>prop genes = 0.2 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-29.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-29">
@@ -12858,8 +12907,8 @@ Neighborhood of IL2RB
 </tbody>
 </table>
 </div>
-<div id="cd56-nk-0.5-all_msigdb" class="section level3">
-<h3>CD56+ NK 0.5 all_msigdb</h3>
+<div id="prop-genes-0.5-db-all_msigdb-3" class="section level3">
+<h3>prop genes = 0.5 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-31.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-31">
@@ -13778,8 +13827,11 @@ Genes down-regulated in peripheral blood monocytes by HGF [GeneID=3082].
 </tbody>
 </table>
 </div>
-<div id="t-cell-0.05-all_msigdb" class="section level3">
-<h3>T cell 0.05 all_msigdb</h3>
+</div>
+<div id="t-cell" class="section level2">
+<h2>T cell</h2>
+<div id="prop-genes-0.05-db-all_msigdb-4" class="section level3">
+<h3>prop genes = 0.05 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-33.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-33">
@@ -14593,8 +14645,8 @@ Genes in the cancer module 14.
 </tbody>
 </table>
 </div>
-<div id="t-cell-0.1-all_msigdb" class="section level3">
-<h3>T cell 0.1 all_msigdb</h3>
+<div id="prop-genes-0.1-db-all_msigdb-4" class="section level3">
+<h3>prop genes = 0.1 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-35.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-35">
@@ -15228,8 +15280,8 @@ Oxidative phosphorylation
 </tbody>
 </table>
 </div>
-<div id="t-cell-0.2-all_msigdb" class="section level3">
-<h3>T cell 0.2 all_msigdb</h3>
+<div id="prop-genes-0.2-db-all_msigdb-4" class="section level3">
+<h3>prop genes = 0.2 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-37.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-37">
@@ -16133,8 +16185,8 @@ Genes down-regulated in monocyte-derived dendritic cells (MDDC) after stimulatio
 </tbody>
 </table>
 </div>
-<div id="t-cell-0.5-all_msigdb" class="section level3">
-<h3>T cell 0.5 all_msigdb</h3>
+<div id="prop-genes-0.5-db-all_msigdb-4" class="section level3">
+<h3>prop genes = 0.5 , db = all_msigdb</h3>
 <p><img src="figure/example_pbmc.Rmd/experiment.level.results-39.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-experiment.level.results-39">
