@@ -16,6 +16,7 @@ params:
 
 ## Introduction
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   comment = '#>',
@@ -23,213 +24,88 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r load.libraries, include=FALSE}
+```{r load.results}
+library(gseasusie)
+library(ggplot2)
 library(tidyverse)
-library(htmltools)
-library(gseareg)
-source('code/utils.R')
+library(targets)
 
-params.cache_dir <- params$cache_dir
-params.rerun <- eval(parse(text=params$rerun))
-cache_rds <- partial(xfun::cache_rds, dir=params.cache_dir, rerun=params.rerun)
+tar_load(sc_pbmc_deseq_enrichment_summary)
+results <- sc_pbmc_deseq_enrichment_summary
 ```
 
-```{r load.data, include=FALSE}
-source('code/load_data.R')
+```{r plot.function, hide=TRUE}
+color_sign <- gseasusie:::color_sign
 
-genesets <- gseareg::load_gene_sets()
-data <- load_sc_pbmc()
-```
+interactive_table2 = function(res){
+  dt <- res %>% 
+    dplyr::filter(overlap > 0) %>%
+    dplyr::mutate(
+      logOddsRatio = log(oddsRatio),
+      nlog10pFishersExact = -log10(pFishersExact)
+    ) %>%
+    dplyr::arrange(dplyr::desc(nlog10pFishersExact)) %>%
+    dplyr::mutate(
+      fisherRank = dplyr::row_number(),
+      in_active_cs = dplyr::if_else(is.na(in_cs), FALSE, in_cs & active_cs)) %>%
+    dplyr::select(geneSet, description, in_active_cs, beta, pip, overlap, geneSetSize, logOddsRatio, nlog10pFishersExact, component, fisherRank) %>%
+    dplyr::mutate(dplyr::across(!where(is.numeric), as.factor))
 
-```{r fit, include=FALSE}
-params.genesets <- eval(parse(text=params$genesets))
-params.thresh <- eval(parse(text=params$thresh))
-
-# fit logistic susie
-do_logistic_susie_cached = function(data,
-                                    db,
-                                    thresh,
-                                    prefix=''){
-  res <- cache_rds({
-    purrr::map_dfr(
-      names(data),
-      ~do_logistic_susie(.x, db, thresh, genesets, data))
-  },
-  file=paste0(prefix, 'logistic_susie_', db, '_', thresh),
-  hash = list(data, db, thresh, prefix))
-}
-fits <- map_dfr(params.genesets, ~do_logistic_susie_cached(data, .x, params.thresh))
-
-# fit ora
-do_ora_cached = function(data, db, thresh, prefix='', ...){
-  res <- cache_rds({
-    purrr::map_dfr(
-      names(data),
-      ~do_ora(.x, db, thresh, genesets, data))
-  },
-  file=paste0(prefix, 'ora_', db, '_', thresh),
-  hash = list(data, db, thresh, prefix))
-}
-ora <- map_dfr(params.genesets, ~do_ora_cached(data, .x, params.thresh))
-```
-
-
-```{r residual.regression}
-susie_coef = function(fit){
-  return(colSums((fit$alpha * fit$mu)))
-}
-
-susie_pred = function(fit){
-  return((fit$intercept + fit$dat$X %*% susie_coef(fit))[, 1])
-}
-
-residual_regression = function(y, x, o){
-  X <- matrix(c(rep(1, length(x)), x), ncol = 2)
-  summary(fastglm::fastglm(x=X, y=y, offset=o, family='binomial'))$coef %>% tail(1)
-}
-
-do_residual_regression = function(fit){
-  pred <- susie_pred(fit)
-  p <- dim(fit$dat$X)[2]
-
-  message('performing logistic regression on residuals')
-  tictoc::tic()
-  residual_res <- map(1:p, ~residual_regression(fit$dat$y, fit$dat$X[, .x], pred))
-  tictoc::toc()
-  residual_res <- do.call(rbind, residual_res)
-  residual_res <- as_tibble(residual_res) %>%  mutate(geneSet = colnames(fit$dat$X))
-  colnames(residual_res) <- c('residual_beta', 'residual_se', 'residual_z', 'residual_p', 'geneSet')
-  return(residual_res)
-}
-
-fits <- cache_rds({
-  message('computing residual regressions')
-  fits %>% rowwise() %>% mutate(residual_regression = list(do_residual_regression(fit))) %>% ungroup()
-}, file='residual_regression')
-```
-
-
-## Overview
-### Threshold sensitivity
-
-```{r threshold.sensitivity}
-ttt <- map_dbl(1:20, ~10**-.x)
-
-.prop.ones = function(experiment){
-  map_dbl(ttt, ~ prep_binary_data(
-  genesets[['gobp_nr']], data[[experiment]], thresh=.x)$y %>% mean())
-}
-
-prop.ones <- cache_rds({map_dfc(names(data), ~.prop.ones(.x))}, file='threshold_sensitivity')
-colnames(prop.ones) <- names(data)
-prop.ones <- prop.ones %>% mutate(thresh = ttt)
-
-prop.ones %>%
-  pivot_longer(one_of(names(data))) %>%
-  group_by(name) %>%
-  mutate(value = value) %>%
-  ggplot(aes(x=factor(-log10(thresh)), y=value)) +
-  geom_boxplot() +
-  labs(
-    y = 'Proportions of genes in gene list',
-    title = 'Sensitivity to thresholding'
-  )
-```
-
-```{r process.results, echo=FALSE, warning=FALSE}
-# gene set summary
-res <- fits %>%
-  left_join(ora) %>%
-  mutate(
-    gs_summary = map(fit, gseareg::get_gene_set_summary),
-    res = map2(gs_summary, ora, ~ left_join(.x, .y)),
-    res = map2(res, residual_regression, ~ left_join(.x, .y)),
-  ) %>%
-  select(-c(fit, residual_regression, ora, gs_summary)) %>%
-  unnest(res)
-
-# credible set summary
-res2 <- fits %>%
-  left_join(ora) %>%
-  mutate(res = map(fit, gseareg::get_credible_set_summary)) %>%
-  mutate(res = map2(res, ora, ~ left_join(.x, .y))) %>%
-  mutate(res = map2(res, residual_regression, ~ left_join(.x, .y))) %>%
-  select(-c(fit, ora)) %>%
-  unnest(res)
-
-# Setup HTML tables
-split_tibble = function(tibble, col = 'col'){
-  tibble %>% split(., .[, col])
-}
-
-descriptions <- map_dfr(genesets, ~pluck(.x, 'geneSet', 'geneSetDes'))
-tbl <- res2 %>% 
-  filter(active_cs, in_cs)
-tbl_split <- split_tibble(tbl, 'experiment')
-html_tables <- map(tbl_split, ~split_tibble(.x, 'db'))
-# nested list like html_tables[[experiment]][[db]]
-
-```
-
-
-### Big volcano plot
-
-Colors represent enrichment/depletion detected by Fishers exact test (Benjamini Hochberg corrected p-values < $0.05$). Gene sets that belong to a SuSiE credible set are circled.
-
-```{r big.volcano.plot}
-get_ora_enrichments = function(tbl){
-   tbl %>% mutate(
-    padj = p.adjust(pFishersExact),
-    result = case_when(
-      padj < 0.05 & oddsRatio < 1 ~ 'depleted',
-      padj < 0.05 & oddsRatio > 1 ~ 'enriched',
-      TRUE ~ 'not significant'
+  dt %>%
+    reactable::reactable(
+      filterable=TRUE,
+      minRows=20,
+      columns = list(
+        pip = reactable::colDef(format = reactable::colFormat(digits = 3)),
+        logOddsRatio = reactable::colDef(style= function(value){color_sign(value)},
+                                         format = reactable::colFormat(digits = 3)),
+        beta = reactable::colDef(style= function(value){color_sign(value)},
+                                 format = reactable::colFormat(digits = 3)),
+        nlog10pFishersExact = reactable::colDef(format = reactable::colFormat(digits = 3))
+      ),
+      rowStyle = function(index){
+        if(dt$in_active_cs[index] == TRUE){
+          list(background = "#e5f5e0")
+        }
+      },
+      defaultSorted = list(nlog10pFishersExact='desc')
     )
-  )
 }
 
-get_residual_enrichments = function(tbl){
-   tbl %>% mutate(
-    padj = p.adjust(residual_p),
-    result = case_when(
-      padj < 0.05 & residual_beta < 1 ~ 'depleted',
-      padj < 0.05 & residual_beta > 1 ~ 'enriched',
-      TRUE ~ 'not significant'
-    )
-  )
+#' @export
+residual_enrichment_histogram2 = function(res){
+  res %>%
+    dplyr::select(geneSet, pval_marginal, pval_residual) %>%
+    tidyr::pivot_longer(dplyr::starts_with('pval'), values_to = 'pval') %>%
+    ggplot2::ggplot(aes(x=pval)) +
+      ggplot2::geom_histogram() + ggplot2::facet_wrap(vars(name))
 }
-
-# plot all enrichments, highlight gene sets in credible set
-csdat <- res2 %>% 
-  filter(in_cs, active_cs)
-
-res %>% 
-  group_by(experiment, db) %>%
-  get_ora_enrichments %>%
-  ggplot(aes(x=log10(oddsRatio), y=-log10(pFishersExact), color=result)) +
-  geom_point() +
-  geom_point(
-    csdat, 
-    mapping=aes(x=log10(oddsRatio), y=-log10(pFishersExact), fill=component),
-    color='black', pch=21, size=5) +
-  scale_color_manual(values = c('depleted' = 'coral',
-                                'enriched' = 'dodgerblue',
-                                'not significant' = 'grey')) +
-  facet_wrap(vars(db))
-
-
-res %>%
-  group_by(experiment, db) %>%
-  get_residual_enrichments() %>%
-  ggplot(aes(x=residual_beta, y=-log10(residual_p), color=result)) +
-  geom_point() +
-  scale_color_manual(values = c('depleted' = 'coral',
-                                'enriched' = 'dodgerblue',
-                                'not significant' = 'grey')) +
-  facet_wrap(vars(db))
 ```
+
 
 ## Enrichment results
+
+```{r experiment.level.results, results='asis'}
+results <- results %>% arrange(experiment, ptop, db)
+N <- dim(results)[1]
+for (i in 1:N){
+  this_experiment <- results$experiment[[i]]
+  this_db <- results$db[[i]]
+  this_ptop <- results$ptop[[i]]
+  res <- results$enrichment_summary[[i]]
+
+  cat("\n") 
+  cat("###", this_experiment, ' ', this_ptop, ' ', this_db, "\n") # Create second level headings with the names.
+
+  volcano <- res %>% gseasusie::enrichment_volcano2()
+  hist <- res %>% filter(overlap > 0) %>% residual_enrichment_histogram2() 
+  print(volcano)
+  print(hist)
+
+  cat("\n\n") 
+  print(shiny::tagList(interactive_table2(res)))
+}
+```
 
 ### Glossary
 
@@ -267,120 +143,4 @@ report_susie_credible_sets = function(tbl,
     column_spec(c(5, 6), color=ifelse(tbl_filtered$beta > 0, 'green', 'red')) %>%
     kableExtra::kable_styling()
 }
-```
-
-```{r experiment.level.results, results='asis'}
-experiments <- unique(res$experiment)
-
-do.experiment.volcano = function(this_experiment){
-  res %>% 
-    filter(experiment == this_experiment) %>%
-    group_by(db) %>%
-    get_ora_enrichments %>%
-    ggplot(aes(x=log10(oddsRatio), y=-log10(pFishersExact), color=result)) +
-    geom_point() +
-    geom_point(
-      csdat %>% filter(experiment == this_experiment), 
-      mapping=aes(x=log10(oddsRatio), y=-log10(pFishersExact), fill=component),
-      color='black', pch=21, size=5) +
-    scale_color_manual(values = c('depleted' = 'coral',
-                                  'enriched' = 'dodgerblue',
-                                  'not significant' = 'grey')) +
-    facet_wrap(vars(db)) +
-    labs(title = this_experiment)
-}
-
-do.residual.volcano = function(this_experiment){
-  res %>% 
-    filter(experiment == this_experiment) %>%
-    group_by(db) %>%
-    get_residual_enrichments() %>%
-    ggplot(aes(x=residual_beta, y=-log10(residual_p), color=result)) +
-    geom_point() +
-    scale_color_manual(values = c('depleted' = 'coral',
-                                  'enriched' = 'dodgerblue',
-                                  'not significant' = 'grey')) +
-    facet_wrap(vars(db)) +
-    labs(title = paste0('Residual gene set associations: ', this_experiment))
-}
-
-for (i in 1:length(experiments)){
-  this_experiment <- experiments[i]
-  cat("\n") 
-  cat("###", this_experiment, "\n") # Create second level headings with the names.
-  volcano1 <- do.experiment.volcano(this_experiment) 
-  volcano2 <- do.residual.volcano(this_experiment)
-  print(volcano1)
-  print(volcano2)
-  cat("\n\n") 
-
-  avail_dbs <- csdat %>% 
-    filter(experiment == this_experiment) %>%
-    select(db) %>% unique()
-  for(this_db in avail_dbs){
-    cat("####", this_db, "\n") # Create second level headings with the names.
-    res2 %>%
-      filter(
-        active_cs,
-        experiment == this_experiment,
-        db == this_db) %>%
-      distinct() %>%
-      report_susie_credible_sets(max_coverage=0.95) %>% 
-      htmltools::HTML() %>% 
-      print()
-    cat("\n")
-  }}
-```
-
-### Enrichment table
-
-```{r full.table}
-color_sign = function(value) {
-      if (value > 0) {
-        color <- "#008000"
-      } else if (value < 0) {
-        color <- "#e00000"
-      } else {
-        color <- "#777"
-      }
-      list(color = color)
-}
-
-in_cs <-
-  res2 %>% 
-  filter(in_cs, active_cs) %>%
-  select(experiment, db, thresh, geneSet, component, in_cs) %>%
-  distinct()
-
-dt <- res %>% 
-  filter(overlap > 0) %>%
-  mutate(
-    logOddsRatio = log(oddsRatio),
-    nlog10pFishersExact = -log10(pFishersExact)
-  ) %>%
-  left_join(in_cs) %>%
-  mutate(in_cs = if_else(is.na(in_cs), FALSE, in_cs)) %>%
-  select(in_cs, experiment, db, thresh, geneSet, beta, pip, overlap, geneSetSize, logOddsRatio, nlog10pFishersExact) %>%
-  mutate(across(!where(is.numeric) , as.factor)) 
-
-dt %>%
-  select(-in_cs) %>%
-  reactable::reactable(
-    filterable=TRUE,
-    minRows=10,
-    columns = list(
-      pip = reactable::colDef(format = reactable::colFormat(digits = 3)),
-      logOddsRatio = reactable::colDef(style= function(value){color_sign(value)},
-                                       format = reactable::colFormat(digits = 3)),
-      beta = reactable::colDef(style= function(value){color_sign(value)},
-                               format = reactable::colFormat(digits = 3)),
-      nlog10pFishersExact = reactable::colDef(format = reactable::colFormat(digits = 3))
-    ),
-    rowStyle = function(index){
-      if(dt$in_cs[index] == TRUE){
-        list(background = "#e5f5e0")
-      }
-    },
-    defaultSorted = list(nlog10pFishersExact='desc')
-  )
 ```
