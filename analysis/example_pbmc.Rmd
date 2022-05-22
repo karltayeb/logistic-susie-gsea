@@ -9,7 +9,8 @@ editor_options:
   chunk_output_type: console
 params:
   cache_dir: 'cache/example_pbmc/'
-  genesets: c('gobp')
+  prefix: 'scpbmcdeseq'
+  genesets: c('all_msigdb', 'all_go', 'pathways')
   thresh: 1e-4
   rerun: FALSE  # set to true to ignore cache
 ---
@@ -26,7 +27,8 @@ knitr::opts_chunk$set(
 ```{r load.libraries, include=FALSE}
 library(tidyverse)
 library(htmltools)
-library(gseareg)
+devtools::load_all('~/R/gseasusie/') #library(gseasusie) 
+library(tictoc)
 source('code/utils.R')
 
 params.cache_dir <- params$cache_dir
@@ -36,10 +38,169 @@ cache_rds <- partial(xfun::cache_rds, dir=params.cache_dir, rerun=params.rerun)
 
 ```{r load.data, include=FALSE}
 source('code/load_data.R')
-
-genesets <- gseareg::load_gene_sets()
-data <- load_sc_pbmc()
+params.genesets <- eval(parse(text=params$genesets))
+genesets <- gseasusie::load_gene_sets(c('c2', params.genesets))
+data <- load_sc_pbmc_deseq2()
 ```
+
+
+```{r}
+run_enrichment = function(prefix, db, experiment, thresh){
+  message(paste0('Fitting logistic susie...',
+    '\n\tTitle = ', prefix,
+    '\n\tExperiment = ', experiment,
+    '\n\tDatabase = ', db,
+    '\n\tthresh = ', thresh))
+  
+  res <- cache_rds({
+  bin.data <- gseasusie::prep_binary_data(genesets[[db]], data[[experiment]], thresh)
+  X <- bin.data$X
+  y <- bin.data$y
+  
+  logistic.fit <- gseasusie::fit_logistic_susie_veb_boost(X, y, L=20)
+  linear.fit <- susieR::susie(X, y)
+  ora <- gseasusie::fit_ora(X, y)
+  marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
+  residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
+
+  res <- tibble(
+    db = db,
+    experiment = experiment,
+    thresh = thresh,
+    fit=list(logistic.fit),
+    linear.fit = list(linear.fit),
+    ora=list(ora),
+    marginal_reg = list(marginal_regression),
+    residual_reg = list(residual_regression)
+  )
+  res
+  },  file=paste0(prefix, '_', experiment, '_', db, '_', thresh))
+  return(res)
+}
+
+a <- run_enrichment('scpbmcdeseq', 'c2', 'CD14+ Monocyte', 1e-4)
+
+summarise_enrichment = function(fit, ora, marginal_reg, residual_reg, geneSetDes){
+  # put everything into one table
+  gssum <- get_gene_set_summary(fit)
+  cssum <- get_cs_summary_condensed(fit)
+  
+  reg <- left_join(
+    marginal_reg,
+    residual_reg,
+    by="geneSet", suffix=c('_marginal', '_residual'))
+
+  gene_set_summary <- 
+    gssum %>%
+    dplyr::left_join(cssum) %>%
+    dplyr::left_join(ora) %>%
+    left_join(reg) %>%
+    left_join(geneSetDes)
+  return(gene_set_summary)
+}
+
+b <- a %>% rowwise() %>% mutate(summary = list(summarise_enrichment(
+  fit, ora, marginal_regression, residual_regression, genesets[[db]]$geneSetDes)))
+
+b$summary[[1]] %>% filter(in_cs, active_cs)
+
+gssum <- get_gene_set_summary(a$fit[[1]])
+cssum <- get_cs_summary_condensed(a$fit[[1]])
+
+reg <- left_join(
+  a$marginal_reg[[1]],
+  a$residual_reg[[1]],
+  by="geneSet", suffix=c('_marginal', '_residual'))
+  
+geneSetDes <- genesets$c2$geneSetDes
+gene_set_summary <- 
+  gssum %>%
+  dplyr::left_join(cssum) %>%
+  dplyr::left_join(ora) %>%
+  left_join(reg) %>%
+  left_join(geneSetDes)
+
+summarise_enrichment(a$fit[[1]], a$ora[[1]], a$marginal_reg[[1]], a$residual_reg[[1]], genesets$c2$geneSetDes)
+
+a$residual_reg[[1]]
+
+run_enrichment('scpbmcdeseq', 'all_go', 'CD14+ Monocyte', 1e-4)
+run_enrichment('scpbmcdeseq', 'all_msigdb', 'CD14+ Monocyte', 1e-4)
+run_enrichment('scpbmcdeseq', 'pathways', 'CD14+ Monocyte', 1e-4)
+
+
+fit <- a$fit[[1]];
+ora <- a$ora[[1]];
+marginal_regression <- a$marginal_reg[[1]]
+residual_regression <- a$residual_reg[[1]]
+
+
+geneSetDes <- genesets$c2$geneSetDes
+
+# put everything into one table
+reg <- left_join(
+  marginal_regression,
+  residual_regression,
+  by="geneSet", suffix=c('_marginal', '_residual'))
+
+res <- get_gene_set_summary(fit) %>%
+  dplyr::left_join(get_credible_set_summary(fit)) %>%
+  dplyr::left_join(ora) %>%
+  left_join(reg) %>%
+  left_join(geneSetDes)
+
+genesets$c2$geneSetDes
+
+
+enrichment_volcano2 = function(res){
+  res %>% 
+    label_sig_enrichments() %>%
+    ggplot2::ggplot(aes(x=log10(oddsRatio), y=-log10(pFishersExact), color=result)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_point(
+      res %>% filter(in_cs, active_cs), 
+      mapping=aes(x=log10(oddsRatio), y=-log10(pFishersExact), fill=component),
+      color='black', pch=21, size=5) +
+    ggplot2::scale_color_manual(values = c('depleted' = 'coral',
+                                           'enriched' = 'dodgerblue',
+                                           'not significant' = 'grey'))
+}
+
+residual_enrichment_histogram2 = function(res){
+  res %>%
+    dplyr::select(geneSet, pval_marginal, pval_residual) %>%
+    tidyr::pivot_longer(dplyr::starts_with('pval'), values_to = 'pval') %>%
+    ggplot2::ggplot(aes(x=pval)) +
+      ggplot2::geom_histogram() + ggplot2::facet_wrap(vars(name))
+}
+
+```
+
+```{r}
+params.genesets <- eval(parse(text=params$genesets))
+params.thresh <- eval(parse(text=params$thresh))
+
+meta <- crossing(
+  prefix = params$prefix,
+  db=params.genesets, 
+  experiment=names(data),
+  thresh = params.thresh
+)
+
+meta %>% rowwise() %>% mutate(args = list(.))
+meta2 <- split(as.data.frame(meta), seq(nrow(meta))) %>% map(as.list)
+```
+
+
+```{r}
+library(furrr)
+future::plan(multisession, workers = 6)
+
+# take a list of kwargs and unpack it into run_enrichment
+exec_run_enrichment = function(args) exec(run_enrichment, !!!args)
+furrr::future_map_dfr(meta2, exec_run_enrichment)
+```
+
 
 ```{r fit, include=FALSE}
 params.genesets <- eval(parse(text=params$genesets))
@@ -53,7 +214,7 @@ do_logistic_susie_cached = function(data,
   res <- cache_rds({
     purrr::map_dfr(
       names(data),
-      ~do_logistic_susie(.x, db, thresh, genesets, data))
+      ~do_logistic_susie_veb_boost(.x, db, thresh, genesets, data))
   },
   file=paste0(prefix, 'logistic_susie_', db, '_', thresh),
   hash = list(data, db, thresh, prefix))
@@ -141,7 +302,7 @@ prop.ones %>%
 res <- fits %>%
   left_join(ora) %>%
   mutate(
-    gs_summary = map(fit, gseareg::get_gene_set_summary),
+    gs_summary = map(fit, gseasusie::get_gene_set_summary),
     res = map2(gs_summary, ora, ~ left_join(.x, .y)),
     res = map2(res, residual_regression, ~ left_join(.x, .y)),
   ) %>%
@@ -151,7 +312,7 @@ res <- fits %>%
 # credible set summary
 res2 <- fits %>%
   left_join(ora) %>%
-  mutate(res = map(fit, gseareg::get_credible_set_summary)) %>%
+  mutate(res = map(fit, gseasusie::get_credible_set_summary)) %>%
   mutate(res = map2(res, ora, ~ left_join(.x, .y))) %>%
   mutate(res = map2(res, residual_regression, ~ left_join(.x, .y))) %>%
   select(-c(fit, ora)) %>%

@@ -109,10 +109,6 @@ ora <- map_dfr(params.genesets, ~do_ora_cached(data, .x, params.thresh))
 ### Threshold sensitivity
 
 ```{r threshold.sensitivity}
-mean.gene.prop = function(l){
-  purrr::map_dbl(3:10, ~get_y(l, 10^(-.x)) %>% mean())
-}
-
 thresh <- map_dbl(1:10, ~10**-.x)
 
 .prop.ones = function(experiment){
