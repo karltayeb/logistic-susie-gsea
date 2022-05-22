@@ -40,6 +40,11 @@ library(htmltools)
 library(gseasusie)
 source('code/utils.R')
 
+
+params = list(
+  cache_dir = 'cache/human_chimp_eb/',
+  genesets=('kegg'), thresh=1e-2, rerun=FALSE
+)
 params.cache_dir <- params$cache_dir
 params.rerun <- eval(parse(text=params$rerun))
 cache_rds <- partial(xfun::cache_rds, dir=params.cache_dir, rerun=params.rerun)
@@ -101,6 +106,35 @@ do_logistic_susie_cached = function(data,
   hash = list(data, db, thresh, prefix))
 }
 fits <- map_dfr(params.genesets, ~do_logistic_susie_cached(data, .x, params.thresh))
+
+do_linear_susie_cached = function(data,
+                                    db,
+                                    thresh,
+                                    prefix=''){
+  res <- cache_rds({
+    purrr::map_dfr(
+      names(data),
+      ~gseareg::do_linear_susie(.x, db, thresh, genesets, data))
+  },
+  file=paste0(prefix, 'logistic_susie_', db, '_', thresh),
+  hash = list(data, db, thresh, prefix))
+}
+fits <- map_dfr(params.genesets, ~do_linear_susie_cached(data, .x, params.thresh))
+
+# tccm
+do_tccm_susie_cached = function(data,
+                                    db,
+                                    thresh,
+                                    prefix=''){
+  res <- cache_rds({
+    purrr::map_dfr(
+      names(data),
+      ~gseareg::do_tccm_point_normal_susie(.x, db, thresh, genesets, data))
+  },
+  file=paste0(prefix, 'logistic_susie_', db, '_', thresh),
+  hash = list(data, db, thresh, prefix))
+}
+fits <- map_dfr(params.genesets, ~do_linear_susie_cached(data, .x, params.thresh))
 
 # fit ora
 do_ora_cached = function(data, db, thresh, prefix='', ...){
