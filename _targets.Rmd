@@ -23,7 +23,7 @@ library(tarchetypes)
 library(conflicted)
 library(gseasusie)
 library(DESeq2)
-
+library(BiocGenerics)
 
 #library(clustermq)
 #options(clustermq.scheduler = "multiprocess")
@@ -64,9 +64,14 @@ tar_option_set(memory='transient', garbage_collection = T)
 
 REP <- tar_toggle(1, 10)
 BATCH <- tar_toggle(1, 1)
+
+GENESETS <- c('gocc') # c('all_msigdb', 'all_go', 'pathways')
+PROPGENES <- c(0.1) # c(0.05, 0.1, 0.2, 0.5)
 ```
 
-## Methods
+## Simulations
+
+### Methods
 
 To add a method add a row to `method_lookup` and `score_lookup`
 `method_function` should take arguments `X` and `y`
@@ -129,7 +134,6 @@ score_lookup <- tribble(
 )
 ```
 
-## Targets
 
 ### Get gene sets
 ```{targets load-genesets}
@@ -140,7 +144,8 @@ list(
 )
 ```
 
-## L1 Simulation
+
+### L1 Simulation
 
 Simulate a single active gene set from `GO-BP no redundnant`
 
@@ -210,14 +215,12 @@ list(
 )
 ```
 
+
 ## Real Data
 
 ### PBMC
 
 ```{targets pbmc.deseq}
-GENESETS <- c('all_msigdb') # c('all_msigdb', 'all_go', 'pathways')
-PROPGENES <- c(0.05, 0.1, 0.2, 0.5) # c(1e-2, 1e-4, 1e-6, 1e-8)
-
 target_list <- list(
   # get data
   tar_target(sc_pbmc_deseq_data, load_sc_pbmc_deseq2()),
