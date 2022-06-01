@@ -225,3 +225,26 @@ load_baboon_diet = function(){
 
   return(data)
 }
+
+
+load_chondrocyte_data<- function(){
+  data <- read.table('data/anthony/DE_table_midSize.csv', sep=',', header=T)
+  map2entrez <- generate_map2entrez(data$Row.names, 'ENSEMBL')
+  data <- data %>%
+    mutate(ENSEMBL = Row.names, beta=1., se=1.) %>%
+    select(ENSEMBL, adjPval_CTS, adjPval_il1b, beta, se) %>%
+    left_join(map2entrez)
+
+  cts <- data %>%
+    select(ENTREZID, beta, se, adjPval_CTS) %>%
+    mutate(threshold.on = adjPval_CTS)
+
+  il1b <- data %>%
+    select(ENTREZID, beta, se, adjPval_il1b) %>%
+    mutate(threshold.on = adjPval_il1b)
+
+  data <- list(
+    CTS=cts, IL1B=il1b
+  )
+  return(data)
+}
