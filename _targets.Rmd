@@ -30,7 +30,7 @@ library(DESeq2)
 
 library(future)
 library(future.callr)
-plan(multisession)
+plan(callr)
 
 # Manage naming conflicts
 conflict_prefer("select", "dplyr", "AnnotationDbi")
@@ -265,7 +265,7 @@ target_list <- list(
     crossing(
       db=GENESETS,
       experiment=names(human_chimp_eb_data),
-      ptop = PROPGENES), experiment),
+      ptop = PROPGENES), experiment, db),
   # fit enrichment for each row of meta
   tar_target(
     human_chimp_eb_enrichment_fit,
@@ -302,8 +302,8 @@ target_list <- list(
     baboon_diet_meta,
     crossing(
       db=GENESETS,
-      experiment=names(baboon_diet_data)[1:2],
-      ptop = PROPGENES), experiment),
+      experiment=names(baboon_diet_data),
+      ptop = PROPGENES), experiment, db),
   # fit enrichment for each row of meta
   tar_target(
     baboon_diet_enrichment_fit,
