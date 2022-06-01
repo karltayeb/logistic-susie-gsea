@@ -1,0 +1,257 @@
+---
+title: "redundancy_is_a_problem"
+author: "karltayeb"
+date: "2022-05-01"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+params:
+  cache_dir: 'cache/redundancy/'
+  rerun: FALSE  # set to true to ignore cache
+---
+
+## Introduction
+
+This notebook is intended to help communicate the issue of redundancy in GSEA (and how multiple regression can help!)
+
+We take ~2500 GO-BP terms and simulate a single active gene set (at different gene set sizes) The degree of redundant enrichments is expectedly a function of gene set size and overlap.
+
+Next we generate a gene list with 3 enriched gene sets and show that the redundant marginal enrichment from the largest gene set "bury" the other interesting enticements.
+
+Finally, we demonstrate the utility of joint gene set analysis. A simple forward selection procedure successfully recovers the "active" gene sets.
+
+### Example
+
+```{r}
+library(tidyverse)
+library(purrr)
+library(gseasusie)
+
+params.cache_dir <- params$cache_dir
+params.rerun <- eval(parse(text=params$rerun))
+cache_rds <- partial(xfun::cache_rds, dir=params.cache_dir, rerun=params.rerun)
+```
+
+```{r}
+set.seed(4)
+active_gene_sets <- c("GO:0050994", "GO:0044774", "GO:0090150")
+
+genesets <- gseasusie::load_gene_sets()
+X <- genesets$gobp$X
+ngenes <- sort(Matrix::colSums(X))
+overlap <- Matrix::t(X) %*% X
+```
+
+```{r}
+sim_from_gene_set = function(x, p.in=0.5, p.out=0.01){
+  1 - rbinom(length(x), size=1, prob=ifelse(x == 1, p.in, p.out))
+}
+y <- map(
+  active_gene_sets,
+  ~tibble(ENTREZID=rownames(X), beta=1, threshold.on=sim_from_gene_set(X[,.x]))
+)
+names(y) <- active_gene_sets
+
+ora_res <- cache_rds({
+  map_dfr(active_gene_sets, ~do_ora(
+  .x, 'gobp', thresh = 0.5, genesets = genesets, data = y))},
+  file='l1.sim')
+```
+
+```{r}
+null.y <- map(active_gene_sets[1:1],
+              ~tibble(ENTREZID=rownames(X), beta=1, threshold.on=sim_from_gene_set(X[,.x], p.in=0.01)))
+names(null.y) <- 'null'
+ora_null_res <- do_ora(
+  'null', 'gobp', thresh = 0.5, genesets = genesets, data = null.y)
+```
+
+In each simulation we select one "active" gene set. Gene set genes have a probability of $p_{in} = 0.5$ of appearing the the gene list. Genes out of the gene set have a probability of $p_{out}=0.01$ of appearing in the gene list. We repeat this simulation for 3 gene sets of size ~50, 100, 300. 
+
+Clearly, gene set overlap leads to dramatic inflation of non active gene set p-values.
+
+```{r, aspect=0.25}
+par(mfrow=c(1,4))
+gaston::qqplot.pvalues(ora_null_res$ora[[1]]$pHypergeometric, main='Null Simulation')
+
+i = 1
+title = paste0(active_gene_sets[i], ', n=', ngenes[active_gene_sets[i]])
+gaston::qqplot.pvalues(ora_res$ora[[i]]$pHypergeometric, main=title)
+
+i = 2
+title = paste0(active_gene_sets[i], ', n=', ngenes[active_gene_sets[i]])
+gaston::qqplot.pvalues(ora_res$ora[[i]]$pHypergeometric, main=title)
+
+i = 3
+title = paste0(active_gene_sets[i], ', n=', ngenes[active_gene_sets[i]])
+gaston::qqplot.pvalues(ora_res$ora[[i]]$pHypergeometric, main=title)
+```
+
+
+```{r}
+res <- ora_res %>%
+  unnest(ora) %>%
+  left_join(genesets$gobp$geneSet$geneSetDes)
+
+res %>% 
+  filter(experiment == active_gene_sets[3]) %>%
+  arrange(pHypergeometric) %>% 
+  select(geneSet, description, overlap, geneSetSize, pHypergeometric) %>%
+  head(10) %>%
+  xtable::xtable(type='latex')
+```
+
+
+### Multiple enriched gene sets
+
+```{r aspect=0.8}
+x3 <- pmin(Matrix::rowSums(X[, active_gene_sets]), 1)
+y3 <- tibble(
+  ENTREZID=rownames(X),
+  beta=1,
+  threshold.on=sim_from_gene_set(x3, 0.5, 0.01))
+
+y[['Y3']] <- y3
+ora_y3 <- do_ora('Y3', 'gobp', 0.5, genesets = genesets, data=y)
+
+plotdat <- ora_y3$ora[[1]] %>%
+  mutate(active = geneSet %in% active_gene_sets) 
+
+
+plotdat %>%
+  mutate(padj = p.adjust(pHypergeometric, method = 'BH')) %>%
+  mutate(reject = padj < 0.05) %>%
+  ggplot(aes(x=log10(oddsRatio), y=-log10(pHypergeometric), color=reject, size=active, shape=active)) +
+  geom_point() +
+  scale_color_manual(values=c("FALSE"="grey","TRUE"="red")) +
+  scale_size_manual(values=c('FALSE' = 1, 'TRUE'= 3)) +
+  scale_shape_manual(values=c('FALSE' = 1, 'TRUE'= 17)) +
+  labs(x = 'log10(Odds Ratio)', y = '-log10(p)')
+```
+
+```{r}
+ora_y3$ora[[1]] %>%
+  arrange(pHypergeometric) %>%
+  mutate(rank = row_number()) %>%
+  filter(geneSet %in% active_gene_sets) %>%
+  left_join(genesets$gobp$geneSet$geneSetDes) %>%
+  select(geneSet, description, rank, pHypergeometric) %>%
+  xtable::xtable(type='latex')
+```
+
+## Stepwise regression
+
+```{r}
+u <- gseasusie::prep_binary_data(genesets$gobp, y3, 0.5)
+
+y <- u$y
+x3 <- u$X[, active_gene_sets[3]]
+x2 <- u$X[, active_gene_sets[2]]
+x1 <- u$X[, active_gene_sets[1]]
+
+library(tictoc)
+tic()
+m1p <- cache_rds({map_dbl(
+  colnames(u$X),
+  ~tail(summary(glm(y ~ u$X[,.x], family='binomial'))$coef[, "Pr(>|z|)"], 1)
+)}, file='forwardstepwise1')
+names(m1p) <- colnames(u$X)
+toc()
+
+M1 <- glm(y ~ x3, family='binomial')
+p1 <- predict.glm(M1) - M1$coefficients[1]
+
+### 
+tic()
+m2p <- cache_rds({map_dbl(
+  colnames(u$X),
+  ~tail(summary(glm(y ~ u$X[,.x] + offset(p1), family='binomial'))$coef[, "Pr(>|z|)"], 1)
+)}, file='forwardstepwise2')
+names(m2p) <- colnames(u$X)
+toc()
+
+M2 <- glm(y ~ x2 + offset(p1), family='binomial')
+p2 <- predict.glm(M2) - M2$coefficients[1]
+
+###
+tic()
+m3p <- cache_rds({map_dbl(
+  colnames(u$X),
+  ~tail(summary(glm(y ~ u$X[,.x] + offset(p2), family='binomial'))$coef[, "Pr(>|z|)"], 1)
+)}, file='forwardstepwise3')
+names(m3p) <- colnames(u$X)
+toc()
+
+M3 <- glm(y ~ x1 + offset(p2), family='binomial')
+p3 <- predict.glm(M3) - M3$coefficients[1]
+
+
+###
+tic()
+m4p <- map_dbl(
+  colnames(u$X),
+  ~tail(summary(glm(y ~ u$X[,.x] + offset(p3), family='binomial'))$coef[, "Pr(>|z|)"], 1)
+)
+names(m4p) <- colnames(u$X)
+toc()
+```
+
+## Correct selection path regression
+
+```{r aspect=0.25}
+par(mfrow=c(1, 4))
+
+plot(-log10(m1p), col='white', main='Step 1')
+abline(v=which(names(m3p) %in% active_gene_sets), col='grey', lty='dotted')
+points(-log10(m1p))
+abline(
+  v=which(names(m3p) == active_gene_sets[3]),
+  col='red'
+)
+
+plot(-log10(m2p), col='white', main='Step 2')
+abline(v=which(names(m3p) %in% active_gene_sets), col='grey', lty='dotted')
+points(-log10(m2p))
+abline(
+  v=which(names(m2p) == active_gene_sets[2]),
+  col='red'
+)
+
+plot(-log10(m3p), col='white', main='Step 3')
+abline(v=which(names(m3p) %in% active_gene_sets), col='grey', lty='dotted')
+points(-log10(m3p))
+abline(
+  v=which(names(m3p) == active_gene_sets[1]),
+  col='red'
+)
+
+plot(-log10(m4p), main='Step 4')
+abline(v=which(names(m3p) %in% active_gene_sets), col='grey', lty='dotted')
+```
+
+### Actual selection path
+
+```{r}
+sort(m1p) %>% head()
+sort(m2p) %>% head()
+sort(m3p) %>% head()
+active_gene_sets
+```
+
+### Logistic vs Linear
+
+```{r}
+susie_y3 <- gseasusie::do_logistic_susie('Y3', 'gobp', 0.5, genesets = genesets, data=list(Y3=y3))
+linear_susie_y3 <- gseasusie::do_linear_susie('Y3', 'gobp', 0.5, genesets = genesets, data=list(Y3=y3))
+```
+
+
+```{r aspect=0.5}
+par(mfrow=c(1,2))
+susieR::susie_plot(susie_y3$fit[[1]], 'PIP', main='Logistic')
+abline(v=which(names(m3p) %in% active_gene_sets), col='grey', lty='dotted')
+
+susieR::susie_plot(linear_susie_y3$fit[[1]], 'PIP', main='Linear')
+abline(v=which(names(m3p) %in% active_gene_sets), col='grey', lty='dotted')
+```
+

@@ -23,7 +23,7 @@ library(tarchetypes)
 library(conflicted)
 library(gseasusie)
 library(DESeq2)
-
+library(BiocGenerics)
 
 #library(clustermq)
 #options(clustermq.scheduler = "multiprocess")
@@ -64,9 +64,14 @@ tar_option_set(memory='transient', garbage_collection = T)
 
 REP <- tar_toggle(1, 10)
 BATCH <- tar_toggle(1, 1)
+
+GENESETS <- c('gocc', 'gomf', 'gobp', 'all_go', 'all_msigdb') # c('all_msigdb', 'all_go', 'pathways')
+PROPGENES <- c(0.1) # c(0.05, 0.1, 0.2, 0.5)
 ```
 
-## Methods
+## Simulations
+
+### Methods
 
 To add a method add a row to `method_lookup` and `score_lookup`
 `method_function` should take arguments `X` and `y`
@@ -129,7 +134,6 @@ score_lookup <- tribble(
 )
 ```
 
-## Targets
 
 ### Get gene sets
 ```{targets load-genesets}
@@ -140,7 +144,8 @@ list(
 )
 ```
 
-## L1 Simulation
+
+### L1 Simulation
 
 Simulate a single active gene set from `GO-BP no redundnant`
 
@@ -210,14 +215,12 @@ list(
 )
 ```
 
+
 ## Real Data
 
 ### PBMC
 
 ```{targets pbmc.deseq}
-GENESETS <- c('all_msigdb') # c('all_msigdb', 'all_go', 'pathways')
-PROPGENES <- c(0.05, 0.1, 0.2, 0.5) # c(1e-2, 1e-4, 1e-6, 1e-8)
-
 target_list <- list(
   # get data
   tar_target(sc_pbmc_deseq_data, load_sc_pbmc_deseq2()),
@@ -253,80 +256,41 @@ target_list <- list(
 target_list
 ```
 
-### Human Chimp EB
-
-```{targets human.chimp.eb}
-target_list <- list(
-  # get data
-  tar_target(human_chimp_eb_data, load_human_chimp_eb()),
-  # make meta table (group over experiment, all db and threshold get evaluated in one target)
-  tarchetypes::tar_group_by(
-    human_chimp_eb_meta,
-    crossing(
-      db=GENESETS,
-      experiment=names(human_chimp_eb_data),
-      ptop = PROPGENES), experiment, db),
-  # fit enrichment for each row of meta
-  tar_target(
-    human_chimp_eb_enrichment_fit,
-    human_chimp_eb_meta %>% 
-      rowwise() %>%
-      mutate(
-        enrichment = list(run_enrichment(db, experiment, ptop, genesets, human_chimp_eb_data))
-      ) %>% ungroup() %>% unnest(enrichment),
-    pattern = map(human_chimp_eb_meta)
-  ),
-  # summarise enrichment (lightweight, used for plotting, etc)
-  tar_target(
-    human_chimp_eb_enrichment_summary,
-    human_chimp_eb_enrichment_fit %>%
-      rowwise() %>% 
-      mutate(
-        enrichment_summary = list(summarise_enrichment(
-          fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
-      select(db, experiment, ptop, enrichment_summary),
-    pattern = map(human_chimp_eb_enrichment_fit)
-  )
+```{targets pbmc.deseq2}
+binary_enrichment_target_factory(
+  'pbmc_deseq2',
+  load_sc_pbmc_deseq2,
+  c('gomf', 'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.05, 0.1, 0.2, 0.5)
 )
-target_list
 ```
 
-### Baboon Diet
-
 ```{targets baboon.diet}
-target_list <- list(
-  # get data
-  tar_target(baboon_diet_data, load_baboon_diet()),
-  # make meta table (group over experiment, all db and threshold get evaluated in one target)
-  tarchetypes::tar_group_by(
-    baboon_diet_meta,
-    crossing(
-      db=GENESETS,
-      experiment=names(baboon_diet_data),
-      ptop = PROPGENES), experiment, db),
-  # fit enrichment for each row of meta
-  tar_target(
-    baboon_diet_enrichment_fit,
-    baboon_diet_meta %>% 
-      rowwise() %>%
-      mutate(
-        enrichment = list(run_enrichment(db, experiment, ptop, genesets, baboon_diet_data))
-      ) %>% ungroup() %>% unnest(enrichment),
-    pattern = map(baboon_diet_meta)
-  ),
-  # summarise enrichment (lightweight, used for plotting, etc)
-  tar_target(
-    baboon_diet_enrichment_summary,
-    baboon_diet_enrichment_fit %>%
-      rowwise() %>% 
-      mutate(
-        enrichment_summary = list(summarise_enrichment(
-          fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
-      select(db, experiment, ptop, enrichment_summary),
-    pattern = map(baboon_diet_enrichment_fit)
-  )
+enrichment_target_factory(
+  'baboon_diet',
+  load_baboon_diet,
+  c('gomf'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.1)
 )
-target_list
+```
+
+```{targets human.chimp.eb}
+enrichment_target_factory(
+  'human_chimp_eb',
+  load_human_chimp_eb,
+  c('gocc'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.1),
+  c("Acinar cells", "Antigen presenting cells", "Astrocytes", "Visceral neurons")
+)
+```
+
+```{targets chondrocyte.oa}
+enrichment_target_factory(
+  'chondroctye_oa',
+  load_chondrocyte_data,
+  c('gocc', 'gomf'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.1)
+)
 ```
 
 
