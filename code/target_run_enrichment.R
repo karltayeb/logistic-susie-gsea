@@ -45,7 +45,11 @@ run_enrichment = function(db, experiment, ptop, genesets, data){
   # apres <- fit_affinity_prop_ora(ora, X, y)
   # wscres <- fit_weighted_set_cover_ora(ora, X, y)
 
-  #linear_fit <- susieR::susie(X, y)
+  message('fitting linear susie')
+  tictoc::tic()
+  linear_fit <- susieR::susie(X, y, L=20)
+  tictoc::toc()
+
   marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
   residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
 
@@ -108,7 +112,7 @@ enrichment_target_factory <- function(prefix, data_loader, .genesets, .propgenes
     meta_target_sym %>%
       rowwise() %>%
       mutate(
-        enrichment = list(run_enrichment(db, experiment, ptop, genesets, sc_pbmc_deseq_data))
+        enrichment = list(run_enrichment(db, experiment, ptop, genesets, data_target_sym))
       ) %>%
       ungroup() %>%
       unnest(enrichment)
@@ -122,14 +126,14 @@ enrichment_target_factory <- function(prefix, data_loader, .genesets, .propgenes
 
   # summary target
   summary_target_name <- paste0(prefix, '_enrichment_summary')
-  summary_target_command <- substitute(rlang::expr(
+  summary_target_command <- substitute(eval(rlang::expr(
     fit_target_sym %>%
       rowwise() %>%
       mutate(
         enrichment_summary = list(summarise_enrichment(
           fit, ora, marginal_reg, residual_reg, genesets[[db]]$geneSetDes))) %>%
       select(db, experiment, ptop, enrichment_summary)
-  ))
+  )))
   summary_target_pattern = substitute(map(fit_target_sym))
   summary_target <- tar_target_raw(
     name = summary_target_name,

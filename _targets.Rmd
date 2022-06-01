@@ -275,6 +275,16 @@ enrichment_target_factory(
 )
 ```
 
+```{targets chondrocyte.oa}
+enrichment_target_factory(
+  'chondroctye_oa',
+  load_chondrocyte_data,
+  c('gocc', 'gomf'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.1)
+)
+```
+
+
 ## BREAK
 ```{r tar_make, eval=FALSE}
 tar_make()
