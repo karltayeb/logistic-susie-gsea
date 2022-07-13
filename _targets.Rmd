@@ -266,7 +266,7 @@ binary_enrichment_target_factory(
 ```
 
 ```{targets baboon.diet}
-enrichment_target_factory(
+binary_enrichment_target_factory(
   'baboon_diet',
   load_baboon_diet,
   c('gomf'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
@@ -275,7 +275,7 @@ enrichment_target_factory(
 ```
 
 ```{targets human.chimp.eb}
-enrichment_target_factory(
+binary_enrichment_target_factory(
   'human_chimp_eb',
   load_human_chimp_eb,
   c('gocc'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
@@ -285,7 +285,7 @@ enrichment_target_factory(
 ```
 
 ```{targets chondrocyte.oa}
-enrichment_target_factory(
+binary_enrichment_target_factory(
   'chondroctye_oa',
   load_chondrocyte_data,
   c('gocc', 'gomf'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
