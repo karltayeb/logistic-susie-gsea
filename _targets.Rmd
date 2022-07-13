@@ -284,6 +284,33 @@ enrichment_target_factory(
 )
 ```
 
+```{targets chondrocyte.oa2}
+enrichment_target_factory2(
+  'chondroctye_oa2',
+  load_chondrocyte_data2,
+  c('gocc'),#, 'gomf', 'gobp', 'all_go', 'all_msigdb'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.05)
+)
+```
+
+```{targets sc.tumor.hnscc}
+enrichment_target_factory2(
+  'sc_tumor_hnscc',
+  load_sc_tumor_hnscc,
+  c('gocc'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.1)
+)
+```
+
+```{targets sc.tumor.pdac}
+enrichment_target_factory2(
+  'sc_tumor_pdac',
+  load_sc_tumor_pdac,
+  c('gocc'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.1)
+)
+```
+
 
 ## BREAK
 ```{r tar_make, eval=FALSE}
