@@ -2,13 +2,14 @@
 #' standardized versions of the data
 library(tidyverse)
 
-generate_map2entrez = function(genes, from){
+generate_map2entrez = function(genes, from, to='ENTREZID'){
   hs <- org.Hs.eg.db::org.Hs.eg.db
   genes <- unique(genes)
   map2entrez <- AnnotationDbi::select(
     hs, keys=genes,
-    columns=c('ENTREZID', from),
+    columns=c(to, from),
     keytype = from)
+  return(map2entrez)
 }
 
 #' add names to list, useful for piping
@@ -246,5 +247,94 @@ load_chondrocyte_data<- function(){
   data <- list(
     CTS=cts, IL1B=il1b
   )
+  return(data)
+}
+
+
+# NOTE: data has logfc etc, but we're just loading p-values here
+load_chondrocyte_data2 <- function(){
+  data <- read.table('data/anthony/DE_merged.csv', sep=',', header=T)
+  map2entrez <- generate_map2entrez(data$rowname, 'ENSEMBL')
+  data <- data %>%
+    mutate(ENSEMBL = rowname, beta=1., se=1.) %>%
+    select(ENSEMBL, adj.P.Val_CTS, adj.P.Val_il1b, beta, se) %>%
+    left_join(map2entrez)
+
+  cts <- data %>%
+    select(ENTREZID, beta, se, adj.P.Val_CTS) %>%
+    mutate(threshold.on = adj.P.Val_CTS)
+
+  il1b <- data %>%
+    select(ENTREZID, beta, se, adj.P.Val_il1b) %>%
+    mutate(threshold.on = adj.P.Val_il1b)
+
+  data <- list(
+    CTS=cts, IL1B=il1b
+  )
+  return(data)
+}
+
+
+# yusha's singcle cell tumor data
+load_sc_tumor_hnscc = function(){
+  # load data
+  genes <- read.table('data/yusha_sc_tumor/hnscc/gene_list.txt')$V1
+
+  files <- Sys.glob('data/yusha_sc_tumor/hnscc/factor*', dirmark = FALSE)
+  map2entrez <- generate_map2entrez(genes, 'SYMBOL')
+
+  f <- files[1]
+
+  load_factor = function(f){
+    gene_list <- read.table(f)$V1
+
+    map2entrez %>%
+      mutate(
+        beta = as.integer(SYMBOL %in% gene_list),
+        threshold.on= 1 - beta
+      )
+  }
+
+  data <- purrr::map(files, load_factor)
+
+  # get names from filepaths
+  names <- stringr::str_split(files, '/') %>%
+    map_chr(~pluck(.x, 4)) %>%
+    stringr::str_split('.txt') %>%
+    map_chr(~pluck(.x, 1))
+  names(data) <- names
+
+  return(data)
+}
+
+
+load_sc_tumor_pdac = function(){
+  # load data
+  genes <- read.table('data/yusha_sc_tumor/pdac/gene_list.txt')$V1
+
+  files <- Sys.glob('data/yusha_sc_tumor/pdac/factor*', dirmark = FALSE)
+  map2entrez <- generate_map2entrez(genes, 'SYMBOL')
+
+  f <- files[1]
+
+  load_factor = function(f){
+    gene_list <- read.table(f)$V1
+
+    map2entrez %>%
+      mutate(
+        beta = as.integer(SYMBOL %in% gene_list),
+        threshold.on= 1 - beta
+      )
+  }
+
+  data <- purrr::map(files, load_factor)
+
+  # get names from filepaths
+  names <- stringr::str_split(files, '/') %>%
+    map_chr(~pluck(.x, 4)) %>%
+    stringr::str_split('.txt') %>%
+    map_chr(~pluck(.x, 1))
+  names(data) <- names
+
   return(data)
 }
