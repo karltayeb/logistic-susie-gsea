@@ -51,7 +51,9 @@ run_enrichment = function(db, experiment, ptop, genesets, data){
   tictoc::toc()
 
   marginal_regression <- gseasusie::fit_marginal_regression_jax(X, y)
-  residual_regression <- gseasusie::fit_residual_regression_jax(X, y, logistic.fit)
+
+  pred <- gseasusie:::susie_pred(logistic.fit, X)
+  residual_regression <- gseasusie::fit_marginal_regression_jax(X, y, offset=pred)
 
   res <- tibble(
     y = list(y),

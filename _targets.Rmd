@@ -30,7 +30,7 @@ library(BiocGenerics)
 
 library(future)
 library(future.callr)
-plan(multisession)
+plan(callr)
 
 # Manage naming conflicts
 conflict_prefer("select", "dplyr", "AnnotationDbi")
@@ -256,9 +256,18 @@ target_list <- list(
 target_list
 ```
 
+```{targets pbmc.deseq2}
+binary_enrichment_target_factory(
+  'pbmc_deseq2',
+  load_sc_pbmc_deseq2,
+  c('gomf', 'gomf', 'gobp', 'all_go', 'all_msigdb'),
+  c(0.05, 0.1, 0.2, 0.5)
+)
+```
+
 ```{targets baboon.diet}
-enrichment_target_factory(
-  'baboon_diet2',
+binary_enrichment_target_factory(
+  'baboon_diet',
   load_baboon_diet,
   c('gomf'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
   c(0.1)
@@ -266,7 +275,7 @@ enrichment_target_factory(
 ```
 
 ```{targets human.chimp.eb}
-enrichment_target_factory(
+binary_enrichment_target_factory(
   'human_chimp_eb',
   load_human_chimp_eb,
   c('gocc'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
@@ -276,7 +285,7 @@ enrichment_target_factory(
 ```
 
 ```{targets chondrocyte.oa}
-enrichment_target_factory(
+binary_enrichment_target_factory(
   'chondroctye_oa',
   load_chondrocyte_data,
   c('gocc', 'gomf'), #'gomf', 'gobp', 'all_go', 'all_msigdb'),
