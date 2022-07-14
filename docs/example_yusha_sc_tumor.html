@@ -1,0 +1,3326 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="karltayeb" />
+
+<meta name="date" content="2022-07-13" />
+
+<title>example_yusha_sc_tumor</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">example_yusha_sc_tumor</h1>
+<h4 class="author">karltayeb</h4>
+<h4 class="date">2022-07-13</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-07-14
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree24146ef4aa5975e3ef35a0913232273d1163a1d5targetblank24146efa">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/24146ef4aa5975e3ef35a0913232273d1163a1d5" target="_blank">24146ef</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree24146ef4aa5975e3ef35a0913232273d1163a1d5targetblank24146efa"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/24146ef4aa5975e3ef35a0913232273d1163a1d5" target="_blank">24146ef</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    _targets.R
+    Ignored:    _targets.html
+    Ignored:    _targets.md
+    Ignored:    _targets/objects/
+    Ignored:    _targets/user/
+    Ignored:    _targets/workspaces/
+    Ignored:    _targets_r/
+    Ignored:    cache/
+    Ignored:    data/.DS_Store
+    Ignored:    data/adipose_2yr_topsnp.txt
+    Ignored:    data/anthony/
+    Ignored:    data/de-droplet/
+    Ignored:    data/deng/
+    Ignored:    data/fetal_reference_cellid_gene_sets.RData
+    Ignored:    data/human_chimp_eb/
+    Ignored:    data/pbmc-purified/
+    Ignored:    data/wenhe_baboon_diet/
+    Ignored:    data/yusha_sc_tumor/
+    Ignored:    library/
+    Ignored:    renv/
+    Ignored:    staging/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Master's Paper.pdf
+    Untracked:  Project_1652928411/
+    Untracked:  Project_1653228324/
+    Untracked:  Project_1653228355/
+    Untracked:  VEB_Boost_Proposal_Write_Up (1).pdf
+    Untracked:  _targets/meta/
+    Untracked:  additive.l5.gonr.aggregate.scores
+    Untracked:  analysis/alpha_ash_v_point_normal.Rmd
+    Untracked:  analysis/compare_w_post_hoc_clustering.Rmd
+    Untracked:  analysis/de_droplet_noshrink.Rmd
+    Untracked:  analysis/de_droplet_noshrink_logistic_susie.Rmd
+    Untracked:  analysis/example_anthony.Rmd
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/gsea_made_simple.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/linear_v_logistic_pbmc.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/logistic_variational_bound.Rmd
+    Untracked:  analysis/logsitic_susie_template.Rmd
+    Untracked:  analysis/pcb_scratch.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/roadmap.Rmd
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/simulations_l1.Rmd
+    Untracked:  analysis/tccm_vs_logistic_susie.Rmd
+    Untracked:  analysis/template.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  build_site.R
+    Untracked:  code/html_tables.R
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/point_normal.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  code/susie_gsea_queries.R
+    Untracked:  docs.zip
+    Untracked:  export/
+    Untracked:  l1.sim.aggregate.scores
+    Untracked:  pbmc_cd19_symbol.txt
+    Untracked:  pbmc_cd19b_0.1_background.csv
+    Untracked:  pbmc_cd19b_0.1_david_annotation_clusters.txt
+    Untracked:  pbmc_cd19b_0.1_david_results.txt
+    Untracked:  pbmc_cd19b_0.1_list.csv
+    Untracked:  presentations/
+    Untracked:  references.bib
+
+Unstaged changes:
+    Modified:   analysis/example_pbmc.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/example_yusha_sc_tumor.Rmd</code>) and HTML
+(<code>docs/example_yusha_sc_tumor.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/24146ef4aa5975e3ef35a0913232273d1163a1d5/analysis/example_yusha_sc_tumor.Rmd" target="_blank">24146ef</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+<td>
+wflow_publish("analysis/example_yusha_sc_tumor.Rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-data" class="section level2">
+<h2>Load data</h2>
+<pre class="r"><code>source(&#39;code/load_data.R&#39;)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+✔ tibble  3.1.7     ✔ dplyr   1.0.9
+✔ tidyr   1.2.0     ✔ stringr 1.4.0
+✔ readr   2.1.2     ✔ forcats 0.5.1</code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(gseasusie)
+
+# save output to a folder... helps for running many factors
+cache_rds = purrr::partial(xfun::cache_rds, dir=&#39;cache/sc_tumor/&#39;)
+
+driver = function(gs, experiment){
+  dat &lt;- gseasusie::prep_binary_data(gs, data[[experiment]])
+  ora &lt;- gseasusie::fit_ora(dat$X, dat$y)
+  # add description
+  ora &lt;- ora %&gt;%
+    dplyr::left_join(gs$geneSetDes)
+  fit &lt;- gseasusie::fit_logistic_susie_veb_boost(dat$X, dat$y)
+  return(list(fit=fit, ora=ora))
+}
+
+driver_cached = function(prefix, gs, experiment){
+  file = paste0(prefix, &#39;_&#39;, gs$db, &#39;_&#39;, experiment, &#39;.rds&#39;)
+  print(file)
+  cache_rds(driver(gs, experiment), file=file)
+}</code></pre>
+<pre class="r"><code>data  &lt;- load_sc_tumor_hnscc()</code></pre>
+<pre><code></code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<pre class="r"><code>go &lt;- gseasusie::load_all_go()</code></pre>
+<pre><code>loading gene set from webgestaltr: geneontology_Biological_Process</code></pre>
+<pre><code>loading gene set from webgestaltr: geneontology_Molecular_Function</code></pre>
+<pre><code>loading gene set from webgestaltr: geneontology_Cellular_Component</code></pre>
+<pre class="r"><code>hnscc_res &lt;- purrr::map(names(data), ~driver_cached(&#39;hnscc&#39;, go, .x))</code></pre>
+<pre><code>[1] &quot;hnscc_all_go_factor10.rds&quot;
+[1] &quot;hnscc_all_go_factor11.rds&quot;
+[1] &quot;hnscc_all_go_factor12.rds&quot;
+[1] &quot;hnscc_all_go_factor13.rds&quot;
+[1] &quot;hnscc_all_go_factor14.rds&quot;
+[1] &quot;hnscc_all_go_factor15.rds&quot;
+[1] &quot;hnscc_all_go_factor16.rds&quot;
+[1] &quot;hnscc_all_go_factor17.rds&quot;
+[1] &quot;hnscc_all_go_factor18.rds&quot;
+[1] &quot;hnscc_all_go_factor19.rds&quot;
+[1] &quot;hnscc_all_go_factor2.rds&quot;
+[1] &quot;hnscc_all_go_factor20.rds&quot;
+[1] &quot;hnscc_all_go_factor21.rds&quot;
+[1] &quot;hnscc_all_go_factor22.rds&quot;
+[1] &quot;hnscc_all_go_factor23.rds&quot;
+[1] &quot;hnscc_all_go_factor24.rds&quot;
+[1] &quot;hnscc_all_go_factor3.rds&quot;
+[1] &quot;hnscc_all_go_factor4.rds&quot;
+[1] &quot;hnscc_all_go_factor5.rds&quot;
+[1] &quot;hnscc_all_go_factor6.rds&quot;
+[1] &quot;hnscc_all_go_factor7.rds&quot;
+[1] &quot;hnscc_all_go_factor8.rds&quot;
+[1] &quot;hnscc_all_go_factor9.rds&quot;</code></pre>
+<pre class="r"><code>names(hnscc_res) &lt;- names(data)</code></pre>
+<pre class="r"><code>static_table = function(fit, ora){
+  res &lt;- gseasusie:::get_gene_set_summary(fit) %&gt;%
+    dplyr::left_join(ora)
+
+  csdat &lt;- gseasusie:::get_credible_set_summary(fit) %&gt;%
+    dplyr::left_join(ora) %&gt;%
+    dplyr::filter(in_cs, active_cs) %&gt;%
+    dplyr::select(geneSet, description, component, in_cs, alpha) %&gt;%
+    distinct()
+  
+  dt &lt;- res %&gt;% 
+    dplyr::filter(overlap &gt; 0) %&gt;%
+    dplyr::mutate(
+      logOddsRatio = log(oddsRatio),
+      nlog10pFishersExact = -log10(pFishersExact)
+    ) %&gt;%
+    dplyr::left_join(csdat) %&gt;%
+    dplyr::arrange(dplyr::desc(nlog10pFishersExact)) %&gt;%
+    dplyr::mutate(
+      fisherRank = dplyr::row_number(),
+      in_cs = dplyr::if_else(is.na(in_cs), FALSE, in_cs)) %&gt;%
+    dplyr::filter(in_cs) %&gt;%
+    dplyr::select(tidyselect::any_of(
+      c(&quot;geneSet&quot;, &quot;description&quot;, &quot;beta&quot;, &quot;alpha&quot;, &quot;pip&quot;, &quot;overlap&quot;, &quot;geneSetSize&quot;, &quot;logOddsRatio&quot;, &quot;nlog10pFishersExact&quot;, &quot;in_cs&quot;, &quot;component&quot;, &quot;fisherRank&quot;))) %&gt;%
+    dplyr::mutate(dplyr::across(!where(is.numeric) , as.factor))
+
+  dt %&gt;%
+    dplyr::select(
+      component, geneSet, description, geneSetSize, overlap,
+      logOddsRatio, beta,
+      alpha, pip, nlog10pFishersExact, fisherRank) %&gt;%
+    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %&gt;%
+    pack_group %&gt;%
+    kableExtra::column_spec(c(7), color=ifelse(dt$beta &gt; 0, &#39;green&#39;, &#39;red&#39;)) %&gt;%
+    kableExtra::kable_styling()
+}</code></pre>
+<pre class="r"><code>data  &lt;- load_sc_tumor_pdac()</code></pre>
+<pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<pre class="r"><code>pdac_res &lt;- purrr::map(names(data), ~driver_cached(&#39;pdac&#39;, go, .x))</code></pre>
+<pre><code>[1] &quot;pdac_all_go_factor10.rds&quot;
+[1] &quot;pdac_all_go_factor11.rds&quot;
+[1] &quot;pdac_all_go_factor15.rds&quot;
+[1] &quot;pdac_all_go_factor16.rds&quot;
+[1] &quot;pdac_all_go_factor17.rds&quot;
+[1] &quot;pdac_all_go_factor19.rds&quot;
+[1] &quot;pdac_all_go_factor2.rds&quot;
+[1] &quot;pdac_all_go_factor20.rds&quot;
+[1] &quot;pdac_all_go_factor24.rds&quot;
+[1] &quot;pdac_all_go_factor25.rds&quot;
+[1] &quot;pdac_all_go_factor26.rds&quot;
+[1] &quot;pdac_all_go_factor28.rds&quot;
+[1] &quot;pdac_all_go_factor3.rds&quot;
+[1] &quot;pdac_all_go_factor30.rds&quot;
+[1] &quot;pdac_all_go_factor32.rds&quot;
+[1] &quot;pdac_all_go_factor4.rds&quot;
+[1] &quot;pdac_all_go_factor5.rds&quot;
+[1] &quot;pdac_all_go_factor6.rds&quot;
+[1] &quot;pdac_all_go_factor7.rds&quot;
+[1] &quot;pdac_all_go_factor8.rds&quot;</code></pre>
+<pre class="r"><code>results &lt;- hnscc_res
+experiments &lt;- names(results)
+
+safe_static_table &lt;- purrr::safely(
+  gseasusie::static_table,
+  otherwise = &#39;nothing to report&#39;)
+
+for(this_experiment in experiments){
+  sub_res &lt;- results[[this_experiment]]
+  volcano &lt;- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  results[[this_experiment]]$volcano &lt;- volcano
+  
+  table &lt;- safe_static_table(sub_res$fit, sub_res$ora)$result
+  results[[this_experiment]]$table &lt;- table
+}</code></pre>
+<pre class="r"><code>cat(&#39;\n&#39;)</code></pre>
+<pre class="r"><code>cat(&#39;##&#39;, &#39;HNSCC&#39;)</code></pre>
+</div>
+<div id="hnscc" class="section level2">
+<h2>HNSCC</h2>
+<pre class="r"><code>for(this_experiment in experiments){
+  cat(&#39;\n&#39;)
+  cat(&#39;###&#39;, this_experiment)
+
+  #sub_res &lt;- results[[this_experiment]]
+  #volcano &lt;- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  print(results[[this_experiment]]$volcano)
+  
+  cat(&quot;\n\n&quot;)
+  #table &lt;- safe_static_table(sub_res$fit, sub_res$ora)$result
+  print(results[[this_experiment]]$table)
+}</code></pre>
+<div id="factor10" class="section level3">
+<h3>factor10<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-1.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="3">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070062" class="uri">GO:0070062</a>
+</td>
+<td style="text-align:left;">
+extracellular exosome
+</td>
+<td style="text-align:left;">
+1290
+</td>
+<td style="text-align:left;">
+71
+</td>
+<td style="text-align:left;">
+1.67
+</td>
+<td style="text-align:left;">
+0.465
+</td>
+<td style="text-align:left;color: green !important;">
+0.347
+</td>
+<td style="text-align:left;">
+0.348
+</td>
+<td style="text-align:left;">
+20.7
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0043230" class="uri">GO:0043230</a>
+</td>
+<td style="text-align:left;">
+extracellular organelle
+</td>
+<td style="text-align:left;">
+1290
+</td>
+<td style="text-align:left;">
+71
+</td>
+<td style="text-align:left;">
+1.66
+</td>
+<td style="text-align:left;">
+0.436
+</td>
+<td style="text-align:left;color: green !important;">
+0.326
+</td>
+<td style="text-align:left;">
+0.327
+</td>
+<td style="text-align:left;">
+20.6
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:1903561" class="uri">GO:1903561</a>
+</td>
+<td style="text-align:left;">
+extracellular vesicle
+</td>
+<td style="text-align:left;">
+1290
+</td>
+<td style="text-align:left;">
+71
+</td>
+<td style="text-align:left;">
+1.66
+</td>
+<td style="text-align:left;">
+0.436
+</td>
+<td style="text-align:left;color: green !important;">
+0.326
+</td>
+<td style="text-align:left;">
+0.327
+</td>
+<td style="text-align:left;">
+20.6
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr grouplength="5">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006735" class="uri">GO:0006735</a>
+</td>
+<td style="text-align:left;">
+NADH regeneration
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+3.77
+</td>
+<td style="text-align:left;">
+0.714
+</td>
+<td style="text-align:left;color: green !important;">
+0.24
+</td>
+<td style="text-align:left;">
+0.241
+</td>
+<td style="text-align:left;">
+9.36
+</td>
+<td style="text-align:left;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0061621" class="uri">GO:0061621</a>
+</td>
+<td style="text-align:left;">
+canonical glycolysis
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+3.77
+</td>
+<td style="text-align:left;">
+0.714
+</td>
+<td style="text-align:left;color: green !important;">
+0.24
+</td>
+<td style="text-align:left;">
+0.241
+</td>
+<td style="text-align:left;">
+9.36
+</td>
+<td style="text-align:left;">
+13
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0061718" class="uri">GO:0061718</a>
+</td>
+<td style="text-align:left;">
+glucose catabolic process to pyruvate
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+3.77
+</td>
+<td style="text-align:left;">
+0.714
+</td>
+<td style="text-align:left;color: green !important;">
+0.24
+</td>
+<td style="text-align:left;">
+0.241
+</td>
+<td style="text-align:left;">
+9.36
+</td>
+<td style="text-align:left;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0061615" class="uri">GO:0061615</a>
+</td>
+<td style="text-align:left;">
+glycolytic process through fructose-6-phosphate
+</td>
+<td style="text-align:left;">
+20
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+3.68
+</td>
+<td style="text-align:left;">
+0.339
+</td>
+<td style="text-align:left;color: green !important;">
+0.118
+</td>
+<td style="text-align:left;">
+0.118
+</td>
+<td style="text-align:left;">
+9.15
+</td>
+<td style="text-align:left;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0061620" class="uri">GO:0061620</a>
+</td>
+<td style="text-align:left;">
+glycolytic process through glucose-6-phosphate
+</td>
+<td style="text-align:left;">
+20
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+3.68
+</td>
+<td style="text-align:left;">
+0.339
+</td>
+<td style="text-align:left;color: green !important;">
+0.118
+</td>
+<td style="text-align:left;">
+0.118
+</td>
+<td style="text-align:left;">
+9.15
+</td>
+<td style="text-align:left;">
+19
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L3</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:1900115" class="uri">GO:1900115</a>
+</td>
+<td style="text-align:left;">
+extracellular regulation of signal transduction
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+3.63
+</td>
+<td style="text-align:left;">
+1.85
+</td>
+<td style="text-align:left;color: green !important;">
+0.5
+</td>
+<td style="text-align:left;">
+0.5
+</td>
+<td style="text-align:left;">
+7.96
+</td>
+<td style="text-align:left;">
+35
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:1900116" class="uri">GO:1900116</a>
+</td>
+<td style="text-align:left;">
+extracellular negative regulation of signal transduction
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+3.63
+</td>
+<td style="text-align:left;">
+1.85
+</td>
+<td style="text-align:left;color: green !important;">
+0.5
+</td>
+<td style="text-align:left;">
+0.5
+</td>
+<td style="text-align:left;">
+7.96
+</td>
+<td style="text-align:left;">
+36
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor11" class="section level3">
+<h3>factor11<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-2.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0048019" class="uri">GO:0048019</a>
+</td>
+<td style="text-align:left;">
+receptor antagonist activity
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+4.38
+</td>
+<td style="text-align:left;">
+4.21
+</td>
+<td style="text-align:left;color: green !important;">
+0.983
+</td>
+<td style="text-align:left;">
+0.983
+</td>
+<td style="text-align:left;">
+13.5
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor12" class="section level3">
+<h3>factor12<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-3.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0044421" class="uri">GO:0044421</a>
+</td>
+<td style="text-align:left;">
+extracellular region part
+</td>
+<td style="text-align:left;">
+1720
+</td>
+<td style="text-align:left;">
+81
+</td>
+<td style="text-align:left;">
+1.56
+</td>
+<td style="text-align:left;">
+1.32
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+19.7
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0009812" class="uri">GO:0009812</a>
+</td>
+<td style="text-align:left;">
+flavonoid metabolic process
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+4.98
+</td>
+<td style="text-align:left;">
+5.21
+</td>
+<td style="text-align:left;color: green !important;">
+0.999
+</td>
+<td style="text-align:left;">
+0.999
+</td>
+<td style="text-align:left;">
+7.51
+</td>
+<td style="text-align:left;">
+24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor13" class="section level3">
+<h3>factor13<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-4.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>[1] “nothing to report”</p>
+</div>
+<div id="factor14" class="section level3">
+<h3>factor14<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-5.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0051301" class="uri">GO:0051301</a>
+</td>
+<td style="text-align:left;">
+cell division
+</td>
+<td style="text-align:left;">
+411
+</td>
+<td style="text-align:left;">
+73
+</td>
+<td style="text-align:left;">
+3.03
+</td>
+<td style="text-align:left;">
+1.92
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+54.8
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0007059" class="uri">GO:0007059</a>
+</td>
+<td style="text-align:left;">
+chromosome segregation
+</td>
+<td style="text-align:left;">
+217
+</td>
+<td style="text-align:left;">
+53
+</td>
+<td style="text-align:left;">
+3.24
+</td>
+<td style="text-align:left;">
+0.166
+</td>
+<td style="text-align:left;color: green !important;">
+0.119
+</td>
+<td style="text-align:left;">
+0.12
+</td>
+<td style="text-align:left;">
+46.1
+</td>
+<td style="text-align:left;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0000819" class="uri">GO:0000819</a>
+</td>
+<td style="text-align:left;">
+sister chromatid segregation
+</td>
+<td style="text-align:left;">
+143
+</td>
+<td style="text-align:left;">
+42
+</td>
+<td style="text-align:left;">
+3.41
+</td>
+<td style="text-align:left;">
+1.41
+</td>
+<td style="text-align:left;color: green !important;">
+0.85
+</td>
+<td style="text-align:left;">
+0.85
+</td>
+<td style="text-align:left;">
+39.8
+</td>
+<td style="text-align:left;">
+11
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L3</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005874" class="uri">GO:0005874</a>
+</td>
+<td style="text-align:left;">
+microtubule
+</td>
+<td style="text-align:left;">
+247
+</td>
+<td style="text-align:left;">
+42
+</td>
+<td style="text-align:left;">
+2.69
+</td>
+<td style="text-align:left;">
+1.46
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+29.1
+</td>
+<td style="text-align:left;">
+21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor15" class="section level3">
+<h3>factor15<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-6.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>[1] “nothing to report”</p>
+</div>
+<div id="factor16" class="section level3">
+<h3>factor16<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-7.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070268" class="uri">GO:0070268</a>
+</td>
+<td style="text-align:left;">
+cornification
+</td>
+<td style="text-align:left;">
+61
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+2.99
+</td>
+<td style="text-align:left;">
+2.83
+</td>
+<td style="text-align:left;color: green !important;">
+0.982
+</td>
+<td style="text-align:left;">
+0.982
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor17" class="section level3">
+<h3>factor17<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-8.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>[1] “nothing to report”</p>
+</div>
+<div id="factor18" class="section level3">
+<h3>factor18<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-9.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>[1] “nothing to report”</p>
+</div>
+<div id="factor19" class="section level3">
+<h3>factor19<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-10.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="3">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070062" class="uri">GO:0070062</a>
+</td>
+<td style="text-align:left;">
+extracellular exosome
+</td>
+<td style="text-align:left;">
+1290
+</td>
+<td style="text-align:left;">
+72
+</td>
+<td style="text-align:left;">
+1.71
+</td>
+<td style="text-align:left;">
+0.526
+</td>
+<td style="text-align:left;color: green !important;">
+0.347
+</td>
+<td style="text-align:left;">
+0.348
+</td>
+<td style="text-align:left;">
+21.6
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0043230" class="uri">GO:0043230</a>
+</td>
+<td style="text-align:left;">
+extracellular organelle
+</td>
+<td style="text-align:left;">
+1290
+</td>
+<td style="text-align:left;">
+72
+</td>
+<td style="text-align:left;">
+1.7
+</td>
+<td style="text-align:left;">
+0.494
+</td>
+<td style="text-align:left;color: green !important;">
+0.326
+</td>
+<td style="text-align:left;">
+0.327
+</td>
+<td style="text-align:left;">
+21.5
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:1903561" class="uri">GO:1903561</a>
+</td>
+<td style="text-align:left;">
+extracellular vesicle
+</td>
+<td style="text-align:left;">
+1290
+</td>
+<td style="text-align:left;">
+72
+</td>
+<td style="text-align:left;">
+1.7
+</td>
+<td style="text-align:left;">
+0.494
+</td>
+<td style="text-align:left;color: green !important;">
+0.326
+</td>
+<td style="text-align:left;">
+0.327
+</td>
+<td style="text-align:left;">
+21.5
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070069" class="uri">GO:0070069</a>
+</td>
+<td style="text-align:left;">
+cytochrome complex
+</td>
+<td style="text-align:left;">
+23
+</td>
+<td style="text-align:left;">
+9
+</td>
+<td style="text-align:left;">
+3.66
+</td>
+<td style="text-align:left;">
+3.93
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+10.2
+</td>
+<td style="text-align:left;">
+20
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L3</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0042613" class="uri">GO:0042613</a>
+</td>
+<td style="text-align:left;">
+MHC class II protein complex
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+4.08
+</td>
+<td style="text-align:left;">
+3.8
+</td>
+<td style="text-align:left;color: green !important;">
+0.987
+</td>
+<td style="text-align:left;">
+0.987
+</td>
+<td style="text-align:left;">
+7.7
+</td>
+<td style="text-align:left;">
+55
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor2" class="section level3">
+<h3>factor2<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-11.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006805" class="uri">GO:0006805</a>
+</td>
+<td style="text-align:left;">
+xenobiotic metabolic process
+</td>
+<td style="text-align:left;">
+60
+</td>
+<td style="text-align:left;">
+14
+</td>
+<td style="text-align:left;">
+2.93
+</td>
+<td style="text-align:left;">
+2.83
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+11.9
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor20" class="section level3">
+<h3>factor20<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-12.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0031012" class="uri">GO:0031012</a>
+</td>
+<td style="text-align:left;">
+extracellular matrix
+</td>
+<td style="text-align:left;">
+215
+</td>
+<td style="text-align:left;">
+42
+</td>
+<td style="text-align:left;">
+2.84
+</td>
+<td style="text-align:left;">
+2.04
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+31.5
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0030198" class="uri">GO:0030198</a>
+</td>
+<td style="text-align:left;">
+extracellular matrix organization
+</td>
+<td style="text-align:left;">
+183
+</td>
+<td style="text-align:left;">
+38
+</td>
+<td style="text-align:left;">
+2.89
+</td>
+<td style="text-align:left;">
+1.43
+</td>
+<td style="text-align:left;color: green !important;">
+0.941
+</td>
+<td style="text-align:left;">
+0.941
+</td>
+<td style="text-align:left;">
+29.4
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0043062" class="uri">GO:0043062</a>
+</td>
+<td style="text-align:left;">
+extracellular structure organization
+</td>
+<td style="text-align:left;">
+212
+</td>
+<td style="text-align:left;">
+39
+</td>
+<td style="text-align:left;">
+2.74
+</td>
+<td style="text-align:left;">
+0.0824
+</td>
+<td style="text-align:left;color: green !important;">
+0.0589
+</td>
+<td style="text-align:left;">
+0.0597
+</td>
+<td style="text-align:left;">
+28.1
+</td>
+<td style="text-align:left;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor21" class="section level3">
+<h3>factor21<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-13.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>[1] “nothing to report”</p>
+</div>
+<div id="factor22" class="section level3">
+<h3>factor22<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-14.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>[1] “nothing to report”</p>
+</div>
+<div id="factor23" class="section level3">
+<h3>factor23<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-15.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005615" class="uri">GO:0005615</a>
+</td>
+<td style="text-align:left;">
+extracellular space
+</td>
+<td style="text-align:left;">
+1630
+</td>
+<td style="text-align:left;">
+93
+</td>
+<td style="text-align:left;">
+1.81
+</td>
+<td style="text-align:left;">
+1.4
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+27.8
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0031424" class="uri">GO:0031424</a>
+</td>
+<td style="text-align:left;">
+keratinization
+</td>
+<td style="text-align:left;">
+69
+</td>
+<td style="text-align:left;">
+23
+</td>
+<td style="text-align:left;">
+3.43
+</td>
+<td style="text-align:left;">
+1.23
+</td>
+<td style="text-align:left;color: green !important;">
+0.432
+</td>
+<td style="text-align:left;">
+0.432
+</td>
+<td style="text-align:left;">
+22.8
+</td>
+<td style="text-align:left;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070268" class="uri">GO:0070268</a>
+</td>
+<td style="text-align:left;">
+cornification
+</td>
+<td style="text-align:left;">
+61
+</td>
+<td style="text-align:left;">
+22
+</td>
+<td style="text-align:left;">
+3.54
+</td>
+<td style="text-align:left;">
+1.68
+</td>
+<td style="text-align:left;color: green !important;">
+0.568
+</td>
+<td style="text-align:left;">
+0.569
+</td>
+<td style="text-align:left;">
+22.7
+</td>
+<td style="text-align:left;">
+8
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor24" class="section level3">
+<h3>factor24<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-16.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0060337" class="uri">GO:0060337</a>
+</td>
+<td style="text-align:left;">
+type I interferon signaling pathway
+</td>
+<td style="text-align:left;">
+64
+</td>
+<td style="text-align:left;">
+25
+</td>
+<td style="text-align:left;">
+3.72
+</td>
+<td style="text-align:left;">
+1.73
+</td>
+<td style="text-align:left;color: green !important;">
+0.478
+</td>
+<td style="text-align:left;">
+0.478
+</td>
+<td style="text-align:left;">
+27.1
+</td>
+<td style="text-align:left;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0071357" class="uri">GO:0071357</a>
+</td>
+<td style="text-align:left;">
+cellular response to type I interferon
+</td>
+<td style="text-align:left;">
+64
+</td>
+<td style="text-align:left;">
+25
+</td>
+<td style="text-align:left;">
+3.72
+</td>
+<td style="text-align:left;">
+1.73
+</td>
+<td style="text-align:left;color: green !important;">
+0.478
+</td>
+<td style="text-align:left;">
+0.478
+</td>
+<td style="text-align:left;">
+27.1
+</td>
+<td style="text-align:left;">
+6
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0042613" class="uri">GO:0042613</a>
+</td>
+<td style="text-align:left;">
+MHC class II protein complex
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+4.38
+</td>
+<td style="text-align:left;">
+4.29
+</td>
+<td style="text-align:left;color: green !important;">
+0.986
+</td>
+<td style="text-align:left;">
+0.986
+</td>
+<td style="text-align:left;">
+9.4
+</td>
+<td style="text-align:left;">
+65
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor3" class="section level3">
+<h3>factor3<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-17.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0005576" class="uri">GO:0005576</a>
+</td>
+<td style="text-align:left;">
+extracellular region
+</td>
+<td style="text-align:left;">
+1980
+</td>
+<td style="text-align:left;">
+105
+</td>
+<td style="text-align:left;">
+1.98
+</td>
+<td style="text-align:left;">
+1.52
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+32.2
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0042611" class="uri">GO:0042611</a>
+</td>
+<td style="text-align:left;">
+MHC protein complex
+</td>
+<td style="text-align:left;">
+17
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+3.95
+</td>
+<td style="text-align:left;">
+3.64
+</td>
+<td style="text-align:left;color: green !important;">
+0.995
+</td>
+<td style="text-align:left;">
+0.995
+</td>
+<td style="text-align:left;">
+9.75
+</td>
+<td style="text-align:left;">
+33
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L3</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:1900115" class="uri">GO:1900115</a>
+</td>
+<td style="text-align:left;">
+extracellular regulation of signal transduction
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+3.84
+</td>
+<td style="text-align:left;">
+1.36
+</td>
+<td style="text-align:left;color: green !important;">
+0.497
+</td>
+<td style="text-align:left;">
+0.497
+</td>
+<td style="text-align:left;">
+9.5
+</td>
+<td style="text-align:left;">
+38
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:1900116" class="uri">GO:1900116</a>
+</td>
+<td style="text-align:left;">
+extracellular negative regulation of signal transduction
+</td>
+<td style="text-align:left;">
+18
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+3.84
+</td>
+<td style="text-align:left;">
+1.36
+</td>
+<td style="text-align:left;color: green !important;">
+0.497
+</td>
+<td style="text-align:left;">
+0.497
+</td>
+<td style="text-align:left;">
+9.5
+</td>
+<td style="text-align:left;">
+39
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor4" class="section level3">
+<h3>factor4<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-18.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="2">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0071556" class="uri">GO:0071556</a>
+</td>
+<td style="text-align:left;">
+integral component of lumenal side of endoplasmic reticulum membrane
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+4.26
+</td>
+<td style="text-align:left;">
+2.1
+</td>
+<td style="text-align:left;color: green !important;">
+0.5
+</td>
+<td style="text-align:left;">
+0.5
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0098553" class="uri">GO:0098553</a>
+</td>
+<td style="text-align:left;">
+lumenal side of endoplasmic reticulum membrane
+</td>
+<td style="text-align:left;">
+19
+</td>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+4.26
+</td>
+<td style="text-align:left;">
+2.1
+</td>
+<td style="text-align:left;color: green !important;">
+0.5
+</td>
+<td style="text-align:left;">
+0.5
+</td>
+<td style="text-align:left;">
+13
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:1900118" class="uri">GO:1900118</a>
+</td>
+<td style="text-align:left;">
+negative regulation of execution phase of apoptosis
+</td>
+<td style="text-align:left;">
+16
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+4.14
+</td>
+<td style="text-align:left;">
+4.04
+</td>
+<td style="text-align:left;color: green !important;">
+0.992
+</td>
+<td style="text-align:left;">
+0.992
+</td>
+<td style="text-align:left;">
+10.3
+</td>
+<td style="text-align:left;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor5" class="section level3">
+<h3>factor5<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-19.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006261" class="uri">GO:0006261</a>
+</td>
+<td style="text-align:left;">
+DNA-dependent DNA replication
+</td>
+<td style="text-align:left;">
+116
+</td>
+<td style="text-align:left;">
+36
+</td>
+<td style="text-align:left;">
+3.41
+</td>
+<td style="text-align:left;">
+3.16
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+34.5
+</td>
+<td style="text-align:left;">
+10
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L3</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0000280" class="uri">GO:0000280</a>
+</td>
+<td style="text-align:left;">
+nuclear division
+</td>
+<td style="text-align:left;">
+273
+</td>
+<td style="text-align:left;">
+43
+</td>
+<td style="text-align:left;">
+2.57
+</td>
+<td style="text-align:left;">
+1.99
+</td>
+<td style="text-align:left;color: green !important;">
+0.998
+</td>
+<td style="text-align:left;">
+0.998
+</td>
+<td style="text-align:left;">
+27.9
+</td>
+<td style="text-align:left;">
+16
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L2</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0006323" class="uri">GO:0006323</a>
+</td>
+<td style="text-align:left;">
+DNA packaging
+</td>
+<td style="text-align:left;">
+98
+</td>
+<td style="text-align:left;">
+24
+</td>
+<td style="text-align:left;">
+2.99
+</td>
+<td style="text-align:left;">
+2.58
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+20.1
+</td>
+<td style="text-align:left;">
+35
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L4</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0009263" class="uri">GO:0009263</a>
+</td>
+<td style="text-align:left;">
+deoxyribonucleotide biosynthetic process
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+4.29
+</td>
+<td style="text-align:left;color: green !important;">
+0.998
+</td>
+<td style="text-align:left;">
+0.998
+</td>
+<td style="text-align:left;">
+7.5
+</td>
+<td style="text-align:left;">
+159
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor6" class="section level3">
+<h3>factor6<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-20.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>[1] “nothing to report”</p>
+</div>
+<div id="factor7" class="section level3">
+<h3>factor7<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-21.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070469" class="uri">GO:0070469</a>
+</td>
+<td style="text-align:left;">
+respiratory chain
+</td>
+<td style="text-align:left;">
+77
+</td>
+<td style="text-align:left;">
+26
+</td>
+<td style="text-align:left;">
+3.54
+</td>
+<td style="text-align:left;">
+3.42
+</td>
+<td style="text-align:left;color: green !important;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+26.7
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor8" class="section level3">
+<h3>factor8<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-22.png" width="672" style="display: block; margin: auto;" /></h3>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:left;">
+description
+</th>
+<th style="text-align:left;">
+geneSetSize
+</th>
+<th style="text-align:left;">
+overlap
+</th>
+<th style="text-align:left;">
+logOddsRatio
+</th>
+<th style="text-align:left;">
+beta
+</th>
+<th style="text-align:left;">
+alpha
+</th>
+<th style="text-align:left;">
+pip
+</th>
+<th style="text-align:left;">
+nlog10pFishersExact
+</th>
+<th style="text-align:left;">
+fisherRank
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="1">
+<td colspan="10" style="border-bottom: 1px solid;">
+<strong>L1</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<a href="GO:0070431" class="uri">GO:0070431</a>
+</td>
+<td style="text-align:left;">
+nucleotide-binding oligomerization domain containing 2 signaling pathway
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+5.42
+</td>
+<td style="text-align:left;">
+5.37
+</td>
+<td style="text-align:left;color: green !important;">
+0.993
+</td>
+<td style="text-align:left;">
+0.993
+</td>
+<td style="text-align:left;">
+6.32
+</td>
+<td style="text-align:left;">
+31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="factor9" class="section level3">
+<h3>factor9<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-23.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>[1] “nothing to report”</p>
+<pre class="r"><code>results &lt;- pdac_res
+experiments &lt;- names(results)
+
+for(this_experiment in experiments){
+  sub_res &lt;- results[[this_experiment]]
+  volcano &lt;- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  results[[this_experiment]]$volcano &lt;- volcano
+  
+  table &lt;- safe_static_table(sub_res$fit, sub_res$ora)$result
+  results[[this_experiment]]$table &lt;- table
+}</code></pre>
+<pre class="r"><code>cat(&#39;\n&#39;)</code></pre>
+<pre class="r"><code>cat(&#39;##&#39;, &#39;PDAC&#39;)</code></pre>
+</div>
+</div>
+<div id="pdac" class="section level2">
+<h2>PDAC</h2>
+<pre class="r"><code>for(this_experiment in experiments){
+  cat(&#39;\n&#39;)
+  cat(&#39;###&#39;, this_experiment)
+  cat(&#39;\n&#39;)
+
+  #sub_res &lt;- results[[this_experiment]]
+  #volcano &lt;- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  print(results[[this_experiment]]$volcano)
+  
+  cat(&quot;\n\n&quot;)
+  #table &lt;- safe_static_table(sub_res$fit, sub_res$ora)$result
+  print(results[[this_experiment]]$table)
+}</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.2 (2021-11-01)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] gseasusie_0.0.0.9000 forcats_0.5.1        stringr_1.4.0       
+ [4] dplyr_1.0.9          purrr_0.3.4          readr_2.1.2         
+ [7] tidyr_1.2.0          tibble_3.1.7         ggplot2_3.3.6       
+[10] tidyverse_1.3.1     
+
+loaded via a namespace (and not attached):
+  [1] matrixStats_0.62.0     bitops_1.0-7           fs_1.5.2              
+  [4] lubridate_1.8.0        bit64_4.0.5            webshot_0.5.3         
+  [7] httr_1.4.3             rprojroot_2.0.3        GenomeInfoDb_1.30.1   
+ [10] data.tree_1.0.0        tools_4.1.2            backports_1.4.1       
+ [13] bslib_0.3.1            utf8_1.2.2             R6_2.5.1              
+ [16] DBI_1.1.2              BiocGenerics_0.40.0    colorspace_2.0-3      
+ [19] withr_2.5.0            tidyselect_1.1.2       bit_4.0.4             
+ [22] compiler_4.1.2         git2r_0.30.1           VEB.Boost_0.0.0.9037  
+ [25] cli_3.3.0              rvest_1.0.2            Biobase_2.54.0        
+ [28] xml2_1.3.3             labeling_0.4.2         sass_0.4.1            
+ [31] scales_1.2.0           mvtnorm_1.1-3          systemfonts_1.0.4     
+ [34] digest_0.6.29          spatstat.utils_2.3-1   svglite_2.1.0         
+ [37] rmarkdown_2.14         XVector_0.34.0         pkgconfig_2.0.3       
+ [40] htmltools_0.5.2        highr_0.9              dbplyr_2.2.0          
+ [43] fastmap_1.1.0          rlang_1.0.2            readxl_1.4.0          
+ [46] rstudioapi_0.13        RSQLite_2.2.14         farver_2.1.0          
+ [49] jquerylib_0.1.4        generics_0.1.2         jsonlite_1.8.0        
+ [52] mr.ash.alpha_0.1-42    RCurl_1.98-1.7         magrittr_2.0.3        
+ [55] kableExtra_1.3.4       GenomeInfoDbData_1.2.7 Matrix_1.4-1          
+ [58] Rcpp_1.0.8.3           munsell_0.5.0          S4Vectors_0.32.4      
+ [61] fansi_1.0.3            lifecycle_1.0.1        stringi_1.7.6         
+ [64] whisker_0.4            yaml_2.3.5             zlibbioc_1.40.0       
+ [67] org.Hs.eg.db_3.14.0    grid_4.1.2             blob_1.2.3            
+ [70] parallel_4.1.2         promises_1.2.0.1       crayon_1.5.1          
+ [73] lattice_0.20-45        Biostrings_2.62.0      haven_2.5.0           
+ [76] hms_1.1.1              KEGGREST_1.34.0        knitr_1.39            
+ [79] pillar_1.7.0           stats4_4.1.2           reprex_2.0.1          
+ [82] glue_1.6.2             evaluate_0.15          emulator_1.2-21       
+ [85] modelr_0.1.8           vctrs_0.4.1            png_0.1-7             
+ [88] tzdb_0.3.0             httpuv_1.6.5           cellranger_1.1.0      
+ [91] gtable_0.3.0           assertthat_0.2.1       cachem_1.0.6          
+ [94] xfun_0.31              broom_0.8.0            later_1.3.0           
+ [97] viridisLite_0.4.0      AnnotationDbi_1.56.2   memoise_2.0.1         
+[100] IRanges_2.28.0         workflowr_1.7.0        ellipsis_0.3.2        </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
