@@ -1,0 +1,189 @@
+---
+title: "Chondrocyte CTS and IL1B DE"
+author: "karltayeb"
+date: "2022-04-11"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Anthony differentiated IPSCS -> MSC -> Chondrocytes and treated with physical stress and IL1B.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = '#>',
+  message=FALSE, warning=FALSE
+)
+```
+
+
+## Load data
+
+```{r}
+source('code/load_data.R')
+library(gseasusie)
+
+# save output to a folder... helps for running many factors
+cache_rds = purrr::partial(xfun::cache_rds, dir='cache/chondrocyte_oa/')
+
+driver = function(gs, experiment){
+  dat <- gseasusie::prep_binary_data(gs, data[[experiment]], thresh = 0.05)
+  ora <- gseasusie::fit_ora(dat$X, dat$y)
+  # add description
+  ora <- ora %>%
+    dplyr::left_join(gs$geneSetDes)
+  fit <- gseasusie::fit_logistic_susie_veb_boost(dat$X, dat$y)
+  return(list(fit=fit, ora=ora))
+}
+
+driver_cached = function(prefix, gs, experiment, ...){
+  file = paste0(prefix, '_', gs$db, '_', experiment, '.rds')
+  print(file)
+  cache_rds(driver(gs, experiment), file=file, ...)
+}
+```
+
+```{r fits}
+data  <- load_chondrocyte_data2()
+go <- gseasusie::load_all_go()
+res <- purrr::map(names(data), ~driver_cached('hnscc', go, .x, rerun=F))
+names(res) <- names(data)
+```
+
+
+```{r hnscc.prep, message=FALSE, warning=FALSE}
+results <- res
+experiments <- names(results)
+
+safe_static_table <- purrr::safely(
+  gseasusie::static_table,
+  otherwise = 'nothing to report')
+
+for(this_experiment in experiments){
+  sub_res <- results[[this_experiment]]
+  volcano <- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  results[[this_experiment]]$volcano <- volcano
+  
+  table <- safe_static_table(sub_res$fit, sub_res$ora)$result
+  results[[this_experiment]]$table <- table
+}
+```
+
+
+```{r results, results='asis'}
+cat('\n')
+cat('##', 'Results')
+
+for(this_experiment in experiments){
+  cat('\n')
+  cat('###', this_experiment)
+
+  #sub_res <- results[[this_experiment]]
+  #volcano <- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  print(results[[this_experiment]]$volcano)
+  
+  cat("\n\n")
+  #table <- safe_static_table(sub_res$fit, sub_res$ora)$result
+  print(results[[this_experiment]]$table)
+}
+```
+
+
+```{r}
+knitr::knit_exit()
+```
+
+```{r load.results}
+library(gseasusie)
+library(ggplot2)
+library(tidyverse)
+library(targets)
+
+source('code/target_run_enrichment.R')
+
+#tar_load(genesets)
+#tar_load(chondroctye_oa_meta)
+#tar_load(chondroctye_oa_data)
+tar_load(chondroctye_oa_enrichment_fit)
+
+results <- tar_read(chondroctye_oa_enrichment_summary)
+```
+
+## Enrichment results
+
+```{r}
+pack_group = function(tbl){
+    components <- tbl$component
+    unique.components <- unique(components)
+    start <- match(unique.components, components)
+    end <- c(tail(start, -1) - 1, length(components))
+    res <- tbl %>% dplyr::select(-c(component)) %>% kableExtra::kbl()
+    for(i in 1:length(unique.components)){
+      res <- kableExtra::pack_rows(res, unique.components[i], start[i], end[i])
+    }
+    return(res)
+}
+
+
+static_table2 = function(res){
+  require(kableExtra)
+  tbl_filtered <-
+    res %>%
+    arrange(pFishersExact) %>%
+    mutate(fisherRank = row_number()) %>%
+    filter(in_cs, active_cs) %>%
+    group_by(component) %>%
+    arrange(component, desc(alpha)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(logOddsRatio = log(oddsRatio))
+
+  tbl_filtered %>%
+    dplyr::select(
+      component, geneSet, description, geneSetSize, overlap,
+      logOddsRatio, conditional_beta, conditional_beta_se,
+      alpha, pip, pFishersExact, fisherRank) %>%
+    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %>%
+    pack_group %>%
+    column_spec(c(5, 6), color=ifelse(tbl_filtered$beta > 0, 'green', 'red')) %>%
+    kableExtra::kable_styling()
+}
+```
+
+```{r experiment.level.results, results='asis'}
+results <- results %>% arrange(experiment, ptop, db)
+experiments <- results$experiment %>% unique()
+
+for(this_experiment in experiments){
+  cat('\n')
+  cat('##', this_experiment)
+
+  sub_res <- results %>% filter(experiment == this_experiment)
+
+  N <- dim(sub_res)[1]
+  for (i in 1:N){
+    this_db <- sub_res$db[[i]]
+    this_ptop <- sub_res$ptop[[i]]
+    res <- sub_res$enrichment_summary[[i]]
+
+    cat("\n") 
+    cat("### prop genes = ", this_ptop, ', db = ', this_db, "\n") # Create second level headings with the names.
+    volcano <- res %>% gseasusie::enrichment_volcano2()
+    hist <- res %>% filter(overlap > 0) %>% gseasusie::residual_enrichment_histogram2() 
+    print(volcano)
+    print(hist)
+    cat("\n\n")
+    print(safely(static_table2, NULL, quiet = TRUE)(res))
+  }
+}
+```
+
+### Glossary
+
+* `beta` $\mathbb E_q[\beta_l | \gamma_l = j]$  the posterior mean effect size, conditional on this gene set ($j$) being selected by component $l$
+* `alpha` $\mathbb E_q(\gamma_l = j)$ is the posterior probability of SuSiE selecting this gene set ($j$). Not this is distinct from the PIP $\text{PIP}_j = 1 - \prod_l (1 - \alpha_{lj})$
+* `beta` posterior mean/standard error of posterior mean for effect size. Standard errors are likely too small. 
+* `oddsRatio, pHypergeometric, pFishersExact` construct a contingency table (gene list membersip) x (gene set membership), estimate the `oddsRatio` gives the odds of being in the gene list conditional on being in the gene set / odds of being in the gene list conditional on NOT being in the gene set. `pHypergeometric` and `pFishersExact` are pvalues from 1 and 2 sided test respectively. 
