@@ -119,7 +119,7 @@ summarise_enrichment = function(fit, ora, marginal_reg, residual_reg, geneSetDes
   return(gene_set_summary)
 }
 
-enrichment_target_factory <- function(prefix, data_loader, .genesets, .propgenes, .experiments=NULL){
+binary_enrichment_target_factory <- function(prefix, data_loader, .genesets, .propgenes, .experiments=NULL){
   # load data target
   data_target_name <- paste0(prefix, '_data')
   data_target_sym <- rlang::sym(data_target_name)
