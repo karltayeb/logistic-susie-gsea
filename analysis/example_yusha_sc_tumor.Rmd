@@ -1,0 +1,159 @@
+---
+title: "example_yusha_sc_tumor"
+author: "karltayeb"
+date: "2022-07-13"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Load data
+
+```{r}
+source('code/load_data.R')
+library(gseasusie)
+
+# save output to a folder... helps for running many factors
+cache_rds = purrr::partial(xfun::cache_rds, dir='cache/sc_tumor/')
+
+driver = function(gs, experiment){
+  dat <- gseasusie::prep_binary_data(gs, data[[experiment]])
+  ora <- gseasusie::fit_ora(dat$X, dat$y)
+  # add description
+  ora <- ora %>%
+    dplyr::left_join(gs$geneSetDes)
+  fit <- gseasusie::fit_logistic_susie_veb_boost(dat$X, dat$y)
+  return(list(fit=fit, ora=ora))
+}
+
+driver_cached = function(prefix, gs, experiment){
+  file = paste0(prefix, '_', gs$db, '_', experiment, '.rds')
+  print(file)
+  cache_rds(driver(gs, experiment), file=file)
+}
+```
+
+```{r hnscc}
+data  <- load_sc_tumor_hnscc()
+go <- gseasusie::load_all_go()
+hnscc_res <- purrr::map(names(data), ~driver_cached('hnscc', go, .x))
+names(hnscc_res) <- names(data)
+```
+
+```{r}
+static_table = function(fit, ora){
+  res <- gseasusie:::get_gene_set_summary(fit) %>%
+    dplyr::left_join(ora)
+
+  csdat <- gseasusie:::get_credible_set_summary(fit) %>%
+    dplyr::left_join(ora) %>%
+    dplyr::filter(in_cs, active_cs) %>%
+    dplyr::select(geneSet, description, component, in_cs, alpha) %>%
+    distinct()
+  
+  dt <- res %>% 
+    dplyr::filter(overlap > 0) %>%
+    dplyr::mutate(
+      logOddsRatio = log(oddsRatio),
+      nlog10pFishersExact = -log10(pFishersExact)
+    ) %>%
+    dplyr::left_join(csdat) %>%
+    dplyr::arrange(dplyr::desc(nlog10pFishersExact)) %>%
+    dplyr::mutate(
+      fisherRank = dplyr::row_number(),
+      in_cs = dplyr::if_else(is.na(in_cs), FALSE, in_cs)) %>%
+    dplyr::filter(in_cs) %>%
+    dplyr::select(tidyselect::any_of(
+      c("geneSet", "description", "beta", "alpha", "pip", "overlap", "geneSetSize", "logOddsRatio", "nlog10pFishersExact", "in_cs", "component", "fisherRank"))) %>%
+    dplyr::mutate(dplyr::across(!where(is.numeric) , as.factor))
+
+  dt %>%
+    dplyr::select(
+      component, geneSet, description, geneSetSize, overlap,
+      logOddsRatio, beta,
+      alpha, pip, nlog10pFishersExact, fisherRank) %>%
+    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %>%
+    pack_group %>%
+    kableExtra::column_spec(c(7), color=ifelse(dt$beta > 0, 'green', 'red')) %>%
+    kableExtra::kable_styling()
+}
+```
+
+```{r pdac}
+data  <- load_sc_tumor_pdac()
+pdac_res <- purrr::map(names(data), ~driver_cached('pdac', go, .x))
+```
+
+```{r hnscc.prep, message=FALSE, warning=FALSE}
+results <- hnscc_res
+experiments <- names(results)
+
+safe_static_table <- purrr::safely(
+  gseasusie::static_table,
+  otherwise = 'nothing to report')
+
+for(this_experiment in experiments){
+  sub_res <- results[[this_experiment]]
+  volcano <- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  results[[this_experiment]]$volcano <- volcano
+  
+  table <- safe_static_table(sub_res$fit, sub_res$ora)$result
+  results[[this_experiment]]$table <- table
+}
+```
+
+
+```{r hnscc.results, results='asis'}
+cat('\n')
+cat('##', 'HNSCC')
+
+for(this_experiment in experiments){
+  cat('\n')
+  cat('###', this_experiment)
+
+  #sub_res <- results[[this_experiment]]
+  #volcano <- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  print(results[[this_experiment]]$volcano)
+  
+  cat("\n\n")
+  #table <- safe_static_table(sub_res$fit, sub_res$ora)$result
+  print(results[[this_experiment]]$table)
+}
+```
+
+
+```{r pdac.prep, message=FALSE, warning=FALSE}
+results <- pdac_res
+experiments <- names(results)
+
+for(this_experiment in experiments){
+  sub_res <- results[[this_experiment]]
+  volcano <- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  results[[this_experiment]]$volcano <- volcano
+  
+  table <- safe_static_table(sub_res$fit, sub_res$ora)$result
+  results[[this_experiment]]$table <- table
+}
+```
+
+
+```{r pdac.results, results='asis'}
+cat('\n')
+cat('##', 'PDAC')
+
+for(this_experiment in experiments){
+  cat('\n')
+  cat('###', this_experiment)
+  cat('\n')
+
+  #sub_res <- results[[this_experiment]]
+  #volcano <- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  print(results[[this_experiment]]$volcano)
+  
+  cat("\n\n")
+  #table <- safe_static_table(sub_res$fit, sub_res$ora)$result
+  print(results[[this_experiment]]$table)
+}
+```
+
+
