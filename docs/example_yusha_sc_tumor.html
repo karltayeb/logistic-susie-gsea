@@ -393,7 +393,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-07-14
+<strong>Last updated:</strong> 2022-07-15
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -524,15 +524,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree24146ef4aa5975e3ef35a0913232273d1163a1d5targetblank24146efa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeadb077c0a48cd364bc5289dfbc7e2db1a3787dfctargetblankadb077ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/24146ef4aa5975e3ef35a0913232273d1163a1d5" target="_blank">24146ef</a>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/adb077c0a48cd364bc5289dfbc7e2db1a3787dfc" target="_blank">adb077c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree24146ef4aa5975e3ef35a0913232273d1163a1d5targetblank24146efa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeadb077c0a48cd364bc5289dfbc7e2db1a3787dfctargetblankadb077ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -542,7 +542,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/24146ef4aa5975e3ef35a0913232273d1163a1d5" target="_blank">24146ef</a>.
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/adb077c0a48cd364bc5289dfbc7e2db1a3787dfc" target="_blank">adb077c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -596,7 +596,6 @@ Untracked files:
     Untracked:  analysis/compare_w_post_hoc_clustering.Rmd
     Untracked:  analysis/de_droplet_noshrink.Rmd
     Untracked:  analysis/de_droplet_noshrink_logistic_susie.Rmd
-    Untracked:  analysis/example_anthony.Rmd
     Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
     Untracked:  analysis/fixed_intercept.Rmd
     Untracked:  analysis/gsea_made_simple.Rmd
@@ -689,6 +688,41 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/adb077c0a48cd364bc5289dfbc7e2db1a3787dfc/analysis/example_yusha_sc_tumor.Rmd" target="_blank">adb077c</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-15
+</td>
+<td>
+wflow_publish(files = c("analysis/example_anthony.Rmd",
+"analysis/example_yusha_sc_tumor.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/example_yusha_sc_tumor.html" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/24146ef4aa5975e3ef35a0913232273d1163a1d5/analysis/example_yusha_sc_tumor.Rmd" target="_blank">24146ef</a>
 </td>
 <td>
@@ -771,42 +805,6 @@ driver_cached = function(prefix, gs, experiment){
 [1] &quot;hnscc_all_go_factor8.rds&quot;
 [1] &quot;hnscc_all_go_factor9.rds&quot;</code></pre>
 <pre class="r"><code>names(hnscc_res) &lt;- names(data)</code></pre>
-<pre class="r"><code>static_table = function(fit, ora){
-  res &lt;- gseasusie:::get_gene_set_summary(fit) %&gt;%
-    dplyr::left_join(ora)
-
-  csdat &lt;- gseasusie:::get_credible_set_summary(fit) %&gt;%
-    dplyr::left_join(ora) %&gt;%
-    dplyr::filter(in_cs, active_cs) %&gt;%
-    dplyr::select(geneSet, description, component, in_cs, alpha) %&gt;%
-    distinct()
-  
-  dt &lt;- res %&gt;% 
-    dplyr::filter(overlap &gt; 0) %&gt;%
-    dplyr::mutate(
-      logOddsRatio = log(oddsRatio),
-      nlog10pFishersExact = -log10(pFishersExact)
-    ) %&gt;%
-    dplyr::left_join(csdat) %&gt;%
-    dplyr::arrange(dplyr::desc(nlog10pFishersExact)) %&gt;%
-    dplyr::mutate(
-      fisherRank = dplyr::row_number(),
-      in_cs = dplyr::if_else(is.na(in_cs), FALSE, in_cs)) %&gt;%
-    dplyr::filter(in_cs) %&gt;%
-    dplyr::select(tidyselect::any_of(
-      c(&quot;geneSet&quot;, &quot;description&quot;, &quot;beta&quot;, &quot;alpha&quot;, &quot;pip&quot;, &quot;overlap&quot;, &quot;geneSetSize&quot;, &quot;logOddsRatio&quot;, &quot;nlog10pFishersExact&quot;, &quot;in_cs&quot;, &quot;component&quot;, &quot;fisherRank&quot;))) %&gt;%
-    dplyr::mutate(dplyr::across(!where(is.numeric) , as.factor))
-
-  dt %&gt;%
-    dplyr::select(
-      component, geneSet, description, geneSetSize, overlap,
-      logOddsRatio, beta,
-      alpha, pip, nlog10pFishersExact, fisherRank) %&gt;%
-    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3)))) %&gt;%
-    pack_group %&gt;%
-    kableExtra::column_spec(c(7), color=ifelse(dt$beta &gt; 0, &#39;green&#39;, &#39;red&#39;)) %&gt;%
-    kableExtra::kable_styling()
-}</code></pre>
 <pre class="r"><code>data  &lt;- load_sc_tumor_pdac()</code></pre>
 <pre><code>&#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 <pre class="r"><code>pdac_res &lt;- purrr::map(names(data), ~driver_cached(&#39;pdac&#39;, go, .x))</code></pre>
@@ -864,6 +862,43 @@ for(this_experiment in experiments){
 }</code></pre>
 <div id="factor10" class="section level3">
 <h3>factor10<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-1.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-1">
+Past versions of hnscc.results-1.png
+</button>
+</p>
+<div id="fig-hnscc.results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-1.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -880,10 +915,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -918,13 +953,13 @@ extracellular exosome
 <td style="text-align:left;">
 71
 </td>
-<td style="text-align:left;">
-1.67
-</td>
-<td style="text-align:left;">
-0.465
+<td style="text-align:left;color: green !important;">
+2.4
 </td>
 <td style="text-align:left;color: green !important;">
+1.93
+</td>
+<td style="text-align:left;">
 0.347
 </td>
 <td style="text-align:left;">
@@ -950,13 +985,13 @@ extracellular organelle
 <td style="text-align:left;">
 71
 </td>
-<td style="text-align:left;">
-1.66
-</td>
-<td style="text-align:left;">
-0.436
+<td style="text-align:left;color: green !important;">
+2.4
 </td>
 <td style="text-align:left;color: green !important;">
+1.93
+</td>
+<td style="text-align:left;">
 0.326
 </td>
 <td style="text-align:left;">
@@ -982,13 +1017,13 @@ extracellular vesicle
 <td style="text-align:left;">
 71
 </td>
-<td style="text-align:left;">
-1.66
-</td>
-<td style="text-align:left;">
-0.436
+<td style="text-align:left;color: green !important;">
+2.4
 </td>
 <td style="text-align:left;color: green !important;">
+1.93
+</td>
+<td style="text-align:left;">
 0.326
 </td>
 <td style="text-align:left;">
@@ -1019,13 +1054,13 @@ NADH regeneration
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-3.77
-</td>
-<td style="text-align:left;">
-0.714
+<td style="text-align:left;color: green !important;">
+5.44
 </td>
 <td style="text-align:left;color: green !important;">
+4.29
+</td>
+<td style="text-align:left;">
 0.24
 </td>
 <td style="text-align:left;">
@@ -1051,13 +1086,13 @@ canonical glycolysis
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-3.77
-</td>
-<td style="text-align:left;">
-0.714
+<td style="text-align:left;color: green !important;">
+5.44
 </td>
 <td style="text-align:left;color: green !important;">
+4.29
+</td>
+<td style="text-align:left;">
 0.24
 </td>
 <td style="text-align:left;">
@@ -1083,13 +1118,13 @@ glucose catabolic process to pyruvate
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-3.77
-</td>
-<td style="text-align:left;">
-0.714
+<td style="text-align:left;color: green !important;">
+5.44
 </td>
 <td style="text-align:left;color: green !important;">
+4.29
+</td>
+<td style="text-align:left;">
 0.24
 </td>
 <td style="text-align:left;">
@@ -1115,13 +1150,13 @@ glycolytic process through fructose-6-phosphate
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-3.68
-</td>
-<td style="text-align:left;">
-0.339
+<td style="text-align:left;color: green !important;">
+5.32
 </td>
 <td style="text-align:left;color: green !important;">
+4.15
+</td>
+<td style="text-align:left;">
 0.118
 </td>
 <td style="text-align:left;">
@@ -1147,13 +1182,13 @@ glycolytic process through glucose-6-phosphate
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-3.68
-</td>
-<td style="text-align:left;">
-0.339
+<td style="text-align:left;color: green !important;">
+5.32
 </td>
 <td style="text-align:left;color: green !important;">
+4.15
+</td>
+<td style="text-align:left;">
 0.118
 </td>
 <td style="text-align:left;">
@@ -1184,13 +1219,13 @@ extracellular regulation of signal transduction
 <td style="text-align:left;">
 7
 </td>
-<td style="text-align:left;">
-3.63
-</td>
-<td style="text-align:left;">
-1.85
+<td style="text-align:left;color: green !important;">
+5.24
 </td>
 <td style="text-align:left;color: green !important;">
+5.33
+</td>
+<td style="text-align:left;">
 0.5
 </td>
 <td style="text-align:left;">
@@ -1216,13 +1251,13 @@ extracellular negative regulation of signal transduction
 <td style="text-align:left;">
 7
 </td>
-<td style="text-align:left;">
-3.63
-</td>
-<td style="text-align:left;">
-1.85
+<td style="text-align:left;color: green !important;">
+5.24
 </td>
 <td style="text-align:left;color: green !important;">
+5.33
+</td>
+<td style="text-align:left;">
 0.5
 </td>
 <td style="text-align:left;">
@@ -1240,6 +1275,43 @@ extracellular negative regulation of signal transduction
 </div>
 <div id="factor11" class="section level3">
 <h3>factor11<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-2.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-2">
+Past versions of hnscc.results-2.png
+</button>
+</p>
+<div id="fig-hnscc.results-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-2.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1256,10 +1328,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -1294,13 +1366,13 @@ receptor antagonist activity
 <td style="text-align:left;">
 10
 </td>
-<td style="text-align:left;">
-4.38
-</td>
-<td style="text-align:left;">
-4.21
+<td style="text-align:left;color: green !important;">
+6.32
 </td>
 <td style="text-align:left;color: green !important;">
+6.17
+</td>
+<td style="text-align:left;">
 0.983
 </td>
 <td style="text-align:left;">
@@ -1318,6 +1390,43 @@ receptor antagonist activity
 </div>
 <div id="factor12" class="section level3">
 <h3>factor12<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-3.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-3">
+Past versions of hnscc.results-3.png
+</button>
+</p>
+<div id="fig-hnscc.results-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-3.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1334,10 +1443,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -1372,13 +1481,13 @@ extracellular region part
 <td style="text-align:left;">
 81
 </td>
-<td style="text-align:left;">
-1.56
-</td>
-<td style="text-align:left;">
-1.32
+<td style="text-align:left;color: green !important;">
+2.25
 </td>
 <td style="text-align:left;color: green !important;">
+1.91
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -1409,13 +1518,13 @@ flavonoid metabolic process
 <td style="text-align:left;">
 5
 </td>
-<td style="text-align:left;">
-4.98
-</td>
-<td style="text-align:left;">
-5.21
+<td style="text-align:left;color: green !important;">
+7.19
 </td>
 <td style="text-align:left;color: green !important;">
+7.53
+</td>
+<td style="text-align:left;">
 0.999
 </td>
 <td style="text-align:left;">
@@ -1433,10 +1542,84 @@ flavonoid metabolic process
 </div>
 <div id="factor13" class="section level3">
 <h3>factor13<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-4.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-4">
+Past versions of hnscc.results-4.png
+</button>
+</p>
+<div id="fig-hnscc.results-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-4.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>[1] “nothing to report”</p>
 </div>
 <div id="factor14" class="section level3">
 <h3>factor14<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-5.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-5">
+Past versions of hnscc.results-5.png
+</button>
+</p>
+<div id="fig-hnscc.results-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-5.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1453,10 +1636,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -1491,13 +1674,13 @@ cell division
 <td style="text-align:left;">
 73
 </td>
-<td style="text-align:left;">
-3.03
-</td>
-<td style="text-align:left;">
-1.92
+<td style="text-align:left;color: green !important;">
+4.36
 </td>
 <td style="text-align:left;color: green !important;">
+2.77
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -1528,13 +1711,13 @@ chromosome segregation
 <td style="text-align:left;">
 53
 </td>
-<td style="text-align:left;">
-3.24
-</td>
-<td style="text-align:left;">
-0.166
+<td style="text-align:left;color: green !important;">
+4.68
 </td>
 <td style="text-align:left;color: green !important;">
+2.01
+</td>
+<td style="text-align:left;">
 0.119
 </td>
 <td style="text-align:left;">
@@ -1560,13 +1743,13 @@ sister chromatid segregation
 <td style="text-align:left;">
 42
 </td>
-<td style="text-align:left;">
-3.41
-</td>
-<td style="text-align:left;">
-1.41
+<td style="text-align:left;color: green !important;">
+4.91
 </td>
 <td style="text-align:left;color: green !important;">
+2.39
+</td>
+<td style="text-align:left;">
 0.85
 </td>
 <td style="text-align:left;">
@@ -1597,13 +1780,13 @@ microtubule
 <td style="text-align:left;">
 42
 </td>
-<td style="text-align:left;">
-2.69
-</td>
-<td style="text-align:left;">
-1.46
+<td style="text-align:left;color: green !important;">
+3.88
 </td>
 <td style="text-align:left;color: green !important;">
+2.11
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -1621,10 +1804,84 @@ microtubule
 </div>
 <div id="factor15" class="section level3">
 <h3>factor15<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-6.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-6">
+Past versions of hnscc.results-6.png
+</button>
+</p>
+<div id="fig-hnscc.results-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-6.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>[1] “nothing to report”</p>
 </div>
 <div id="factor16" class="section level3">
 <h3>factor16<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-7.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-7">
+Past versions of hnscc.results-7.png
+</button>
+</p>
+<div id="fig-hnscc.results-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-7.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1641,10 +1898,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -1679,13 +1936,13 @@ cornification
 <td style="text-align:left;">
 15
 </td>
-<td style="text-align:left;">
-2.99
-</td>
-<td style="text-align:left;">
-2.83
+<td style="text-align:left;color: green !important;">
+4.31
 </td>
 <td style="text-align:left;color: green !important;">
+4.15
+</td>
+<td style="text-align:left;">
 0.982
 </td>
 <td style="text-align:left;">
@@ -1703,14 +1960,125 @@ cornification
 </div>
 <div id="factor17" class="section level3">
 <h3>factor17<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-8.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-8">
+Past versions of hnscc.results-8.png
+</button>
+</p>
+<div id="fig-hnscc.results-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-8.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>[1] “nothing to report”</p>
 </div>
 <div id="factor18" class="section level3">
 <h3>factor18<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-9.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-9">
+Past versions of hnscc.results-9.png
+</button>
+</p>
+<div id="fig-hnscc.results-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-9.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>[1] “nothing to report”</p>
 </div>
 <div id="factor19" class="section level3">
 <h3>factor19<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-10.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-10">
+Past versions of hnscc.results-10.png
+</button>
+</p>
+<div id="fig-hnscc.results-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-10.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1727,10 +2095,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -1765,13 +2133,13 @@ extracellular exosome
 <td style="text-align:left;">
 72
 </td>
-<td style="text-align:left;">
-1.71
-</td>
-<td style="text-align:left;">
-0.526
+<td style="text-align:left;color: green !important;">
+2.46
 </td>
 <td style="text-align:left;color: green !important;">
+2.19
+</td>
+<td style="text-align:left;">
 0.347
 </td>
 <td style="text-align:left;">
@@ -1797,13 +2165,13 @@ extracellular organelle
 <td style="text-align:left;">
 72
 </td>
-<td style="text-align:left;">
-1.7
-</td>
-<td style="text-align:left;">
-0.494
+<td style="text-align:left;color: green !important;">
+2.45
 </td>
 <td style="text-align:left;color: green !important;">
+2.18
+</td>
+<td style="text-align:left;">
 0.326
 </td>
 <td style="text-align:left;">
@@ -1829,13 +2197,13 @@ extracellular vesicle
 <td style="text-align:left;">
 72
 </td>
-<td style="text-align:left;">
-1.7
-</td>
-<td style="text-align:left;">
-0.494
+<td style="text-align:left;color: green !important;">
+2.45
 </td>
 <td style="text-align:left;color: green !important;">
+2.18
+</td>
+<td style="text-align:left;">
 0.326
 </td>
 <td style="text-align:left;">
@@ -1866,13 +2234,13 @@ cytochrome complex
 <td style="text-align:left;">
 9
 </td>
-<td style="text-align:left;">
-3.66
-</td>
-<td style="text-align:left;">
-3.93
+<td style="text-align:left;color: green !important;">
+5.28
 </td>
 <td style="text-align:left;color: green !important;">
+5.67
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -1903,13 +2271,13 @@ MHC class II protein complex
 <td style="text-align:left;">
 6
 </td>
-<td style="text-align:left;">
-4.08
-</td>
-<td style="text-align:left;">
-3.8
+<td style="text-align:left;color: green !important;">
+5.89
 </td>
 <td style="text-align:left;color: green !important;">
+5.56
+</td>
+<td style="text-align:left;">
 0.987
 </td>
 <td style="text-align:left;">
@@ -1927,6 +2295,43 @@ MHC class II protein complex
 </div>
 <div id="factor2" class="section level3">
 <h3>factor2<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-11.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-11">
+Past versions of hnscc.results-11.png
+</button>
+</p>
+<div id="fig-hnscc.results-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-11.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1943,10 +2348,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -1981,13 +2386,13 @@ xenobiotic metabolic process
 <td style="text-align:left;">
 14
 </td>
-<td style="text-align:left;">
-2.93
-</td>
-<td style="text-align:left;">
-2.83
+<td style="text-align:left;color: green !important;">
+4.23
 </td>
 <td style="text-align:left;color: green !important;">
+4.08
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -2005,6 +2410,43 @@ xenobiotic metabolic process
 </div>
 <div id="factor20" class="section level3">
 <h3>factor20<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-12.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-12">
+Past versions of hnscc.results-12.png
+</button>
+</p>
+<div id="fig-hnscc.results-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-12.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2021,10 +2463,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -2059,13 +2501,13 @@ extracellular matrix
 <td style="text-align:left;">
 42
 </td>
-<td style="text-align:left;">
-2.84
-</td>
-<td style="text-align:left;">
-2.04
+<td style="text-align:left;color: green !important;">
+4.1
 </td>
 <td style="text-align:left;color: green !important;">
+2.94
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -2096,13 +2538,13 @@ extracellular matrix organization
 <td style="text-align:left;">
 38
 </td>
-<td style="text-align:left;">
-2.89
-</td>
-<td style="text-align:left;">
-1.43
+<td style="text-align:left;color: green !important;">
+4.17
 </td>
 <td style="text-align:left;color: green !important;">
+2.19
+</td>
+<td style="text-align:left;">
 0.941
 </td>
 <td style="text-align:left;">
@@ -2128,13 +2570,13 @@ extracellular structure organization
 <td style="text-align:left;">
 39
 </td>
-<td style="text-align:left;">
-2.74
-</td>
-<td style="text-align:left;">
-0.0824
+<td style="text-align:left;color: green !important;">
+3.96
 </td>
 <td style="text-align:left;color: green !important;">
+2.02
+</td>
+<td style="text-align:left;">
 0.0589
 </td>
 <td style="text-align:left;">
@@ -2152,14 +2594,125 @@ extracellular structure organization
 </div>
 <div id="factor21" class="section level3">
 <h3>factor21<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-13.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-13">
+Past versions of hnscc.results-13.png
+</button>
+</p>
+<div id="fig-hnscc.results-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-13.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>[1] “nothing to report”</p>
 </div>
 <div id="factor22" class="section level3">
 <h3>factor22<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-14.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-14">
+Past versions of hnscc.results-14.png
+</button>
+</p>
+<div id="fig-hnscc.results-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-14.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>[1] “nothing to report”</p>
 </div>
 <div id="factor23" class="section level3">
 <h3>factor23<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-15.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-15">
+Past versions of hnscc.results-15.png
+</button>
+</p>
+<div id="fig-hnscc.results-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-15.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2176,10 +2729,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -2214,13 +2767,13 @@ extracellular space
 <td style="text-align:left;">
 93
 </td>
-<td style="text-align:left;">
-1.81
-</td>
-<td style="text-align:left;">
-1.4
+<td style="text-align:left;color: green !important;">
+2.61
 </td>
 <td style="text-align:left;color: green !important;">
+2.01
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -2251,13 +2804,13 @@ keratinization
 <td style="text-align:left;">
 23
 </td>
-<td style="text-align:left;">
-3.43
-</td>
-<td style="text-align:left;">
-1.23
+<td style="text-align:left;color: green !important;">
+4.94
 </td>
 <td style="text-align:left;color: green !important;">
+4.1
+</td>
+<td style="text-align:left;">
 0.432
 </td>
 <td style="text-align:left;">
@@ -2283,13 +2836,13 @@ cornification
 <td style="text-align:left;">
 22
 </td>
-<td style="text-align:left;">
-3.54
-</td>
-<td style="text-align:left;">
-1.68
+<td style="text-align:left;color: green !important;">
+5.11
 </td>
 <td style="text-align:left;color: green !important;">
+4.26
+</td>
+<td style="text-align:left;">
 0.568
 </td>
 <td style="text-align:left;">
@@ -2307,6 +2860,43 @@ cornification
 </div>
 <div id="factor24" class="section level3">
 <h3>factor24<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-16.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-16">
+Past versions of hnscc.results-16.png
+</button>
+</p>
+<div id="fig-hnscc.results-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-16.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2323,10 +2913,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -2361,13 +2951,13 @@ type I interferon signaling pathway
 <td style="text-align:left;">
 25
 </td>
-<td style="text-align:left;">
-3.72
-</td>
-<td style="text-align:left;">
-1.73
+<td style="text-align:left;color: green !important;">
+5.37
 </td>
 <td style="text-align:left;color: green !important;">
+5.21
+</td>
+<td style="text-align:left;">
 0.478
 </td>
 <td style="text-align:left;">
@@ -2393,13 +2983,13 @@ cellular response to type I interferon
 <td style="text-align:left;">
 25
 </td>
-<td style="text-align:left;">
-3.72
-</td>
-<td style="text-align:left;">
-1.73
+<td style="text-align:left;color: green !important;">
+5.37
 </td>
 <td style="text-align:left;color: green !important;">
+5.21
+</td>
+<td style="text-align:left;">
 0.478
 </td>
 <td style="text-align:left;">
@@ -2430,13 +3020,13 @@ MHC class II protein complex
 <td style="text-align:left;">
 7
 </td>
-<td style="text-align:left;">
-4.38
-</td>
-<td style="text-align:left;">
-4.29
+<td style="text-align:left;color: green !important;">
+6.32
 </td>
 <td style="text-align:left;color: green !important;">
+6.28
+</td>
+<td style="text-align:left;">
 0.986
 </td>
 <td style="text-align:left;">
@@ -2454,6 +3044,43 @@ MHC class II protein complex
 </div>
 <div id="factor3" class="section level3">
 <h3>factor3<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-17.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-17">
+Past versions of hnscc.results-17.png
+</button>
+</p>
+<div id="fig-hnscc.results-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-17.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2470,10 +3097,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -2508,13 +3135,13 @@ extracellular region
 <td style="text-align:left;">
 105
 </td>
-<td style="text-align:left;">
-1.98
-</td>
-<td style="text-align:left;">
-1.52
+<td style="text-align:left;color: green !important;">
+2.85
 </td>
 <td style="text-align:left;color: green !important;">
+2.19
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -2545,13 +3172,13 @@ MHC protein complex
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-3.95
-</td>
-<td style="text-align:left;">
-3.64
+<td style="text-align:left;color: green !important;">
+5.69
 </td>
 <td style="text-align:left;color: green !important;">
+5.27
+</td>
+<td style="text-align:left;">
 0.995
 </td>
 <td style="text-align:left;">
@@ -2582,13 +3209,13 @@ extracellular regulation of signal transduction
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-3.84
-</td>
-<td style="text-align:left;">
-1.36
+<td style="text-align:left;color: green !important;">
+5.54
 </td>
 <td style="text-align:left;color: green !important;">
+3.95
+</td>
+<td style="text-align:left;">
 0.497
 </td>
 <td style="text-align:left;">
@@ -2614,13 +3241,13 @@ extracellular negative regulation of signal transduction
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-3.84
-</td>
-<td style="text-align:left;">
-1.36
+<td style="text-align:left;color: green !important;">
+5.54
 </td>
 <td style="text-align:left;color: green !important;">
+3.95
+</td>
+<td style="text-align:left;">
 0.497
 </td>
 <td style="text-align:left;">
@@ -2638,6 +3265,43 @@ extracellular negative regulation of signal transduction
 </div>
 <div id="factor4" class="section level3">
 <h3>factor4<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-18.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-18">
+Past versions of hnscc.results-18.png
+</button>
+</p>
+<div id="fig-hnscc.results-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-18.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2654,10 +3318,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -2692,13 +3356,13 @@ integral component of lumenal side of endoplasmic reticulum membrane
 <td style="text-align:left;">
 10
 </td>
-<td style="text-align:left;">
-4.26
-</td>
-<td style="text-align:left;">
-2.1
+<td style="text-align:left;color: green !important;">
+6.15
 </td>
 <td style="text-align:left;color: green !important;">
+6.05
+</td>
+<td style="text-align:left;">
 0.5
 </td>
 <td style="text-align:left;">
@@ -2724,13 +3388,13 @@ lumenal side of endoplasmic reticulum membrane
 <td style="text-align:left;">
 10
 </td>
-<td style="text-align:left;">
-4.26
-</td>
-<td style="text-align:left;">
-2.1
+<td style="text-align:left;color: green !important;">
+6.15
 </td>
 <td style="text-align:left;color: green !important;">
+6.05
+</td>
+<td style="text-align:left;">
 0.5
 </td>
 <td style="text-align:left;">
@@ -2761,13 +3425,13 @@ negative regulation of execution phase of apoptosis
 <td style="text-align:left;">
 8
 </td>
-<td style="text-align:left;">
-4.14
-</td>
-<td style="text-align:left;">
-4.04
+<td style="text-align:left;color: green !important;">
+5.97
 </td>
 <td style="text-align:left;color: green !important;">
+5.88
+</td>
+<td style="text-align:left;">
 0.992
 </td>
 <td style="text-align:left;">
@@ -2785,6 +3449,43 @@ negative regulation of execution phase of apoptosis
 </div>
 <div id="factor5" class="section level3">
 <h3>factor5<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-19.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-19">
+Past versions of hnscc.results-19.png
+</button>
+</p>
+<div id="fig-hnscc.results-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-19.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2801,10 +3502,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -2839,13 +3540,13 @@ DNA-dependent DNA replication
 <td style="text-align:left;">
 36
 </td>
-<td style="text-align:left;">
-3.41
-</td>
-<td style="text-align:left;">
-3.16
+<td style="text-align:left;color: green !important;">
+4.91
 </td>
 <td style="text-align:left;color: green !important;">
+4.57
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -2876,13 +3577,13 @@ nuclear division
 <td style="text-align:left;">
 43
 </td>
-<td style="text-align:left;">
-2.57
-</td>
-<td style="text-align:left;">
-1.99
+<td style="text-align:left;color: green !important;">
+3.7
 </td>
 <td style="text-align:left;color: green !important;">
+2.88
+</td>
+<td style="text-align:left;">
 0.998
 </td>
 <td style="text-align:left;">
@@ -2913,13 +3614,13 @@ DNA packaging
 <td style="text-align:left;">
 24
 </td>
-<td style="text-align:left;">
-2.99
-</td>
-<td style="text-align:left;">
-2.58
+<td style="text-align:left;color: green !important;">
+4.31
 </td>
 <td style="text-align:left;color: green !important;">
+3.72
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -2950,13 +3651,13 @@ deoxyribonucleotide biosynthetic process
 <td style="text-align:left;">
 6
 </td>
-<td style="text-align:left;">
-4
-</td>
-<td style="text-align:left;">
-4.29
+<td style="text-align:left;color: green !important;">
+5.78
 </td>
 <td style="text-align:left;color: green !important;">
+6.21
+</td>
+<td style="text-align:left;">
 0.998
 </td>
 <td style="text-align:left;">
@@ -2974,10 +3675,84 @@ deoxyribonucleotide biosynthetic process
 </div>
 <div id="factor6" class="section level3">
 <h3>factor6<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-20.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-20">
+Past versions of hnscc.results-20.png
+</button>
+</p>
+<div id="fig-hnscc.results-20" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-20.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>[1] “nothing to report”</p>
 </div>
 <div id="factor7" class="section level3">
 <h3>factor7<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-21.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-21">
+Past versions of hnscc.results-21.png
+</button>
+</p>
+<div id="fig-hnscc.results-21" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-21.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2994,10 +3769,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -3032,13 +3807,13 @@ respiratory chain
 <td style="text-align:left;">
 26
 </td>
-<td style="text-align:left;">
-3.54
-</td>
-<td style="text-align:left;">
-3.42
+<td style="text-align:left;color: green !important;">
+5.11
 </td>
 <td style="text-align:left;color: green !important;">
+4.93
+</td>
+<td style="text-align:left;">
 1
 </td>
 <td style="text-align:left;">
@@ -3056,6 +3831,43 @@ respiratory chain
 </div>
 <div id="factor8" class="section level3">
 <h3>factor8<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-22.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-22">
+Past versions of hnscc.results-22.png
+</button>
+</p>
+<div id="fig-hnscc.results-22" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-22.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -3072,10 +3884,10 @@ geneSetSize
 overlap
 </th>
 <th style="text-align:left;">
-logOddsRatio
+log2OR
 </th>
 <th style="text-align:left;">
-beta
+effect
 </th>
 <th style="text-align:left;">
 alpha
@@ -3110,13 +3922,13 @@ nucleotide-binding oligomerization domain containing 2 signaling pathway
 <td style="text-align:left;">
 4
 </td>
-<td style="text-align:left;">
-5.42
-</td>
-<td style="text-align:left;">
-5.37
+<td style="text-align:left;color: green !important;">
+7.83
 </td>
 <td style="text-align:left;color: green !important;">
+7.8
+</td>
+<td style="text-align:left;">
 0.993
 </td>
 <td style="text-align:left;">
@@ -3134,6 +3946,43 @@ nucleotide-binding oligomerization domain containing 2 signaling pathway
 </div>
 <div id="factor9" class="section level3">
 <h3>factor9<img src="figure/example_yusha_sc_tumor.Rmd/hnscc.results-23.png" width="672" style="display: block; margin: auto;" /></h3>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-hnscc.results-23">
+Past versions of hnscc.results-23.png
+</button>
+</p>
+<div id="fig-hnscc.results-23" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/eb48f62ccb0ec9aff79978b0d8fb550bd3856b80/docs/figure/example_yusha_sc_tumor.Rmd/hnscc.results-23.png" target="_blank">eb48f62</a>
+</td>
+<td>
+karltayeb
+</td>
+<td>
+2022-07-14
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>[1] “nothing to report”</p>
 <pre class="r"><code>results &lt;- pdac_res
 experiments &lt;- names(results)
