@@ -25,11 +25,11 @@ Packages managed with `renv`
 * [Single cell PBMCs](single_cell_pbmc_standardized.html)
 * [Shared intercept explains differences to univariate enrichment tests](single_cell_pbmc_l1.html)
 
-### Wenhe's Baboom Diet Example
+### Examples
 * [Wenhe Baboon Diet](baboon_diet.html)
-
-### Kenneths Human/Chimp EBs
 * [Human-Chimp EB](human_chimp_eb_de_example.html)
+* [Single-Cell Tumor](example_yusha_sc_tumor.html)
+* [Chondrocyte Stress DE](example_anthony.html)
 
 ## GSEA from summary statistics
 * [Two component model, initial exploration](summary_stat_gsea_exploration.html)
