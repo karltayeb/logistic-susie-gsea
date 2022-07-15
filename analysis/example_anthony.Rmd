@@ -54,6 +54,72 @@ res <- purrr::map(names(data), ~driver_cached('hnscc', go, .x, rerun=F))
 names(res) <- names(data)
 ```
 
+```{r, eval=F}
+pack_group = function(tbl){
+    components <- tbl$component
+    unique.components <- unique(components)
+    start <- match(unique.components, components)
+    end <- c(tail(start, -1) - 1, length(components))
+    res <- tbl %>% dplyr::select(-c(component)) %>% kableExtra::kbl()
+    for(i in 1:length(unique.components)){
+      res <- kableExtra::pack_rows(res, unique.components[i], start[i], end[i])
+    }
+    return(res)
+}
+
+#' Report credible set based summary of SuSiE
+#' @export
+static_table = function(fit, ora){
+  # get credible sets
+  res <- gseasusie:::get_gene_set_summary(fit) %>%
+    dplyr::left_join(ora)
+  csdat <- gseasusie:::get_credible_set_summary(fit) %>%
+    dplyr::left_join(ora) %>%
+    dplyr::filter(in_cs, active_cs) %>%
+    dplyr::select(geneSet, description, component, in_cs, alpha, conditional_beta) %>%
+    distinct()
+  
+  # manipulate table
+  columns <- c(
+    'geneSet', 'description', 'geneSetSize', 'overlap',
+    'log2OR', 'effect', 'alpha', 'pip', 'nlog10pFishersExact', 'fisherRank',
+    'component'
+  )
+  color_columns <- which(columns %in% c('log2OR', 'effect'))
+  dt <- res %>% 
+    dplyr::filter(overlap > 0) %>%
+    dplyr::mutate(
+      log2OR = log2(oddsRatio),
+      nlog10pFishersExact = -log10(pFishersExact)
+    ) %>%
+    dplyr::left_join(csdat) %>%
+    dplyr::arrange(dplyr::desc(nlog10pFishersExact)) %>%
+    dplyr::mutate(
+      fisherRank = dplyr::row_number(),
+      in_cs = dplyr::if_else(is.na(in_cs), FALSE, in_cs),
+      effect = conditional_beta * log2(exp(1))
+    ) %>%
+    dplyr::filter(in_cs) %>%
+    dplyr::select(columns) %>%
+    dplyr::mutate(dplyr::across(!where(is.numeric) , as.factor)) %>%
+    mutate(
+      component = reorder(factor(component), fisherRank, FUN=min) 
+      # sorts components
+    ) %>%
+    dplyr::arrange(component) %>%
+    dplyr::mutate_if(is.numeric, funs(as.character(signif(., 3))))
+
+  # display table
+  dt %>%
+    pack_group %>%
+    kableExtra::column_spec(
+      color_columns, color=ifelse(dt$effect > 0, 'green', 'red')) %>%
+    kableExtra::kable_styling()
+}
+
+static_table(fit, ora)
+```
+
 
 ```{r hnscc.prep, message=FALSE, warning=FALSE}
 results <- res
@@ -92,10 +158,10 @@ for(this_experiment in experiments){
 }
 ```
 
-
 ```{r}
 knitr::knit_exit()
 ```
+
 
 ```{r load.results}
 library(gseasusie)
