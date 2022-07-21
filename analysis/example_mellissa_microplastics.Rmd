@@ -71,7 +71,7 @@ for(this_experiment in experiments){
 
 ```{r results, results='asis'}
 cat('\n')
-cat('##', 'HNSCC')
+cat('##', 'Results')
 
 for(this_experiment in experiments){
   cat('\n')
