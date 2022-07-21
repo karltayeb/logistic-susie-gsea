@@ -1,0 +1,88 @@
+---
+title: "example_yusha_sc_tumor"
+author: "karltayeb"
+date: "2022-07-13"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Load data
+
+```{r}
+source('code/load_data.R')
+library(gseasusie)
+
+# save output to a folder... helps for running many factors
+cache_rds = purrr::partial(xfun::cache_rds, dir='cache/de_microplastics/')
+
+
+
+driver = function(gs, experiment){
+  dat <- gseasusie::prep_binary_data(gs, data[[experiment]])
+  ora <- gseasusie::fit_ora(dat$X, dat$y)
+  # add description
+  ora <- ora %>%
+    dplyr::left_join(gs$geneSetDes)
+  fit <- gseasusie::fit_logistic_susie_veb_boost(dat$X, dat$y)
+  return(list(fit=fit, ora=ora))
+}
+
+driver_cached = function(prefix, gs, experiment){
+  file = paste0(prefix, '_', gs$db, '_', experiment, '.rds')
+  print(file)
+  cache_rds(driver(gs, experiment), file=file)
+}
+```
+
+```{r hnscc}
+
+data <- read_rds('data/de-microplastics/plastics_de.rds')
+map2enrtrez <- generate_map2entrez(rownames(data$`0`$fivemg), 'SYMBOL')
+data <- unlist(data, recursive = F)
+data <- purrr::map(data, ~ rownames_to_column(.x, 'SYMBOL') %>% 
+                     mutate(beta = 1, threshold.on = (p_val_adj * as.integer(row_number() > 2))) %>% 
+                     left_join(map2enrtrez))
+
+go <- gseasusie::load_all_go()
+res <- purrr::map(names(data), ~driver_cached('microplastics', go, .x))
+names(res) <- names(data)
+```
+
+
+```{r prep, message=FALSE, warning=FALSE}
+results <- res
+experiments <- names(results)
+
+safe_static_table <- purrr::safely(
+  gseasusie::static_table,
+  otherwise = 'nothing to report')
+
+for(this_experiment in experiments){
+  sub_res <- results[[this_experiment]]
+  volcano <- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  results[[this_experiment]]$volcano <- volcano
+  
+  table <- safe_static_table(sub_res$fit, sub_res$ora)$result
+  results[[this_experiment]]$table <- table
+}
+```
+
+
+```{r results, results='asis'}
+cat('\n')
+cat('##', 'HNSCC')
+
+for(this_experiment in experiments){
+  cat('\n')
+  cat('###', this_experiment)
+
+  #sub_res <- results[[this_experiment]]
+  #volcano <- gseasusie::enrichment_volcano(fit=sub_res$fit, ora=sub_res$ora)
+  print(results[[this_experiment]]$volcano)
+  
+  cat("\n\n")
+  #table <- safe_static_table(sub_res$fit, sub_res$ora)$result
+  print(results[[this_experiment]]$table)
+}
+```
