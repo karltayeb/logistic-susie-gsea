@@ -30,6 +30,7 @@ Packages managed with `renv`
 * [Human-Chimp EB](human_chimp_eb_de_example.html)
 * [Single-Cell Tumor](example_yusha_sc_tumor.html)
 * [Chondrocyte Stress DE](example_anthony.html)
+* [Microplastic DE](example_mellissa_microplastics.html)
 
 ## GSEA from summary statistics
 * [Two component model, initial exploration](summary_stat_gsea_exploration.html)
