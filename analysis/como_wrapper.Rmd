@@ -1,0 +1,146 @@
+---
+title: "como_wrapper"
+author: "karltayeb"
+date: "2022-08-10"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+```{r reticulate-setup}
+library(reticulate)
+
+pypath <- '/usr/local/Caskroom/miniconda/base/bin/python'
+use_python(pypath)
+#py_install("numpy==1.22.4", pip = TRUE)
+#py_install("jaxlib==0.3.15", pip = TRUE)
+#py_install("jax==0.3.16", pip = TRUE)
+#py_install("git+https://github.com/karltayeb/como.git", pip = TRUE)
+```
+
+
+```{python simulation-setup}
+import matplotlib.pyplot as plt
+import numpy as np
+import jax
+
+sigmoid = lambda x: 1 / (1 + np.exp(-x))
+logit = lambda p: np.log(p) - np.log(1-p)
+
+def sim_sumstat_susie(n, p, b0, b, scale=1):
+  """
+  simulate data for covariate moderated ebmn problem, 3 active covariates
+  covariates 1-10, 11-20, 21-30 are identical
+  
+  Paramters:
+    b0: background rate/intercept
+    b: array of length 3, effects for each active covariates
+    scale: standard deviation of non-null component g ~ N(0, scale^2)
+  """
+  #mix = np.exp(-np.abs(np.arange(p) - np.arange(p)[:, None]) / 3)
+  #X = np.random.binomial(1, 0.2, size=n*p).reshape(n, -1) @ mix
+  X = np.random.normal(size=n*p).reshape(n, -1) #@ mix
+  X[:, :9] = X[:, 9][:, None]
+  X[:, 10:19] = X[:, 19][:, None]
+  X[:, 20:29] = X[:, 29][:, None]
+  
+  logits = b0 + X[:, [9, 19, 29]] @ b
+  p = np.clip(sigmoid(b0 + X[:, [9, 19, 29]] @ b), 1e-8, 1-1e-8)
+
+  y = np.random.binomial(1, p)
+  se = np.random.uniform(1, 5, size=n)
+  beta = y * np.random.normal(size=n) * scale
+  beta_hat = beta + np.random.normal(size=n)* se
+  
+  data = {
+      'beta_hat': beta_hat,  # observations
+      'beta': beta,  # true means
+      'se': se,  # standard errors
+      'y': y,  # component membership
+      'p' : p,  # probability of being alternate
+      'logits': logits,  # log odds of being alternate
+      'X': X,  # covariates for selection
+      'Z': np.ones((n, 1)),  # fixed covariates (intercept)
+      'params': dict(b0=b0, b=b)  # simulations parameters
+  }
+  return data
+
+```
+
+```{python como-example}
+from como.twococomo import PointNormalSuSiE
+from como.utils import is_monotone
+import numpy as np
+
+# simulation with 5k observations and 100 covariates
+n = 5000
+p = 100
+sim = sim_sumstat_susie(n, p, -2, np.array([1., 2., 3.,]), scale=4.)
+
+# this is the data you need to pass to the model
+data = dict(
+    beta = sim['beta_hat'],  # n-vector
+    se = sim['se'],  # n-vector
+    X = sim['X'],  # n x p matrix of covariates (selected by SuSiE)
+    Z = sim['Z']  # n x q matrix of covariates (fixed effects, including)
+)
+```
+
+```{r fit-como}
+como <- import("como")
+data <- py$data
+fit <- como$twococomo$PointNormalSuSiE(data, scale=10.)
+fit$fit(niter=as.integer(1000))  # need to explicitly cast to integer
+fit$converged()
+```
+
+```{r available-function}
+# Update that we expose-- may be useful for covariate moderated factorization
+fit$update_f0()  # update f0 (don't need it hear, it's a point mass at 0)
+fit$update_logreg()  # update f1 (reestimate scale parameter)
+fit$update_responsibilities()  # update assignment probabilities
+```
+
+```{r simulation-results1}
+plot(py$sim$logits, fit$prior_log_odds)
+plot(as.factor(py$sim$y), fit$responsibilities, xlab='true component', ylab='responsibility')
+```
+
+```{r simulation-results2}
+tdr <- fit$responsibilities
+y <- py$sim$y
+coverage = function(x) mean(y[tdr > x])
+target <- seq(0.8, 0.99, 0.005)
+realized <- purrr::map_dbl(target, coverage)
+plot(target, realized)
+abline(0, 1, col='red')
+```
+
+```{r}
+knitr::knit_exit()
+```
+
+
+## Try to work with Basilisk
+
+I'm having trouble getting it to install `como` from github... may need to get it on PyPi....
+
+```{r}
+library(basilisk)
+como_env <- BasiliskEnvironment(
+  envname="como-0.1.0",
+  pkgname="gseasusie",
+  packages=c("numpy==1.21.1", "jax==0.3.16"),
+  pip=c("git+https://github.com/karltayeb/como.git@9ed341f11254e14e20ad7234e80bb4b65fd50612"),
+  channels=c('conda-forge')
+)
+
+proc <- basiliskStart(como_env)
+```
+
+```{r}
+?BasiliskEnvironment
+```
+
