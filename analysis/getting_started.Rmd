@@ -7,6 +7,13 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  warning = F, message = F
+)
+```
+
+
 ## Introduction
 
 Here we demonstrate the basics of how to use the `gseasusie` package.
@@ -27,13 +34,11 @@ There are other packages that curate geneset databases `WebGestaltR`, `msigdbr`,
 All I did here was write a few functions to load them into a standard format.
 
 Each gene set list contains three elements: 
- * `X`: a gene x gene set indicator matrx
+ * `X`: a gene x gene set indicator matrix, genes are identified by their ENTREZID
  * `geneSet`: a two column `data.frame` (`geneSet` and `gene`) mapping genes to gene sets 
  * `geneSetDes`: a written description of what the gene set does
  
-`gseasusie::load_gene_sets` lets you load multiple gene sets. Note: the first time you try to load gene sets it might take a while because we need to build the indicator matrices (and the implimentation is far from optimized). After your fit it onces it will cache to a folder `./cache/resources/` relative to your working directory/project directory
-
-eventually, the package will ship with some data
+`gseasusie::load_gene_sets` lets you load multiple gene sets. Note: the first time you try to load gene sets it might take a while because we need to build the indicator matrices (and the implimentation is far from optimized). After you load them once it will cache to a folder `./cache/resources/` where the path is relative to your working directory/project directory.
 
 ```{r load.gene.sets}
 genesets <- gseasusie::load_gene_sets(c('c2', 'all_msigbd'))
@@ -50,9 +55,7 @@ If you have multiple experiments that you want to run enrichment for, I've found
 `data` is a list of data frames, one for each experiment. The dataframes can have whatever information you'd like, but they must have the following columns: 
 * `ENTREZID`: the gene sets above use `ENTREZID`, so map your gene names to this!
 * `threshold.on`: this might be a p-value, adjusted pvalue, effect size, etc
-* and `beta`:: right now this is only used for sign information, so if you don't care specifically about up or down regulated genes just make a dummy column with 1s.
-
-Eventually, `beta` and `se` columns will be important for the summary stat enrichment analaysis.
+* and `beta`:: right now this is only used for sign information, so if you don't care specifically about up or down regulated genes just make a dummy column with 1s. This will be more important once we support enrichment on z-scores and effects sizes without thresholding.
 
 ```{r load.data}
 source('code/load_data.R')
