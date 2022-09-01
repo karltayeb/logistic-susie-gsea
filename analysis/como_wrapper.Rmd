@@ -11,20 +11,32 @@ editor_options:
 
 ```{r reticulate-setup}
 library(reticulate)
-
-pypath <- '/usr/local/Caskroom/miniconda/base/bin/python'
-use_python(pypath)
-#py_install("numpy==1.22.4", pip = TRUE)
-#py_install("jaxlib==0.3.15", pip = TRUE)
-#py_install("jax==0.3.16", pip = TRUE)
-#py_install("git+https://github.com/karltayeb/como.git", pip = TRUE)
+condaenv <- 'como'
+use_condaenv(condaenv = condaenv)
+py_config()
 ```
 
 
+```{r}
+library(ashr)
+
+beta = c(rep(0,100),rnorm(100))
+sebetahat = abs(rnorm(200,0,1))
+betahat = rnorm(200,beta,sebetahat)
+beta.ash = ash(betahat, sebetahat)
+
+beta.ash
+
+ashr::postmean
+
+length(beta.ash$result$PosteriorMean)
+beta.ash$result$PosteriorMean
+```
+
 ```{python simulation-setup}
-import matplotlib.pyplot as plt
 import numpy as np
 import jax
+import flax
 
 sigmoid = lambda x: 1 / (1 + np.exp(-x))
 logit = lambda p: np.log(p) - np.log(1-p)
@@ -73,6 +85,7 @@ def sim_sumstat_susie(n, p, b0, b, scale=1):
 from como.twococomo import PointNormalSuSiE
 from como.utils import is_monotone
 import numpy as np
+import jax
 
 # simulation with 5k observations and 100 covariates
 n = 5000
@@ -89,11 +102,12 @@ data = dict(
 ```
 
 ```{r fit-como}
+numpy <- import("numpy")
 como <- import("como")
 data <- py$data
-fit <- como$twococomo$PointNormalSuSiE(data, scale=10.)
-fit$fit(niter=as.integer(1000))  # need to explicitly cast to integer
-fit$converged()
+fit <- como$twococomo$PointNormalSuSiE(data, scale=10.)  # initialize model
+fit$fit(niter=as.integer(1000))  # fir model, need to explicitly cast to integer
+fit$converged()  # check convergence
 ```
 
 ```{r available-function}
@@ -102,6 +116,11 @@ fit$update_f0()  # update f0 (don't need it hear, it's a point mass at 0)
 fit$update_logreg()  # update f1 (reestimate scale parameter)
 fit$update_responsibilities()  # update assignment probabilities
 ```
+
+```{r}
+fit$logreg$params$tau
+```
+
 
 ```{r simulation-results1}
 plot(py$sim$logits, fit$prior_log_odds)
@@ -128,16 +147,35 @@ knitr::knit_exit()
 I'm having trouble getting it to install `como` from github... may need to get it on PyPi....
 
 ```{r}
+# BiocManager::install("basilisk")
 library(basilisk)
 como_env <- BasiliskEnvironment(
-  envname="como-0.1.0",
+  envname="como-0.0.14",
   pkgname="gseasusie",
-  packages=c("numpy==1.21.1", "jax==0.3.16"),
-  pip=c("git+https://github.com/karltayeb/como.git@9ed341f11254e14e20ad7234e80bb4b65fd50612"),
+  packages=c("python==3.8.3", "numpy==1.21.1", "jax==0.3.16", "flax==0.5.0"),
+  pip=c('como-ebnm==0.0.14'),
   channels=c('conda-forge')
 )
-
 proc <- basiliskStart(como_env)
+
+fit_test <- function(){
+  numpy <- import("numpy")
+  como <- import("como")
+  data <- py$data
+  fit <- como$twococomo$PointNormalSuSiE(data, scale=10.)  # initialize model
+  fit$fit(niter=as.integer(1000))  # fir model, need to explicitly cast to integer
+  fit$converged()  # check convergence
+}
+
+np_arange <- function(){
+  np <- import("numpy")
+  np$arange(10)
+}
+
+basilisk::basiliskRun(
+  proc, fit_test
+)
+
 ```
 
 ```{r}
