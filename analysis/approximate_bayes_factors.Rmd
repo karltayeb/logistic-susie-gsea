@@ -1,0 +1,377 @@
+---
+title: "approximate_bayes_factors"
+author: "Karl Tayeb"
+date: "2022-10-10"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Overview
+
+Here we compare several approximate Bayes factor computations
+
+1. Wakefields ABF
+1. Exact BF computed by quadrature (fixed intercept)
+1. Variational BF-- fit a univariate logistic regression with polya-gamma VB (also, fixed intercept)
+1. Exact BF computed by 2d quadrature (we put a Normal prior on the effect and the intercept)
+1. Reparameterized Exact BF computed by 2d quadrature (put a normal prior on the effect and reparameterized "intercept")
+
+TLDR: The 1d quadrature and VB show strong agreement. This makes sense because the the fixed intercept model is the target VB is approximating (and then optimizing over intercept as well).
+
+Neither BF agrees with the Wakefield BF. And Wakefield doesn't really agree with either of the 2d quadrature approaches. Furthermore the 2d quadrature BFs are sensitive to the prior we put on the non-effect parameter. This is not surprising for the intercept model, but discouraging for the reparameterized model (where we expect the terms involving the intercept to approximately cancel out in the BF computation).
+
+###  Univariate VB updates
+
+```{r univariate_vb_updates}
+sigmoid <- function(x){
+  return(1 / (1 + exp(-x)))
+}
+
+logodds <- function(p){
+  return(log(p) - log(1-p))
+}
+
+update_intercept <- function(x, y, mu, tau, xi, delta, tau0){
+  kappa = y - 0.5
+  xb <- (x * mu)
+  omega <- logisticsusie:::pg_mean(1, xi)
+  return(sum(kappa - xb * omega)/sum(omega))
+}
+
+update_b <- function(x, y, mu, tau, xi, delta, tau0){
+  omega <- logisticsusie:::pg_mean(1, xi)
+  kappa = y - 0.5
+  tau <- sum(omega * x^2) + tau0
+  nu <- sum((kappa - omega*delta) * x)
+  return(list(mu = nu/tau, tau=tau))
+}
+
+update_xi <- function(x, y, mu, tau, xi, delta, tau0){
+  xb2 <- x^2 * (mu^2 + 1/tau) + 2*x*mu*delta + delta^2
+  return(sqrt(xb2))
+}
+
+compute_elbo <- function(x, y, mu, tau, xi, delta, tau0){
+  kappa = y - 0.5
+  xb <- (x * mu) + delta
+  bound <- log(sigmoid(xi)) + (kappa * xb) - (0.5 * xi)
+  kl <- logisticsusie:::normal_kl(mu, 1/tau, 0, 1/tau0)
+  return(sum(bound) - kl)
+}
+
+# include the term that cancels out when xi is up-to-date
+compute_elbo2 <- function(x, y, mu, tau, xi, delta, tau0){
+  kappa = y - 0.5
+  xb <- (x * mu) + delta
+  xb2 <- x^2 * (mu^2 + 1/tau) + 2*x*mu*delta + delta^2
+
+  omega <- logisticsusie:::pg_mean(1, xi)
+  bound <- log(sigmoid(xi)) + (kappa * xb) - (0.5 * xi) + 0.5 * omega * (xi^2 - xb2)
+  kl <- logisticsusie:::normal_kl(mu, 1/tau, 0, 1/tau0)
+  return(sum(bound) - kl)
+}
+
+.monotone <- logisticsusie:::.monotone
+
+fit_univariate_vb <- function(x, y, delta.init=0, tau0=1, estimate_intercept=T){
+  # init 
+  mu <- 0
+  tau <- 1
+  delta <- delta.init
+  xi <- update_xi(x, y, mu, tau, 1, delta, tau0)
+  xi <- pmax(xi, 1e-3)
+  
+  elbos <- compute_elbo(x, y, mu, tau, xi, delta, tau0)
+  for(i in seq(20)){
+    # rep
+    if(estimate_intercept){
+      delta <- update_intercept(x, y, mu, tau, xi, delta, tau0)
+    }
+    
+    b <- update_b(x, y, mu, tau, xi, delta, tau0)
+    mu <- b$mu
+    tau <- b$tau
+    
+    xi <- update_xi(x, y, mu, tau, xi, delta, tau0)
+    
+    elbos <- c(elbos, compute_elbo(x, y, mu, tau, xi, delta, tau0))
+    
+    if(diff(tail(elbos, 2)) < 1e-5){
+      break
+    }
+  }
+  
+  converged = diff(tail(elbos, 2)) < 1e-5
+  monotone = logisticsusie:::.monotone(elbos)
+  p_mle <- mean(y)
+  BF = exp(tail(elbos, 1) - sum(dbinom(y, 1, p_mle, log = T)))
+  return(list(x=x, y=y,
+              mu=mu, tau=tau, xi=xi, delta=delta, tau0=tau0,
+              BF=BF,
+              elbos=elbos,
+              converged=converged,
+              monotone=monotone))
+}
+```
+
+
+```{r compute_wakefield}
+# Compute ln(ABF) where ABF is Wakefields Approximate Bayes Factor
+compute_lnabf <- function(z, V, W){
+  lnabf <- -(log(sqrt((V+W)/V)) + (- 0.5 * z^2 * W / (V+W)))
+  return(lnabf)
+}
+
+# Compute likelihood conditional on effect size y ~ Bernoulli(sigmoid(x*b + delta))
+conditional_likelihood <- function(x, y, b, delta=0, log=F) {
+  p <- sigmoid(x*b + delta)
+  ll <- sum(dbinom(y, 1, p, log=T))
+  if(!log){
+    ll <- exp(ll)  # rescale for numerical stability?
+  }
+  return(ll)
+}
+```
+
+
+Here we quickly recreate figure one from Wakefield's ABF paper to confirm we are computing it right.
+```{r recreate_abf_figure}
+z <- 4
+W <- 0.21^2
+f <- function(V){exp(compute_lnabf(z, V, W))}
+plot(f, xlim = c(0, 0.025))
+```
+
+
+
+### A note on how I'm computing the quadrature
+
+There are a few packages in R that just give the quadrature points and their associated weights so that you can compute
+
+$$
+\int f(x) dx \approx \sum w_i f(x_i)
+$$
+
+We are computing the *evidence* $p(y) = \int \left(\prod p(y_i | b, b_0)\right) p(b, b_0) dbdb_0 = \int f(b, b_0) dbd_0$. Because this involved the product of many probabilities it can get quite small and we can run into underflow issues. An option to deal with this is to re scale the function when computing the integral.
+
+Alternatively, since we are dealing with non-negative probabilities, we can compute the sum on the RHS of the approximate inequality on the log scale, which is much better numerically. That is what we do here. The R package `statmod::gaus.quad.prob` supply the quadrature points and weights so this computation is easy to carry out.
+
+$$
+\log \sum w_i f(x_i) = \log\sum\exp\{\log f(x_i) + \log(w_i)\}
+$$
+
+
+
+
+## Comparing exact and approximate Bayes factors
+
+### VB vs 1d quadrature
+
+We compute the evidence $p(y)$ numerically via quadrature, and approximately via Wakefields ABF and the Polya-Gamma/Jaakkola-Jordan variational approximation. We confirm that the ELBO is indeed a lower bound for the evidence. Furthermore, for this simple example the bound is quite tight.
+
+```{r}
+# simulate some data
+sigmoid <- function(x) {1/(1 + exp(-x))}
+x <- rnorm(1000)
+b0 <- 0
+b1 <- 0.1
+y <- rbinom(length(x), 1, sigmoid(x))
+
+# compute MLE
+glmfit <- glm(y ~ x, family='binomial')
+coef <- summary(glmfit)$coef
+b0_mle <- coef[1,1]
+
+# evidence compute via quadrature (FIXED INTERCEPT)
+evidence <- gseasusie:::compute_evidence_quadrature_fixed_b0(
+  as.matrix(x, ncol=1), y, 0, b0=b0_mle, params = list(b_mu=0, b_sigma=1), n=2048)
+
+# ELBO via VB (FIXED INTERCEPT)
+vb <- fit_univariate_vb(x, y, delta.init=b0_mle, tau0=1, estimate_intercept = F)
+elbo <- tail(vb$elbos, 1)
+
+# check its a lower bound
+evidence > elbo
+
+# p(y)/ELBO-- ideally close to, but a bit larger than, 1
+# since denom is (hopefully) a tight lower bound to the numerator
+exp(evidence - elbo)
+```
+
+
+Here we show three different computations of the evidence under the null model. First we simply compute the log likelihood of MLE for the intercept-only model. Second, we compute the evidence in the limiting case where $\sigma_b \approx 0$-- exactly using quadrature and approximately using the VB method. 
+
+The latter two approaches agree perfectly (this is not suprising, since there is nothing really to approximate). I think it should also agree with the log likelihood of the intercept-only MLE, but there is a slight discrepency. 
+
+```{r null_likelihood}
+# null likelihod == mLE of intercept only model
+null1 <- conditional_likelihood(x, y, 0, logodds(mean(y)), log = T)
+
+# null likelihood as the model with negligible prior variance on b
+null2 <- gseasusie:::compute_evidence_quadrature_fixed_b0(
+  as.matrix(x, ncol=1), y, 0, b0=b0_mle, params = list(b_mu=0, b_sigma=1e-10), n=2048)
+
+# null likelihood as the model with negligible prior variance on b, VB
+nullvb <- fit_univariate_vb(
+  x, y, delta.init=b0_mle, tau0=1e10, estimate_intercept = F)
+null3 <- tail(nullvb$elbos, 1)
+
+print(null1)
+print(null2)
+print(null3)
+```
+
+
+```{r}
+quad1d_bf <- evidence - null2
+vb_bf <- elbo - null2
+print(quad1d_bf)
+print(vb_bf)
+```
+
+
+
+### 2d quadrature vs Wakefield ABF
+
+Evidently there is a pretty big discrpency between the Wakefield ABF and the BFs computed by 2d quadrature (we specify normal priors on both $b$ and $b_0$).
+
+```{r}
+wakefield <- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+wakefield
+```
+
+```{r}
+# 2d integral
+evidence_h1 <- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=1), n=1024)
+evidence_h0 <- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=1), n=1024)
+evidence_h1 - evidence_h0
+```
+
+### The BF depends on the prior
+
+Furthermore, our 2d quadrature BF depends very much on the prior variance of the intercept! Perhaps this shouldn't be too surprising since the likelihood induce rather strong dependence between the estimate of the intercept and the effect.
+
+```{r}
+# 2d integral
+evidence_h1 <- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=1), n=1024)
+evidence_h0 <- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=1), n=1024)
+evidence_h1 - evidence_h0
+```
+
+```{r}
+# 2d integral
+evidence_h1 <- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=10), n=1024)
+evidence_h0 <- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=10), n=1024)
+evidence_h1 - evidence_h0
+```
+
+
+### Reparameterization
+
+Here we pursue a reparameterization of the logistic regression, that reduces the statistical dependence between the estimate of the effect and the intercept. Following the appendix of Wakefield'd ABF paper. We start by considering the logistic regression model:
+
+$$
+\log \frac{p_i}{1 - p_i} = b_0 + bx
+$$
+
+The MLE for logistic regression (under some conditions) is consistent and asymptotically normal
+
+$$
+\begin{bmatrix}\hat b_0 \\ \hat b \end{bmatrix} \sim 
+N\left(\begin{bmatrix} b_0 \\  b \end{bmatrix},
+\begin{bmatrix} I_{00} & I_{01} \\ I_{10} & I_{11} \end{bmatrix}^{-1}\right)
+$$
+
+But we can re-parameterize the model to (asymptotically) get rid of the covariance between these estimates. Specifically we can replace $b_0$ with the parameter $\beta_0 = b_0 + \frac{I_{00}}{I_{01}} b$ which yields
+
+$$
+\begin{bmatrix}\hat \beta_0 \\ \hat b \end{bmatrix} \sim 
+N\left(\begin{bmatrix} b_0 \\  b \end{bmatrix},
+\begin{bmatrix} I_{00} & 0 \\ 0 & I_{11} \end{bmatrix}^{-1}\right)
+$$
+
+By specifying independent priors $p(\beta_0, b) = p(\beta_0)p(\beta)$ the posterior factorizes. Wakefield takes advantage of this by only "integrating" over the effect estimate (since the integral involving the intercept cancels in the numerator and denominator). For them, it has the effect of only needing the effect estimate and it's standard error (disregarding the intercept).
+
+
+$$
+BF = \frac{p(\hat\beta, \hat\theta | H_1)}{p(\hat\beta, \hat\theta | H_0)} 
+\approx \frac{\int p(\hat \beta | \beta)p(\beta) \times \int p(\hat \theta | \theta)p(\theta)}{\int p(\hat \beta | \beta)p(\beta) \times p(\hat \theta | \theta =0)}
+= \frac{\int p(\hat \theta | \theta)p(\theta)}{p(\hat \theta | \theta =0)} = ABF
+$$
+
+Below we impliment 2d quadrature for this re-parameterization. We don't get around integrating over two parameters-- but we still hope the $\int p(\hat \beta | \beta)p(\beta)$ will cancel out the numerator and denominator.
+
+```{r}
+compute_info <- function(x, y){
+  logits <- predict(glm(y ~ x))
+  p1p <- sigmoid(logits) * sigmoid(-logits)
+  I00 <- - sum(p1p)
+  I01 <- -sum(p1p * x)
+  return(I01/I00)
+}
+
+log_joint_reparam <- function(x, y, b, b0, b_mu, b_sigma, beta_mu, beta_sigma, I01I00){
+  beta <- b0 + I01I00 * b
+  log_joint <- conditional_likelihood(x, y, b, b0, log=T) + 
+    dnorm(b, b_mu, b_sigma, log=T) + 
+    dnorm(beta, beta_mu, beta_sigma, log=T)
+  return(log_joint)
+}
+
+quad2d_reparam <- function(x, y, b_mu, b_sigma, beta_mu, beta_sigma, n=128){
+  q1 <- statmod::gauss.quad.prob(n=n, l=b_mu-10*b_sigma, u = b_mu+10*b_sigma)
+  q2 <- statmod::gauss.quad.prob(n=n, l=beta_mu-10*beta_sigma, u = beta_mu+10*beta_sigma)
+
+  I01I00 <- compute_info(x, y)
+  # inner integral over b
+  quad_b <- function(b0){
+    # for fixed b0, evaluate log_joint at quadrature points
+    integrand1 <- purrr::map_dbl(q1$nodes, ~log_joint_reparam(
+      x, y, .x, b0, b_mu, b_sigma, beta_mu, beta_sigma, I01I00))
+    res <- matrixStats::logSumExp(integrand1 + log(q1$weights))
+    return(res)
+  }
+  
+  # integrate over b0
+  integrand2 <- purrr::map_dbl(q2$nodes, quad_b)
+  res <- matrixStats::logSumExp(integrand2 + log(q2$weights))
+}
+```
+
+
+### Reparameterized 2d quadrature at multiple settings
+
+Unfortunately, this does not seem to resolve the discrepency with Wakefields. What is going on?
+
+```{r}
+evidence_reparam <- quad2d_reparam(x, y, 0, 1, 0, .1, n=256)
+null_reparam <- quad2d_reparam(x, y, 0, 1e-10, 0, .1, n=256)
+evidence_reparam - null_reparam
+```
+
+```{r}
+evidence_reparam <- quad2d_reparam(x, y, 0, 1, 0, 1, n=256)
+null_reparam <- quad2d_reparam(x, y, 0, 1e-10, 0, 1, n=256)
+evidence_reparam - null_reparam
+```
+
+```{r}
+evidence_reparam <- quad2d_reparam(x, y, 0, 1, 0, 10, n=256)
+null_reparam <- quad2d_reparam(x, y, 0, 1e-10, 0, 10, n=256)
+evidence_reparam - null_reparam
+```
+
+```{r}
+evidence_reparam <- quad2d_reparam(x, y, 0, 1, 0, 20, n=256)
+null_reparam <- quad2d_reparam(x, y, 0, 1e-10, 0, 20, n=256)
+evidence_reparam - null_reparam
+```
+
+
