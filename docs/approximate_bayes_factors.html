@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Karl Tayeb" />
+
+<meta name="date" content="2022-10-10" />
+
+<title>approximate_bayes_factors</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">approximate_bayes_factors</h1>
+<h4 class="author">Karl Tayeb</h4>
+<h4 class="date">2022-10-10</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-10-11
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree68bf2ea160af03b7ee50c14e721a0a66e89a6076targetblank68bf2eaa">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/68bf2ea160af03b7ee50c14e721a0a66e89a6076" target="_blank">68bf2ea</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree68bf2ea160af03b7ee50c14e721a0a66e89a6076targetblank68bf2eaa"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/68bf2ea160af03b7ee50c14e721a0a66e89a6076" target="_blank">68bf2ea</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    _targets.R
+    Ignored:    _targets.html
+    Ignored:    _targets.md
+    Ignored:    _targets/objects/
+    Ignored:    _targets/user/
+    Ignored:    _targets/workspaces/
+    Ignored:    _targets_r/
+    Ignored:    cache/
+    Ignored:    data/.DS_Store
+    Ignored:    data/adipose_2yr_topsnp.txt
+    Ignored:    data/anthony/
+    Ignored:    data/de-droplet/
+    Ignored:    data/de-microplastics/
+    Ignored:    data/deng/
+    Ignored:    data/fetal_reference_cellid_gene_sets.RData
+    Ignored:    data/human_chimp_eb/
+    Ignored:    data/pbmc-purified/
+    Ignored:    data/wenhe_baboon_diet/
+    Ignored:    data/yusha_sc_tumor/
+    Ignored:    library/
+    Ignored:    renv/
+    Ignored:    staging/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Master's Paper.pdf
+    Untracked:  Project_1652928411/
+    Untracked:  Project_1653228324/
+    Untracked:  Project_1653228355/
+    Untracked:  VEB_Boost_Proposal_Write_Up (1).pdf
+    Untracked:  _targets/meta/
+    Untracked:  additive.l5.gonr.aggregate.scores
+    Untracked:  analysis/2022_09_22_pdac_example.Rmd
+    Untracked:  analysis/alpha_ash_v_point_normal.Rmd
+    Untracked:  analysis/compare_w_post_hoc_clustering.Rmd
+    Untracked:  analysis/compute_exact_BFs.Rmd
+    Untracked:  analysis/de_droplet_noshrink.Rmd
+    Untracked:  analysis/de_droplet_noshrink_logistic_susie.Rmd
+    Untracked:  analysis/exact_logistic_ser.Rmd
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/gsea_made_simple.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/linear_v_logistic_pbmc.Rmd
+    Untracked:  analysis/logistic_susie_rss.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/logistic_variational_bound.Rmd
+    Untracked:  analysis/logsitic_susie_template.Rmd
+    Untracked:  analysis/normal_means.Rmd
+    Untracked:  analysis/pcb_scratch.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/roadmap.Rmd
+    Untracked:  analysis/sc_tumor_followup.Rmd
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/simulations_l1.Rmd
+    Untracked:  analysis/tccm_vs_logistic_susie.Rmd
+    Untracked:  analysis/template.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  analysis/z_score_vs_threshold.Rmd
+    Untracked:  build_site.R
+    Untracked:  code/binromial_ser.R
+    Untracked:  code/html_tables.R
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/point_normal.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  code/susie_gsea_queries.R
+    Untracked:  docs.zip
+    Untracked:  export/
+    Untracked:  figure/
+    Untracked:  l1.sim.aggregate.scores
+    Untracked:  logistic_regression.stan
+    Untracked:  pbmc_cd19_symbol.txt
+    Untracked:  pbmc_cd19b_0.1_background.csv
+    Untracked:  pbmc_cd19b_0.1_david_annotation_clusters.txt
+    Untracked:  pbmc_cd19b_0.1_david_results.txt
+    Untracked:  pbmc_cd19b_0.1_list.csv
+    Untracked:  presentations/
+    Untracked:  references.bib
+
+Unstaged changes:
+    Modified:   analysis/example_pbmc.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown
+(<code>analysis/approximate_bayes_factors.Rmd</code>) and HTML
+(<code>docs/approximate_bayes_factors.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/68bf2ea160af03b7ee50c14e721a0a66e89a6076/analysis/approximate_bayes_factors.Rmd" target="_blank">68bf2ea</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+<td>
+wflow_publish("analysis/approximate_bayes_factors.Rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Here we compare several approximate Bayes factor computations</p>
+<ol style="list-style-type: decimal">
+<li>Wakefields ABF</li>
+<li>Exact BF computed by quadrature (fixed intercept)</li>
+<li>Variational BF– fit a univariate logistic regression with
+polya-gamma VB (also, fixed intercept)</li>
+<li>Exact BF computed by 2d quadrature (we put a Normal prior on the
+effect and the intercept)</li>
+<li>Reparameterized Exact BF computed by 2d quadrature (put a normal
+prior on the effect and reparameterized “intercept”)</li>
+</ol>
+<p>TLDR: The 1d quadrature and VB show strong agreement. This makes
+sense because the the fixed intercept model is the target VB is
+approximating (and then optimizing over intercept as well).</p>
+<p>Neither BF agrees with the Wakefield BF. And Wakefield doesn’t really
+agree with either of the 2d quadrature approaches. Furthermore the 2d
+quadrature BFs are sensitive to the prior we put on the non-effect
+parameter. This is not surprising for the intercept model, but
+discouraging for the reparameterized model (where we expect the terms
+involving the intercept to approximately cancel out in the BF
+computation).</p>
+<div id="univariate-vb-updates" class="section level3">
+<h3>Univariate VB updates</h3>
+<pre class="r"><code>sigmoid &lt;- function(x){
+  return(1 / (1 + exp(-x)))
+}
+
+logodds &lt;- function(p){
+  return(log(p) - log(1-p))
+}
+
+update_intercept &lt;- function(x, y, mu, tau, xi, delta, tau0){
+  kappa = y - 0.5
+  xb &lt;- (x * mu)
+  omega &lt;- logisticsusie:::pg_mean(1, xi)
+  return(sum(kappa - xb * omega)/sum(omega))
+}
+
+update_b &lt;- function(x, y, mu, tau, xi, delta, tau0){
+  omega &lt;- logisticsusie:::pg_mean(1, xi)
+  kappa = y - 0.5
+  tau &lt;- sum(omega * x^2) + tau0
+  nu &lt;- sum((kappa - omega*delta) * x)
+  return(list(mu = nu/tau, tau=tau))
+}
+
+update_xi &lt;- function(x, y, mu, tau, xi, delta, tau0){
+  xb2 &lt;- x^2 * (mu^2 + 1/tau) + 2*x*mu*delta + delta^2
+  return(sqrt(xb2))
+}
+
+compute_elbo &lt;- function(x, y, mu, tau, xi, delta, tau0){
+  kappa = y - 0.5
+  xb &lt;- (x * mu) + delta
+  bound &lt;- log(sigmoid(xi)) + (kappa * xb) - (0.5 * xi)
+  kl &lt;- logisticsusie:::normal_kl(mu, 1/tau, 0, 1/tau0)
+  return(sum(bound) - kl)
+}
+
+# include the term that cancels out when xi is up-to-date
+compute_elbo2 &lt;- function(x, y, mu, tau, xi, delta, tau0){
+  kappa = y - 0.5
+  xb &lt;- (x * mu) + delta
+  xb2 &lt;- x^2 * (mu^2 + 1/tau) + 2*x*mu*delta + delta^2
+
+  omega &lt;- logisticsusie:::pg_mean(1, xi)
+  bound &lt;- log(sigmoid(xi)) + (kappa * xb) - (0.5 * xi) + 0.5 * omega * (xi^2 - xb2)
+  kl &lt;- logisticsusie:::normal_kl(mu, 1/tau, 0, 1/tau0)
+  return(sum(bound) - kl)
+}
+
+.monotone &lt;- logisticsusie:::.monotone
+
+fit_univariate_vb &lt;- function(x, y, delta.init=0, tau0=1, estimate_intercept=T){
+  # init 
+  mu &lt;- 0
+  tau &lt;- 1
+  delta &lt;- delta.init
+  xi &lt;- update_xi(x, y, mu, tau, 1, delta, tau0)
+  xi &lt;- pmax(xi, 1e-3)
+  
+  elbos &lt;- compute_elbo(x, y, mu, tau, xi, delta, tau0)
+  for(i in seq(20)){
+    # rep
+    if(estimate_intercept){
+      delta &lt;- update_intercept(x, y, mu, tau, xi, delta, tau0)
+    }
+    
+    b &lt;- update_b(x, y, mu, tau, xi, delta, tau0)
+    mu &lt;- b$mu
+    tau &lt;- b$tau
+    
+    xi &lt;- update_xi(x, y, mu, tau, xi, delta, tau0)
+    
+    elbos &lt;- c(elbos, compute_elbo(x, y, mu, tau, xi, delta, tau0))
+    
+    if(diff(tail(elbos, 2)) &lt; 1e-5){
+      break
+    }
+  }
+  
+  converged = diff(tail(elbos, 2)) &lt; 1e-5
+  monotone = logisticsusie:::.monotone(elbos)
+  p_mle &lt;- mean(y)
+  BF = exp(tail(elbos, 1) - sum(dbinom(y, 1, p_mle, log = T)))
+  return(list(x=x, y=y,
+              mu=mu, tau=tau, xi=xi, delta=delta, tau0=tau0,
+              BF=BF,
+              elbos=elbos,
+              converged=converged,
+              monotone=monotone))
+}</code></pre>
+<pre class="r"><code># Compute ln(ABF) where ABF is Wakefields Approximate Bayes Factor
+compute_lnabf &lt;- function(z, V, W){
+  lnabf &lt;- -(log(sqrt((V+W)/V)) + (- 0.5 * z^2 * W / (V+W)))
+  return(lnabf)
+}
+
+# Compute likelihood conditional on effect size y ~ Bernoulli(sigmoid(x*b + delta))
+conditional_likelihood &lt;- function(x, y, b, delta=0, log=F) {
+  p &lt;- sigmoid(x*b + delta)
+  ll &lt;- sum(dbinom(y, 1, p, log=T))
+  if(!log){
+    ll &lt;- exp(ll)  # rescale for numerical stability?
+  }
+  return(ll)
+}</code></pre>
+<p>Here we quickly recreate figure one from Wakefield’s ABF paper to
+confirm we are computing it right.</p>
+<pre class="r"><code>z &lt;- 4
+W &lt;- 0.21^2
+f &lt;- function(V){exp(compute_lnabf(z, V, W))}
+plot(f, xlim = c(0, 0.025))</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/recreate_abf_figure-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="a-note-on-how-im-computing-the-quadrature"
+class="section level3">
+<h3>A note on how I’m computing the quadrature</h3>
+<p>There are a few packages in R that just give the quadrature points
+and their associated weights so that you can compute</p>
+<p><span class="math display">\[
+\int f(x) dx \approx \sum w_i f(x_i)
+\]</span></p>
+<p>We are computing the <em>evidence</em> <span
+class="math inline">\(p(y) = \int \left(\prod p(y_i | b, b_0)\right)
+p(b, b_0) dbdb_0 = \int f(b, b_0) dbd_0\)</span>. Because this involved
+the product of many probabilities it can get quite small and we can run
+into underflow issues. An option to deal with this is to re scale the
+function when computing the integral.</p>
+<p>Alternatively, since we are dealing with non-negative probabilities,
+we can compute the sum on the RHS of the approximate inequality on the
+log scale, which is much better numerically. That is what we do here.
+The R package <code>statmod::gaus.quad.prob</code> supply the quadrature
+points and weights so this computation is easy to carry out.</p>
+<p><span class="math display">\[
+\log \sum w_i f(x_i) = \log\sum\exp\{\log f(x_i) + \log(w_i)\}
+\]</span></p>
+</div>
+</div>
+<div id="comparing-exact-and-approximate-bayes-factors"
+class="section level2">
+<h2>Comparing exact and approximate Bayes factors</h2>
+<div id="vb-vs-1d-quadrature" class="section level3">
+<h3>VB vs 1d quadrature</h3>
+<p>We compute the evidence <span class="math inline">\(p(y)\)</span>
+numerically via quadrature, and approximately via Wakefields ABF and the
+Polya-Gamma/Jaakkola-Jordan variational approximation. We confirm that
+the ELBO is indeed a lower bound for the evidence. Furthermore, for this
+simple example the bound is quite tight.</p>
+<pre class="r"><code># simulate some data
+sigmoid &lt;- function(x) {1/(1 + exp(-x))}
+x &lt;- rnorm(1000)
+b0 &lt;- 0
+b1 &lt;- 0.1
+y &lt;- rbinom(length(x), 1, sigmoid(x))
+
+# compute MLE
+glmfit &lt;- glm(y ~ x, family=&#39;binomial&#39;)
+coef &lt;- summary(glmfit)$coef
+b0_mle &lt;- coef[1,1]
+
+# evidence compute via quadrature (FIXED INTERCEPT)
+evidence &lt;- gseasusie:::compute_evidence_quadrature_fixed_b0(
+  as.matrix(x, ncol=1), y, 0, b0=b0_mle, params = list(b_mu=0, b_sigma=1), n=2048)</code></pre>
+<pre><code>computing approximate evidence via quadrature (fixed  b0)...</code></pre>
+<pre><code>2.957 sec elapsed</code></pre>
+<pre class="r"><code># ELBO via VB (FIXED INTERCEPT)
+vb &lt;- fit_univariate_vb(x, y, delta.init=b0_mle, tau0=1, estimate_intercept = F)
+elbo &lt;- tail(vb$elbos, 1)
+
+# check its a lower bound
+evidence &gt; elbo</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code># p(y)/ELBO-- ideally close to, but a bit larger than, 1
+# since denom is (hopefully) a tight lower bound to the numerator
+exp(evidence - elbo)</code></pre>
+<pre><code>[1] 1.229793</code></pre>
+<p>Here we show three different computations of the evidence under the
+null model. First we simply compute the log likelihood of MLE for the
+intercept-only model. Second, we compute the evidence in the limiting
+case where <span class="math inline">\(\sigma_b \approx 0\)</span>–
+exactly using quadrature and approximately using the VB method.</p>
+<p>The latter two approaches agree perfectly (this is not suprising,
+since there is nothing really to approximate). I think it should also
+agree with the log likelihood of the intercept-only MLE, but there is a
+slight discrepency.</p>
+<pre class="r"><code># null likelihod == mLE of intercept only model
+null1 &lt;- conditional_likelihood(x, y, 0, logodds(mean(y)), log = T)
+
+# null likelihood as the model with negligible prior variance on b
+null2 &lt;- gseasusie:::compute_evidence_quadrature_fixed_b0(
+  as.matrix(x, ncol=1), y, 0, b0=b0_mle, params = list(b_mu=0, b_sigma=1e-10), n=2048)</code></pre>
+<pre><code>computing approximate evidence via quadrature (fixed  b0)...</code></pre>
+<pre><code>0.235 sec elapsed</code></pre>
+<pre class="r"><code># null likelihood as the model with negligible prior variance on b, VB
+nullvb &lt;- fit_univariate_vb(
+  x, y, delta.init=b0_mle, tau0=1e10, estimate_intercept = F)
+null3 &lt;- tail(nullvb$elbos, 1)
+
+print(null1)</code></pre>
+<pre><code>[1] -689.615</code></pre>
+<pre class="r"><code>print(null2)</code></pre>
+<pre><code>[1] -690.2896</code></pre>
+<pre class="r"><code>print(null3)</code></pre>
+<pre><code>[1] -690.2896</code></pre>
+<pre class="r"><code>quad1d_bf &lt;- evidence - null2
+vb_bf &lt;- elbo - null2
+print(quad1d_bf)</code></pre>
+<pre><code>[1] 103.3082</code></pre>
+<pre class="r"><code>print(vb_bf)</code></pre>
+<pre><code>[1] 103.1014</code></pre>
+</div>
+<div id="d-quadrature-vs-wakefield-abf" class="section level3">
+<h3>2d quadrature vs Wakefield ABF</h3>
+<p>Evidently there is a pretty big discrpency between the Wakefield ABF
+and the BFs computed by 2d quadrature (we specify normal priors on both
+<span class="math inline">\(b\)</span> and <span
+class="math inline">\(b_0\)</span>).</p>
+<pre class="r"><code>wakefield &lt;- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+wakefield</code></pre>
+<pre><code>[1] 74.61162</code></pre>
+<pre class="r"><code># 2d integral
+evidence_h1 &lt;- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=1), n=1024)</code></pre>
+<pre><code>computing evidence via quadrature...</code></pre>
+<pre><code>10.18 sec elapsed</code></pre>
+<pre class="r"><code>evidence_h0 &lt;- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=1), n=1024)</code></pre>
+<pre><code>computing evidence via quadrature...</code></pre>
+<pre><code>3.86 sec elapsed</code></pre>
+<pre class="r"><code>evidence_h1 - evidence_h0</code></pre>
+<pre><code>[1] 102.7316</code></pre>
+</div>
+<div id="the-bf-depends-on-the-prior" class="section level3">
+<h3>The BF depends on the prior</h3>
+<p>Furthermore, our 2d quadrature BF depends very much on the prior
+variance of the intercept! Perhaps this shouldn’t be too surprising
+since the likelihood induce rather strong dependence between the
+estimate of the intercept and the effect.</p>
+<pre class="r"><code># 2d integral
+evidence_h1 &lt;- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=1), n=1024)</code></pre>
+<pre><code>computing evidence via quadrature...</code></pre>
+<pre><code>4.802 sec elapsed</code></pre>
+<pre class="r"><code>evidence_h0 &lt;- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=1), n=1024)</code></pre>
+<pre><code>computing evidence via quadrature...</code></pre>
+<pre><code>2.738 sec elapsed</code></pre>
+<pre class="r"><code>evidence_h1 - evidence_h0</code></pre>
+<pre><code>[1] 102.7316</code></pre>
+<pre class="r"><code># 2d integral
+evidence_h1 &lt;- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=10), n=1024)</code></pre>
+<pre><code>computing evidence via quadrature...</code></pre>
+<pre><code>2.509 sec elapsed</code></pre>
+<pre class="r"><code>evidence_h0 &lt;- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=10), n=1024)</code></pre>
+<pre><code>computing evidence via quadrature...</code></pre>
+<pre><code>1.647 sec elapsed</code></pre>
+<pre class="r"><code>evidence_h1 - evidence_h0</code></pre>
+<pre><code>[1] 109.3392</code></pre>
+</div>
+<div id="reparameterization" class="section level3">
+<h3>Reparameterization</h3>
+<p>Here we pursue a reparameterization of the logistic regression, that
+reduces the statistical dependence between the estimate of the effect
+and the intercept. Following the appendix of Wakefield’d ABF paper. We
+start by considering the logistic regression model:</p>
+<p><span class="math display">\[
+\log \frac{p_i}{1 - p_i} = b_0 + bx
+\]</span></p>
+<p>The MLE for logistic regression (under some conditions) is consistent
+and asymptotically normal</p>
+<p><span class="math display">\[
+\begin{bmatrix}\hat b_0 \\ \hat b \end{bmatrix} \sim
+N\left(\begin{bmatrix} b_0 \\  b \end{bmatrix},
+\begin{bmatrix} I_{00} &amp; I_{01} \\ I_{10} &amp; I_{11}
+\end{bmatrix}^{-1}\right)
+\]</span></p>
+<p>But we can re-parameterize the model to (asymptotically) get rid of
+the covariance between these estimates. Specifically we can replace
+<span class="math inline">\(b_0\)</span> with the parameter <span
+class="math inline">\(\beta_0 = b_0 + \frac{I_{00}}{I_{01}} b\)</span>
+which yields</p>
+<p><span class="math display">\[
+\begin{bmatrix}\hat \beta_0 \\ \hat b \end{bmatrix} \sim
+N\left(\begin{bmatrix} b_0 \\  b \end{bmatrix},
+\begin{bmatrix} I_{00} &amp; 0 \\ 0 &amp; I_{11}
+\end{bmatrix}^{-1}\right)
+\]</span></p>
+<p>By specifying independent priors <span
+class="math inline">\(p(\beta_0, b) = p(\beta_0)p(\beta)\)</span> the
+posterior factorizes. Wakefield takes advantage of this by only
+“integrating” over the effect estimate (since the integral involving the
+intercept cancels in the numerator and denominator). For them, it has
+the effect of only needing the effect estimate and it’s standard error
+(disregarding the intercept).</p>
+<p><span class="math display">\[
+BF = \frac{p(\hat\beta, \hat\theta | H_1)}{p(\hat\beta, \hat\theta |
+H_0)}
+\approx \frac{\int p(\hat \beta | \beta)p(\beta) \times \int p(\hat
+\theta | \theta)p(\theta)}{\int p(\hat \beta | \beta)p(\beta) \times
+p(\hat \theta | \theta =0)}
+= \frac{\int p(\hat \theta | \theta)p(\theta)}{p(\hat \theta | \theta
+=0)} = ABF
+\]</span></p>
+<p>Below we impliment 2d quadrature for this re-parameterization. We
+don’t get around integrating over two parameters– but we still hope the
+<span class="math inline">\(\int p(\hat \beta | \beta)p(\beta)\)</span>
+will cancel out the numerator and denominator.</p>
+<pre class="r"><code>compute_info &lt;- function(x, y){
+  logits &lt;- predict(glm(y ~ x))
+  p1p &lt;- sigmoid(logits) * sigmoid(-logits)
+  I00 &lt;- - sum(p1p)
+  I01 &lt;- -sum(p1p * x)
+  return(I01/I00)
+}
+
+log_joint_reparam &lt;- function(x, y, b, b0, b_mu, b_sigma, beta_mu, beta_sigma, I01I00){
+  beta &lt;- b0 + I01I00 * b
+  log_joint &lt;- conditional_likelihood(x, y, b, b0, log=T) + 
+    dnorm(b, b_mu, b_sigma, log=T) + 
+    dnorm(beta, beta_mu, beta_sigma, log=T)
+  return(log_joint)
+}
+
+quad2d_reparam &lt;- function(x, y, b_mu, b_sigma, beta_mu, beta_sigma, n=128){
+  q1 &lt;- statmod::gauss.quad.prob(n=n, l=b_mu-10*b_sigma, u = b_mu+10*b_sigma)
+  q2 &lt;- statmod::gauss.quad.prob(n=n, l=beta_mu-10*beta_sigma, u = beta_mu+10*beta_sigma)
+
+  I01I00 &lt;- compute_info(x, y)
+  # inner integral over b
+  quad_b &lt;- function(b0){
+    # for fixed b0, evaluate log_joint at quadrature points
+    integrand1 &lt;- purrr::map_dbl(q1$nodes, ~log_joint_reparam(
+      x, y, .x, b0, b_mu, b_sigma, beta_mu, beta_sigma, I01I00))
+    res &lt;- matrixStats::logSumExp(integrand1 + log(q1$weights))
+    return(res)
+  }
+  
+  # integrate over b0
+  integrand2 &lt;- purrr::map_dbl(q2$nodes, quad_b)
+  res &lt;- matrixStats::logSumExp(integrand2 + log(q2$weights))
+}</code></pre>
+</div>
+<div id="reparameterized-2d-quadrature-at-multiple-settings"
+class="section level3">
+<h3>Reparameterized 2d quadrature at multiple settings</h3>
+<p>Unfortunately, this does not seem to resolve the discrepency with
+Wakefields. What is going on?</p>
+<pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, .1, n=256)
+null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, .1, n=256)
+evidence_reparam - null_reparam</code></pre>
+<pre><code>[1] 78.47077</code></pre>
+<pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, 1, n=256)
+null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, 1, n=256)
+evidence_reparam - null_reparam</code></pre>
+<pre><code>[1] 79.69248</code></pre>
+<pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, 10, n=256)
+null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, 10, n=256)
+evidence_reparam - null_reparam</code></pre>
+<pre><code>[1] 90.39357</code></pre>
+<pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, 20, n=256)
+null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, 20, n=256)
+evidence_reparam - null_reparam</code></pre>
+<pre><code>[1] 122.7274</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.2 (2021-11-01)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.9               highr_0.9                pillar_1.8.1            
+ [4] compiler_4.1.2           bslib_0.3.1              later_1.3.0             
+ [7] jquerylib_0.1.4          git2r_0.30.1             workflowr_1.7.0         
+[10] basilisk.utils_1.6.0     tools_4.1.2              statmod_1.4.37          
+[13] digest_0.6.29            lattice_0.20-45          jsonlite_1.8.0          
+[16] evaluate_0.15            lifecycle_1.0.2          tibble_3.1.8            
+[19] logisticsusie_0.0.0.9000 png_0.1-7                pkgconfig_2.0.3         
+[22] rlang_1.0.6              Matrix_1.4-1             dir.expiry_1.2.0        
+[25] cli_3.4.1                rstudioapi_0.13          filelock_1.0.2          
+[28] parallel_4.1.2           yaml_2.3.5               xfun_0.31               
+[31] fastmap_1.1.0            stringr_1.4.0            knitr_1.39              
+[34] tictoc_1.0.1             fs_1.5.2                 vctrs_0.4.1             
+[37] sass_0.4.1               rprojroot_2.0.3          grid_4.1.2              
+[40] here_1.0.1               reticulate_1.26          gseasusie_0.0.0.9000    
+[43] glue_1.6.2               R6_2.5.1                 fansi_1.0.3             
+[46] basilisk_1.6.0           rmarkdown_2.14           purrr_0.3.4             
+[49] magrittr_2.0.3           whisker_0.4              matrixStats_0.62.0      
+[52] promises_1.2.0.1         htmltools_0.5.2          httpuv_1.6.5            
+[55] utf8_1.2.2               stringi_1.7.8           </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
