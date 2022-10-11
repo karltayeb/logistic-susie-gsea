@@ -13,7 +13,7 @@
 
 <meta name="date" content="2022-10-10" />
 
-<title>approximate_bayes_factors</title>
+<title>Approximating Bayes Factors</title>
 
 <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -362,7 +362,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">approximate_bayes_factors</h1>
+<h1 class="title toc-ignore">Approximating Bayes Factors</h1>
 <h4 class="author">Karl Tayeb</h4>
 <h4 class="date">2022-10-10</h4>
 
@@ -524,15 +524,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree68bf2ea160af03b7ee50c14e721a0a66e89a6076targetblank68bf2eaa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree93b6b2c41a8061ce79724b4b843eab388ab01c72targetblank93b6b2ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/68bf2ea160af03b7ee50c14e721a0a66e89a6076" target="_blank">68bf2ea</a>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/93b6b2c41a8061ce79724b4b843eab388ab01c72" target="_blank">93b6b2c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree68bf2ea160af03b7ee50c14e721a0a66e89a6076targetblank68bf2eaa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree93b6b2c41a8061ce79724b4b843eab388ab01c72targetblank93b6b2ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -542,7 +542,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/68bf2ea160af03b7ee50c14e721a0a66e89a6076" target="_blank">68bf2ea</a>.
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/93b6b2c41a8061ce79724b4b843eab388ab01c72" target="_blank">93b6b2c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -699,6 +699,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/93b6b2c41a8061ce79724b4b843eab388ab01c72/analysis/approximate_bayes_factors.Rmd" target="_blank">93b6b2c</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+<td>
+wflow_publish("analysis/approximate_bayes_factors.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/b042d2eef35ca15391dc1658bc0347595f234867/docs/approximate_bayes_factors.html" target="_blank">b042d2e</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/68bf2ea160af03b7ee50c14e721a0a66e89a6076/analysis/approximate_bayes_factors.Rmd" target="_blank">68bf2ea</a>
 </td>
 <td>
@@ -718,14 +752,17 @@ wflow_publish("analysis/approximate_bayes_factors.Rmd")
 </div>
 </div>
 </div>
+<pre class="r"><code>cache_rds &lt;- purrr::partial(xfun::cache_rds, dir=&#39;cache/aproximate_bayes_factors/&#39;)</code></pre>
 <div id="overview" class="section level2">
 <h2>Overview</h2>
 <p>Here we compare several approximate Bayes factor computations</p>
 <ol style="list-style-type: decimal">
 <li>Wakefields ABF</li>
-<li>Exact BF computed by quadrature (fixed intercept)</li>
+<li>Exact BF computed by quadrature (fixed intercept to <span
+class="math inline">\(\hat b_{0, MLE}\)</span>)</li>
 <li>Variational BF– fit a univariate logistic regression with
-polya-gamma VB (also, fixed intercept)</li>
+polya-gamma VB (also, fixed intercept <span class="math inline">\(\hat
+b_{0, MLE}\)</span>)</li>
 <li>Exact BF computed by 2d quadrature (we put a Normal prior on the
 effect and the intercept)</li>
 <li>Reparameterized Exact BF computed by 2d quadrature (put a normal
@@ -734,13 +771,13 @@ prior on the effect and reparameterized “intercept”)</li>
 <p>TLDR: The 1d quadrature and VB show strong agreement. This makes
 sense because the the fixed intercept model is the target VB is
 approximating (and then optimizing over intercept as well).</p>
-<p>Neither BF agrees with the Wakefield BF. And Wakefield doesn’t really
-agree with either of the 2d quadrature approaches. Furthermore the 2d
-quadrature BFs are sensitive to the prior we put on the non-effect
-parameter. This is not surprising for the intercept model, but
-discouraging for the reparameterized model (where we expect the terms
-involving the intercept to approximately cancel out in the BF
-computation).</p>
+<p>Neither 1D quadrature BF of VB BF agree with the Wakefield’s ABF. And
+Wakefield’s ABF doesn’t really agree with either of the 2d quadrature
+approaches. Furthermore the 2d quadrature BFs are sensitive to the prior
+we put on the non-effect parameter. This is not surprising for the
+intercept model, but discouraging for the reparameterized model (where
+we expect the terms involving the intercept to approximately cancel out
+in the BF computation).</p>
 <div id="univariate-vb-updates" class="section level3">
 <h3>Univariate VB updates</h3>
 <pre class="r"><code>sigmoid &lt;- function(x){
@@ -854,6 +891,43 @@ W &lt;- 0.21^2
 f &lt;- function(V){exp(compute_lnabf(z, V, W))}
 plot(f, xlim = c(0, 0.025))</code></pre>
 <p><img src="figure/approximate_bayes_factors.Rmd/recreate_abf_figure-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-recreate_abf_figure-1">
+Past versions of recreate_abf_figure-1.png
+</button>
+</p>
+<div id="fig-recreate_abf_figure-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/b042d2eef35ca15391dc1658bc0347595f234867/docs/figure/approximate_bayes_factors.Rmd/recreate_abf_figure-1.png" target="_blank">b042d2e</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="a-note-on-how-im-computing-the-quadrature"
 class="section level3">
@@ -905,7 +979,7 @@ b0_mle &lt;- coef[1,1]
 evidence &lt;- gseasusie:::compute_evidence_quadrature_fixed_b0(
   as.matrix(x, ncol=1), y, 0, b0=b0_mle, params = list(b_mu=0, b_sigma=1), n=2048)</code></pre>
 <pre><code>computing approximate evidence via quadrature (fixed  b0)...</code></pre>
-<pre><code>2.957 sec elapsed</code></pre>
+<pre><code>2.903 sec elapsed</code></pre>
 <pre class="r"><code># ELBO via VB (FIXED INTERCEPT)
 vb &lt;- fit_univariate_vb(x, y, delta.init=b0_mle, tau0=1, estimate_intercept = F)
 elbo &lt;- tail(vb$elbos, 1)
@@ -933,18 +1007,21 @@ null1 &lt;- conditional_likelihood(x, y, 0, logodds(mean(y)), log = T)
 null2 &lt;- gseasusie:::compute_evidence_quadrature_fixed_b0(
   as.matrix(x, ncol=1), y, 0, b0=b0_mle, params = list(b_mu=0, b_sigma=1e-10), n=2048)</code></pre>
 <pre><code>computing approximate evidence via quadrature (fixed  b0)...</code></pre>
-<pre><code>0.235 sec elapsed</code></pre>
+<pre><code>0.231 sec elapsed</code></pre>
 <pre class="r"><code># null likelihood as the model with negligible prior variance on b, VB
 nullvb &lt;- fit_univariate_vb(
   x, y, delta.init=b0_mle, tau0=1e10, estimate_intercept = F)
 null3 &lt;- tail(nullvb$elbos, 1)
 
-print(null1)</code></pre>
-<pre><code>[1] -689.615</code></pre>
-<pre class="r"><code>print(null2)</code></pre>
-<pre><code>[1] -690.2896</code></pre>
-<pre class="r"><code>print(null3)</code></pre>
-<pre><code>[1] -690.2896</code></pre>
+print(&#39;Three computations of the null model likelihood&#39;)</code></pre>
+<pre><code>[1] &quot;Three computations of the null model likelihood&quot;</code></pre>
+<pre class="r"><code>print(paste(c(&#39;Fixed-intercept MLE:&#39;, null1)))</code></pre>
+<pre><code>[1] &quot;Fixed-intercept MLE:&quot; &quot;-689.615019877552&quot;   </code></pre>
+<pre class="r"><code>print(paste(c(&#39;Fixed-intercept 1d null:&#39;, null2)))</code></pre>
+<pre><code>[1] &quot;Fixed-intercept 1d null:&quot; &quot;-690.28955078125&quot;        </code></pre>
+<pre class="r"><code>print(paste(c(&#39;Fixed-intercept VB null:&#39;, null2)))</code></pre>
+<pre><code>[1] &quot;Fixed-intercept VB null:&quot; &quot;-690.28955078125&quot;        </code></pre>
+<p>The evidence computations agree, so the BFs will also agree…</p>
 <pre class="r"><code>quad1d_bf &lt;- evidence - null2
 vb_bf &lt;- elbo - null2
 print(quad1d_bf)</code></pre>
@@ -954,53 +1031,92 @@ print(quad1d_bf)</code></pre>
 </div>
 <div id="d-quadrature-vs-wakefield-abf" class="section level3">
 <h3>2d quadrature vs Wakefield ABF</h3>
-<p>Evidently there is a pretty big discrpency between the Wakefield ABF
+<p>Evidently there is a pretty big discrepancy between the Wakefield ABF
 and the BFs computed by 2d quadrature (we specify normal priors on both
 <span class="math inline">\(b\)</span> and <span
 class="math inline">\(b_0\)</span>).</p>
-<pre class="r"><code>wakefield &lt;- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
-wakefield</code></pre>
-<pre><code>[1] 74.61162</code></pre>
-<pre class="r"><code># 2d integral
-evidence_h1 &lt;- gseasusie:::compute_evidence_quadrature_2d(
-  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=1), n=1024)</code></pre>
+<p>Here we compute the BF via 2d quadrature. We compute the evidence for
+the null model by computing the 2d quadrature with <span
+class="math inline">\(b \sim N(0, \sigma_^2_b \approx 0)\)</span></p>
+<pre class="r"><code># 2d integral function
+compute_2d_bf &lt;- function(b_sigma, b0_sigma, n=128){
+  evidence_h1 &lt;- gseasusie:::compute_evidence_quadrature_2d(
+  as.matrix(x, ncol=1), y, offset=0,
+  params = list(b_mu=0, b_sigma=b_sigma, b0_mu=0, b0_sigma=b0_sigma), n=n)
+  evidence_h0 &lt;- gseasusie:::compute_evidence_quadrature_2d(
+    as.matrix(x, ncol=1), y, offset=0,
+    params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=b0_sigma), n=n)
+  quad2d_lnbf &lt;- evidence_h1 - evidence_h0
+  return(quad2d_lnbf)
+}
+
+compute_wakefield &lt;- function(b_sigma){
+  compute_lnabf(coef[2, 3], coef[2,2]^2, b_sigma^2)
+}
+
+wakefield &lt;- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+
+
+print(paste(&#39;ln Wakefield ABF: ,&#39;, compute_wakefield(1)))</code></pre>
+<pre><code>[1] &quot;ln Wakefield ABF: , 74.611621134862&quot;</code></pre>
+<pre class="r"><code>print(paste(&#39;ln BF (2d quadrature): ,&#39;, compute_2d_bf(1.0, 1.0, n=1024)))</code></pre>
 <pre><code>computing evidence via quadrature...</code></pre>
-<pre><code>10.18 sec elapsed</code></pre>
-<pre class="r"><code>evidence_h0 &lt;- gseasusie:::compute_evidence_quadrature_2d(
-  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=1), n=1024)</code></pre>
+<pre><code>12.125 sec elapsed</code></pre>
 <pre><code>computing evidence via quadrature...</code></pre>
-<pre><code>3.86 sec elapsed</code></pre>
-<pre class="r"><code>evidence_h1 - evidence_h0</code></pre>
-<pre><code>[1] 102.7316</code></pre>
+<pre><code>4.782 sec elapsed
+[1] &quot;ln BF (2d quadrature): , 102.731628417969&quot;</code></pre>
 </div>
-<div id="the-bf-depends-on-the-prior" class="section level3">
-<h3>The BF depends on the prior</h3>
-<p>Furthermore, our 2d quadrature BF depends very much on the prior
-variance of the intercept! Perhaps this shouldn’t be too surprising
-since the likelihood induce rather strong dependence between the
-estimate of the intercept and the effect.</p>
-<pre class="r"><code># 2d integral
-evidence_h1 &lt;- gseasusie:::compute_evidence_quadrature_2d(
-  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=1), n=1024)</code></pre>
-<pre><code>computing evidence via quadrature...</code></pre>
-<pre><code>4.802 sec elapsed</code></pre>
-<pre class="r"><code>evidence_h0 &lt;- gseasusie:::compute_evidence_quadrature_2d(
-  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=1), n=1024)</code></pre>
-<pre><code>computing evidence via quadrature...</code></pre>
-<pre><code>2.738 sec elapsed</code></pre>
-<pre class="r"><code>evidence_h1 - evidence_h0</code></pre>
-<pre><code>[1] 102.7316</code></pre>
-<pre class="r"><code># 2d integral
-evidence_h1 &lt;- gseasusie:::compute_evidence_quadrature_2d(
-  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1, b0_mu=0, b0_sigma=10), n=1024)</code></pre>
-<pre><code>computing evidence via quadrature...</code></pre>
-<pre><code>2.509 sec elapsed</code></pre>
-<pre class="r"><code>evidence_h0 &lt;- gseasusie:::compute_evidence_quadrature_2d(
-  as.matrix(x, ncol=1), y, offset=0, params = list(b_mu=0, b_sigma=1e-10, b0_mu=0, b0_sigma=10), n=1024)</code></pre>
-<pre><code>computing evidence via quadrature...</code></pre>
-<pre><code>1.647 sec elapsed</code></pre>
-<pre class="r"><code>evidence_h1 - evidence_h0</code></pre>
-<pre><code>[1] 109.3392</code></pre>
+<div id="the-bf-is-sensitive-to-the-prior-over-the-intercept"
+class="section level3">
+<h3>The BF is sensitive to the prior over the intercept</h3>
+<p>First, although there is a big gap between the log ABFs and
+quadrature log BFs, they seem more or less of by a constant when we vary
+the prior variance of the effect.</p>
+<pre class="r"><code>b_sigma_grid &lt;- seq(0.2, 2, by=0.2)
+
+wakefield_b_sigma &lt;- purrr::map_dbl(b_sigma_grid, ~compute_lnabf(coef[2, 3], coef[2,2]^2, .x^2))
+bfs_2d_b_sigma&lt;- cache_rds(
+  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf(.x, 1, n=512)),
+  file=&#39;2d_quad_b_sigma&#39;
+)
+
+par(mfrow=c(1,2))
+
+plot(
+  b_sigma_grid, wakefield_b_sigma,
+  type=&#39;l&#39;,
+  ylim=range(c(wakefield_b_sigma, bfs_2d_b_sigma)),
+  ylab = &#39;logBF&#39;,
+  xlab = &#39;sigma_b&#39;,
+  col=&#39;blue&#39;,
+  main=&#39;Wakefield (blue) vs 2d quad BF (red)&#39;
+)
+lines(b_sigma_grid, bfs_2d_b_sigma, col=&#39;red&#39;)
+
+plot(wakefield_b_sigma, bfs_2d_b_sigma, xlab=&#39;Wakefield&#39;, ylab=&#39;Quad&#39;);
+abline(0, 1, lty=3, col=&#39;red&#39;)</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>In contrast, changing the prior on the intercept does not effect the
+ABF, but it does impact the 2d quadrature BF.</p>
+<pre class="r"><code>b0_sigma_grid &lt;- seq(0.2, 6, by=0.2)
+
+wakefield &lt;- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+bfs_2d_b0_sigma&lt;- cache_rds(
+  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf(1, .x, n=512)),
+  file=&#39;2d_quad_b0_sigma&#39;
+)
+
+plot(
+  b0_sigma_grid, bfs_2d_b0_sigma,
+  type=&#39;l&#39;,
+  ylim=range(c(bfs_2d_b0_sigma, wakefield)),
+  ylab = &#39;logBF&#39;,
+  xlab = &#39;sigma_b0&#39;,
+  col=&#39;red&#39;,
+  main=&#39;Wakefield (Blue) vs 2d quad BF (Red)&#39;
+)
+abline(h=wakefield, col=&#39;blue&#39;)</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="reparameterization" class="section level3">
 <h3>Reparameterization</h3>
@@ -1084,12 +1200,63 @@ quad2d_reparam &lt;- function(x, y, b_mu, b_sigma, beta_mu, beta_sigma, n=128){
   integrand2 &lt;- purrr::map_dbl(q2$nodes, quad_b)
   res &lt;- matrixStats::logSumExp(integrand2 + log(q2$weights))
 }</code></pre>
-</div>
-<div id="reparameterized-2d-quadrature-at-multiple-settings"
-class="section level3">
-<h3>Reparameterized 2d quadrature at multiple settings</h3>
+<pre class="r"><code>compute_2d_bf_reparam &lt;- function(b_sigma, b0_sigma, n=128){
+  tictoc::tic()
+  evidence_reparam &lt;- quad2d_reparam(x, y, 0, b_sigma, 0, b0_sigma, n=n)
+  null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, b0_sigma, n=n)
+  tictoc::toc()
+  return(evidence_reparam - null_reparam)
+}
+
+b_sigma_grid &lt;- seq(0.2, 2, by=0.2)
+wakefield_b_sigma &lt;- purrr::map_dbl(b_sigma_grid, ~compute_lnabf(coef[2, 3], coef[2,2]^2, .x^2))
+bfs_2d_b_sigma&lt;- cache_rds(
+  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf_reparam(.x, 1, n=256)),
+  file=&#39;2d_quad_b_sigma_reparam&#39;
+)
+
+
+par(mfrow=c(1,2))
+plot(
+  b_sigma_grid, wakefield_b_sigma,
+  type=&#39;l&#39;,
+  ylim=range(c(wakefield_b_sigma, bfs_2d_b_sigma)),
+  ylab = &#39;logBF&#39;,
+  xlab = &#39;sigma_b&#39;,
+  col=&#39;blue&#39;)
+lines(b_sigma_grid, bfs_2d_b_sigma, col=&#39;red&#39;)
+plot(wakefield_b_sigma, bfs_2d_b_sigma, xlab=&#39;Wakefield&#39;, ylab=&#39;2d Quad Reparam&#39;);
+abline(0, 1, lty=3, col=&#39;red&#39;)</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Unfortunately, this does not seem to resolve the discrepency with
-Wakefields. What is going on?</p>
+Wakefields. What is going on? The quadrature BF computation is still
+dependent on the prior over the intercept. We don’t have access to <span
+class="math inline">\(I_{01}/I_{00}\)</span> so we approximated it with
+<span class="math inline">\(I_{01}(\hat b, \hat b_0)/I_{00}(\hat b, \hat
+b_0)\)</span>, and the factorization that ABF computation relies on is
+only true asymptotically.</p>
+<p>Also, unlike the intercept parameterization, now the gap between log
+BFs seems to vary as a function of the prior effect variance.</p>
+<pre class="r"><code>b0_sigma_grid &lt;- seq(0.2, 6, by=0.2)
+
+wakefield &lt;- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+bfs_2d_b0_sigma&lt;- cache_rds(
+  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf_reparam(1, .x, n=128)),
+  file=&#39;2d_quad_b0_sigma_reparam&#39;
+)
+
+par(mfrow=c(1,1))
+plot(
+  b0_sigma_grid, bfs_2d_b0_sigma,
+  type=&#39;l&#39;,
+  ylim=range(c(bfs_2d_b0_sigma, wakefield)),
+  ylab = &#39;logBF&#39;,
+  xlab = &#39;sigma_b0&#39;,
+  col=&#39;red&#39;,
+  main=&#39;Wakefield (Blue) vs 2d quad BF (Red)&#39;
+)
+abline(h=wakefield, col=&#39;blue&#39;)</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, .1, n=256)
 null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, .1, n=256)
 evidence_reparam - null_reparam</code></pre>
@@ -1106,6 +1273,10 @@ evidence_reparam - null_reparam</code></pre>
 null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, 20, n=256)
 evidence_reparam - null_reparam</code></pre>
 <pre><code>[1] 122.7274</code></pre>
+</div>
+</div>
+<div id="new-section" class="section level2">
+<h2>New section</h2>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1142,14 +1313,13 @@ loaded via a namespace (and not attached):
 [28] parallel_4.1.2           yaml_2.3.5               xfun_0.31               
 [31] fastmap_1.1.0            stringr_1.4.0            knitr_1.39              
 [34] tictoc_1.0.1             fs_1.5.2                 vctrs_0.4.1             
-[37] sass_0.4.1               rprojroot_2.0.3          grid_4.1.2              
+[37] sass_0.4.1               grid_4.1.2               rprojroot_2.0.3         
 [40] here_1.0.1               reticulate_1.26          gseasusie_0.0.0.9000    
 [43] glue_1.6.2               R6_2.5.1                 fansi_1.0.3             
 [46] basilisk_1.6.0           rmarkdown_2.14           purrr_0.3.4             
 [49] magrittr_2.0.3           whisker_0.4              matrixStats_0.62.0      
 [52] promises_1.2.0.1         htmltools_0.5.2          httpuv_1.6.5            
 [55] utf8_1.2.2               stringi_1.7.8           </code></pre>
-</div>
 </div>
 </div>
 
