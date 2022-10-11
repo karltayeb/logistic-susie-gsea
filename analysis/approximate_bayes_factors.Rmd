@@ -362,16 +362,17 @@ $$
 Below we impliment 2d quadrature for this re-parameterization. We don't get around integrating over two parameters-- but we still hope the $\int p(\hat \beta | \beta)p(\beta)$ will cancel out the numerator and denominator.
 
 ```{r}
-compute_info <- function(x, y){
-  logits <- predict(glm(y ~ x))
+compute_reparam <- function(x, y){
+  glmfit <- glm(y ~ x)
+  logits <- predict(glmfit)
   p1p <- sigmoid(logits) * sigmoid(-logits)
   I00 <- - sum(p1p)
   I01 <- -sum(p1p * x)
-  return(I01/I00)
+  return(I01/I00 * coef(glmfit)[2])
 }
 
-log_joint_reparam <- function(x, y, b, b0, b_mu, b_sigma, beta_mu, beta_sigma, I01I00){
-  beta <- b0 + I01I00 * b
+log_joint_reparam <- function(x, y, b, b0, b_mu, b_sigma, beta_mu, beta_sigma, reparam){
+  beta <- b0 + reparam
   log_joint <- conditional_likelihood(x, y, b, b0, log=T) + 
     dnorm(b, b_mu, b_sigma, log=T) + 
     dnorm(beta, beta_mu, beta_sigma, log=T)
@@ -382,12 +383,12 @@ quad2d_reparam <- function(x, y, b_mu, b_sigma, beta_mu, beta_sigma, n=128){
   q1 <- statmod::gauss.quad.prob(n=n, l=b_mu-10*b_sigma, u = b_mu+10*b_sigma)
   q2 <- statmod::gauss.quad.prob(n=n, l=beta_mu-10*beta_sigma, u = beta_mu+10*beta_sigma)
 
-  I01I00 <- compute_info(x, y)
+  reparam <- compute_reparam(x, y)
   # inner integral over b
   quad_b <- function(b0){
     # for fixed b0, evaluate log_joint at quadrature points
     integrand1 <- purrr::map_dbl(q1$nodes, ~log_joint_reparam(
-      x, y, .x, b0, b_mu, b_sigma, beta_mu, beta_sigma, I01I00))
+      x, y, .x, b0, b_mu, b_sigma, beta_mu, beta_sigma, reparam))
     res <- matrixStats::logSumExp(integrand1 + log(q1$weights))
     return(res)
   }
