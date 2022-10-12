@@ -78,6 +78,19 @@ compute_elbo2 <- function(x, y, mu, tau, xi, delta, tau0){
   return(sum(bound) - kl)
 }
 
+# compute the elbo explicitly
+compute_elbo3 <- function(x, y, mu, tau, xi, delta, tau0){
+  kappa = y - 0.5
+  xb <- (x * mu) + delta
+  xb2 <- x^2 * (mu^2 + 1/tau) + 2*x*mu*delta + delta^2
+  omega <- logisticsusie:::pg_mean(1, xi)
+  
+  elbo <- sum(-log(2) + kappa * xb - 0.5 * xb2 * omega) -
+    logisticsusie:::normal_kl(mu, 1/tau, 0, 1/tau0) -
+    sum(logisticsusie:::pg_kl(1, xi))
+  return(elbo)
+}
+
 .monotone <- logisticsusie:::.monotone
 
 fit_univariate_vb <- function(x, y, delta.init=0, tau0=1, estimate_intercept=T){
@@ -100,7 +113,6 @@ fit_univariate_vb <- function(x, y, delta.init=0, tau0=1, estimate_intercept=T){
     tau <- b$tau
     
     xi <- update_xi(x, y, mu, tau, xi, delta, tau0)
-    
     elbos <- c(elbos, compute_elbo(x, y, mu, tau, xi, delta, tau0))
     
     if(diff(tail(elbos, 2)) < 1e-5){
@@ -248,7 +260,7 @@ Here we compute the BF via 2d quadrature. We compute the evidence for the null m
 
 ```{r}
 # 2d integral function
-compute_2d_bf <- function(b_sigma, b0_sigma, n=128){
+compute_2d_bf <- function(x, y, b_sigma, b0_sigma, n=128){
   evidence_h1 <- gseasusie:::compute_evidence_quadrature_2d(
   as.matrix(x, ncol=1), y, offset=0,
   params = list(b_mu=0, b_sigma=b_sigma, b0_mu=0, b0_sigma=b0_sigma), n=n)
@@ -259,15 +271,12 @@ compute_2d_bf <- function(b_sigma, b0_sigma, n=128){
   return(quad2d_lnbf)
 }
 
-compute_wakefield <- function(b_sigma){
+compute_wakefield <- function(coef, b_sigma){
   compute_lnabf(coef[2, 3], coef[2,2]^2, b_sigma^2)
 }
 
-wakefield <- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
-
-
-print(paste('ln Wakefield ABF: ,', compute_wakefield(1)))
-print(paste('ln BF (2d quadrature): ,', compute_2d_bf(1.0, 1.0, n=1024)))
+print(paste('ln Wakefield ABF: ,', compute_wakefield(coef, 1)))
+print(paste('ln BF (2d quadrature): ,', compute_2d_bf(x, y, 1.0, 1.0, n=1024)))
 ```
 
 ### The BF is sensitive to the prior over the intercept
@@ -277,9 +286,9 @@ First, although there is a big gap between the log ABFs and quadrature log BFs, 
 ```{r}
 b_sigma_grid <- seq(0.2, 2, by=0.2)
 
-wakefield_b_sigma <- purrr::map_dbl(b_sigma_grid, ~compute_lnabf(coef[2, 3], coef[2,2]^2, .x^2))
+wakefield_b_sigma <- purrr::map_dbl(b_sigma_grid, ~compute_wakefield(coef, .x))
 bfs_2d_b_sigma<- cache_rds(
-  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf(.x, 1, n=512)),
+  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf(x, y, .x, 1, n=512)),
   file='2d_quad_b_sigma'
 )
 
@@ -298,7 +307,6 @@ lines(b_sigma_grid, bfs_2d_b_sigma, col='red')
 
 plot(wakefield_b_sigma, bfs_2d_b_sigma, xlab='Wakefield', ylab='Quad');
 abline(0, 1, lty=3, col='red')
-
 ```
 
 
@@ -307,9 +315,9 @@ In contrast, changing the prior on the intercept does not effect the ABF, but it
 ```{r}
 b0_sigma_grid <- seq(0.2, 6, by=0.2)
 
-wakefield <- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+wakefield <- compute_wakefield(coef, 1.)
 bfs_2d_b0_sigma<- cache_rds(
-  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf(1, .x, n=512)),
+  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf(x, y, 1, .x, n=512)),
   file='2d_quad_b0_sigma'
 )
 
@@ -401,7 +409,7 @@ quad2d_reparam <- function(x, y, b_mu, b_sigma, beta_mu, beta_sigma, n=128){
 
 
 ```{r}
-compute_2d_bf_reparam <- function(b_sigma, b0_sigma, n=128){
+compute_2d_bf_reparam <- function(x, y, b_sigma, b0_sigma, n=128){
   tictoc::tic()
   evidence_reparam <- quad2d_reparam(x, y, 0, b_sigma, 0, b0_sigma, n=n)
   null_reparam <- quad2d_reparam(x, y, 0, 1e-10, 0, b0_sigma, n=n)
@@ -410,9 +418,9 @@ compute_2d_bf_reparam <- function(b_sigma, b0_sigma, n=128){
 }
 
 b_sigma_grid <- seq(0.2, 2, by=0.2)
-wakefield_b_sigma <- purrr::map_dbl(b_sigma_grid, ~compute_lnabf(coef[2, 3], coef[2,2]^2, .x^2))
+wakefield_b_sigma <- purrr::map_dbl(b_sigma_grid, ~compute_wakefield(coef, .x))
 bfs_2d_b_sigma<- cache_rds(
-  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf_reparam(.x, 1, n=256)),
+  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf_reparam(x, y, .x, 1, n=256)),
   file='2d_quad_b_sigma_reparam'
 )
 
@@ -439,9 +447,9 @@ Also, unlike the intercept parameterization, now the gap between log BFs seems t
 ```{r}
 b0_sigma_grid <- seq(0.2, 6, by=0.2)
 
-wakefield <- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+wakefield <- compute_wakefield(coef, 1.)
 bfs_2d_b0_sigma<- cache_rds(
-  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf_reparam(1, .x, n=128)),
+  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf_reparam(x, y, 1, .x, n=128)),
   file='2d_quad_b0_sigma_reparam'
 )
 
@@ -465,22 +473,144 @@ evidence_reparam - null_reparam
 ```
 
 ```{r}
-evidence_reparam <- quad2d_reparam(x, y, 0, 1, 0, 1, n=256)
-null_reparam <- quad2d_reparam(x, y, 0, 1e-10, 0, 1, n=256)
-evidence_reparam - null_reparam
+compute_2d_bf_reparam(x, y, 1, 0.1)
+compute_2d_bf_reparam(x, y, 1, 1)
+compute_2d_bf_reparam(x, y, 1, 10)
+compute_2d_bf_reparam(x, y, 1, 20)
+```
+
+### KL Gap Across Hyper-Parameters
+
+An important question is if we can optimize the ELBO over hyper-parameters. In order for that to go well (ie, the results we get are similar to what we would get if we were optimizing the evidence directly) it would be reassuring to know that the gap between the ELBO and the evidence does not change drastically.
+
+It appears that the gap is more sensitive to the intercept (hyper)parameter compared to the prior effect variance (hyper) parameter.
+
+```{r}
+library(tidyverse)
+
+set.seed(1)
+x <- rnorm(1000)
+b0 <- 0
+b1 <- 0.1
+y <- rbinom(length(x), 1, sigmoid(x))
+
+b0_grid <- seq(-3, 3, by=0.2)
+b_sigma_grid<- seq(0.1, 4, by=0.1)
+
+# compute quadrature integration over gaussian
+quad1d_fixed_intercept <- function(x, y, b0, b_mu, b_sigma, n=128){
+  # inner integral over b
+  quad_b <- function(b){
+    res <- conditional_likelihood(x, y, b, delta=b0, log=T)
+    return(res)
+  }
+  
+  # integrate over b0
+  q <- statmod::gauss.quad.prob(n=n, dist = 'normal', mu = b_mu, sigma=b_sigma)
+  integrand <- purrr::map_dbl(q$nodes, quad_b)
+  res <- matrixStats::logSumExp(integrand + log(q$weights))
+  return(res)
+}
+
+# compute quadrature integration over uniform
+quad1d_fixed_intercept2 <- function(x, y, b0, b_mu, b_sigma, n=128, q=NULL){
+  # inner integral over b
+  quad_b <- function(b){
+    res <- conditional_likelihood(x, y, b, b0, log=T) + dnorm(b, b_mu, b_sigma, log=T)
+    return(res)
+  }
+  
+  # integrate over b0
+  q <- statmod::gauss.quad.prob(n=n, l=b_mu-10*b_sigma, u = b_mu+10*b_sigma)
+  integrand <- purrr::map_dbl(q$nodes, quad_b)
+  res <- matrixStats::logSumExp(integrand + log(q$weights)) + log(20*b_sigma)
+  return(res)
+}
+
+
+fit_quad_1d_fixed_int <- function(x, y, b0, b_sigma, n=2^10){
+  tictoc::tic()
+  res <- quad1d_fixed_intercept2(x, y, b0, 0, b_sigma, n=n)
+  tictoc::toc()
+  return(res)
+}
+
+fit_grid <- cache_rds({
+  tidyr::crossing(b0=b0_grid, b_sigma=b_sigma_grid) %>%
+  rowwise() %>%
+  mutate(vb = list(fit_univariate_vb(
+    x, y, delta.init=b0, tau0=1/b_sigma^2, estimate_intercept = F))) %>%
+  mutate(quad1d = fit_quad_1d_fixed_int(x, y, b0, b_sigma, n=2^10))
+},file='fit_grid_1d_v_vb', hash=list(x=x, y=y))
+
+fit_grid <- fit_grid %>% 
+  mutate(elbo = tail(vb$elbos, 1), diff=quad1d-tail(vb$elbos, 1)) 
+
+fit_grid %>% 
+  ggplot(aes(x=b0, y=b_sigma, fill=exp(diff))) + 
+  geom_raster() +
+  scale_fill_gradient2(low='red', mid='white', high='blue', midpoint=1, limits=c(1.0, exp(max(fit_grid$diff))))
+
+fit_grid %>% 
+  filter(abs(b0) < 0.5) %>%
+  ggplot(aes(x=as.numeric(b0), y=as.numeric(b_sigma), z=elbo)) + 
+  geom_raster(aes(fill=elbo)) +
+  scale_fill_gradient(low='darkblue', high='goldenrod2') +
+  geom_contour(color='white')
+
+fit_grid %>% 
+  filter(abs(b0) < 0.5) %>%
+  ggplot(aes(x=as.numeric(b0), y=as.numeric(b_sigma), z=quad1d)) + 
+  geom_raster(aes(fill=quad1d)) +
+  scale_fill_gradient(low='darkblue', high='goldenrod2') +
+  geom_contour(color='white') 
+```
+
+###  Numerical issues with quadrauture
+
+For some values of $\sigma_0$ the 1d quadrature has trouble... 
+
+```{r}
+bigf <- function(x, y, b0, sigma){
+  f1 <- function(b_sigma){
+    vb <- fit_univariate_vb(x, y, delta.init=b0, tau0=1/b_sigma^2, estimate_intercept = F)
+    assertthat::assert_that(vb$monotone)
+    return(tail(vb$elbos, 1))
+  }
+  
+  f2 <- function(b_sigma){fit_quad_1d_fixed_int(x, y, b0, b_sigma, n=2^10)}
+  
+  f3 <- function(b_sigma){f2(b_sigma) - f1(b_sigma)}
+  
+  elbo <- map_dbl(sigma, f1)
+  logpy <- map_dbl(sigma, f2)
+  diffs <- logpy - elbo
+  
+  par(mfrow=c(1,3))
+  plot(sigma, diffs, main='logp(y) - ELBO')
+  points(sigma[diffs < 0], diffs[diffs < 0], col='red')
+  plot(sigma, logpy, main='logp(y)')
+  plot(sigma, elbo, main='ELBO')
+}
+```
+
+
+```{r}
+set.seed(5)
+x <- rnorm(1000)
+b0 <- 0
+b1 <- 1
+y <- rbinom(length(x), 1, sigmoid(x*b1 + b0))
+bigf(x, y, 3, seq(0.01, 0.3, by=0.02))
 ```
 
 ```{r}
-evidence_reparam <- quad2d_reparam(x, y, 0, 1, 0, 10, n=256)
-null_reparam <- quad2d_reparam(x, y, 0, 1e-10, 0, 10, n=256)
-evidence_reparam - null_reparam
-```
-
-```{r}
-evidence_reparam <- quad2d_reparam(x, y, 0, 1, 0, 20, n=256)
-null_reparam <- quad2d_reparam(x, y, 0, 1e-10, 0, 20, n=256)
-evidence_reparam - null_reparam
+set.seed(5)
+x <- rnorm(1000)
+b0 <- 0
+b1 <- 1
+y <- rbinom(length(x), 1, sigmoid(x*b1 + b0))
+bigf(x, y, 3, seq(10, 20, by=0.1))
 ```
 
 
-## New section
