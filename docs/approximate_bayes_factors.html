@@ -524,15 +524,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree93b6b2c41a8061ce79724b4b843eab388ab01c72targetblank93b6b2ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6e926d21a29845d05a6a15e0c345e0631491b278targetblank6e926d2a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/93b6b2c41a8061ce79724b4b843eab388ab01c72" target="_blank">93b6b2c</a>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6e926d21a29845d05a6a15e0c345e0631491b278" target="_blank">6e926d2</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree93b6b2c41a8061ce79724b4b843eab388ab01c72targetblank93b6b2ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree6e926d21a29845d05a6a15e0c345e0631491b278targetblank6e926d2a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -542,7 +542,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/93b6b2c41a8061ce79724b4b843eab388ab01c72" target="_blank">93b6b2c</a>.
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/6e926d21a29845d05a6a15e0c345e0631491b278" target="_blank">6e926d2</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -699,6 +699,57 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6e926d21a29845d05a6a15e0c345e0631491b278/analysis/approximate_bayes_factors.Rmd" target="_blank">6e926d2</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+<td>
+wflow_publish("analysis/approximate_bayes_factors.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/16c7b656f96a065dea8c4a2fc7fb5316b6578ab7/analysis/approximate_bayes_factors.Rmd" target="_blank">16c7b65</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+<td>
+wflow_publish("analysis/approximate_bayes_factors.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/044d58fbf10f6ce6a517be83fb46c1af511f9382/docs/approximate_bayes_factors.html" target="_blank">044d58f</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/93b6b2c41a8061ce79724b4b843eab388ab01c72/analysis/approximate_bayes_factors.Rmd" target="_blank">93b6b2c</a>
 </td>
 <td>
@@ -828,6 +879,19 @@ compute_elbo2 &lt;- function(x, y, mu, tau, xi, delta, tau0){
   return(sum(bound) - kl)
 }
 
+# compute the elbo explicitly
+compute_elbo3 &lt;- function(x, y, mu, tau, xi, delta, tau0){
+  kappa = y - 0.5
+  xb &lt;- (x * mu) + delta
+  xb2 &lt;- x^2 * (mu^2 + 1/tau) + 2*x*mu*delta + delta^2
+  omega &lt;- logisticsusie:::pg_mean(1, xi)
+  
+  elbo &lt;- sum(-log(2) + kappa * xb - 0.5 * xb2 * omega) -
+    logisticsusie:::normal_kl(mu, 1/tau, 0, 1/tau0) -
+    sum(logisticsusie:::pg_kl(1, xi))
+  return(elbo)
+}
+
 .monotone &lt;- logisticsusie:::.monotone
 
 fit_univariate_vb &lt;- function(x, y, delta.init=0, tau0=1, estimate_intercept=T){
@@ -850,7 +914,6 @@ fit_univariate_vb &lt;- function(x, y, delta.init=0, tau0=1, estimate_intercept=
     tau &lt;- b$tau
     
     xi &lt;- update_xi(x, y, mu, tau, xi, delta, tau0)
-    
     elbos &lt;- c(elbos, compute_elbo(x, y, mu, tau, xi, delta, tau0))
     
     if(diff(tail(elbos, 2)) &lt; 1e-5){
@@ -913,6 +976,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/51c381e4dd1ef95480f5ce529e86f7c1b4e12e45/docs/figure/approximate_bayes_factors.Rmd/recreate_abf_figure-1.png" target="_blank">51c381e</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/b042d2eef35ca15391dc1658bc0347595f234867/docs/figure/approximate_bayes_factors.Rmd/recreate_abf_figure-1.png" target="_blank">b042d2e</a>
@@ -979,7 +1053,7 @@ b0_mle &lt;- coef[1,1]
 evidence &lt;- gseasusie:::compute_evidence_quadrature_fixed_b0(
   as.matrix(x, ncol=1), y, 0, b0=b0_mle, params = list(b_mu=0, b_sigma=1), n=2048)</code></pre>
 <pre><code>computing approximate evidence via quadrature (fixed  b0)...</code></pre>
-<pre><code>2.903 sec elapsed</code></pre>
+<pre><code>2.255 sec elapsed</code></pre>
 <pre class="r"><code># ELBO via VB (FIXED INTERCEPT)
 vb &lt;- fit_univariate_vb(x, y, delta.init=b0_mle, tau0=1, estimate_intercept = F)
 elbo &lt;- tail(vb$elbos, 1)
@@ -1007,7 +1081,7 @@ null1 &lt;- conditional_likelihood(x, y, 0, logodds(mean(y)), log = T)
 null2 &lt;- gseasusie:::compute_evidence_quadrature_fixed_b0(
   as.matrix(x, ncol=1), y, 0, b0=b0_mle, params = list(b_mu=0, b_sigma=1e-10), n=2048)</code></pre>
 <pre><code>computing approximate evidence via quadrature (fixed  b0)...</code></pre>
-<pre><code>0.231 sec elapsed</code></pre>
+<pre><code>0.234 sec elapsed</code></pre>
 <pre class="r"><code># null likelihood as the model with negligible prior variance on b, VB
 nullvb &lt;- fit_univariate_vb(
   x, y, delta.init=b0_mle, tau0=1e10, estimate_intercept = F)
@@ -1039,7 +1113,7 @@ class="math inline">\(b_0\)</span>).</p>
 the null model by computing the 2d quadrature with <span
 class="math inline">\(b \sim N(0, \sigma_^2_b \approx 0)\)</span></p>
 <pre class="r"><code># 2d integral function
-compute_2d_bf &lt;- function(b_sigma, b0_sigma, n=128){
+compute_2d_bf &lt;- function(x, y, b_sigma, b0_sigma, n=128){
   evidence_h1 &lt;- gseasusie:::compute_evidence_quadrature_2d(
   as.matrix(x, ncol=1), y, offset=0,
   params = list(b_mu=0, b_sigma=b_sigma, b0_mu=0, b0_sigma=b0_sigma), n=n)
@@ -1050,20 +1124,17 @@ compute_2d_bf &lt;- function(b_sigma, b0_sigma, n=128){
   return(quad2d_lnbf)
 }
 
-compute_wakefield &lt;- function(b_sigma){
+compute_wakefield &lt;- function(coef, b_sigma){
   compute_lnabf(coef[2, 3], coef[2,2]^2, b_sigma^2)
 }
 
-wakefield &lt;- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
-
-
-print(paste(&#39;ln Wakefield ABF: ,&#39;, compute_wakefield(1)))</code></pre>
+print(paste(&#39;ln Wakefield ABF: ,&#39;, compute_wakefield(coef, 1)))</code></pre>
 <pre><code>[1] &quot;ln Wakefield ABF: , 74.611621134862&quot;</code></pre>
-<pre class="r"><code>print(paste(&#39;ln BF (2d quadrature): ,&#39;, compute_2d_bf(1.0, 1.0, n=1024)))</code></pre>
+<pre class="r"><code>print(paste(&#39;ln BF (2d quadrature): ,&#39;, compute_2d_bf(x, y, 1.0, 1.0, n=1024)))</code></pre>
 <pre><code>computing evidence via quadrature...</code></pre>
-<pre><code>12.125 sec elapsed</code></pre>
+<pre><code>20.911 sec elapsed</code></pre>
 <pre><code>computing evidence via quadrature...</code></pre>
-<pre><code>4.782 sec elapsed
+<pre><code>6.102 sec elapsed
 [1] &quot;ln BF (2d quadrature): , 102.731628417969&quot;</code></pre>
 </div>
 <div id="the-bf-is-sensitive-to-the-prior-over-the-intercept"
@@ -1074,9 +1145,9 @@ quadrature log BFs, they seem more or less of by a constant when we vary
 the prior variance of the effect.</p>
 <pre class="r"><code>b_sigma_grid &lt;- seq(0.2, 2, by=0.2)
 
-wakefield_b_sigma &lt;- purrr::map_dbl(b_sigma_grid, ~compute_lnabf(coef[2, 3], coef[2,2]^2, .x^2))
+wakefield_b_sigma &lt;- purrr::map_dbl(b_sigma_grid, ~compute_wakefield(coef, .x))
 bfs_2d_b_sigma&lt;- cache_rds(
-  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf(.x, 1, n=512)),
+  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf(x, y, .x, 1, n=512)),
   file=&#39;2d_quad_b_sigma&#39;
 )
 
@@ -1096,13 +1167,61 @@ lines(b_sigma_grid, bfs_2d_b_sigma, col=&#39;red&#39;)
 plot(wakefield_b_sigma, bfs_2d_b_sigma, xlab=&#39;Wakefield&#39;, ylab=&#39;Quad&#39;);
 abline(0, 1, lty=3, col=&#39;red&#39;)</code></pre>
 <p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/51c381e4dd1ef95480f5ce529e86f7c1b4e12e45/docs/figure/approximate_bayes_factors.Rmd/unnamed-chunk-4-1.png" target="_blank">51c381e</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/044d58fbf10f6ce6a517be83fb46c1af511f9382/docs/figure/approximate_bayes_factors.Rmd/unnamed-chunk-4-1.png" target="_blank">044d58f</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>In contrast, changing the prior on the intercept does not effect the
 ABF, but it does impact the 2d quadrature BF.</p>
 <pre class="r"><code>b0_sigma_grid &lt;- seq(0.2, 6, by=0.2)
 
-wakefield &lt;- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+wakefield &lt;- compute_wakefield(coef, 1.)
 bfs_2d_b0_sigma&lt;- cache_rds(
-  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf(1, .x, n=512)),
+  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf(x, y, 1, .x, n=512)),
   file=&#39;2d_quad_b0_sigma&#39;
 )
 
@@ -1117,6 +1236,54 @@ plot(
 )
 abline(h=wakefield, col=&#39;blue&#39;)</code></pre>
 <p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/51c381e4dd1ef95480f5ce529e86f7c1b4e12e45/docs/figure/approximate_bayes_factors.Rmd/unnamed-chunk-5-1.png" target="_blank">51c381e</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/044d58fbf10f6ce6a517be83fb46c1af511f9382/docs/figure/approximate_bayes_factors.Rmd/unnamed-chunk-5-1.png" target="_blank">044d58f</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="reparameterization" class="section level3">
 <h3>Reparameterization</h3>
@@ -1166,16 +1333,17 @@ p(\hat \theta | \theta =0)}
 don’t get around integrating over two parameters– but we still hope the
 <span class="math inline">\(\int p(\hat \beta | \beta)p(\beta)\)</span>
 will cancel out the numerator and denominator.</p>
-<pre class="r"><code>compute_info &lt;- function(x, y){
-  logits &lt;- predict(glm(y ~ x))
+<pre class="r"><code>compute_reparam &lt;- function(x, y){
+  glmfit &lt;- glm(y ~ x)
+  logits &lt;- predict(glmfit)
   p1p &lt;- sigmoid(logits) * sigmoid(-logits)
   I00 &lt;- - sum(p1p)
   I01 &lt;- -sum(p1p * x)
-  return(I01/I00)
+  return(I01/I00 * coef(glmfit)[2])
 }
 
-log_joint_reparam &lt;- function(x, y, b, b0, b_mu, b_sigma, beta_mu, beta_sigma, I01I00){
-  beta &lt;- b0 + I01I00 * b
+log_joint_reparam &lt;- function(x, y, b, b0, b_mu, b_sigma, beta_mu, beta_sigma, reparam){
+  beta &lt;- b0 + reparam
   log_joint &lt;- conditional_likelihood(x, y, b, b0, log=T) + 
     dnorm(b, b_mu, b_sigma, log=T) + 
     dnorm(beta, beta_mu, beta_sigma, log=T)
@@ -1186,12 +1354,12 @@ quad2d_reparam &lt;- function(x, y, b_mu, b_sigma, beta_mu, beta_sigma, n=128){
   q1 &lt;- statmod::gauss.quad.prob(n=n, l=b_mu-10*b_sigma, u = b_mu+10*b_sigma)
   q2 &lt;- statmod::gauss.quad.prob(n=n, l=beta_mu-10*beta_sigma, u = beta_mu+10*beta_sigma)
 
-  I01I00 &lt;- compute_info(x, y)
+  reparam &lt;- compute_reparam(x, y)
   # inner integral over b
   quad_b &lt;- function(b0){
     # for fixed b0, evaluate log_joint at quadrature points
     integrand1 &lt;- purrr::map_dbl(q1$nodes, ~log_joint_reparam(
-      x, y, .x, b0, b_mu, b_sigma, beta_mu, beta_sigma, I01I00))
+      x, y, .x, b0, b_mu, b_sigma, beta_mu, beta_sigma, reparam))
     res &lt;- matrixStats::logSumExp(integrand1 + log(q1$weights))
     return(res)
   }
@@ -1200,7 +1368,7 @@ quad2d_reparam &lt;- function(x, y, b_mu, b_sigma, beta_mu, beta_sigma, n=128){
   integrand2 &lt;- purrr::map_dbl(q2$nodes, quad_b)
   res &lt;- matrixStats::logSumExp(integrand2 + log(q2$weights))
 }</code></pre>
-<pre class="r"><code>compute_2d_bf_reparam &lt;- function(b_sigma, b0_sigma, n=128){
+<pre class="r"><code>compute_2d_bf_reparam &lt;- function(x, y, b_sigma, b0_sigma, n=128){
   tictoc::tic()
   evidence_reparam &lt;- quad2d_reparam(x, y, 0, b_sigma, 0, b0_sigma, n=n)
   null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, b0_sigma, n=n)
@@ -1209,9 +1377,9 @@ quad2d_reparam &lt;- function(x, y, b_mu, b_sigma, beta_mu, beta_sigma, n=128){
 }
 
 b_sigma_grid &lt;- seq(0.2, 2, by=0.2)
-wakefield_b_sigma &lt;- purrr::map_dbl(b_sigma_grid, ~compute_lnabf(coef[2, 3], coef[2,2]^2, .x^2))
+wakefield_b_sigma &lt;- purrr::map_dbl(b_sigma_grid, ~compute_wakefield(coef, .x))
 bfs_2d_b_sigma&lt;- cache_rds(
-  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf_reparam(.x, 1, n=256)),
+  purrr::map_dbl(b_sigma_grid, ~compute_2d_bf_reparam(x, y, .x, 1, n=256)),
   file=&#39;2d_quad_b_sigma_reparam&#39;
 )
 
@@ -1228,6 +1396,54 @@ lines(b_sigma_grid, bfs_2d_b_sigma, col=&#39;red&#39;)
 plot(wakefield_b_sigma, bfs_2d_b_sigma, xlab=&#39;Wakefield&#39;, ylab=&#39;2d Quad Reparam&#39;);
 abline(0, 1, lty=3, col=&#39;red&#39;)</code></pre>
 <p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/51c381e4dd1ef95480f5ce529e86f7c1b4e12e45/docs/figure/approximate_bayes_factors.Rmd/unnamed-chunk-7-1.png" target="_blank">51c381e</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/044d58fbf10f6ce6a517be83fb46c1af511f9382/docs/figure/approximate_bayes_factors.Rmd/unnamed-chunk-7-1.png" target="_blank">044d58f</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Unfortunately, this does not seem to resolve the discrepency with
 Wakefields. What is going on? The quadrature BF computation is still
 dependent on the prior over the intercept. We don’t have access to <span
@@ -1239,9 +1455,9 @@ only true asymptotically.</p>
 BFs seems to vary as a function of the prior effect variance.</p>
 <pre class="r"><code>b0_sigma_grid &lt;- seq(0.2, 6, by=0.2)
 
-wakefield &lt;- compute_lnabf(coef[2, 3], coef[2,2]^2, 1)
+wakefield &lt;- compute_wakefield(coef, 1.)
 bfs_2d_b0_sigma&lt;- cache_rds(
-  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf_reparam(1, .x, n=128)),
+  purrr::map_dbl(b0_sigma_grid, ~compute_2d_bf_reparam(x, y, 1, .x, n=128)),
   file=&#39;2d_quad_b0_sigma_reparam&#39;
 )
 
@@ -1257,26 +1473,323 @@ plot(
 )
 abline(h=wakefield, col=&#39;blue&#39;)</code></pre>
 <p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/51c381e4dd1ef95480f5ce529e86f7c1b4e12e45/docs/figure/approximate_bayes_factors.Rmd/unnamed-chunk-8-1.png" target="_blank">51c381e</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/044d58fbf10f6ce6a517be83fb46c1af511f9382/docs/figure/approximate_bayes_factors.Rmd/unnamed-chunk-8-1.png" target="_blank">044d58f</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-10-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, .1, n=256)
 null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, .1, n=256)
 evidence_reparam - null_reparam</code></pre>
-<pre><code>[1] 78.47077</code></pre>
-<pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, 1, n=256)
-null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, 1, n=256)
-evidence_reparam - null_reparam</code></pre>
-<pre><code>[1] 79.69248</code></pre>
-<pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, 10, n=256)
-null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, 10, n=256)
-evidence_reparam - null_reparam</code></pre>
-<pre><code>[1] 90.39357</code></pre>
-<pre class="r"><code>evidence_reparam &lt;- quad2d_reparam(x, y, 0, 1, 0, 20, n=256)
-null_reparam &lt;- quad2d_reparam(x, y, 0, 1e-10, 0, 20, n=256)
-evidence_reparam - null_reparam</code></pre>
-<pre><code>[1] 122.7274</code></pre>
+<pre><code>[1] 78.73718</code></pre>
+<pre class="r"><code>compute_2d_bf_reparam(x, y, 1, 0.1)</code></pre>
+<pre><code>2.916 sec elapsed</code></pre>
+<pre><code>[1] 78.74931</code></pre>
+<pre class="r"><code>compute_2d_bf_reparam(x, y, 1, 1)</code></pre>
+<pre><code>2.697 sec elapsed</code></pre>
+<pre><code>[1] 79.10902</code></pre>
+<pre class="r"><code>compute_2d_bf_reparam(x, y, 1, 10)</code></pre>
+<pre><code>3.952 sec elapsed</code></pre>
+<pre><code>[1] 122.6199</code></pre>
+<pre class="r"><code>compute_2d_bf_reparam(x, y, 1, 20)</code></pre>
+<pre><code>3.978 sec elapsed</code></pre>
+<pre><code>[1] 242.4936</code></pre>
 </div>
+<div id="kl-gap-across-hyper-parameters" class="section level3">
+<h3>KL Gap Across Hyper-Parameters</h3>
+<p>An important question is if we can optimize the ELBO over
+hyper-parameters. In order for that to go well (ie, the results we get
+are similar to what we would get if we were optimizing the evidence
+directly) it would be reassuring to know that the gap between the ELBO
+and the evidence does not change drastically.</p>
+<p>It appears that the gap is more sensitive to the intercept
+(hyper)parameter compared to the prior effect variance (hyper)
+parameter.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+✔ tibble  3.1.8      ✔ dplyr   1.0.10
+✔ tidyr   1.2.1      ✔ stringr 1.4.0 
+✔ readr   2.1.2      ✔ forcats 0.5.1 </code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>set.seed(1)
+x &lt;- rnorm(1000)
+b0 &lt;- 0
+b1 &lt;- 0.1
+y &lt;- rbinom(length(x), 1, sigmoid(x))
+
+b0_grid &lt;- seq(-3, 3, by=0.2)
+b_sigma_grid&lt;- seq(0.1, 4, by=0.1)
+
+# compute quadrature integration over gaussian
+quad1d_fixed_intercept &lt;- function(x, y, b0, b_mu, b_sigma, n=128){
+  # inner integral over b
+  quad_b &lt;- function(b){
+    res &lt;- conditional_likelihood(x, y, b, delta=b0, log=T)
+    return(res)
+  }
+  
+  # integrate over b0
+  q &lt;- statmod::gauss.quad.prob(n=n, dist = &#39;normal&#39;, mu = b_mu, sigma=b_sigma)
+  integrand &lt;- purrr::map_dbl(q$nodes, quad_b)
+  res &lt;- matrixStats::logSumExp(integrand + log(q$weights))
+  return(res)
+}
+
+# compute quadrature integration over uniform
+quad1d_fixed_intercept2 &lt;- function(x, y, b0, b_mu, b_sigma, n=128, q=NULL){
+  # inner integral over b
+  quad_b &lt;- function(b){
+    res &lt;- conditional_likelihood(x, y, b, b0, log=T) + dnorm(b, b_mu, b_sigma, log=T)
+    return(res)
+  }
+  
+  # integrate over b0
+  q &lt;- statmod::gauss.quad.prob(n=n, l=b_mu-10*b_sigma, u = b_mu+10*b_sigma)
+  integrand &lt;- purrr::map_dbl(q$nodes, quad_b)
+  res &lt;- matrixStats::logSumExp(integrand + log(q$weights)) + log(20*b_sigma)
+  return(res)
+}
+
+
+fit_quad_1d_fixed_int &lt;- function(x, y, b0, b_sigma, n=2^10){
+  tictoc::tic()
+  res &lt;- quad1d_fixed_intercept2(x, y, b0, 0, b_sigma, n=n)
+  tictoc::toc()
+  return(res)
+}
+
+fit_grid &lt;- cache_rds({
+  tidyr::crossing(b0=b0_grid, b_sigma=b_sigma_grid) %&gt;%
+  rowwise() %&gt;%
+  mutate(vb = list(fit_univariate_vb(
+    x, y, delta.init=b0, tau0=1/b_sigma^2, estimate_intercept = F))) %&gt;%
+  mutate(quad1d = fit_quad_1d_fixed_int(x, y, b0, b_sigma, n=2^10))
+},file=&#39;fit_grid_1d_v_vb&#39;, hash=list(x=x, y=y))
+
+fit_grid &lt;- fit_grid %&gt;% 
+  mutate(elbo = tail(vb$elbos, 1), diff=quad1d-tail(vb$elbos, 1)) 
+
+fit_grid %&gt;% 
+  ggplot(aes(x=b0, y=b_sigma, fill=exp(diff))) + 
+  geom_raster() +
+  scale_fill_gradient2(low=&#39;red&#39;, mid=&#39;white&#39;, high=&#39;blue&#39;, midpoint=1, limits=c(1.0, exp(max(fit_grid$diff))))</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fit_grid %&gt;% 
+  filter(abs(b0) &lt; 0.5) %&gt;%
+  ggplot(aes(x=as.numeric(b0), y=as.numeric(b_sigma), z=elbo)) + 
+  geom_raster(aes(fill=elbo)) +
+  scale_fill_gradient(low=&#39;darkblue&#39;, high=&#39;goldenrod2&#39;) +
+  geom_contour(color=&#39;white&#39;)</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fit_grid %&gt;% 
+  filter(abs(b0) &lt; 0.5) %&gt;%
+  ggplot(aes(x=as.numeric(b0), y=as.numeric(b_sigma), z=quad1d)) + 
+  geom_raster(aes(fill=quad1d)) +
+  scale_fill_gradient(low=&#39;darkblue&#39;, high=&#39;goldenrod2&#39;) +
+  geom_contour(color=&#39;white&#39;) </code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-11-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="new-section" class="section level2">
-<h2>New section</h2>
+<div id="numerical-issues-with-quadrauture" class="section level3">
+<h3>Numerical issues with quadrauture</h3>
+<p>For some values of <span class="math inline">\(\sigma_0\)</span> the
+1d quadrature has trouble…</p>
+<pre class="r"><code>bigf &lt;- function(x, y, b0, sigma){
+  f1 &lt;- function(b_sigma){
+    vb &lt;- fit_univariate_vb(x, y, delta.init=b0, tau0=1/b_sigma^2, estimate_intercept = F)
+    assertthat::assert_that(vb$monotone)
+    return(tail(vb$elbos, 1))
+  }
+  
+  f2 &lt;- function(b_sigma){fit_quad_1d_fixed_int(x, y, b0, b_sigma, n=2^10)}
+  
+  f3 &lt;- function(b_sigma){f2(b_sigma) - f1(b_sigma)}
+  
+  elbo &lt;- map_dbl(sigma, f1)
+  logpy &lt;- map_dbl(sigma, f2)
+  diffs &lt;- logpy - elbo
+  
+  par(mfrow=c(1,3))
+  plot(sigma, diffs, main=&#39;logp(y) - ELBO&#39;)
+  points(sigma[diffs &lt; 0], diffs[diffs &lt; 0], col=&#39;red&#39;)
+  plot(sigma, logpy, main=&#39;logp(y)&#39;)
+  plot(sigma, elbo, main=&#39;ELBO&#39;)
+}</code></pre>
+<pre class="r"><code>set.seed(5)
+x &lt;- rnorm(1000)
+b0 &lt;- 0
+b1 &lt;- 1
+y &lt;- rbinom(length(x), 1, sigmoid(x*b1 + b0))
+bigf(x, y, 3, seq(0.01, 0.3, by=0.02))</code></pre>
+<pre><code>0.107 sec elapsed
+0.102 sec elapsed
+0.097 sec elapsed
+0.096 sec elapsed
+0.115 sec elapsed
+0.138 sec elapsed
+0.098 sec elapsed
+0.097 sec elapsed
+0.095 sec elapsed
+0.103 sec elapsed
+0.096 sec elapsed
+0.162 sec elapsed
+0.096 sec elapsed
+0.101 sec elapsed
+0.103 sec elapsed</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>set.seed(5)
+x &lt;- rnorm(1000)
+b0 &lt;- 0
+b1 &lt;- 1
+y &lt;- rbinom(length(x), 1, sigmoid(x*b1 + b0))
+bigf(x, y, 3, seq(10, 20, by=0.1))</code></pre>
+<pre><code>0.215 sec elapsed
+0.219 sec elapsed
+0.216 sec elapsed
+0.213 sec elapsed
+0.211 sec elapsed
+0.21 sec elapsed
+0.215 sec elapsed
+0.212 sec elapsed
+0.21 sec elapsed
+0.208 sec elapsed
+0.21 sec elapsed
+0.215 sec elapsed
+0.208 sec elapsed
+0.208 sec elapsed
+0.209 sec elapsed
+0.208 sec elapsed
+0.213 sec elapsed
+0.211 sec elapsed
+0.209 sec elapsed
+0.207 sec elapsed
+0.21 sec elapsed
+0.212 sec elapsed
+0.211 sec elapsed
+0.211 sec elapsed
+0.208 sec elapsed
+0.213 sec elapsed
+0.213 sec elapsed
+0.272 sec elapsed
+0.217 sec elapsed
+0.209 sec elapsed
+0.211 sec elapsed
+0.216 sec elapsed
+0.211 sec elapsed
+0.211 sec elapsed
+0.214 sec elapsed
+0.21 sec elapsed
+0.223 sec elapsed
+0.213 sec elapsed
+0.21 sec elapsed
+0.21 sec elapsed
+0.209 sec elapsed
+0.216 sec elapsed
+0.214 sec elapsed
+0.211 sec elapsed
+0.368 sec elapsed
+0.211 sec elapsed
+0.206 sec elapsed
+0.215 sec elapsed
+0.211 sec elapsed
+0.206 sec elapsed
+0.21 sec elapsed
+0.212 sec elapsed
+0.207 sec elapsed
+0.213 sec elapsed
+0.214 sec elapsed
+0.213 sec elapsed
+0.211 sec elapsed
+0.217 sec elapsed
+0.216 sec elapsed
+0.221 sec elapsed
+0.214 sec elapsed
+0.21 sec elapsed
+0.209 sec elapsed
+0.214 sec elapsed
+0.218 sec elapsed
+0.207 sec elapsed
+0.213 sec elapsed
+0.212 sec elapsed
+0.21 sec elapsed
+0.208 sec elapsed
+0.21 sec elapsed
+0.21 sec elapsed
+0.208 sec elapsed
+0.211 sec elapsed
+0.218 sec elapsed
+0.205 sec elapsed
+0.217 sec elapsed
+0.215 sec elapsed
+0.221 sec elapsed
+0.212 sec elapsed
+0.216 sec elapsed
+0.227 sec elapsed
+0.282 sec elapsed
+0.222 sec elapsed
+0.216 sec elapsed
+0.209 sec elapsed
+0.214 sec elapsed
+0.214 sec elapsed
+0.212 sec elapsed
+0.211 sec elapsed
+0.213 sec elapsed
+0.212 sec elapsed
+0.209 sec elapsed
+0.217 sec elapsed
+0.213 sec elapsed
+0.206 sec elapsed
+0.225 sec elapsed
+0.214 sec elapsed
+0.207 sec elapsed
+0.222 sec elapsed
+0.211 sec elapsed</code></pre>
+<p><img src="figure/approximate_bayes_factors.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1300,26 +1813,40 @@ locale:
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+other attached packages:
+[1] forcats_0.5.1   stringr_1.4.0   dplyr_1.0.10    purrr_0.3.4    
+[5] readr_2.1.2     tidyr_1.2.1     tibble_3.1.8    ggplot2_3.3.6  
+[9] tidyverse_1.3.1
+
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.9               highr_0.9                pillar_1.8.1            
- [4] compiler_4.1.2           bslib_0.3.1              later_1.3.0             
- [7] jquerylib_0.1.4          git2r_0.30.1             workflowr_1.7.0         
-[10] basilisk.utils_1.6.0     tools_4.1.2              statmod_1.4.37          
-[13] digest_0.6.29            lattice_0.20-45          jsonlite_1.8.0          
-[16] evaluate_0.15            lifecycle_1.0.2          tibble_3.1.8            
-[19] logisticsusie_0.0.0.9000 png_0.1-7                pkgconfig_2.0.3         
-[22] rlang_1.0.6              Matrix_1.4-1             dir.expiry_1.2.0        
-[25] cli_3.4.1                rstudioapi_0.13          filelock_1.0.2          
-[28] parallel_4.1.2           yaml_2.3.5               xfun_0.31               
-[31] fastmap_1.1.0            stringr_1.4.0            knitr_1.39              
-[34] tictoc_1.0.1             fs_1.5.2                 vctrs_0.4.1             
-[37] sass_0.4.1               grid_4.1.2               rprojroot_2.0.3         
-[40] here_1.0.1               reticulate_1.26          gseasusie_0.0.0.9000    
-[43] glue_1.6.2               R6_2.5.1                 fansi_1.0.3             
-[46] basilisk_1.6.0           rmarkdown_2.14           purrr_0.3.4             
-[49] magrittr_2.0.3           whisker_0.4              matrixStats_0.62.0      
-[52] promises_1.2.0.1         htmltools_0.5.2          httpuv_1.6.5            
-[55] utf8_1.2.2               stringi_1.7.8           </code></pre>
+ [1] matrixStats_0.62.0       fs_1.5.2                 lubridate_1.8.0         
+ [4] filelock_1.0.2           httr_1.4.4               rprojroot_2.0.3         
+ [7] tools_4.1.2              backports_1.4.1          bslib_0.3.1             
+[10] utf8_1.2.2               R6_2.5.1                 DBI_1.1.2               
+[13] colorspace_2.0-3         withr_2.5.0              tidyselect_1.1.2        
+[16] tictoc_1.0.1             compiler_4.1.2           git2r_0.30.1            
+[19] cli_3.4.1                rvest_1.0.2              basilisk.utils_1.6.0    
+[22] xml2_1.3.3               isoband_0.2.5            labeling_0.4.2          
+[25] sass_0.4.1               scales_1.2.1             digest_0.6.29           
+[28] rmarkdown_2.14           basilisk_1.6.0           logisticsusie_0.0.0.9000
+[31] pkgconfig_2.0.3          htmltools_0.5.2          dbplyr_2.2.0            
+[34] fastmap_1.1.0            highr_0.9                rlang_1.0.6             
+[37] readxl_1.4.0             rstudioapi_0.13          jquerylib_0.1.4         
+[40] generics_0.1.3           farver_2.1.1             jsonlite_1.8.0          
+[43] gseasusie_0.0.0.9000     magrittr_2.0.3           Matrix_1.4-1            
+[46] Rcpp_1.0.9               munsell_0.5.0            fansi_1.0.3             
+[49] reticulate_1.26          lifecycle_1.0.2          stringi_1.7.8           
+[52] whisker_0.4              yaml_2.3.5               grid_4.1.2              
+[55] parallel_4.1.2           promises_1.2.0.1         crayon_1.5.2            
+[58] dir.expiry_1.2.0         lattice_0.20-45          haven_2.5.0             
+[61] hms_1.1.2                knitr_1.39               pillar_1.8.1            
+[64] reprex_2.0.1             glue_1.6.2               evaluate_0.15           
+[67] modelr_0.1.8             png_0.1-7                vctrs_0.4.1             
+[70] tzdb_0.3.0               httpuv_1.6.5             cellranger_1.1.0        
+[73] gtable_0.3.1             assertthat_0.2.1         xfun_0.31               
+[76] broom_0.8.0              later_1.3.0              workflowr_1.7.0         
+[79] statmod_1.4.37           ellipsis_0.3.2           here_1.0.1              </code></pre>
+</div>
 </div>
 </div>
 
