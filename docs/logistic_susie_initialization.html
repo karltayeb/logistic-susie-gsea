@@ -526,15 +526,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree228b0b725db62aaa0f35259e59d2ac860bb2f299targetblank228b0b7a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeec873de76f506a1708b2335d5218358cd58be9e0targetblankec873dea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/228b0b725db62aaa0f35259e59d2ac860bb2f299" target="_blank">228b0b7</a>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/ec873de76f506a1708b2335d5218358cd58be9e0" target="_blank">ec873de</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree228b0b725db62aaa0f35259e59d2ac860bb2f299targetblank228b0b7a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreeec873de76f506a1708b2335d5218358cd58be9e0targetblankec873dea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -544,7 +544,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/228b0b725db62aaa0f35259e59d2ac860bb2f299" target="_blank">228b0b7</a>.
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/ec873de76f506a1708b2335d5218358cd58be9e0" target="_blank">ec873de</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -709,6 +709,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/ec873de76f506a1708b2335d5218358cd58be9e0/analysis/logistic_susie_initialization.Rmd" target="_blank">ec873de</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+<td>
+wflow_publish("analysis/logistic_susie_initialization.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/83e284bb84d9e6b882805e4114c5febc094fc662/docs/logistic_susie_initialization.html" target="_blank">83e284b</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/228b0b725db62aaa0f35259e59d2ac860bb2f299/analysis/logistic_susie_initialization.Rmd" target="_blank">228b0b7</a>
 </td>
 <td>
@@ -856,7 +890,7 @@ independent enrichment signals, here we show the correlation among all
 enrichments at a FDR of 5% (BH, Fisher’s exact test).</p>
 <pre class="r"><code>ora &lt;- with(bindata, gseasusie::fit_ora(X, y))</code></pre>
 <pre><code>computing ORA statistics...</code></pre>
-<pre><code>0.628 sec elapsed</code></pre>
+<pre><code>0.6 sec elapsed</code></pre>
 <pre class="r"><code>marginal_idx &lt;- which(p.adjust(ora$pFishersExact, method=&#39;BH&#39;) &lt; 0.05)
 heatmap(cor(as.matrix(bindata$X[, marginal_idx])), scale=&#39;none&#39;, main=&#39;Marginally enriched gene sets, p.BH &lt; 0.05&#39;)</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/marginal-results-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -1790,37 +1824,37 @@ close to zero (i.e. we estimate the null model).</p>
 <pre class="r"><code>tic(&#39;L=10, fixed prior variance&#39;)
 fit.default &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=10, estimate_prior_variance=F)), file=&#39;fit.default&#39;)
 toc()</code></pre>
-<pre><code>L=10, fixed prior variance: 0.644 sec elapsed</code></pre>
+<pre><code>L=10, fixed prior variance: 0.622 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.default)</code></pre>
 <pre><code>[1] -821.4436</code></pre>
 <pre class="r"><code>tic(&#39;L=10, estimate prior variance&#39;)
 fit.default2 &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=10, estimate_prior_variance=T)), file=&#39;fit.default2&#39;)
 toc()</code></pre>
-<pre><code>L=10, estimate prior variance: 0.629 sec elapsed</code></pre>
+<pre><code>L=10, estimate prior variance: 0.57 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.default2)</code></pre>
 <pre><code>[1] -809.7458</code></pre>
 <pre class="r"><code>tic(&#39;L=10, null model&#39;)
 fit.null &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=1e-10, estimate_prior_variance=F)), file=&#39;fit.null&#39;)
 toc()</code></pre>
-<pre><code>L=10, null model: 0.451 sec elapsed</code></pre>
+<pre><code>L=10, null model: 0.48 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.null)</code></pre>
 <pre><code>[1] -809.6773</code></pre>
 <pre class="r"><code>tic(&#39;SER, fixed prior variance&#39;)
 ser.default &lt;- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 10, estimate_prior_variance = F)), file=&#39;ser.default&#39;)
 toc()</code></pre>
-<pre><code>SER, fixed prior variance: 0.426 sec elapsed</code></pre>
+<pre><code>SER, fixed prior variance: 0.395 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(ser.default)</code></pre>
 <pre><code>[1] -810.7019</code></pre>
 <pre class="r"><code>tic(&#39;SER, estimate prior variance&#39;)
 ser.default2 &lt;- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 10, estimate_prior_variance = T)), file=&#39;ser.default2&#39;)
 toc()</code></pre>
-<pre><code>SER, estimate prior variance: 0.236 sec elapsed</code></pre>
+<pre><code>SER, estimate prior variance: 0.222 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(ser.default2)</code></pre>
 <pre><code>[1] -809.697</code></pre>
 <pre class="r"><code>tic(&#39;SER, null model&#39;)
 ser.null &lt;- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 1e-10, estimate_prior_variance = T)), file=&#39;ser.null&#39;)
 toc()</code></pre>
-<pre><code>SER, null model: 0.404 sec elapsed</code></pre>
+<pre><code>SER, null model: 0.393 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(ser.null)</code></pre>
 <pre><code>[1] -809.6773</code></pre>
 <pre class="r"><code>get_all_cs(fit.default)$L1</code></pre>
@@ -2741,7 +2775,7 @@ model.</p>
 <pre class="r"><code>tic(&#39;Fitting VB SER&#39;)
 vb_ser &lt;- cache_rds(with(bindata, fit_vb_ser(scale(X, scale=F), y, prior_variance = 10)), file=&#39;vb_ser&#39;)
 toc()</code></pre>
-<pre><code>Fitting VB SER: 7.98 sec elapsed</code></pre>
+<pre><code>Fitting VB SER: 7.75 sec elapsed</code></pre>
 <pre class="r"><code>vb_cs &lt;- get_cs(vb_ser$PIP)
 vb_cs$cs</code></pre>
 <pre><code> [1]  197  195  193  773  479  200   16  623  772 1303  315  291  288  657  607</code></pre>
@@ -4816,6 +4850,9 @@ fit &lt;- fit_init_xi
 <pre class="r"><code>unlist(fit$sets$cs)</code></pre>
 <pre><code> L2  L3  L4  L5  L6 
 197 193 773 479  16 </code></pre>
+</div>
+<div id="fix-alpha" class="section level4">
+<h4>Fix <span class="math inline">\(\alpha\)</span></h4>
 <p>An alternative approach would be the fix <span
 class="math inline">\(\alpha\)</span></p>
 <pre class="r"><code>fit_init_alpha &lt;- cache_rds({
@@ -4844,6 +4881,11 @@ fit &lt;- fit_init_alpha
 <pre class="r"><code>unlist(fit$sets$cs)</code></pre>
 <pre><code> L1  L3  L4  L5  L7 
 197 193 773 479  16 </code></pre>
+</div>
+<div id="comparing-alpha-initialization-and-xi-initialization"
+class="section level4">
+<h4>Comparing <span class="math inline">\(\alpha\)</span> initialization
+and <span class="math inline">\(\xi\)</span> initialization</h4>
 <p>Whether we initialize with <span class="math inline">\(\xi\)</span>
 or <span class="math inline">\(\alpha\)</span> we get similar solutions
 here. Both improve on the null model, and eliminate redundancy as the
@@ -4982,12 +5024,28 @@ s_i\)</span> is the correspond standard error. 4. Pre-train the model
 optimizing other parameters while holding <span
 class="math inline">\(\xi\)</span> fixed. In a second stage of
 optimization, optimize all parameters.</p>
-<pre class="r"><code>init_xi_glm &lt;- function(X, y, marginal_scores, n_features=10, max_xi=5){
+</div>
+<div id="not-all-good-initializations-beat-the-null-model"
+class="section level3">
+<h3>Not all “good” initializations beat the null model</h3>
+<p>Here we use the “initialize <span class="math inline">\(\xi\)</span>”
+strategy by starting with <span class="math inline">\(\xi\)</span> from
+the unregularized logistic regression fit on <span
+class="math inline">\(M= 1, 3, 5, 10, 20, 50\)</span> variables. We see
+that not all of the final fits beat the null model ELBO. Furthermore,
+the gene sets selected by each initialization do not seems to “escape”
+the initialization– if we initialize with the the top <span
+class="math inline">\(M\)</span> marginal enrichments the resulting fit
+selects a subset of those top <span class="math inline">\(M\)</span>
+enrichment’s.</p>
+<p>So it seems that initializing the model may be as hard as fitting
+it….</p>
+<pre class="r"><code>init_xi_glm &lt;- function(X, y, marginal_scores, n_features=10, max_xi=10){
   top_bf &lt;- order(desc(marginal_scores))[1:n_features]
   glm_fit &lt;- glm(y ~ as.matrix(X[, top_bf]), family = &#39;binomial&#39;)
   pred &lt;- predict(glm_fit, se.fit = T)
   xi &lt;- sqrt(pred$fit^2 + pred$se.fit^2)
-  xi &lt;- pmin(xi, max_xi)
+  xi[xi &gt; 10] &lt;- 10  # truncate
   return(list(
     xi=xi, mu=pred$fit, se=pred$se.fit)
   )
@@ -5003,32 +5061,59 @@ binsusie_fit_xi_init &lt;- function(X, y, marginal_scores, n_features=50, L=10, 
   # warmup 
   fit &lt;- fit.binsusie(
     fit.init, fit_xi = F, fit_prior_variance = F, fast_elbo = F)
-  
   # final fit
   fit &lt;- fit.binsusie(fit, fit_xi = T, fit_prior_variance = T, maxiter = 100, tol = 1e-3) %&gt;% binsusie_wrapup()
   .monotone(fit$elbo)
   print(tail(fit$elbo, 1) - tail(fit.null$elbo, 1))
   return(fit)
 }</code></pre>
-<pre class="r"><code>fit5 &lt;- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=5)), file=&#39;init_xi_top5&#39;)
+<pre class="r"><code>fit1 &lt;- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=1)), file=&#39;init_xi_top1&#39;)
+fit3 &lt;- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=3)), file=&#39;init_xi_top3&#39;)
+fit5 &lt;- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=5)), file=&#39;init_xi_top5&#39;)
 fit10 &lt;- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=10)), file=&#39;init_xi_top10&#39;)
 fit20 &lt;- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=20)), file=&#39;init_xi_top20&#39;)
 fit50 &lt;- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=50)), file=&#39;init_xi_top50&#39;)</code></pre>
+<pre class="r"><code>get_elbo(fit1) - get_elbo(fit.null)</code></pre>
+<pre><code>[1] 1.642994</code></pre>
+<pre class="r"><code>get_elbo(fit3) - get_elbo(fit.null)</code></pre>
+<pre><code>[1] 2.678685</code></pre>
+<pre class="r"><code>get_elbo(fit5) - get_elbo(fit.null)</code></pre>
+<pre><code>[1] 3.896645</code></pre>
+<pre class="r"><code>get_elbo(fit10) - get_elbo(fit.null)</code></pre>
+<pre><code>[1] 2.563226</code></pre>
+<pre class="r"><code>get_elbo(fit20) - get_elbo(fit.null)</code></pre>
+<pre><code>[1] -4.983073</code></pre>
+<pre class="r"><code>get_elbo(fit50) - get_elbo(fit.null)</code></pre>
+<pre><code>[1] -41.91266</code></pre>
+<pre class="r"><code>unlist(fit1$sets$cs)</code></pre>
+<pre><code> L2 
+197 </code></pre>
+<pre class="r"><code>unlist(fit3$sets$cs)</code></pre>
+<pre><code> L2  L3 
+197 193 </code></pre>
 <pre class="r"><code>unlist(fit5$sets$cs)</code></pre>
 <pre><code> L2  L3  L4  L5 
-195 193 479 773 </code></pre>
+197 193 479 773 </code></pre>
 <pre class="r"><code>unlist(fit10$sets$cs)</code></pre>
 <pre><code> L2  L3  L4  L5  L6 
-195  16 773 479 193 </code></pre>
+197  16 773 479 193 </code></pre>
 <pre class="r"><code>unlist(fit20$sets$cs)</code></pre>
 <pre><code> L2  L3  L4  L5  L6  L7  L8 
-195  16 479 773 193 657 108 </code></pre>
+197 860  16 479 773 193 108 </code></pre>
 <pre class="r"><code>unlist(fit50$sets$cs)</code></pre>
-<pre><code> L2  L3  L4  L5  L6  L7 
-197  16 479 193 860 773 </code></pre>
+<pre><code> L1  L2  L3  L4  L5  L6  L7  L9 L10 
+ 16 197 860 332 582 116 779  18  13 </code></pre>
+<pre class="r"><code># rank of BFs
+order(desc(vb_ser$BF)) %&gt;% head(50)</code></pre>
+<pre><code> [1]  197  195  193  773  479  200   16  623  772 1303  315  291  288  657  607
+[16]  108 1180  286 1203  860  116  332  732  184  194  682   10 1181  363 1151
+[31]  126 1050  692   13  469 1282 1053  779   18   91  683  706  681  102  582
+[46] 1054  723  163  829  816</code></pre>
+<div id="some-heatmaps" class="section level4">
+<h4>Some heatmaps</h4>
 <p>All the fits are identifying a subset of the effects with positive
 BFs. Here we plot the correlation of the selected variables with all
-gene sets with positive marginal BF (Ordered by marginal BF
+gene sets with positive marginal BF (ordered by marginal BF
 largest-smallest left-right)</p>
 <pre class="r"><code>n_pos &lt;- sum(vb_ser$BF &gt; 0)
 top_bf &lt;- order(desc(vb_ser$BF)) %&gt;% head(n_pos)
@@ -5207,7 +5292,7 @@ Karl Tayeb
 </div>
 <p>Again, with hierarchical clustering applied to marginally enriched
 gene sets</p>
-<pre class="r"><code>n_pos &lt;- sum(vb_ser$BF &gt; 0)
+<pre class="r"><code>n_pos &lt;- sum(vb_ser$BF &gt; 1)
 top_bf &lt;- order(desc(vb_ser$BF)) %&gt;% head(n_pos)
 
 heatmap(cor(
@@ -5386,6 +5471,7 @@ Karl Tayeb
 <pre><code> [1]  197  195  193  773  479  200   16  623  772 1303  315  291  288  657  607
 [16]  108 1180  286 1203  860</code></pre>
 </div>
+</div>
 <div id="centered-vs-non-centered" class="section level3">
 <h3>Centered vs non-centered</h3>
 <p>The default initialization gives different results when
@@ -5398,11 +5484,11 @@ described with a single effect.</p>
 <pre class="r"><code>tic()
 res &lt;- with(bindata, binsusie(X, y, L=5, center = F))
 toc()</code></pre>
-<pre><code>3.845 sec elapsed</code></pre>
+<pre><code>3.757 sec elapsed</code></pre>
 <pre class="r"><code>tic()
 res_centered &lt;- with(bindata, binsusie(X, y, L=5, center = T))
 toc()</code></pre>
-<pre><code>16.295 sec elapsed</code></pre>
+<pre><code>16.175 sec elapsed</code></pre>
 <pre class="r"><code>res_centered$sets$cs</code></pre>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>get_elbo(res_centered)</code></pre>
@@ -5424,7 +5510,7 @@ get_elbo(res_centered) - get_elbo(fit.null)</code></pre>
 get_elbo(res) - get_elbo(fit.null)</code></pre>
 <pre><code>[1] -21.9369</code></pre>
 <pre class="r"><code>get_elbo(fit50) - get_elbo(fit.null)</code></pre>
-<pre><code>[1] -2.466906</code></pre>
+<pre><code>[1] -41.91266</code></pre>
 <pre class="r"><code>get_elbo(res_centered) - get_elbo(fit.null)</code></pre>
 <pre><code>[1] -0.04834613</code></pre>
 <pre class="r"><code>knitr::knit_exit()</code></pre>
