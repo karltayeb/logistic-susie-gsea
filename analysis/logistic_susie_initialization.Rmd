@@ -300,7 +300,7 @@ res2 <- cache_rds({
     tibble() %>%
     unnest_wider(1)
   }, file='init_xi')
-res2
+res2 %>% kbl() %>% kable_styling()
 ```
 
 
