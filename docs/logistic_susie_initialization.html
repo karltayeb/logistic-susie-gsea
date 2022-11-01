@@ -526,15 +526,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreea6493a8427caa489f8c9c406044c1eefe19979b5targetblanka6493a8a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree228b0b725db62aaa0f35259e59d2ac860bb2f299targetblank228b0b7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/a6493a8427caa489f8c9c406044c1eefe19979b5" target="_blank">a6493a8</a>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/228b0b725db62aaa0f35259e59d2ac860bb2f299" target="_blank">228b0b7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreea6493a8427caa489f8c9c406044c1eefe19979b5targetblanka6493a8a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree228b0b725db62aaa0f35259e59d2ac860bb2f299targetblank228b0b7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -544,7 +544,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/a6493a8427caa489f8c9c406044c1eefe19979b5" target="_blank">a6493a8</a>.
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/228b0b725db62aaa0f35259e59d2ac860bb2f299" target="_blank">228b0b7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -709,6 +709,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/228b0b725db62aaa0f35259e59d2ac860bb2f299/analysis/logistic_susie_initialization.Rmd" target="_blank">228b0b7</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+<td>
+wflow_publish("analysis/logistic_susie_initialization.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/6728f824474066744b11556e451965d441e3a977/docs/logistic_susie_initialization.html" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/a6493a8427caa489f8c9c406044c1eefe19979b5/analysis/logistic_susie_initialization.Rmd" target="_blank">a6493a8</a>
 </td>
 <td>
@@ -822,10 +856,47 @@ independent enrichment signals, here we show the correlation among all
 enrichments at a FDR of 5% (BH, Fisher’s exact test).</p>
 <pre class="r"><code>ora &lt;- with(bindata, gseasusie::fit_ora(X, y))</code></pre>
 <pre><code>computing ORA statistics...</code></pre>
-<pre><code>0.66 sec elapsed</code></pre>
+<pre><code>0.628 sec elapsed</code></pre>
 <pre class="r"><code>marginal_idx &lt;- which(p.adjust(ora$pFishersExact, method=&#39;BH&#39;) &lt; 0.05)
 heatmap(cor(as.matrix(bindata$X[, marginal_idx])), scale=&#39;none&#39;, main=&#39;Marginally enriched gene sets, p.BH &lt; 0.05&#39;)</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/marginal-results-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-marginal-results-1">
+Past versions of marginal-results-1.png
+</button>
+</p>
+<div id="fig-marginal-results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/marginal-results-1.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ora %&gt;% arrange(pFishersExact) %&gt;%
   mutate(nl10p_fishers = -log10(pFishersExact)) %&gt;%
   select(geneSet, geneSetSize, overlap, oddsRatio, nl10p_fishers) %&gt;%
@@ -1719,37 +1790,37 @@ close to zero (i.e. we estimate the null model).</p>
 <pre class="r"><code>tic(&#39;L=10, fixed prior variance&#39;)
 fit.default &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=10, estimate_prior_variance=F)), file=&#39;fit.default&#39;)
 toc()</code></pre>
-<pre><code>L=10, fixed prior variance: 0.635 sec elapsed</code></pre>
+<pre><code>L=10, fixed prior variance: 0.644 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.default)</code></pre>
 <pre><code>[1] -821.4436</code></pre>
 <pre class="r"><code>tic(&#39;L=10, estimate prior variance&#39;)
 fit.default2 &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=10, estimate_prior_variance=T)), file=&#39;fit.default2&#39;)
 toc()</code></pre>
-<pre><code>L=10, estimate prior variance: 0.567 sec elapsed</code></pre>
+<pre><code>L=10, estimate prior variance: 0.629 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.default2)</code></pre>
 <pre><code>[1] -809.7458</code></pre>
 <pre class="r"><code>tic(&#39;L=10, null model&#39;)
 fit.null &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=1e-10, estimate_prior_variance=F)), file=&#39;fit.null&#39;)
 toc()</code></pre>
-<pre><code>L=10, null model: 0.442 sec elapsed</code></pre>
+<pre><code>L=10, null model: 0.451 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.null)</code></pre>
 <pre><code>[1] -809.6773</code></pre>
 <pre class="r"><code>tic(&#39;SER, fixed prior variance&#39;)
 ser.default &lt;- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 10, estimate_prior_variance = F)), file=&#39;ser.default&#39;)
 toc()</code></pre>
-<pre><code>SER, fixed prior variance: 0.441 sec elapsed</code></pre>
+<pre><code>SER, fixed prior variance: 0.426 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(ser.default)</code></pre>
 <pre><code>[1] -810.7019</code></pre>
 <pre class="r"><code>tic(&#39;SER, estimate prior variance&#39;)
 ser.default2 &lt;- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 10, estimate_prior_variance = T)), file=&#39;ser.default2&#39;)
 toc()</code></pre>
-<pre><code>SER, estimate prior variance: 0.24 sec elapsed</code></pre>
+<pre><code>SER, estimate prior variance: 0.236 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(ser.default2)</code></pre>
 <pre><code>[1] -809.697</code></pre>
 <pre class="r"><code>tic(&#39;SER, null model&#39;)
 ser.null &lt;- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 1e-10, estimate_prior_variance = T)), file=&#39;ser.null&#39;)
 toc()</code></pre>
-<pre><code>SER, null model: 0.429 sec elapsed</code></pre>
+<pre><code>SER, null model: 0.404 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(ser.null)</code></pre>
 <pre><code>[1] -809.6773</code></pre>
 <pre class="r"><code>get_all_cs(fit.default)$L1</code></pre>
@@ -2540,6 +2611,43 @@ sort(fit.default$pip, decreasing = T) %&gt;% head(10)</code></pre>
 0.08743512 0.06573662 0.06272065 </code></pre>
 <pre class="r"><code>plot(log10(fit.default$pip), -log10(ora$pFishersExact))</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/unnamed-chunk-2-1.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># prior variances shrunk towards 0
 fit.default2$V</code></pre>
 <pre><code> [1] 0.006038130 0.006042149 0.006042500 0.006042866 0.006043241 0.006043623
@@ -2552,6 +2660,43 @@ sort(ser.default$pip, decreasing = T) %&gt;% head(10)</code></pre>
 0.01197180 0.01163170 0.01158728 </code></pre>
 <pre class="r"><code>plot(log10(ser.default$pip), -log10(ora$pFishersExact))</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/unnamed-chunk-3-1.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># prior variances shrunk towards 0
 ser.default2$V</code></pre>
 <pre><code>[1] 0.0182102</code></pre>
@@ -2596,7 +2741,7 @@ model.</p>
 <pre class="r"><code>tic(&#39;Fitting VB SER&#39;)
 vb_ser &lt;- cache_rds(with(bindata, fit_vb_ser(scale(X, scale=F), y, prior_variance = 10)), file=&#39;vb_ser&#39;)
 toc()</code></pre>
-<pre><code>Fitting VB SER: 9.035 sec elapsed</code></pre>
+<pre><code>Fitting VB SER: 7.98 sec elapsed</code></pre>
 <pre class="r"><code>vb_cs &lt;- get_cs(vb_ser$PIP)
 vb_cs$cs</code></pre>
 <pre><code> [1]  197  195  193  773  479  200   16  623  772 1303  315  291  288  657  607</code></pre>
@@ -2609,6 +2754,43 @@ paste0(length(intersection), &#39;/&#39;, length(marginal_idx), &#39; CS gene se
 <pre class="r"><code>par(mfrow=c(1,1))
 plot(-log10(ora$pFishersExact), log10(vb_ser$PIP), xlab=&#39;-log10(p)&#39;, ylab=&#39;log10(PIP)&#39;)</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/vb-ser-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-vb-ser-1">
+Past versions of vb-ser-1.png
+</button>
+</p>
+<div id="fig-vb-ser-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/vb-ser-1.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># BF
 p &lt;- length(vb_ser$BF)
 pi &lt;- rep(1/p, p)
@@ -2789,7 +2971,7 @@ M5336
 197
 </td>
 <td style="text-align:left;">
-197
+1
 </td>
 <td style="text-align:right;">
 1
@@ -2827,7 +3009,7 @@ M543
 195
 </td>
 <td style="text-align:left;">
-195
+1
 </td>
 <td style="text-align:right;">
 1
@@ -2865,7 +3047,7 @@ M522
 193
 </td>
 <td style="text-align:left;">
-193
+0.9982881
 </td>
 <td style="text-align:right;">
 1
@@ -2903,7 +3085,7 @@ M546
 773
 </td>
 <td style="text-align:left;">
-773
+0.9826287
 </td>
 <td style="text-align:right;">
 1
@@ -2941,7 +3123,7 @@ M706
 479
 </td>
 <td style="text-align:left;">
-479
+0.999916
 </td>
 <td style="text-align:right;">
 1
@@ -2979,7 +3161,7 @@ M19248
 200, 193
 </td>
 <td style="text-align:left;">
-200, 193
+0.6283563, 0.3714260
 </td>
 <td style="text-align:right;">
 2
@@ -3017,7 +3199,7 @@ M5907
 16
 </td>
 <td style="text-align:left;">
-16
+0.9999992
 </td>
 <td style="text-align:right;">
 1
@@ -3055,7 +3237,7 @@ M27662
 623
 </td>
 <td style="text-align:left;">
-623
+1
 </td>
 <td style="text-align:right;">
 1
@@ -3093,7 +3275,7 @@ M27416
 772, 773
 </td>
 <td style="text-align:left;">
-772, 773
+0.5316777, 0.4655514
 </td>
 <td style="text-align:right;">
 2
@@ -3132,8 +3314,10 @@ M27372
 135, 772, 363, 1151, 108, 163
 </td>
 <td style="text-align:left;">
-1303, 193, 200, 773, 607, 291, 288, 1180, 479, 184, 102, 286, 1203, 315,
-135, 772, 363, 1151, 108, 163
+0.8628730494, 0.0442058254, 0.0281384740, 0.0030720639, 0.0018578602,
+0.0016368940, 0.0011239731, 0.0008105519, 0.0007805083, 0.0007311466,
+0.0007123212, 0.0006082831, 0.0006082831, 0.0006014488, 0.0005787949,
+0.0005198464, 0.0003459892, 0.0003459892, 0.0003355605, 0.0002991708
 </td>
 <td style="text-align:right;">
 20
@@ -3171,7 +3355,7 @@ M27303
 315, 772, 773
 </td>
 <td style="text-align:left;">
-315, 772, 773
+0.88566226, 0.04569799, 0.03148757
 </td>
 <td style="text-align:right;">
 3
@@ -3209,7 +3393,8 @@ M27410
 291, 773, 288, 286, 1203, 315, 772
 </td>
 <td style="text-align:left;">
-291, 773, 288, 286, 1203, 315, 772
+0.40934594, 0.25114448, 0.14040056, 0.05422813, 0.05422813, 0.03781524,
+0.01586413
 </td>
 <td style="text-align:right;">
 7
@@ -3247,7 +3432,8 @@ M27412
 773, 288, 291, 315, 286, 1203, 772
 </td>
 <td style="text-align:left;">
-773, 288, 291, 315, 286, 1203, 772
+0.31202649, 0.30611691, 0.19330551, 0.04666607, 0.04383352, 0.04383352,
+0.01883548
 </td>
 <td style="text-align:right;">
 7
@@ -3285,7 +3471,7 @@ M16843
 657
 </td>
 <td style="text-align:left;">
-657
+1
 </td>
 <td style="text-align:right;">
 1
@@ -3390,74 +3576,191 @@ M29844
 840, 107, 265, 327, 566, 709, 1080
 </td>
 <td style="text-align:left;">
-607, 773, 1303, 291, 193, 288, 1180, 479, 200, 102, 286, 1203, 315, 772,
-184, 363, 1151, 108, 78, 163, 829, 469, 296, 396, 1195, 1218, 1181, 91,
-85, 87, 97, 194, 16, 723, 1053, 554, 707, 870, 917, 126, 347, 358, 668,
-810, 980, 84, 470, 896, 1282, 1045, 1215, 978, 662, 468, 1312, 52, 729,
-645, 1039, 83, 461, 1212, 445, 10, 591, 738, 780, 154, 218, 266, 357,
-471, 555, 616, 774, 915, 129, 400, 1044, 691, 86, 899, 1326, 127, 1050,
-89, 156, 186, 309, 331, 405, 622, 703, 788, 795, 801, 1020, 1026, 1321,
-93, 537, 1217, 1294, 979, 615, 253, 256, 572, 1182, 229, 850, 1052, 55,
-80, 105, 111, 172, 217, 310, 406, 408, 413, 502, 592, 769, 781, 782,
-792, 808, 809, 818, 945, 954, 1134, 1270, 189, 135, 834, 306, 455, 117,
-273, 1191, 63, 132, 414, 458, 620, 814, 826, 902, 379, 415, 728, 852,
-970, 973, 1025, 1311, 640, 370, 976, 614, 650, 1139, 60, 433, 491, 570,
-588, 750, 832, 920, 923, 1179, 1210, 1329, 710, 813, 1188, 1288, 75, 90,
-155, 254, 360, 410, 412, 474, 531, 815, 1141, 1209, 1302, 1306, 1327,
-76, 532, 1317, 1223, 708, 881, 59, 77, 82, 124, 174, 182, 235, 274, 295,
-305, 374, 380, 386, 387, 403, 573, 575, 606, 618, 647, 664, 718, 720,
-853, 882, 901, 1055, 1193, 1200, 1235, 1319, 293, 443, 529, 830, 858,
-906, 971, 1064, 1249, 1318, 1324, 277, 981, 930, 279, 732, 982, 278,
-442, 1063, 1216, 268, 372, 701, 697, 62, 103, 137, 162, 168, 180, 191,
-261, 375, 456, 511, 594, 603, 628, 696, 743, 857, 873, 883, 908, 946,
-990, 1051, 1168, 1172, 1185, 1206, 1229, 1241, 1251, 1287, 1293, 833,
-94, 125, 258, 325, 354, 567, 631, 736, 784, 1038, 1147, 1325, 1330, 6,
-92, 735, 816, 100, 104, 134, 202, 227, 271, 299, 336, 419, 510, 542,
-579, 587, 593, 595, 601, 643, 674, 715, 747, 771, 819, 820, 821, 825,
-868, 879, 897, 910, 912, 968, 1061, 1101, 1148, 1176, 1177, 1205, 1221,
-1247, 276, 700, 887, 933, 95, 109, 141, 149, 160, 230, 257, 314, 337,
-365, 418, 475, 478, 482, 494, 495, 505, 597, 619, 665, 733, 734, 787,
-791, 807, 822, 837, 859, 911, 1056, 1057, 1065, 1090, 1158, 1173, 1187,
-1213, 1219, 1245, 1255, 1283, 1301, 1320, 877, 318, 150, 1295, 627,
-1046, 441, 96, 101, 151, 244, 267, 361, 381, 383, 423, 434, 435, 436,
-476, 483, 534, 540, 578, 630, 634, 641, 651, 755, 766, 799, 880, 900,
-919, 921, 950, 955, 1019, 1033, 1058, 1092, 1118, 1165, 1166, 1184,
-1192, 1224, 1238, 1254, 1310, 811, 72, 444, 528, 580, 918, 1208, 1243,
-158, 223, 71, 136, 142, 181, 238, 290, 437, 463, 480, 544, 644, 675,
-789, 800, 842, 854, 928, 1032, 1059, 1107, 1135, 1150, 1156, 1183, 1190,
-1222, 1227, 1274, 1308, 1323, 68, 211, 313, 454, 653, 658, 856, 213,
-225, 239, 255, 260, 352, 378, 453, 487, 649, 669, 686, 751, 793, 798,
-805, 835, 839, 841, 843, 866, 869, 926, 927, 939, 1018, 1067, 1104,
-1244, 176, 234, 294, 581, 632, 737, 57, 65, 99, 242, 303, 489, 524, 571,
-576, 600, 602, 663, 670, 678, 690, 846, 864, 878, 1000, 1060, 1078,
-1113, 1174, 1220, 1246, 1250, 302, 1112, 173, 246, 590, 612, 38, 56, 64,
-133, 153, 245, 287, 344, 345, 420, 430, 431, 530, 548, 625, 656, 689,
-705, 749, 783, 865, 931, 1062, 1073, 1094, 1144, 1163, 1313, 1322, 73,
-170, 609, 617, 558, 114, 130, 969, 1068, 1066, 128, 165, 175, 199, 343,
-346, 376, 377, 428, 448, 496, 523, 699, 760, 828, 964, 965, 1031, 1043,
-1070, 1133, 1178, 1201, 1277, 1278, 929, 446, 549, 746, 1269, 106, 167,
-188, 243, 356, 394, 432, 460, 553, 717, 731, 770, 817, 863, 898, 951,
-1010, 1117, 1152, 1240, 1296, 1328, 621, 1022, 998, 51, 183, 350, 399,
-450, 466, 503, 539, 541, 547, 611, 827, 844, 941, 960, 1041, 1074, 1079,
-1081, 1097, 1100, 1242, 185, 210, 983, 366, 209, 262, 319, 338, 457,
-481, 533, 604, 711, 712, 713, 726, 764, 895, 944, 1021, 1030, 1159,
-1234, 1248, 1268, 195, 777, 113, 119, 236, 283, 328, 411, 543, 636, 672,
-714, 748, 796, 838, 959, 966, 1087, 1171, 1272, 1297, 275, 404, 1047,
-1093, 999, 1252, 221, 263, 304, 316, 397, 637, 695, 884, 1006, 1076,
-488, 197, 212, 385, 913, 1233, 61, 122, 459, 687, 958, 988, 1013, 1014,
-1194, 847, 447, 462, 58, 164, 166, 241, 247, 317, 364, 407, 667, 673,
-744, 849, 1003, 1291, 1298, 1309, 535, 140, 355, 425, 472, 679, 739,
-767, 885, 922, 989, 1072, 292, 493, 20, 143, 368, 14, 147, 177, 340,
-362, 1002, 1012, 1028, 1199, 1226, 79, 741, 861, 934, 947, 1001, 1145,
-1265, 159, 35, 477, 633, 639, 642, 98, 179, 312, 339, 341, 359, 389,
-515, 599, 613, 688, 1204, 1259, 725, 1314, 81, 409, 506, 514, 624, 761,
-903, 949, 1089, 1091, 1131, 1138, 598, 157, 232, 569, 1109, 1275, 311,
-574, 704, 702, 49, 321, 335, 501, 546, 804, 894, 1085, 1088, 1132, 1161,
-1170, 577, 187, 69, 417, 1169, 67, 416, 427, 742, 753, 762, 874, 1128,
-1290, 42, 2, 214, 520, 957, 1279, 138, 464, 556, 557, 995, 1084, 1103,
-1207, 4, 525, 564, 1121, 629, 585, 722, 756, 775, 953, 1164, 1267, 551,
-330, 694, 1027, 1110, 1142, 486, 15, 148, 388, 518, 583, 987, 1011, 759,
-840, 107, 265, 327, 566, 709, 1080
+0.5471121791, 0.0208577399, 0.0171284291, 0.0110659568, 0.0101667490,
+0.0076007986, 0.0054827519, 0.0053165348, 0.0050465500, 0.0048062852,
+0.0041154868, 0.0041154868, 0.0040787070, 0.0035337461, 0.0031848308,
+0.0023392588, 0.0023392588, 0.0022764483, 0.0021323563, 0.0020208424,
+0.0020208424, 0.0017984430, 0.0017075085, 0.0017075085, 0.0017075085,
+0.0017075085, 0.0014611353, 0.0014332378, 0.0014165636, 0.0014165636,
+0.0014165636, 0.0012937412, 0.0012749225, 0.0011755782, 0.0010907055,
+0.0010700099, 0.0010700099, 0.0010700099, 0.0010700099, 0.0010352106,
+0.0010064664, 0.0010057598, 0.0010057598, 0.0010057598, 0.0009148401,
+0.0008517732, 0.0008517732, 0.0008517732, 0.0008496415, 0.0008029459,
+0.0007536688, 0.0007536688, 0.0007354118, 0.0007354118, 0.0007354118,
+0.0007209407, 0.0007209407, 0.0007209407, 0.0007209407, 0.0007045606,
+0.0007045606, 0.0007045606, 0.0007045606, 0.0006889417, 0.0006885286,
+0.0006553655, 0.0006553655, 0.0006553655, 0.0006553655, 0.0006553655,
+0.0006553655, 0.0006553655, 0.0006553655, 0.0006553655, 0.0006553655,
+0.0006553655, 0.0006487628, 0.0006320986, 0.0005944372, 0.0005704239,
+0.0005704239, 0.0005704239, 0.0005704239, 0.0005650018, 0.0005632610,
+0.0005238420, 0.0005238420, 0.0005238420, 0.0005238420, 0.0005238420,
+0.0005238420, 0.0005238420, 0.0005238420, 0.0005238420, 0.0005238420,
+0.0005238420, 0.0005238420, 0.0005238420, 0.0005238420, 0.0005224162,
+0.0005224162, 0.0005224162, 0.0005224162, 0.0005156942, 0.0004852384,
+0.0004780795, 0.0004780795, 0.0004780795, 0.0004780795, 0.0004630957,
+0.0004630957, 0.0004523310, 0.0004498772, 0.0004498772, 0.0004498772,
+0.0004498772, 0.0004498772, 0.0004498772, 0.0004498772, 0.0004498772,
+0.0004498772, 0.0004498772, 0.0004498772, 0.0004498772, 0.0004498772,
+0.0004498772, 0.0004498772, 0.0004498772, 0.0004498772, 0.0004498772,
+0.0004498772, 0.0004498772, 0.0004498772, 0.0004498772, 0.0004498772,
+0.0004479046, 0.0004355545, 0.0004352054, 0.0004233812, 0.0004164519,
+0.0004164519, 0.0004164519, 0.0004157657, 0.0004010009, 0.0004010009,
+0.0004010009, 0.0004010009, 0.0004010009, 0.0004010009, 0.0004010009,
+0.0004010009, 0.0004010009, 0.0004010009, 0.0004010009, 0.0004010009,
+0.0004010009, 0.0004010009, 0.0004010009, 0.0004010009, 0.0003979005,
+0.0003894125, 0.0003894125, 0.0003789467, 0.0003727157, 0.0003727157,
+0.0003708649, 0.0003708649, 0.0003708649, 0.0003708649, 0.0003708649,
+0.0003708649, 0.0003708649, 0.0003708649, 0.0003708649, 0.0003708649,
+0.0003708649, 0.0003708649, 0.0003656854, 0.0003656854, 0.0003656854,
+0.0003656854, 0.0003656854, 0.0003656854, 0.0003656854, 0.0003656854,
+0.0003656854, 0.0003656854, 0.0003656854, 0.0003656854, 0.0003656854,
+0.0003656854, 0.0003656854, 0.0003656854, 0.0003656854, 0.0003656854,
+0.0003656854, 0.0003595744, 0.0003501785, 0.0003501785, 0.0003482162,
+0.0003482162, 0.0003482162, 0.0003386698, 0.0003386698, 0.0003386698,
+0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698,
+0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698,
+0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698,
+0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698,
+0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698, 0.0003386698,
+0.0003386698, 0.0003386698, 0.0003386698, 0.0003369298, 0.0003369298,
+0.0003369298, 0.0003369298, 0.0003369298, 0.0003369298, 0.0003369298,
+0.0003369298, 0.0003369298, 0.0003369298, 0.0003369298, 0.0003332709,
+0.0003332709, 0.0003311789, 0.0003292970, 0.0003291966, 0.0003243539,
+0.0003226296, 0.0003226296, 0.0003226296, 0.0003226296, 0.0003226296,
+0.0003226296, 0.0003226296, 0.0003190482, 0.0003171666, 0.0003171666,
+0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666,
+0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666,
+0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666,
+0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666,
+0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666,
+0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666, 0.0003171666,
+0.0003140831, 0.0003103388, 0.0003103388, 0.0003103388, 0.0003103388,
+0.0003103388, 0.0003103388, 0.0003103388, 0.0003103388, 0.0003103388,
+0.0003103388, 0.0003103388, 0.0003103388, 0.0003103388, 0.0003069669,
+0.0003069669, 0.0003069669, 0.0003033275, 0.0002995433, 0.0002995433,
+0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433,
+0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433,
+0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433,
+0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433,
+0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433,
+0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433,
+0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433, 0.0002995433,
+0.0002995433, 0.0002995433, 0.0002923351, 0.0002889062, 0.0002889062,
+0.0002889062, 0.0002889062, 0.0002889062, 0.0002847721, 0.0002847721,
+0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721,
+0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721,
+0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721,
+0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721,
+0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721,
+0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721,
+0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721,
+0.0002847721, 0.0002847721, 0.0002847721, 0.0002847721, 0.0002845431,
+0.0002838960, 0.0002825746, 0.0002825746, 0.0002758233, 0.0002758233,
+0.0002751267, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695,
+0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695,
+0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695,
+0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695,
+0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695,
+0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695,
+0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695,
+0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695,
+0.0002721695, 0.0002721695, 0.0002721695, 0.0002721695, 0.0002718873,
+0.0002712370, 0.0002712370, 0.0002712370, 0.0002712370, 0.0002712370,
+0.0002712370, 0.0002712370, 0.0002666405, 0.0002613324, 0.0002612611,
+0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611,
+0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611,
+0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611,
+0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611,
+0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611,
+0.0002612611, 0.0002612611, 0.0002612611, 0.0002612611, 0.0002563991,
+0.0002563991, 0.0002563991, 0.0002563991, 0.0002563991, 0.0002563991,
+0.0002563991, 0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059,
+0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059,
+0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059,
+0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059,
+0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059,
+0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059, 0.0002517059,
+0.0002497101, 0.0002488997, 0.0002437467, 0.0002437467, 0.0002437467,
+0.0002437467, 0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516,
+0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516,
+0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516,
+0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516,
+0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516, 0.0002432516,
+0.0002432516, 0.0002432516, 0.0002420530, 0.0002405670, 0.0002405540,
+0.0002405540, 0.0002405540, 0.0002405540, 0.0002357072, 0.0002357072,
+0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072,
+0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072,
+0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072,
+0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072,
+0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072, 0.0002357072,
+0.0002357072, 0.0002357072, 0.0002328176, 0.0002328176, 0.0002328176,
+0.0002328176, 0.0002297550, 0.0002297550, 0.0002297550, 0.0002297550,
+0.0002297550, 0.0002296840, 0.0002289249, 0.0002289249, 0.0002289249,
+0.0002289249, 0.0002289249, 0.0002289249, 0.0002289249, 0.0002289249,
+0.0002289249, 0.0002289249, 0.0002289249, 0.0002289249, 0.0002289249,
+0.0002289249, 0.0002289249, 0.0002289249, 0.0002289249, 0.0002289249,
+0.0002289249, 0.0002289249, 0.0002289249, 0.0002289249, 0.0002289249,
+0.0002289249, 0.0002289249, 0.0002241194, 0.0002232728, 0.0002232728,
+0.0002232728, 0.0002232728, 0.0002227884, 0.0002227884, 0.0002227884,
+0.0002227884, 0.0002227884, 0.0002227884, 0.0002227884, 0.0002227884,
+0.0002227884, 0.0002227884, 0.0002227884, 0.0002227884, 0.0002227884,
+0.0002227884, 0.0002227884, 0.0002227884, 0.0002227884, 0.0002227884,
+0.0002227884, 0.0002227884, 0.0002227884, 0.0002227884, 0.0002201334,
+0.0002201137, 0.0002200818, 0.0002172048, 0.0002172048, 0.0002172048,
+0.0002172048, 0.0002172048, 0.0002172048, 0.0002172048, 0.0002172048,
+0.0002172048, 0.0002172048, 0.0002172048, 0.0002172048, 0.0002172048,
+0.0002172048, 0.0002172048, 0.0002172048, 0.0002172048, 0.0002172048,
+0.0002172048, 0.0002172048, 0.0002172048, 0.0002172048, 0.0002148575,
+0.0002148575, 0.0002148575, 0.0002142387, 0.0002120989, 0.0002120989,
+0.0002120989, 0.0002120989, 0.0002120989, 0.0002120989, 0.0002120989,
+0.0002120989, 0.0002120989, 0.0002120989, 0.0002120989, 0.0002120989,
+0.0002120989, 0.0002120989, 0.0002120989, 0.0002120989, 0.0002120989,
+0.0002120989, 0.0002120989, 0.0002120989, 0.0002120989, 0.0002090807,
+0.0002076239, 0.0002074089, 0.0002074089, 0.0002074089, 0.0002074089,
+0.0002074089, 0.0002074089, 0.0002074089, 0.0002074089, 0.0002074089,
+0.0002074089, 0.0002074089, 0.0002074089, 0.0002074089, 0.0002074089,
+0.0002074089, 0.0002074089, 0.0002074089, 0.0002074089, 0.0002074089,
+0.0002073766, 0.0002073766, 0.0002073766, 0.0002073766, 0.0002044346,
+0.0002039684, 0.0002030838, 0.0002030838, 0.0002030838, 0.0002030838,
+0.0002030838, 0.0002030838, 0.0002030838, 0.0002030838, 0.0002030838,
+0.0002030838, 0.0002009814, 0.0002007827, 0.0002006782, 0.0002006782,
+0.0002006782, 0.0001997915, 0.0001990808, 0.0001990808, 0.0001990808,
+0.0001990808, 0.0001990808, 0.0001990808, 0.0001990808, 0.0001990808,
+0.0001990808, 0.0001975598, 0.0001967022, 0.0001967022, 0.0001953638,
+0.0001953638, 0.0001953638, 0.0001953638, 0.0001953638, 0.0001953638,
+0.0001953638, 0.0001953638, 0.0001953638, 0.0001953638, 0.0001953638,
+0.0001953638, 0.0001953638, 0.0001953638, 0.0001953638, 0.0001953638,
+0.0001946419, 0.0001919022, 0.0001919022, 0.0001919022, 0.0001919022,
+0.0001919022, 0.0001919022, 0.0001919022, 0.0001919022, 0.0001919022,
+0.0001919022, 0.0001919022, 0.0001911018, 0.0001911018, 0.0001891715,
+0.0001891715, 0.0001891715, 0.0001888985, 0.0001886697, 0.0001886697,
+0.0001886697, 0.0001886697, 0.0001886697, 0.0001886697, 0.0001886697,
+0.0001886697, 0.0001886697, 0.0001856436, 0.0001856436, 0.0001856436,
+0.0001856436, 0.0001856436, 0.0001856436, 0.0001856436, 0.0001856436,
+0.0001855281, 0.0001855176, 0.0001841885, 0.0001841885, 0.0001841885,
+0.0001830727, 0.0001828044, 0.0001828044, 0.0001828044, 0.0001828044,
+0.0001828044, 0.0001828044, 0.0001828044, 0.0001828044, 0.0001828044,
+0.0001828044, 0.0001828044, 0.0001828044, 0.0001828044, 0.0001804227,
+0.0001804227, 0.0001801349, 0.0001801349, 0.0001801349, 0.0001801349,
+0.0001801349, 0.0001801349, 0.0001801349, 0.0001801349, 0.0001801349,
+0.0001801349, 0.0001801349, 0.0001801349, 0.0001799414, 0.0001796289,
+0.0001796289, 0.0001796289, 0.0001796289, 0.0001796289, 0.0001793881,
+0.0001790974, 0.0001790974, 0.0001790974, 0.0001776200, 0.0001776200,
+0.0001776200, 0.0001776200, 0.0001776200, 0.0001776200, 0.0001776200,
+0.0001776200, 0.0001776200, 0.0001776200, 0.0001776200, 0.0001776200,
+0.0001775603, 0.0001757550, 0.0001754395, 0.0001754395, 0.0001754395,
+0.0001752467, 0.0001752467, 0.0001752467, 0.0001752467, 0.0001752467,
+0.0001752467, 0.0001752467, 0.0001752467, 0.0001752467, 0.0001749014,
+0.0001732371, 0.0001730031, 0.0001730031, 0.0001730031, 0.0001730031,
+0.0001730031, 0.0001730031, 0.0001730031, 0.0001730031, 0.0001730031,
+0.0001730031, 0.0001730031, 0.0001730031, 0.0001715758, 0.0001715758,
+0.0001715758, 0.0001715758, 0.0001709303, 0.0001708790, 0.0001708790,
+0.0001708790, 0.0001708790, 0.0001708790, 0.0001708790, 0.0001708790,
+0.0001693525, 0.0001688650, 0.0001688650, 0.0001688650, 0.0001688650,
+0.0001688650, 0.0001680003, 0.0001679749, 0.0001669528, 0.0001669528,
+0.0001669528, 0.0001669528, 0.0001669528, 0.0001669528, 0.0001658325,
+0.0001654081, 0.0001651351, 0.0001651351, 0.0001651351, 0.0001651351,
+0.0001651351, 0.0001651351
 </td>
 <td style="text-align:right;">
 922
@@ -3503,44 +3806,975 @@ res2 &lt;- cache_rds({
     tibble() %&gt;%
     unnest_wider(1)
   }, file=&#39;init_xi&#39;)
-res2</code></pre>
-<pre><code># A tibble: 15 × 12
-   geneSet elbo_ser logSER_BF logVB_BF fixed_v…¹     V init_…² cs    prob   size
-   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;lis&gt; &lt;lis&gt; &lt;dbl&gt;
- 1 M5336      -808.    1.52       8.70    1.52   8.25      197 &lt;int&gt; &lt;int&gt;     1
- 2 M543       -808.    1.46       8.59    1.47   5.65      195 &lt;int&gt; &lt;int&gt;     1
- 3 M522       -808.    1.46       8.44    1.46   3.40      193 &lt;int&gt; &lt;int&gt;     1
- 4 M546       -809.    0.560      7.64    0.561  5.06      773 &lt;int&gt; &lt;int&gt;     1
- 5 M706       -810.   -0.268      6.71   -0.268  3.39      479 &lt;int&gt; &lt;int&gt;     1
- 6 M19248     -810.    0.0323     6.25    0.0329 3.29      200 &lt;int&gt; &lt;int&gt;     2
- 7 M5907      -811.   -1.15       5.60   -1.15   1.83       16 &lt;int&gt; &lt;int&gt;     1
- 8 M27662     -811.   -1.73       5.44   -1.73   7.95      623 &lt;int&gt; &lt;int&gt;     1
- 9 M27416     -810.   -0.451      5.34   -0.450  4.10      772 &lt;int&gt; &lt;int&gt;     2
-10 M27372     -812.   -2.02       4.94   -2.02   7.25     1303 &lt;int&gt; &lt;int&gt;    20
-11 M27303     -812.   -2.25       4.64   -2.25   4.41      315 &lt;int&gt; &lt;int&gt;     3
-12 M27410     -811.   -1.37       4.54   -1.37   5.66      291 &lt;int&gt; &lt;int&gt;     7
-13 M27412     -811.   -1.28       4.19   -1.28   5.33      288 &lt;int&gt; &lt;int&gt;     7
-14 M16843     -813.   -2.87       4.01   -2.87   2.50      657 &lt;int&gt; &lt;int&gt;     1
-15 M29844     -810.   -0.120      3.91   -0.120  0.140     607 &lt;int&gt; &lt;int&gt;  1220
-# … with 2 more variables: requested_coverage &lt;dbl&gt;, coverage &lt;dbl&gt;, and
-#   abbreviated variable names ¹​fixed_vs_default, ²​init_idx</code></pre>
+res2 %&gt;% kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+geneSet
+</th>
+<th style="text-align:right;">
+elbo_ser
+</th>
+<th style="text-align:right;">
+logSER_BF
+</th>
+<th style="text-align:right;">
+logVB_BF
+</th>
+<th style="text-align:right;">
+fixed_vs_default
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+init_idx
+</th>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+M5336
+</td>
+<td style="text-align:right;">
+-808.1524
+</td>
+<td style="text-align:right;">
+1.5242698
+</td>
+<td style="text-align:right;">
+8.698585
+</td>
+<td style="text-align:right;">
+1.5248717
+</td>
+<td style="text-align:right;">
+8.250031
+</td>
+<td style="text-align:right;">
+197
+</td>
+<td style="text-align:left;">
+197
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M543
+</td>
+<td style="text-align:right;">
+-808.2122
+</td>
+<td style="text-align:right;">
+1.4645172
+</td>
+<td style="text-align:right;">
+8.585738
+</td>
+<td style="text-align:right;">
+1.4651191
+</td>
+<td style="text-align:right;">
+5.652790
+</td>
+<td style="text-align:right;">
+195
+</td>
+<td style="text-align:left;">
+195
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M522
+</td>
+<td style="text-align:right;">
+-808.2171
+</td>
+<td style="text-align:right;">
+1.4595911
+</td>
+<td style="text-align:right;">
+8.440480
+</td>
+<td style="text-align:right;">
+1.4601930
+</td>
+<td style="text-align:right;">
+3.395216
+</td>
+<td style="text-align:right;">
+193
+</td>
+<td style="text-align:left;">
+193
+</td>
+<td style="text-align:left;">
+0.9982881
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9982881
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M546
+</td>
+<td style="text-align:right;">
+-809.1167
+</td>
+<td style="text-align:right;">
+0.5599362
+</td>
+<td style="text-align:right;">
+7.640785
+</td>
+<td style="text-align:right;">
+0.5605380
+</td>
+<td style="text-align:right;">
+5.058362
+</td>
+<td style="text-align:right;">
+773
+</td>
+<td style="text-align:left;">
+773
+</td>
+<td style="text-align:left;">
+0.9826287
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9826287
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M706
+</td>
+<td style="text-align:right;">
+-809.9450
+</td>
+<td style="text-align:right;">
+-0.2683158
+</td>
+<td style="text-align:right;">
+6.713318
+</td>
+<td style="text-align:right;">
+-0.2677140
+</td>
+<td style="text-align:right;">
+3.386309
+</td>
+<td style="text-align:right;">
+479
+</td>
+<td style="text-align:left;">
+479
+</td>
+<td style="text-align:left;">
+0.999916
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9999160
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M19248
+</td>
+<td style="text-align:right;">
+-809.6444
+</td>
+<td style="text-align:right;">
+0.0322777
+</td>
+<td style="text-align:right;">
+6.249154
+</td>
+<td style="text-align:right;">
+0.0328795
+</td>
+<td style="text-align:right;">
+3.289431
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:left;">
+200, 193
+</td>
+<td style="text-align:left;">
+0.6283563, 0.3714260
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9997823
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M5907
+</td>
+<td style="text-align:right;">
+-810.8280
+</td>
+<td style="text-align:right;">
+-1.1513031
+</td>
+<td style="text-align:right;">
+5.600775
+</td>
+<td style="text-align:right;">
+-1.1507013
+</td>
+<td style="text-align:right;">
+1.831678
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:left;">
+16
+</td>
+<td style="text-align:left;">
+0.9999992
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9999992
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M27662
+</td>
+<td style="text-align:right;">
+-811.4091
+</td>
+<td style="text-align:right;">
+-1.7323941
+</td>
+<td style="text-align:right;">
+5.442284
+</td>
+<td style="text-align:right;">
+-1.7317923
+</td>
+<td style="text-align:right;">
+7.946663
+</td>
+<td style="text-align:right;">
+623
+</td>
+<td style="text-align:left;">
+623
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M27416
+</td>
+<td style="text-align:right;">
+-810.1278
+</td>
+<td style="text-align:right;">
+-0.4511010
+</td>
+<td style="text-align:right;">
+5.335552
+</td>
+<td style="text-align:right;">
+-0.4504991
+</td>
+<td style="text-align:right;">
+4.101309
+</td>
+<td style="text-align:right;">
+772
+</td>
+<td style="text-align:left;">
+772, 773
+</td>
+<td style="text-align:left;">
+0.5316777, 0.4655514
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9972290
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M27372
+</td>
+<td style="text-align:right;">
+-811.6946
+</td>
+<td style="text-align:right;">
+-2.0179157
+</td>
+<td style="text-align:right;">
+4.941574
+</td>
+<td style="text-align:right;">
+-2.0173138
+</td>
+<td style="text-align:right;">
+7.254981
+</td>
+<td style="text-align:right;">
+1303
+</td>
+<td style="text-align:left;">
+1303, 193, 200, 773, 607, 291, 288, 1180, 479, 184, 102, 286, 1203, 315,
+135, 772, 363, 1151, 108, 163
+</td>
+<td style="text-align:left;">
+0.8628730510, 0.0442058250, 0.0281384738, 0.0030720639, 0.0018578602,
+0.0016368939, 0.0011239730, 0.0008105519, 0.0007805082, 0.0007311466,
+0.0007123211, 0.0006082831, 0.0006082831, 0.0006014488, 0.0005787949,
+0.0005198464, 0.0003459892, 0.0003459892, 0.0003355605, 0.0002991708
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9501860
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M27303
+</td>
+<td style="text-align:right;">
+-811.9281
+</td>
+<td style="text-align:right;">
+-2.2513812
+</td>
+<td style="text-align:right;">
+4.640866
+</td>
+<td style="text-align:right;">
+-2.2507793
+</td>
+<td style="text-align:right;">
+4.413287
+</td>
+<td style="text-align:right;">
+315
+</td>
+<td style="text-align:left;">
+315, 772, 773
+</td>
+<td style="text-align:left;">
+0.88566226, 0.04569799, 0.03148757
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9628478
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M27410
+</td>
+<td style="text-align:right;">
+-811.0432
+</td>
+<td style="text-align:right;">
+-1.3664919
+</td>
+<td style="text-align:right;">
+4.544674
+</td>
+<td style="text-align:right;">
+-1.3658900
+</td>
+<td style="text-align:right;">
+5.658792
+</td>
+<td style="text-align:right;">
+291
+</td>
+<td style="text-align:left;">
+291, 773, 288, 286, 1203, 315, 772
+</td>
+<td style="text-align:left;">
+0.40934594, 0.25114448, 0.14040056, 0.05422813, 0.05422813, 0.03781524,
+0.01586413
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9630266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M27412
+</td>
+<td style="text-align:right;">
+-810.9566
+</td>
+<td style="text-align:right;">
+-1.2799203
+</td>
+<td style="text-align:right;">
+4.187583
+</td>
+<td style="text-align:right;">
+-1.2793184
+</td>
+<td style="text-align:right;">
+5.332034
+</td>
+<td style="text-align:right;">
+288
+</td>
+<td style="text-align:left;">
+773, 288, 291, 315, 286, 1203, 772
+</td>
+<td style="text-align:left;">
+0.31202649, 0.30611691, 0.19330551, 0.04666607, 0.04383352, 0.04383352,
+0.01883548
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9646175
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M16843
+</td>
+<td style="text-align:right;">
+-812.5463
+</td>
+<td style="text-align:right;">
+-2.8696250
+</td>
+<td style="text-align:right;">
+4.005102
+</td>
+<td style="text-align:right;">
+-2.8690232
+</td>
+<td style="text-align:right;">
+2.504960
+</td>
+<td style="text-align:right;">
+657
+</td>
+<td style="text-align:left;">
+657
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M29844
+</td>
+<td style="text-align:right;">
+-809.7969
+</td>
+<td style="text-align:right;">
+-0.1201766
+</td>
+<td style="text-align:right;">
+3.913984
+</td>
+<td style="text-align:right;">
+-0.1195748
+</td>
+<td style="text-align:right;">
+0.140420
+</td>
+<td style="text-align:right;">
+607
+</td>
+<td style="text-align:left;">
+193, 773, 479, 200, 16, 772, 315, 108, 1303, 291, 288, 1180, 10, 1203,
+286, 194, 1050, 126, 607, 732, 1282, 1181, 1053, 184, 363, 1151, 127,
+816, 469, 91, 591, 723, 135, 195, 468, 1312, 662, 197, 1052, 697, 129,
+318, 829, 163, 978, 1215, 85, 87, 78, 97, 554, 870, 707, 917, 470, 84,
+896, 532, 1317, 834, 445, 83, 461, 1212, 302, 930, 400, 1045, 833, 102,
+1139, 650, 93, 1217, 1294, 537, 1195, 396, 296, 1218, 306, 850, 1044,
+229, 810, 358, 668, 234, 455, 117, 980, 273, 811, 347, 729, 1039, 645,
+52, 929, 92, 735, 6, 614, 86, 1326, 899, 691, 615, 780, 471, 154, 738,
+616, 357, 266, 555, 218, 915, 774, 1223, 708, 881, 1182, 256, 253, 572,
+1020, 331, 1026, 309, 156, 788, 622, 801, 703, 795, 1321, 405, 89, 186,
+441, 982, 979, 1191, 1063, 442, 1216, 370, 701, 976, 268, 278, 372, 413,
+406, 408, 1134, 818, 945, 55, 310, 809, 1270, 792, 111, 769, 781, 782,
+105, 592, 172, 954, 502, 808, 217, 80, 814, 902, 415, 852, 132, 1025,
+63, 620, 728, 1311, 379, 458, 973, 414, 970, 826, 588, 491, 189, 832,
+60, 1210, 433, 1329, 570, 1179, 750, 920, 923, 14, 1233, 815, 710, 410,
+412, 1327, 75, 155, 1209, 813, 1288, 1188, 254, 1302, 531, 474, 1306,
+1141, 360, 90, 443, 858, 830, 971, 1324, 1249, 640, 293, 1318, 529, 906,
+1064, 176, 277, 150, 1295, 981, 387, 1200, 82, 1319, 374, 1235, 77, 274,
+1193, 720, 901, 664, 573, 575, 853, 882, 305, 124, 182, 606, 59, 1055,
+295, 386, 235, 647, 718, 174, 618, 403, 380, 15, 159, 94, 125, 76, 784,
+1325, 1038, 258, 1330, 354, 325, 736, 567, 631, 1147, 1252, 594, 1241,
+191, 137, 62, 1206, 990, 375, 180, 883, 1168, 168, 1229, 628, 103, 1185,
+1287, 857, 696, 261, 456, 162, 603, 873, 743, 1172, 511, 946, 1251, 908,
+1051, 1293, 158, 912, 593, 1221, 1247, 104, 601, 715, 1061, 868, 897,
+747, 271, 100, 419, 1205, 968, 879, 1101, 510, 910, 299, 1176, 1177,
+579, 202, 595, 134, 587, 1148, 643, 542, 674, 227, 825, 336, 820, 819,
+821, 771, 623, 95, 109, 279, 700, 887, 933, 734, 337, 807, 1245, 1219,
+482, 791, 1255, 1283, 1056, 230, 1158, 1057, 505, 494, 619, 859, 149,
+733, 597, 257, 911, 475, 141, 1301, 1173, 365, 1090, 160, 478, 665, 314,
+1187, 418, 822, 1320, 787, 495, 1213, 837, 1065, 276, 777, 72, 444, 580,
+528, 1243, 1208, 918, 1165, 755, 483, 540, 630, 1254, 1058, 383, 244,
+921, 435, 1033, 434, 950, 423, 436, 381, 955, 919, 151, 1238, 634, 1224,
+766, 1092, 267, 651, 880, 1184, 578, 1310, 361, 476, 1166, 96, 101, 641,
+1118, 900, 534, 1192, 1019, 799, 998, 612, 246, 590, 1046, 928, 136,
+1107, 544, 71, 842, 1308, 627, 1032, 1156, 1135, 1274, 437, 1059, 463,
+854, 238, 1150, 181, 1227, 789, 1323, 142, 800, 1190, 675, 1183, 480,
+644, 290, 1222, 173, 454, 856, 653, 313, 877, 658, 68, 211, 2, 488, 866,
+843, 793, 239, 686, 378, 1244, 751, 352, 841, 869, 255, 1067, 1104, 939,
+487, 805, 225, 649, 213, 669, 835, 927, 926, 798, 260, 839, 1018, 453,
+223, 969, 1068, 130, 581, 114, 558, 294, 737, 632, 663, 1220, 600, 670,
+489, 846, 57, 65, 99, 1060, 1000, 1246, 690, 242, 1078, 678, 303, 864,
+1174, 571, 878, 1113, 576, 1250, 524, 602, 625, 530, 64, 865, 1144, 56,
+245, 1163, 749, 153, 1073, 133, 431, 689, 1322, 430, 344, 38, 345, 548,
+656, 1094, 1313, 783, 420, 287, 705, 931, 1062, 170, 73, 617, 609, 999,
+621, 1277, 1278, 828, 448, 428, 965, 1201, 175, 376, 760, 377, 1043,
+1070, 964, 1031, 346, 128, 343, 165, 1133, 496, 1178, 523, 699, 199,
+446, 1112, 549, 1269, 746, 394, 951, 898, 243, 817, 717, 1010, 460, 863,
+1328, 432, 167, 1240, 1296, 770, 1152, 356, 106, 1117, 731, 188, 553,
+577, 847, 611, 539, 827, 844, 350, 541, 1041, 450, 1242, 960, 1079, 503,
+183, 1097, 547, 941, 1074, 1081, 399, 51, 1100, 466, 1066, 983, 185,
+210, 338, 533, 712, 711, 713, 209, 481, 1268, 1021, 1159, 1234, 1248,
+944, 1030, 319, 262, 895, 457, 764, 726, 604, 366, 119, 796, 411, 1087,
+714, 404, 966, 275, 636, 748, 1047, 1093, 1022, 543, 328, 959, 283,
+1297, 672, 1171, 1272, 236, 838, 113, 263, 1076, 1006, 316, 637, 304,
+884, 695, 221, 397, 447, 462, 385, 212, 913, 459, 122, 958, 1194, 61,
+1013, 1014, 311, 988, 687, 849, 166, 58, 667, 1003, 317, 744, 241, 164,
+247, 364, 1298, 407, 1309, 1291, 673, 535, 922, 739, 1072, 355, 679,
+140, 425, 472, 767, 885, 989, 598, 657, 1199, 362, 368, 340, 1226, 20,
+143, 1012, 147, 1002, 1028, 551, 177, 947, 1001, 741, 861, 1265, 1145,
+934, 79, 42, 639, 493, 633, 477, 292, 389, 1204, 98, 688, 339, 613, 515,
+1259, 179, 599, 359, 312, 341, 3, 704, 574, 702, 903, 761, 506, 1138,
+81, 409, 1091, 1089, 949, 1131, 514, 624, 232, 569, 157, 1275, 35, 1109,
+1161, 335, 1170, 1088, 321, 894, 501, 1085, 804, 1132, 49, 660, 546,
+762, 1290, 427, 67, 742, 416, 753, 1128, 874, 1169, 725, 1314, 69, 417,
+556, 1279, 557, 957, 520, 1207, 1084, 138, 464, 995, 214, 1103, 759,
+1164, 756, 953, 642, 775, 722, 585, 1267, 187, 4, 564, 1121, 525, 330,
+1110, 694, 1027, 1142, 518, 148, 486, 1011, 388, 320, 583, 987, 840,
+265, 327, 709, 439, 1080, 107, 1196, 566, 348, 1285, 907, 785, 716, 608,
+1077, 512, 860, 112, 1160, 390, 519, 1005, 806, 1162, 249, 70, 752, 765,
+116, 1316, 421, 984, 526, 745, 1257, 1260, 635, 1236, 527, 845, 1149,
+1157, 326, 763, 429, 1004, 1075, 565, 1186, 1264, 1300, 1258, 956, 332,
+889, 259, 1140, 281, 610, 500, 1048, 972, 550, 886, 996, 504, 424, 1154,
+757, 682, 1108, 369, 74, 629, 1049, 422, 909, 831, 1124, 282, 1023,
+1116, 300, 297, 1083, 384, 1225, 1237, 171, 139, 693, 914, 997, 862,
+1146, 812, 206, 1040, 1202, 192, 943, 802, 1189, 671, 43, 507, 803, 855,
+272, 1007, 285, 1256, 33, 349, 1029, 498, 289, 730, 322, 1016, 1017,
+924, 1086, 1106, 280, 449, 251, 1276, 986, 351, 54, 993, 231, 758, 823,
+145, 1042, 13, 942, 940, 692, 220, 391, 938, 786, 1214, 509, 754, 1015,
+240, 778, 991, 120, 538, 1009, 779, 233, 1155, 18, 205, 264, 110, 1082,
+1253, 706, 683, 497, 401, 904, 681, 1054, 916, 1299, 1228, 1271, 905,
+342, 248, 161, 216, 392, 371, 353, 28, 888, 936, 298, 1286, 952, 121,
+684, 1167, 334, 582, 499, 467, 545, 521, 1119, 1305, 1284, 962, 559,
+563, 66, 1263, 1035, 596, 228, 440, 661, 1034, 1153, 740, 1198, 1127,
+1262, 680, 1281, 1261, 1175, 963, 333, 562, 932, 948, 685, 768, 586,
+237, 329, 794, 517, 552, 961, 1069, 34, 1024, 890, 219, 490, 146, 992,
+1071, 985, 426, 605, 1098, 252, 438, 568, 719, 144, 452, 198, 1239, 301,
+676, 44, 655, 484, 937, 26, 836, 1136, 201, 875, 465, 24, 402, 1143,
+776, 222, 1280, 1137, 994, 367, 824, 50, 925, 196, 8, 473, 1102, 1125,
+790, 589, 53, 9, 1111, 485, 118, 492, 1036, 727, 115, 382, 560, 39, 721
+</td>
+<td style="text-align:left;">
+0.0104718540, 0.0062440278, 0.0056312665, 0.0048189673, 0.0038862446,
+0.0035273293, 0.0025409901, 0.0021505560, 0.0019073504, 0.0018328053,
+0.0017634827, 0.0016915381, 0.0016856830, 0.0016384394, 0.0016369968,
+0.0015915199, 0.0015617598, 0.0014814689, 0.0013988687, 0.0013964365,
+0.0013955718, 0.0013842312, 0.0013046467, 0.0012731482, 0.0012349980,
+0.0012347427, 0.0012238874, 0.0012046053, 0.0012021499, 0.0011732983,
+0.0011687532, 0.0011408554, 0.0011151608, 0.0011103042, 0.0010572814,
+0.0010569839, 0.0010553526, 0.0010480540, 0.0010403377, 0.0010366274,
+0.0010326003, 0.0010298206, 0.0010248703, 0.0010245140, 0.0010092423,
+0.0010086015, 0.0010020281, 0.0010019857, 0.0010011932, 0.0010011753,
+0.0009803942, 0.0009803880, 0.0009794859, 0.0009791358, 0.0009597279,
+0.0009596182, 0.0009587422, 0.0009562915, 0.0009555916, 0.0009460442,
+0.0009402196, 0.0009402147, 0.0009398612, 0.0009392671, 0.0009388453,
+0.0009380972, 0.0009268913, 0.0009210915, 0.0009187769, 0.0009131431,
+0.0009097103, 0.0009096571, 0.0009043504, 0.0009042360, 0.0009035251,
+0.0009033792, 0.0008972491, 0.0008972484, 0.0008972454, 0.0008972307,
+0.0008922529, 0.0008875731, 0.0008870818, 0.0008868403, 0.0008822428,
+0.0008822246, 0.0008822239, 0.0008797572, 0.0008719981, 0.0008712411,
+0.0008711613, 0.0008711458, 0.0008694572, 0.0008680740, 0.0008680390,
+0.0008680049, 0.0008679723, 0.0008679718, 0.0008657225, 0.0008620713,
+0.0008606630, 0.0008606325, 0.0008563554, 0.0008547369, 0.0008545091,
+0.0008544943, 0.0008544763, 0.0008448199, 0.0008447250, 0.0008447248,
+0.0008447240, 0.0008447238, 0.0008447236, 0.0008447230, 0.0008447228,
+0.0008447216, 0.0008447173, 0.0008447088, 0.0008447067, 0.0008445548,
+0.0008421287, 0.0008419761, 0.0008418945, 0.0008418243, 0.0008416965,
+0.0008416602, 0.0008355732, 0.0008355721, 0.0008355716, 0.0008355694,
+0.0008355683, 0.0008355677, 0.0008355675, 0.0008355674, 0.0008355652,
+0.0008355651, 0.0008355639, 0.0008355583, 0.0008355468, 0.0008355397,
+0.0008330042, 0.0008318386, 0.0008295682, 0.0008295586, 0.0008292355,
+0.0008292287, 0.0008290882, 0.0008288297, 0.0008287590, 0.0008284470,
+0.0008283666, 0.0008283125, 0.0008277452, 0.0008268496, 0.0008268483,
+0.0008268483, 0.0008268351, 0.0008268314, 0.0008268312, 0.0008268312,
+0.0008268300, 0.0008268298, 0.0008268298, 0.0008268284, 0.0008268281,
+0.0008268258, 0.0008268247, 0.0008268247, 0.0008268245, 0.0008268229,
+0.0008268212, 0.0008268196, 0.0008268168, 0.0008268167, 0.0008268165,
+0.0008267814, 0.0008185065, 0.0008184982, 0.0008184911, 0.0008184909,
+0.0008184856, 0.0008184855, 0.0008184828, 0.0008184812, 0.0008184766,
+0.0008184746, 0.0008184710, 0.0008184699, 0.0008184676, 0.0008184580,
+0.0008184564, 0.0008184444, 0.0008183031, 0.0008181511, 0.0008181438,
+0.0008180463, 0.0008180289, 0.0008180276, 0.0008180252, 0.0008180168,
+0.0008180096, 0.0008179789, 0.0008179725, 0.0008179160, 0.0008178762,
+0.0008128281, 0.0008115858, 0.0008105268, 0.0008105231, 0.0008105223,
+0.0008105223, 0.0008105032, 0.0008105016, 0.0008105013, 0.0008104990,
+0.0008104971, 0.0008104958, 0.0008104920, 0.0008104894, 0.0008104880,
+0.0008104871, 0.0008104855, 0.0008104817, 0.0008104779, 0.0008104746,
+0.0008104373, 0.0008072736, 0.0008072689, 0.0008070961, 0.0008070245,
+0.0008070187, 0.0008069966, 0.0008069959, 0.0008069682, 0.0008069521,
+0.0008069501, 0.0008069138, 0.0008069088, 0.0008057278, 0.0008035678,
+0.0008035380, 0.0008035080, 0.0008034565, 0.0008029221, 0.0008029008,
+0.0008028869, 0.0008028772, 0.0008028766, 0.0008028705, 0.0008028640,
+0.0008028629, 0.0008028595, 0.0008028593, 0.0008028592, 0.0008028580,
+0.0008028571, 0.0008028571, 0.0008028558, 0.0008028556, 0.0008028531,
+0.0008028521, 0.0008028510, 0.0008028476, 0.0008028462, 0.0008028462,
+0.0008028460, 0.0008028459, 0.0008028457, 0.0008028445, 0.0008028388,
+0.0008028323, 0.0008028140, 0.0008027759, 0.0008027733, 0.0008018190,
+0.0008001974, 0.0007967716, 0.0007966672, 0.0007965767, 0.0007965730,
+0.0007965163, 0.0007965107, 0.0007965089, 0.0007964992, 0.0007964938,
+0.0007964630, 0.0007964540, 0.0007964175, 0.0007963903, 0.0007963484,
+0.0007958720, 0.0007957428, 0.0007956070, 0.0007955861, 0.0007955794,
+0.0007955610, 0.0007955529, 0.0007955517, 0.0007955516, 0.0007955481,
+0.0007955436, 0.0007955426, 0.0007955392, 0.0007955389, 0.0007955378,
+0.0007955364, 0.0007955348, 0.0007955323, 0.0007955315, 0.0007955308,
+0.0007955298, 0.0007955265, 0.0007955255, 0.0007955252, 0.0007955240,
+0.0007955236, 0.0007955231, 0.0007955193, 0.0007955160, 0.0007954923,
+0.0007954875, 0.0007954746, 0.0007954419, 0.0007914988, 0.0007887789,
+0.0007887554, 0.0007887423, 0.0007887412, 0.0007887391, 0.0007887323,
+0.0007887301, 0.0007885715, 0.0007885715, 0.0007885464, 0.0007885451,
+0.0007885410, 0.0007885399, 0.0007885366, 0.0007885297, 0.0007885239,
+0.0007885238, 0.0007885210, 0.0007885209, 0.0007885207, 0.0007885196,
+0.0007885177, 0.0007885157, 0.0007885152, 0.0007885136, 0.0007885072,
+0.0007885057, 0.0007885042, 0.0007885017, 0.0007885007, 0.0007884953,
+0.0007884898, 0.0007884857, 0.0007884692, 0.0007884680, 0.0007884675,
+0.0007884656, 0.0007884579, 0.0007883695, 0.0007872609, 0.0007867361,
+0.0007867110, 0.0007866919, 0.0007865987, 0.0007864408, 0.0007863781,
+0.0007820349, 0.0007820319, 0.0007820303, 0.0007820265, 0.0007820157,
+0.0007820001, 0.0007819675, 0.0007819027, 0.0007818952, 0.0007818653,
+0.0007818604, 0.0007818589, 0.0007818572, 0.0007818549, 0.0007818496,
+0.0007818446, 0.0007818417, 0.0007818291, 0.0007818264, 0.0007818114,
+0.0007818103, 0.0007818071, 0.0007817982, 0.0007817968, 0.0007817965,
+0.0007817908, 0.0007817904, 0.0007817811, 0.0007817779, 0.0007817776,
+0.0007817774, 0.0007817710, 0.0007817644, 0.0007817486, 0.0007817387,
+0.0007817285, 0.0007817003, 0.0007816952, 0.0007816839, 0.0007816414,
+0.0007814751, 0.0007805391, 0.0007777828, 0.0007771072, 0.0007770619,
+0.0007768575, 0.0007768510, 0.0007768100, 0.0007766594, 0.0007766055,
+0.0007755637, 0.0007755530, 0.0007755474, 0.0007754648, 0.0007754541,
+0.0007754325, 0.0007754147, 0.0007754103, 0.0007754040, 0.0007753984,
+0.0007753945, 0.0007753936, 0.0007753924, 0.0007753898, 0.0007753871,
+0.0007753839, 0.0007753823, 0.0007753781, 0.0007753741, 0.0007753616,
+0.0007753566, 0.0007753471, 0.0007753443, 0.0007753377, 0.0007753372,
+0.0007753345, 0.0007753326, 0.0007753304, 0.0007753288, 0.0007753262,
+0.0007753252, 0.0007753235, 0.0007753208, 0.0007753196, 0.0007753150,
+0.0007753138, 0.0007753128, 0.0007752869, 0.0007752711, 0.0007752450,
+0.0007752450, 0.0007751838, 0.0007751729, 0.0007709894, 0.0007702980,
+0.0007699042, 0.0007695625, 0.0007694715, 0.0007693721, 0.0007693713,
+0.0007693578, 0.0007693545, 0.0007693516, 0.0007692511, 0.0007692221,
+0.0007692054, 0.0007692040, 0.0007692005, 0.0007691986, 0.0007691971,
+0.0007691963, 0.0007691890, 0.0007691827, 0.0007691775, 0.0007691609,
+0.0007691531, 0.0007691521, 0.0007691519, 0.0007691351, 0.0007691340,
+0.0007691337, 0.0007691319, 0.0007691266, 0.0007691249, 0.0007691239,
+0.0007691151, 0.0007691049, 0.0007690576, 0.0007690516, 0.0007688860,
+0.0007679910, 0.0007677824, 0.0007677341, 0.0007677260, 0.0007677220,
+0.0007676929, 0.0007676536, 0.0007676144, 0.0007673732, 0.0007655041,
+0.0007633971, 0.0007633941, 0.0007633849, 0.0007632838, 0.0007632683,
+0.0007632516, 0.0007632332, 0.0007632325, 0.0007632250, 0.0007632126,
+0.0007632083, 0.0007632059, 0.0007632001, 0.0007631910, 0.0007631882,
+0.0007631837, 0.0007631796, 0.0007631777, 0.0007631758, 0.0007631699,
+0.0007631459, 0.0007631252, 0.0007631230, 0.0007631045, 0.0007630994,
+0.0007630921, 0.0007630780, 0.0007629880, 0.0007629772, 0.0007595499,
+0.0007593129, 0.0007591608, 0.0007590902, 0.0007590733, 0.0007590529,
+0.0007589951, 0.0007589668, 0.0007589618, 0.0007589084, 0.0007577854,
+0.0007577651, 0.0007577199, 0.0007576438, 0.0007575656, 0.0007575596,
+0.0007575535, 0.0007575487, 0.0007575283, 0.0007575078, 0.0007575077,
+0.0007575054, 0.0007574739, 0.0007574628, 0.0007574567, 0.0007574538,
+0.0007574493, 0.0007574457, 0.0007574408, 0.0007574396, 0.0007574374,
+0.0007574010, 0.0007573845, 0.0007573685, 0.0007573550, 0.0007571261,
+0.0007522768, 0.0007522616, 0.0007522116, 0.0007521823, 0.0007521809,
+0.0007521379, 0.0007521303, 0.0007520486, 0.0007519947, 0.0007519945,
+0.0007519945, 0.0007519762, 0.0007519743, 0.0007519715, 0.0007519637,
+0.0007519492, 0.0007519344, 0.0007519309, 0.0007519223, 0.0007519194,
+0.0007519009, 0.0007518962, 0.0007518905, 0.0007518863, 0.0007518836,
+0.0007518353, 0.0007518314, 0.0007517599, 0.0007517068, 0.0007506680,
+0.0007506360, 0.0007505752, 0.0007505227, 0.0007495194, 0.0007492681,
+0.0007471198, 0.0007471148, 0.0007469002, 0.0007468113, 0.0007467635,
+0.0007467433, 0.0007467422, 0.0007467419, 0.0007467262, 0.0007467139,
+0.0007466947, 0.0007466863, 0.0007466793, 0.0007466495, 0.0007466425,
+0.0007466278, 0.0007466251, 0.0007466240, 0.0007466206, 0.0007466151,
+0.0007465913, 0.0007465829, 0.0007465314, 0.0007463924, 0.0007456054,
+0.0007427037, 0.0007426325, 0.0007425408, 0.0007425133, 0.0007423987,
+0.0007418911, 0.0007418667, 0.0007417872, 0.0007417871, 0.0007417806,
+0.0007417608, 0.0007416678, 0.0007416164, 0.0007416041, 0.0007415860,
+0.0007415681, 0.0007415635, 0.0007415632, 0.0007415529, 0.0007414989,
+0.0007414893, 0.0007414759, 0.0007414564, 0.0007414506, 0.0007414075,
+0.0007414064, 0.0007413846, 0.0007408820, 0.0007383110, 0.0007369571,
+0.0007368999, 0.0007368844, 0.0007368662, 0.0007368389, 0.0007368305,
+0.0007367990, 0.0007367696, 0.0007367586, 0.0007367567, 0.0007366102,
+0.0007365943, 0.0007365867, 0.0007365767, 0.0007365541, 0.0007365440,
+0.0007365342, 0.0007365229, 0.0007364979, 0.0007364792, 0.0007364546,
+0.0007364347, 0.0007349189, 0.0007348773, 0.0007348510, 0.0007348507,
+0.0007321936, 0.0007321631, 0.0007321588, 0.0007321561, 0.0007321453,
+0.0007321232, 0.0007320682, 0.0007319768, 0.0007319632, 0.0007319374,
+0.0007319014, 0.0007318718, 0.0007318711, 0.0007318699, 0.0007318536,
+0.0007318501, 0.0007318166, 0.0007318014, 0.0007317877, 0.0007317288,
+0.0007314513, 0.0007294290, 0.0007278049, 0.0007276654, 0.0007276443,
+0.0007276443, 0.0007275877, 0.0007275824, 0.0007275578, 0.0007275409,
+0.0007275194, 0.0007275129, 0.0007274857, 0.0007274706, 0.0007274661,
+0.0007274632, 0.0007274470, 0.0007274394, 0.0007273189, 0.0007272681,
+0.0007272534, 0.0007272435, 0.0007272167, 0.0007271637, 0.0007270865,
+0.0007269447, 0.0007231392, 0.0007231372, 0.0007231167, 0.0007230818,
+0.0007229897, 0.0007229883, 0.0007228951, 0.0007228893, 0.0007228241,
+0.0007228076, 0.0007222668, 0.0007220493, 0.0007203635, 0.0007203585,
+0.0007203178, 0.0007192783, 0.0007191400, 0.0007190154, 0.0007189300,
+0.0007188410, 0.0007187470, 0.0007187458, 0.0007186211, 0.0007185936,
+0.0007184433, 0.0007149946, 0.0007148647, 0.0007148499, 0.0007147808,
+0.0007147486, 0.0007146542, 0.0007145825, 0.0007145547, 0.0007145531,
+0.0007145168, 0.0007144888, 0.0007144793, 0.0007144387, 0.0007144093,
+0.0007144091, 0.0007143847, 0.0007134513, 0.0007111702, 0.0007108140,
+0.0007108038, 0.0007107728, 0.0007106993, 0.0007105455, 0.0007105102,
+0.0007104614, 0.0007104561, 0.0007104545, 0.0007103212, 0.0007098078,
+0.0007090613, 0.0007071292, 0.0007070564, 0.0007070519, 0.0007070198,
+0.0007070178, 0.0007070115, 0.0007069629, 0.0007068163, 0.0007067865,
+0.0007067155, 0.0007066719, 0.0007066014, 0.0007066001, 0.0007032766,
+0.0007032738, 0.0007031377, 0.0007030689, 0.0007030613, 0.0007030370,
+0.0007030187, 0.0007029835, 0.0007016760, 0.0007008329, 0.0007007963,
+0.0007007586, 0.0007007125, 0.0007006956, 0.0007000875, 0.0007000786,
+0.0006999647, 0.0006998486, 0.0006997840, 0.0006997638, 0.0006997415,
+0.0006994820, 0.0006993803, 0.0006992812, 0.0006991528, 0.0006991250,
+0.0006990501, 0.0006988017, 0.0006980711, 0.0006977114, 0.0006973964,
+0.0006966697, 0.0006966339, 0.0006963382, 0.0006963277, 0.0006963007,
+0.0006962903, 0.0006962441, 0.0006961469, 0.0006960635, 0.0006959445,
+0.0006957183, 0.0006955877, 0.0006946865, 0.0006946845, 0.0006946380,
+0.0006946325, 0.0006946257, 0.0006945841, 0.0006933140, 0.0006930647,
+0.0006929499, 0.0006929325, 0.0006929044, 0.0006926820, 0.0006926754,
+0.0006925915, 0.0006925875, 0.0006925257, 0.0006925121, 0.0006924341,
+0.0006924276, 0.0006900995, 0.0006900701, 0.0006898073, 0.0006897556,
+0.0006895536, 0.0006894691, 0.0006893312, 0.0006892006, 0.0006891268,
+0.0006888838, 0.0006888652, 0.0006888559, 0.0006887817, 0.0006887719,
+0.0006869481, 0.0006869061, 0.0006868896, 0.0006866395, 0.0006866284,
+0.0006865383, 0.0006865071, 0.0006861908, 0.0006861086, 0.0006859816,
+0.0006859666, 0.0006858003, 0.0006851890, 0.0006839269, 0.0006838551,
+0.0006837495, 0.0006836658, 0.0006835672, 0.0006834988, 0.0006833237,
+0.0006832957, 0.0006832058, 0.0006831938, 0.0006831843, 0.0006831813,
+0.0006831562, 0.0006807612, 0.0006805291, 0.0006802178, 0.0006801624,
+0.0006800715, 0.0006778731, 0.0006778518, 0.0006777623, 0.0006774770,
+0.0006774576, 0.0006774313, 0.0006773183, 0.0006770885, 0.0006765175,
+0.0006752142, 0.0006749597, 0.0006749126, 0.0006748091, 0.0006747795,
+0.0006745858, 0.0006745156, 0.0006744904, 0.0006728497, 0.0006727414,
+0.0006725420, 0.0006725215, 0.0006724421, 0.0006721327, 0.0006721016,
+0.0006720348, 0.0006719118, 0.0006709960, 0.0006701642, 0.0006699382,
+0.0006698205, 0.0006697359, 0.0006696001, 0.0006694739, 0.0006694677,
+0.0006693125, 0.0006693077, 0.0006692724, 0.0006683338, 0.0006679468,
+0.0006676039, 0.0006674954, 0.0006674931, 0.0006674471, 0.0006668859,
+0.0006668130, 0.0006648131, 0.0006646816, 0.0006646285, 0.0006646168,
+0.0006645341, 0.0006629904, 0.0006628938, 0.0006626300, 0.0006625202,
+0.0006624694, 0.0006620991, 0.0006619328, 0.0006616987, 0.0006608986,
+0.0006605527, 0.0006603008, 0.0006601502, 0.0006597372, 0.0006596768,
+0.0006596076, 0.0006584044, 0.0006579509, 0.0006578430, 0.0006562982,
+0.0006562113, 0.0006553656, 0.0006533941, 0.0006531902, 0.0006529779,
+0.0006524108, 0.0006523146, 0.0006522562, 0.0006521814, 0.0006521049,
+0.0006519394, 0.0006512766, 0.0006509480, 0.0006507646, 0.0006504749,
+0.0006499538, 0.0006497747, 0.0006490229, 0.0006489829, 0.0006475633,
+0.0006474931, 0.0006467935, 0.0006464381, 0.0006464348, 0.0006461381,
+0.0006459600, 0.0006448316, 0.0006447820, 0.0006447152, 0.0006447105,
+0.0006443916, 0.0006438678, 0.0006434817, 0.0006432575, 0.0006431556,
+0.0006426507, 0.0006423167, 0.0006415864, 0.0006415617, 0.0006415469,
+0.0006414278, 0.0006406439, 0.0006406302, 0.0006405664, 0.0006405196,
+0.0006398878, 0.0006396487, 0.0006396024, 0.0006394350, 0.0006393284,
+0.0006385353, 0.0006379761, 0.0006373427, 0.0006373225, 0.0006370048,
+0.0006369568, 0.0006369509, 0.0006368493, 0.0006367383, 0.0006366760,
+0.0006366649, 0.0006355539, 0.0006352202, 0.0006349989, 0.0006348255,
+0.0006344026, 0.0006343332, 0.0006341601, 0.0006340905, 0.0006329829,
+0.0006328429, 0.0006328408, 0.0006328113, 0.0006327388, 0.0006324440,
+0.0006323961, 0.0006321697, 0.0006321202, 0.0006317638, 0.0006316976,
+0.0006312459, 0.0006308332, 0.0006305304, 0.0006302855, 0.0006295918,
+0.0006295389, 0.0006292311, 0.0006291746, 0.0006291170, 0.0006291072,
+0.0006283693, 0.0006273770, 0.0006272897, 0.0006267703, 0.0006267312,
+0.0006257282, 0.0006254751, 0.0006254512, 0.0006249882, 0.0006249099,
+0.0006241064, 0.0006239574, 0.0006239148, 0.0006237135, 0.0006234289,
+0.0006232380, 0.0006230494, 0.0006230301, 0.0006229690, 0.0006227645,
+0.0006220548, 0.0006219609, 0.0006219369, 0.0006201783, 0.0006201736,
+0.0006201384, 0.0006194632, 0.0006193934, 0.0006186473, 0.0006186408,
+0.0006186128, 0.0006186110, 0.0006185968, 0.0006185794, 0.0006181753,
+0.0006179390, 0.0006179263, 0.0006175735, 0.0006174967, 0.0006169212,
+0.0006168877, 0.0006168858, 0.0006167643, 0.0006163718, 0.0006162298,
+0.0006161804, 0.0006159840, 0.0006156844, 0.0006155954, 0.0006154453,
+0.0006154366, 0.0006136091, 0.0006129755, 0.0006127005, 0.0006124756,
+0.0006124749, 0.0006123597, 0.0006123225, 0.0006119908, 0.0006117780,
+0.0006113452, 0.0006112195, 0.0006103430, 0.0006101365, 0.0006086533,
+0.0006086293, 0.0006085701, 0.0006082609, 0.0006081750, 0.0006081012,
+0.0006078681, 0.0006075215, 0.0006073252, 0.0006068236, 0.0006067894,
+0.0006067890, 0.0006065697, 0.0006063669, 0.0006063366, 0.0006062573,
+0.0006061676, 0.0006060385, 0.0006057583, 0.0006055654, 0.0006055515,
+0.0006053129, 0.0006049989, 0.0006046745, 0.0006043517, 0.0006042655,
+0.0006040902, 0.0006036672, 0.0006033877, 0.0006033120, 0.0006021702,
+0.0006011747, 0.0006011747, 0.0006006004, 0.0006005332, 0.0006004743,
+0.0005967518, 0.0005937339, 0.0005937120, 0.0005930488, 0.0005928724,
+0.0005927221, 0.0005913002, 0.0005902898, 0.0005890363, 0.0005887418,
+0.0005882326, 0.0005851375, 0.0005845594, 0.0005828242, 0.0005820241,
+0.0005795495, 0.0005792467, 0.0005774411, 0.0005745250, 0.0005743960,
+0.0005729020, 0.0005728131, 0.0005711735, 0.0005711547, 0.0005710843,
+0.0005710142, 0.0005699812, 0.0005691158, 0.0005676067, 0.0005663034,
+0.0005651747, 0.0005647419, 0.0005628851, 0.0005621296, 0.0005611589,
+0.0005610161, 0.0005601547, 0.0005592141, 0.0005586897, 0.0005578445,
+0.0005573983, 0.0005570376, 0.0005562962, 0.0005557788, 0.0005519661,
+0.0005502512, 0.0005476310, 0.0005475609, 0.0005472183, 0.0005449793
+</td>
+<td style="text-align:right;">
+1220
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9504780
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>res2 %&gt;% head(9) %&gt;% unnest(cs, prob)</code></pre>
 <pre><code>Warning: unnest() has a new interface. See ?unnest for details.
 Try `df %&gt;% unnest(c(cs, prob))`, with `mutate()` if needed</code></pre>
 <pre><code># A tibble: 11 × 12
    geneSet elbo_ser logSER_BF logVB_BF fixed_v…¹     V init_…²    cs  prob  size
-   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
- 1 M5336      -808.    1.52       8.70    1.52    8.25     197   197   197     1
- 2 M543       -808.    1.46       8.59    1.47    5.65     195   195   195     1
- 3 M522       -808.    1.46       8.44    1.46    3.40     193   193   193     1
- 4 M546       -809.    0.560      7.64    0.561   5.06     773   773   773     1
- 5 M706       -810.   -0.268      6.71   -0.268   3.39     479   479   479     1
- 6 M19248     -810.    0.0323     6.25    0.0329  3.29     200   200   200     2
- 7 M19248     -810.    0.0323     6.25    0.0329  3.29     200   193   193     2
- 8 M5907      -811.   -1.15       5.60   -1.15    1.83      16    16    16     1
- 9 M27662     -811.   -1.73       5.44   -1.73    7.95     623   623   623     1
-10 M27416     -810.   -0.451      5.34   -0.450   4.10     772   772   772     2
-11 M27416     -810.   -0.451      5.34   -0.450   4.10     772   773   773     2
+   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 M5336      -808.    1.52       8.70    1.52    8.25     197   197 1         1
+ 2 M543       -808.    1.46       8.59    1.47    5.65     195   195 1.00      1
+ 3 M522       -808.    1.46       8.44    1.46    3.40     193   193 0.998     1
+ 4 M546       -809.    0.560      7.64    0.561   5.06     773   773 0.983     1
+ 5 M706       -810.   -0.268      6.71   -0.268   3.39     479   479 1.00      1
+ 6 M19248     -810.    0.0323     6.25    0.0329  3.29     200   200 0.628     2
+ 7 M19248     -810.    0.0323     6.25    0.0329  3.29     200   193 0.371     2
+ 8 M5907      -811.   -1.15       5.60   -1.15    1.83      16    16 1.00      1
+ 9 M27662     -811.   -1.73       5.44   -1.73    7.95     623   623 1.00      1
+10 M27416     -810.   -0.451      5.34   -0.450   4.10     772   772 0.532     2
+11 M27416     -810.   -0.451      5.34   -0.450   4.10     772   773 0.466     2
 # … with 2 more variables: requested_coverage &lt;dbl&gt;, coverage &lt;dbl&gt;, and
 #   abbreviated variable names ¹​fixed_vs_default, ²​init_idx</code></pre>
 </div>
@@ -3631,6 +4865,43 @@ plot(fit_init_xi$params$xi, fit_init_alpha$params$xi, main=&#39;xi&#39;)
 plot(compute_Xb.binsusie(fit_init_xi), compute_Xb.binsusie(fit_init_alpha), main=&#39;predictions&#39;)
 plot(fit_init_xi$params$tau, fit_init_alpha$params$tau, main=&#39;tau&#39;)</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/unnamed-chunk-7-1.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>top_bf &lt;- order(desc(vb_ser$BF))[1:10]
 
 heatmap(cor(
@@ -3639,6 +4910,43 @@ heatmap(cor(
   scale = &#39;none&#39;
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-2">
+Past versions of unnamed-chunk-7-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/unnamed-chunk-7-2.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="how-to-initialize" class="section level3">
@@ -3731,24 +5039,172 @@ heatmap(cor(
   scale = &#39;none&#39;, Colv = NA
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-xi_glm_heatmaps-1">
+Past versions of xi_glm_heatmaps-1.png
+</button>
+</p>
+<div id="fig-xi_glm_heatmaps-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps-1.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>heatmap(cor(
   as.matrix(bindata$X[, unlist(fit10$sets$cs)]),
   as.matrix(bindata$X[, top_bf])),
   scale = &#39;none&#39;, Colv = NA
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-xi_glm_heatmaps-2">
+Past versions of xi_glm_heatmaps-2.png
+</button>
+</p>
+<div id="fig-xi_glm_heatmaps-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps-2.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>heatmap(cor(
   as.matrix(bindata$X[, unlist(fit20$sets$cs)]),
   as.matrix(bindata$X[, top_bf])),
   scale = &#39;none&#39;, Colv = NA
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-xi_glm_heatmaps-3">
+Past versions of xi_glm_heatmaps-3.png
+</button>
+</p>
+<div id="fig-xi_glm_heatmaps-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps-3.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>heatmap(cor(
   as.matrix(bindata$X[, unlist(fit50$sets$cs)]),
   as.matrix(bindata$X[, top_bf])),
   scale = &#39;none&#39;, Colv = NA
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-xi_glm_heatmaps-4">
+Past versions of xi_glm_heatmaps-4.png
+</button>
+</p>
+<div id="fig-xi_glm_heatmaps-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps-4.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Again, with hierarchical clustering applied to marginally enriched
 gene sets</p>
 <pre class="r"><code>n_pos &lt;- sum(vb_ser$BF &gt; 0)
@@ -3760,24 +5216,172 @@ heatmap(cor(
   scale = &#39;none&#39;
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-xi_glm_heatmaps2-1">
+Past versions of xi_glm_heatmaps2-1.png
+</button>
+</p>
+<div id="fig-xi_glm_heatmaps2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps2-1.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>heatmap(cor(
   as.matrix(bindata$X[, unlist(fit10$sets$cs)]),
   as.matrix(bindata$X[, top_bf])),
   scale = &#39;none&#39;
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-xi_glm_heatmaps2-2">
+Past versions of xi_glm_heatmaps2-2.png
+</button>
+</p>
+<div id="fig-xi_glm_heatmaps2-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps2-2.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>heatmap(cor(
   as.matrix(bindata$X[, unlist(fit20$sets$cs)]),
   as.matrix(bindata$X[, top_bf])),
   scale = &#39;none&#39;
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-xi_glm_heatmaps2-3">
+Past versions of xi_glm_heatmaps2-3.png
+</button>
+</p>
+<div id="fig-xi_glm_heatmaps2-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps2-3.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>heatmap(cor(
   as.matrix(bindata$X[, unlist(fit50$sets$cs)]),
   as.matrix(bindata$X[, top_bf])),
   scale = &#39;none&#39;
 )</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps2-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-xi_glm_heatmaps2-4">
+Past versions of xi_glm_heatmaps2-4.png
+</button>
+</p>
+<div id="fig-xi_glm_heatmaps2-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/6728f824474066744b11556e451965d441e3a977/docs/figure/logistic_susie_initialization.Rmd/xi_glm_heatmaps2-4.png" target="_blank">6728f82</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>order(desc(vb_ser$BF)) %&gt;% head(20)</code></pre>
 <pre><code> [1]  197  195  193  773  479  200   16  623  772 1303  315  291  288  657  607
 [16]  108 1180  286 1203  860</code></pre>
@@ -3794,11 +5398,11 @@ described with a single effect.</p>
 <pre class="r"><code>tic()
 res &lt;- with(bindata, binsusie(X, y, L=5, center = F))
 toc()</code></pre>
-<pre><code>3.515 sec elapsed</code></pre>
+<pre><code>3.845 sec elapsed</code></pre>
 <pre class="r"><code>tic()
 res_centered &lt;- with(bindata, binsusie(X, y, L=5, center = T))
 toc()</code></pre>
-<pre><code>16.114 sec elapsed</code></pre>
+<pre><code>16.295 sec elapsed</code></pre>
 <pre class="r"><code>res_centered$sets$cs</code></pre>
 <pre><code>NULL</code></pre>
 <pre class="r"><code>get_elbo(res_centered)</code></pre>
