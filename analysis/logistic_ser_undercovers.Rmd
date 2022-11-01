@@ -1,0 +1,322 @@
+---
+title: "logistic_ser_undercovers"
+author: "Karl Tayeb"
+date: "2022-10-26"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+$$
+\usepackage{bm}
+\newcommand{\bomega}{\mathbf\omega}
+$$
+
+Recall that in the single effect regression (SER), the posterior inclusion probabilities are just normalized Bayes Factors (BFs).
+
+A critical difference between the logistic SER and the linear SER is that the linear SER can be solved exactly-- conditioning on which variable is selected reduces to a univariate linear regression with a normal prior on the effect. 
+
+In contrast, in the logistic SER we are left with a univariate logistic regression with a normal prior on the effect. We perform variational inference on  the Polya-Gamma augmented model using the family of approximate posteriors $q(\bomega, b, \phi) = \prod_i q(\omega_i) q(b | \phi)q(\phi)$. Where $b$ is the effect size of the non-zero effect, $\phi$ is the variable that is selected and $\bomega$ are the collection Polya-Gamma random variables (one for each observation). The PG augmentation is helpful because it gives us conditional conjugacy-- and therefor a fast CAVI with closed form updates.
+
+This variational approximation we use is equivalent to the Jaakola-Jordan variational bound, which replaces the log-sigmoid function with a quadratic lower bound. The variational parameter for each $q(\omega_i)$ corresponds to the point in log-odds space that this lower bound is made tight. Here lies the problem: the bound cannot be tight for all features simultaneously. This is a problem for the SER where we are concerned explicitly about the evidence for competing single-effect models.
+
+It is not hard to predict that, barring getting stuck in local optima:
+1. the logistic SER will produce smaller credible sets than it should
+2. the resulting credible sets will be sensitive to the choice of PG variational parameters
+
+## Logistic SER under-covers
+
+We generate a simple simulation with a single effect. For each simulation we fir the logistic SER compute $90\%$ credible sets and check if the correct variable is included in the credible set. Repeating the simulation 1000 times we show that indeed the logistic SER undercovers. We also perform "VB-SER" which performs univariate Bayesian logistic regression for each feature seperately. This gives a good approximation to the exact BFs which can be used to compute PIPs and credible sets. We see that in contrast to the logistic SER, VB-SER achieved target coverage. We also see that the CSs are larger for VB-SER than the logistic SER.
+
+```{r setup}
+library(tidyverse)
+library(tictoc)
+
+devtools::load_all('~/R/logisticsusie/')
+set.seed(11)
+
+compute_ser_conditional_evidence <- function(ser, l=1){
+  p <- dim(ser$data$X)[2]
+  elbo <- with(ser, purrr::map_dbl(1:p, ~compute_elbo2(
+    x=data$X[, .x],
+    y=data$y, o=0,
+    mu=params$mu[l, .x],
+    tau=1/params$var[l, .x],
+    xi=params$xi[,1],
+    delta=params$delta[1,1],
+    tau0=1/hypers$prior_variance
+  )))
+  
+  null_model_elbo <- tail(fit_univariate_vb(ser$data$X[, 1], ser$data$y, tau0=1e10)$elbos, 1)
+  return(elbo - null_model_elbo)
+}
+```
+
+
+```{r undercoverage-simulation}
+undercoverage_sim <- function(){
+  sim <- logisticsusie:::sim_ser(n=100, fsimX_control = list(length_scale=100), idx = 10)
+  ser <- with(sim, binsusie(X, y, L=1, center = F, scale=F, estimate_prior_variance = F, prior_variance = 1))
+  ser$BF <-compute_ser_conditional_evidence(ser) 
+  ser_cs <- get_cs(ser$pip, requested_coverage = 0.9)
+  
+  vb_ser <- with(sim, fit_vb_ser(X, y, prior_variance = 1))
+  vb_ser$BF
+  vb_cs <- get_cs(vb_ser$PIP, requested_coverage = 0.9)
+  
+  
+  res <- tribble(
+    ~'method', ~'covered', ~'cs_size', ~'pips', ~'bfs', 
+    'VB_SER', (10 %in% vb_cs$cs), vb_cs$size, vb_ser$PIP, vb_ser$BF,
+    'SER', (10 %in% ser_cs$cs), ser_cs$size, ser$pip, ser$BF,
+  )
+  print(res$covered)
+  return(res)
+}
+
+tic()
+res <- xfun::cache_rds({
+  replicate(1000, undercoverage_sim(), simplify = FALSE)},
+  dir = 'cache/undercoverage/', file='undercoverage1.rds'
+) %>% bind_rows()
+toc()
+
+res %>% group_by(method) %>% summarise(coverage=mean(covered))
+```
+
+
+```{r}
+res %>% ggplot(aes(x=method, y=cs_size)) + geom_boxplot()
+```
+
+
+Here is a typical example. The log Bayes factors of the logistic SER take on large negative values because for these features we have poor settings for the PG variational parameters and/or poor choice of intercept. Consequently the "rich get richer". The variational parameters and intercept are influenced mostly by the features with the strongest evidence.
+
+```{r undercoverage_bf_plot}
+par(mfrow=c(1,1))
+example <- undercoverage_sim()
+plot(
+  example$bfs[[2]],
+  example$bfs[[1]],
+  ylab='VB SER BFs',
+  xlab='SER BFs',
+);
+abline(0, 1, col='red')
+```
+
+
+## Untangling contributions of PG variational parameters, intercept, etc.
+
+Both the intercept/fixed effect parameters and the PG variational parameter need to be shared across all the features. It would be good to understand how big an impact each of these has.
+
+One option to alleviate the issue of the intercept is to estimate the intercept conditional on which variable is selected (as Andrew does in VEB.boost). 
+
+
+### Simulation with $b_0 = 0$ (fixed intercept)
+
+The logistic SER will undercover even when the intercept is 0, and we fit the model under such assumptions.
+
+```{r}
+par(mfrow=c(1,2))
+sim <- logisticsusie:::sim_ser(beta0 = 0, n=100, fsimX_control = list(length_scale=100), idx = 10)
+# NO INTERCEPT--------
+ser <- with(sim, binsusie(X, y, L=1, center = F, scale=F, intercept = F, estimate_prior_variance = F, prior_variance = 1))
+ser$BF <-compute_ser_conditional_evidence(ser) 
+ser_cs <- get_cs(ser$pip, requested_coverage = 0.9)
+
+vb_ser <- with(sim, fit_vb_ser(X, y, prior_variance = 1, intercept.init = 0, estimate_intercept = F))
+vb_ser$BF
+vb_cs <- get_cs(vb_ser$PIP, requested_coverage = 0.9)
+
+plot(
+  ser$BF,
+  vb_ser$BF,
+  ylab='VB SER BFs',
+  xlab='SER BFs',
+  main='Intercept = 0'
+);
+abline(0, 1, col='red')
+
+# Estimate intercept--------
+ser <- with(sim, binsusie(X, y, L=1, center = F, scale=F, estimate_prior_variance = F, prior_variance = 1))
+ser$BF <-compute_ser_conditional_evidence(ser) 
+ser_cs <- get_cs(ser$pip, requested_coverage = 0.9)
+
+vb_ser <- with(sim, fit_vb_ser(X, y, prior_variance = 1))
+vb_ser$BF
+vb_cs <- get_cs(vb_ser$PIP, requested_coverage = 0.9)
+
+plot(
+  ser$BF,
+  vb_ser$BF,
+  ylab='VB SER BFs',
+  xlab='SER BFs',
+  main='Estimate intercept'
+);
+abline(0, 1, col='red')
+```
+
+### Re-estimatintg $\xi$ and intercept
+
+After fitting the SER we can compute the feature-level BFs at the optimal setting of the intercept, and the optimal setting of $q(\omega)$ for that feature. We see that the discrepancy between uni-variate VB Bayes factors and the SER BFs is resolved almost entirely with one update of $q(\omega)$.
+
+This tells us that (1) we must be doing a good enough job of estimating the conditional effects (at least as far as computing BFs/PIPs is concerned) and (2) the effect of the shared intercept parameter is negligible in comparison to the shared PG bound.
+
+```{r}
+sim <- logisticsusie:::sim_ser(beta0 = 0, n=100, fsimX_control = list(length_scale=100), idx = 10)
+
+# original ser
+ser <- with(sim, binsusie(X, y, L=1, center = F, scale=F, estimate_prior_variance = F, prior_variance = 1))
+ser$BF <-compute_ser_conditional_evidence(ser) 
+ser_cs <- get_cs(ser$pip, requested_coverage = 0.9)
+
+# univariate vb
+vb_ser <- with(sim, fit_vb_ser(X, y, prior_variance = 1))
+vb_ser$BF
+vb_cs <- get_cs(vb_ser$PIP, requested_coverage = 0.9)
+
+# recompute BFs with optimized intercept
+p <- dim(ser$data$X)[2]
+tau = 1/drop(ser$mu2 - ser$mu^2)
+tau0 = 1/ser$hypers$prior_variance
+new_intercept <- with(sim, map_dbl(1:p, ~update_intercept(
+  X[, .x], y, o=0, mu = ser$mu[.x], tau = tau[.x], xi=ser$params$xi, delta = 0, tau0 = tau0)))
+
+
+null_model_elbo <- tail(fit_univariate_vb(
+  ser$data$X[, 1], ser$data$y, tau0=1e10)$elbos, 1)
+
+bf_ser <- with(ser, purrr::map_dbl(1:p, ~compute_elbo2(
+  x=data$X[, .x],
+  y=data$y, o=0,
+  mu=params$mu[1, .x],
+  tau=tau[.x],
+  xi=params$xi[,1],
+  delta=params$delta[1,1],
+  tau0=tau0
+))) - null_model_elbo
+
+
+bf_delta <- with(ser, purrr::map_dbl(1:p, ~compute_elbo2(
+  x=data$X[, .x],
+  y=data$y, o=0,
+  mu=params$mu[1, .x],
+  tau=tau[.x],
+  xi=params$xi[,1],
+  delta=new_intercept[.x],
+  tau0=tau0
+))) - null_model_elbo
+
+bf_xi <- with(ser, purrr::map_dbl(1:p, ~compute_elbo3(
+  x=data$X[, .x],
+  y=data$y, o=0,
+  mu=params$mu[1, .x],
+  tau=tau[.x],
+  xi=params$xi[,1],
+  delta=params$delta[1,1],
+  tau0=tau0
+))) - null_model_elbo
+
+bf_delta_xi <- with(ser, purrr::map_dbl(1:p, ~compute_elbo3(
+  x=data$X[, .x],
+  y=data$y, o=0,
+  mu=params$mu[1, .x],
+  tau=tau[.x],
+  xi=params$xi[,1],
+  delta=new_intercept[.x],
+  tau0=tau0
+))) - null_model_elbo
+
+par(mfrow=c(2,2))
+plot(
+  bf_ser, vb_ser$BF,
+  xlab = 'SER BF',
+  ylab = 'VB BF',
+  main='Original'
+)
+abline(0, 1, col='red')
+plot(
+  bf_delta, vb_ser$BF,
+  xlab = 'SER BF',
+  ylab = 'VB BF',
+  main='Feature-specific Intercept'
+)
+abline(0, 1, col='red')
+plot(
+  bf_xi, vb_ser$BF,
+  xlab = 'SER BF',
+  ylab = 'VB BF',
+  main='Feature-specific xi'
+)
+abline(0, 1, col='red')
+plot(
+  bf_delta_xi, vb_ser$BF,
+  xlab = 'SER BF',
+  ylab = 'VB BF',
+  main='Update both'
+)
+abline(0, 1, col='red')
+```
+
+### Comparison to VEB.Boost
+
+VEB.Boost estimates the intercepts separately for each feature which should help. Here we take the
+```{r}
+par(mfrow=c(1,2))
+sim <- logisticsusie:::sim_ser(beta0 = -2, n=100, fsimX_control = list(length_scale=100), idx = 10)
+# NO INTERCEPT--------
+ser <- with(sim, binsusie(X, y, L=1, center = F, scale=F, intercept = F, estimate_prior_variance = F, prior_variance = 1))
+ser$BF <-compute_ser_conditional_evidence(ser) 
+ser_cs <- get_cs(ser$pip, requested_coverage = 0.9)
+
+vb_ser <- with(sim, fit_vb_ser(X, y, prior_variance = 1, intercept.init = 0, estimate_intercept = F))
+vb_ser$BF
+vb_cs <- get_cs(vb_ser$PIP, requested_coverage = 0.9)
+
+# Estimate intercept--------
+ser <- with(sim, binsusie(X, y, L=1, center = F, scale=F, estimate_prior_variance = F, prior_variance = 1))
+ser$BF <-compute_ser_conditional_evidence(ser) 
+ser_cs <- get_cs(ser$pip, requested_coverage = 0.9)
+
+vb_ser <- with(sim, fit_vb_ser(X, y, prior_variance = 1))
+vb_ser$BF
+vb_cs <- get_cs(vb_ser$PIP, requested_coverage = 0.9)
+
+
+# VEB Boost-----------
+
+veb_ser <- with(sim, gseasusie::fit_logistic_susie_veb_boost(X, y, L=1))
+veb_ser$intercept
+
+# recompute the intercepts 
+veb.fit <- veb_ser$veb.fit
+alpha <- drop(t(do.call(cbind, lapply(
+  veb.fit$leaves, function(x) x$learner$currentFit$alpha))))
+mu <- drop(t(do.call(cbind, lapply(
+  veb.fit$leaves, function(x) x$learner$currentFit$mu))))
+var_post <- drop(t(do.call(cbind, lapply(
+  veb.fit$leaves, function(x) x$learner$currentFit$sigma2_post))))
+xi <- veb.fit$xi[,1]
+tau0 <- 1/veb.fit$leaves[[1]]$learner$currentFit$V
+
+delta <- map_dbl(1:50, with(sim, ~update_intercept(
+  X[, .x], y, o=0, mu=mu[.x], tau=1/var_post[.x], xi = xi, delta = 0, tau0=tau0)))
+
+elbo <- map_dbl(1:50, with(sim, ~compute_elbo2(
+  X[, .x], y, o=0, mu=mu[.x], tau=1/var_post[.x], xi = xi, delta = delta[.x], tau0=tau0
+)))
+null_model_elbo <- with(sim, tail(fit_univariate_vb(X[, 1], y, tau0=1e10)$elbos, 1))
+veb_bfs <- elbo - null_model_elbo
+
+plot(veb_bfs, ser$BF, xlab = 'VEB.Boost BFs', ylab = 'SER BFs')
+abline(0, 1, col='red')
+
+plot(veb_bfs, vb_ser$BF, xlab = 'VEB.Boost BFs', ylab = 'VB SER BFs')
+abline(0, 1, col='red')
+```
+
+VEB.Boost, despite handling the intercept more flexibly, does not change the PIPs/BFs too dramatically.
+
+
