@@ -526,15 +526,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree15d235b9c79978ffe5c7e2fd2d40b6635285e916targetblank15d235ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreee16019e7ce9b99779766244fe831cb7aca368bc0targetblanke16019ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/15d235b9c79978ffe5c7e2fd2d40b6635285e916" target="_blank">15d235b</a>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/e16019e7ce9b99779766244fe831cb7aca368bc0" target="_blank">e16019e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree15d235b9c79978ffe5c7e2fd2d40b6635285e916targetblank15d235ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatreee16019e7ce9b99779766244fe831cb7aca368bc0targetblanke16019ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -544,7 +544,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/15d235b9c79978ffe5c7e2fd2d40b6635285e916" target="_blank">15d235b</a>.
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/e16019e7ce9b99779766244fe831cb7aca368bc0" target="_blank">e16019e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -701,6 +701,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/e16019e7ce9b99779766244fe831cb7aca368bc0/analysis/logistic_susie_initialization.Rmd" target="_blank">e16019e</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-08
+</td>
+<td>
+wflow_publish("analysis/logistic_susie_initialization.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/e716f37a0cc26f76a42129d59e0d42ca52ab215f/docs/logistic_susie_initialization.html" target="_blank">e716f37</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-08
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -998,7 +1032,7 @@ independent enrichment signals, here we show the correlation among all
 enrichments at a FDR of 5% (BH, Fisher’s exact test).</p>
 <pre class="r"><code>ora &lt;- with(bindata, gseasusie::fit_ora(X, y))</code></pre>
 <pre><code>computing ORA statistics...</code></pre>
-<pre><code>0.615 sec elapsed</code></pre>
+<pre><code>0.602 sec elapsed</code></pre>
 <pre class="r"><code>marginal_idx &lt;- which(p.adjust(ora$pFishersExact, method=&#39;bonferroni&#39;) &lt; 0.05)
 heatmap(cor(as.matrix(bindata$X[, marginal_idx])), scale=&#39;none&#39;, main=&#39;Marginally enriched gene sets, p.bonferroni &lt; 0.05&#39;)</code></pre>
 <p><img src="figure/logistic_susie_initialization.Rmd/marginal-results-bf-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -1973,31 +2007,31 @@ close to zero (i.e. we estimate the null model).</p>
 <pre class="r"><code>tic(&#39;L=10, fixed prior variance&#39;)
 fit.default &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=10, estimate_prior_variance=F)), file=&#39;fit.default&#39;)
 toc()</code></pre>
-<pre><code>L=10, fixed prior variance: 0.627 sec elapsed</code></pre>
+<pre><code>L=10, fixed prior variance: 0.638 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.default)</code></pre>
 <pre><code>[1] -821.4436</code></pre>
 <pre class="r"><code>tic(&#39;L=10, estimate prior variance&#39;)
 fit.default2 &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=10, estimate_prior_variance=T)), file=&#39;fit.default2&#39;)
 toc()</code></pre>
-<pre><code>L=10, estimate prior variance: 0.568 sec elapsed</code></pre>
+<pre><code>L=10, estimate prior variance: 0.614 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.default2)</code></pre>
 <pre><code>[1] -809.7458</code></pre>
 <pre class="r"><code>tic(&#39;L=10, null model&#39;)
 fit.null &lt;- cache_rds(with(bindata, binsusie(X, y, prior_variance=1e-10, estimate_prior_variance=F)), file=&#39;fit.null&#39;)
 toc()</code></pre>
-<pre><code>L=10, null model: 0.397 sec elapsed</code></pre>
+<pre><code>L=10, null model: 0.402 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(fit.null)</code></pre>
 <pre><code>[1] -809.6773</code></pre>
 <pre class="r"><code>tic(&#39;SER, fixed prior variance&#39;)
 ser.default &lt;- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 10, estimate_prior_variance = F)), file=&#39;ser.default&#39;)
 toc()</code></pre>
-<pre><code>SER, fixed prior variance: 0.407 sec elapsed</code></pre>
+<pre><code>SER, fixed prior variance: 0.391 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(ser.default)</code></pre>
 <pre><code>[1] -810.7019</code></pre>
 <pre class="r"><code>tic(&#39;SER, estimate prior variance&#39;)
 ser.default2 &lt;- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 10, estimate_prior_variance = T)), file=&#39;ser.default2&#39;)
 toc()</code></pre>
-<pre><code>SER, estimate prior variance: 0.212 sec elapsed</code></pre>
+<pre><code>SER, estimate prior variance: 0.283 sec elapsed</code></pre>
 <pre class="r"><code>get_elbo(ser.default2)</code></pre>
 <pre><code>[1] -809.697</code></pre>
 <pre class="r"><code>tic(&#39;SER, null model&#39;)
@@ -2128,8 +2162,12 @@ Karl Tayeb
 </div>
 </div>
 <pre class="r"><code># prior variances shrunk towards 0
-ser.default2$V</code></pre>
-<pre><code>[1] 0.0182102</code></pre>
+ser.default$V</code></pre>
+<pre><code>[1] 10</code></pre>
+<pre class="r"><code>get_elbo(ser.default)</code></pre>
+<pre><code>[1] -810.7019</code></pre>
+<pre class="r"><code>get_elbo(ser.default2)</code></pre>
+<pre><code>[1] -809.697</code></pre>
 </div>
 <div id="fit-at-many-fixed-values-of-sigma_02" class="section level3">
 <h3>Fit at many fixed values of <span
@@ -2139,7 +2177,7 @@ prior_variance_grid &lt;- c(0.01, 0.1, 0.2, 0.5, 1, 2, 5, 10)
 ser.grid &lt;- cache_rds(with(bindata, map(
   prior_variance_grid, ~binsusie(X, y, L = 1, prior_variance = .x, estimate_prior_variance = F))), file=&#39;ser.vary_sigma0&#39;)
 toc()</code></pre>
-<pre><code>SER, prior variance grid: 2.417 sec elapsed</code></pre>
+<pre><code>SER, prior variance grid: 2.251 sec elapsed</code></pre>
 <pre class="r"><code>plot(prior_variance_grid, map_dbl(ser.grid, get_elbo), type=&#39;l&#39;,
      xlab=&#39;Fixed prior variance&#39;, ylab=&#39;ELBO&#39;,
      main=&#39;Default initialization optimized to ELBO&#39;)
@@ -2226,7 +2264,7 @@ uvb_ser &lt;- cache_rds(with(bindata, fit_uvb_ser(
 uvb_ser_centered &lt;- cache_rds(with(bindata, fit_uvb_ser(
   scale(X, scale=F), y, prior_variance = 10)), file=&#39;uvb_ser_centered&#39;)
 toc()</code></pre>
-<pre><code>Fitting VB SER: 0.017 sec elapsed</code></pre>
+<pre><code>Fitting VB SER: 0.006 sec elapsed</code></pre>
 <pre class="r"><code>vb_cs &lt;- get_cs(uvb_ser$alpha)
 vb_cs$cs</code></pre>
 <pre><code> [1]  197  195  193  773  479  200   16  623  772 1303  315  291  288  657  607</code></pre>
@@ -5168,7 +5206,7 @@ fit10$lbf_component &lt;- cache_rds(compute_component_lbfs(fit10), file=&#39;fit
 fit20$lbf_component &lt;- cache_rds(compute_component_lbfs(fit20), file=&#39;fit20_lbf_component.rds&#39;)
 fit50$lbf_component &lt;- cache_rds(compute_component_lbfs(fit50), file=&#39;fit50_lbf_component.rds&#39;)
 toc()</code></pre>
-<pre><code>0.019 sec elapsed</code></pre>
+<pre><code>0.017 sec elapsed</code></pre>
 <pre class="r"><code>fit_summary_tbl &lt;- function(fit, name){
   fit %&gt;% cs_tbl %&gt;%
     ungroup() %&gt;%
@@ -5177,64 +5215,932 @@ toc()</code></pre>
     select(-c(cs, prob))
 }
 
-fit_summary_tbl(fit1, &#39;top1&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything()))</code></pre>
-<pre><code># A tibble: 1 × 8
-  name  coverage top_feaure top_feature_alpha L         V lbf_component lbf_mo…¹
-  &lt;chr&gt;    &lt;dbl&gt;      &lt;int&gt;             &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-1 top1         1        197                 1 L2     35.2          1.73     1.64
-# … with abbreviated variable name ¹​lbf_model</code></pre>
-<pre class="r"><code>fit_summary_tbl(fit3, &#39;top3&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything()))</code></pre>
-<pre><code># A tibble: 2 × 8
-  name  coverage top_feaure top_feature_alpha L         V lbf_component lbf_mo…¹
-  &lt;chr&gt;    &lt;dbl&gt;      &lt;int&gt;             &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-1 top3     1            197             1     L2    22.1          2.38      2.68
-2 top3     0.997        193             0.997 L3     3.06         0.951     2.68
-# … with abbreviated variable name ¹​lbf_model</code></pre>
-<pre class="r"><code>fit_summary_tbl(fit5, &#39;top5&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything()))</code></pre>
-<pre><code># A tibble: 4 × 8
-  name  coverage top_feaure top_feature_alpha L         V lbf_component lbf_mo…¹
-  &lt;chr&gt;    &lt;dbl&gt;      &lt;int&gt;             &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-1 top5     1            197             1     L2    34.5          2.96      3.90
-2 top5     0.998        193             0.998 L3     3.39         2.13      3.90
-3 top5     1.00         479             1.00  L4     3.81         0.803     3.90
-4 top5     0.981        773             0.981 L5     5.05         0.784     3.90
-# … with abbreviated variable name ¹​lbf_model</code></pre>
-<pre class="r"><code>fit_summary_tbl(fit10, &#39;top10&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything()))</code></pre>
-<pre><code># A tibble: 5 × 8
-  name  coverage top_feaure top_feature_alpha L         V lbf_component lbf_mo…¹
-  &lt;chr&gt;    &lt;dbl&gt;      &lt;int&gt;             &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-1 top10    1            197             1     L2    34.4          5.07      2.56
-2 top10    1.00          16             1.00  L3     1.71         1.01      2.56
-3 top10    0.980        773             0.980 L4     5.10         0.806     2.56
-4 top10    1.00         479             1.00  L5     3.92        -1.15      2.56
-5 top10    0.998        193             0.998 L6     3.34        -1.20      2.56
-# … with abbreviated variable name ¹​lbf_model</code></pre>
-<pre class="r"><code>fit_summary_tbl(fit20, &#39;top20&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything()))</code></pre>
-<pre><code># A tibble: 7 × 8
-  name  coverage top_feaure top_feature_alpha L         V lbf_component lbf_mo…¹
-  &lt;chr&gt;    &lt;dbl&gt;      &lt;int&gt;             &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-1 top20    1            197             1     L2    31.5        -0.0978    -4.98
-2 top20    1.00         860             1.00  L3    20.8        -0.134     -4.98
-3 top20    1.00          16             1.00  L4     1.66       -1.55      -4.98
-4 top20    1.00         479             1.00  L5     3.90       -2.12      -4.98
-5 top20    0.980        773             0.980 L6     5.09       -1.10      -4.98
-6 top20    0.998        193             0.998 L7     3.33       -1.40      -4.98
-7 top20    0.996        108             0.996 L8     4.19       -2.47      -4.98
-# … with abbreviated variable name ¹​lbf_model</code></pre>
-<pre class="r"><code>fit_summary_tbl(fit50, &#39;top50&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything()))</code></pre>
-<pre><code># A tibble: 9 × 8
-  name  coverage top_feaure top_feature_alpha L         V lbf_component lbf_mo…¹
-  &lt;chr&gt;    &lt;dbl&gt;      &lt;int&gt;             &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-1 top50     1.00         16              1.00 L1     1.43         1.60     -41.9
-2 top50     1           197              1    L2    12.9         -0.696    -41.9
-3 top50     1.00        860              1.00 L3    21.3         -7.45     -41.9
-4 top50     1           332              1    L4    14.7         -8.10     -41.9
-5 top50     1.00        582              1.00 L5    13.0         -8.50     -41.9
-6 top50     1           116              1    L6    17.3         -7.92     -41.9
-7 top50     1.00        779              1.00 L7    10.8         -8.68     -41.9
-8 top50     1.00         18              1.00 L9     3.14        -7.61     -41.9
-9 top50     1.00         13              1.00 L10    3.38        -9.35     -41.9
-# … with abbreviated variable name ¹​lbf_model</code></pre>
+fit_summary_tbl(fit1, &#39;top1&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything())) %&gt;% kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+<th style="text-align:left;">
+L
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+lbf_component
+</th>
+<th style="text-align:right;">
+lbf_model
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+top1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+197
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+L2
+</td>
+<td style="text-align:right;">
+35.19241
+</td>
+<td style="text-align:right;">
+1.734098
+</td>
+<td style="text-align:right;">
+1.642393
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>fit_summary_tbl(fit3, &#39;top3&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything())) %&gt;% kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+<th style="text-align:left;">
+L
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+lbf_component
+</th>
+<th style="text-align:right;">
+lbf_model
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+top3
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+197
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:left;">
+L2
+</td>
+<td style="text-align:right;">
+22.069338
+</td>
+<td style="text-align:right;">
+2.3756895
+</td>
+<td style="text-align:right;">
+2.678083
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top3
+</td>
+<td style="text-align:right;">
+0.997
+</td>
+<td style="text-align:right;">
+193
+</td>
+<td style="text-align:right;">
+0.997
+</td>
+<td style="text-align:left;">
+L3
+</td>
+<td style="text-align:right;">
+3.056215
+</td>
+<td style="text-align:right;">
+0.9506984
+</td>
+<td style="text-align:right;">
+2.678083
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>fit_summary_tbl(fit5, &#39;top5&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything())) %&gt;% kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+<th style="text-align:left;">
+L
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+lbf_component
+</th>
+<th style="text-align:right;">
+lbf_model
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+top5
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+197
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L2
+</td>
+<td style="text-align:right;">
+34.508153
+</td>
+<td style="text-align:right;">
+2.9581629
+</td>
+<td style="text-align:right;">
+3.896043
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top5
+</td>
+<td style="text-align:right;">
+0.9984901
+</td>
+<td style="text-align:right;">
+193
+</td>
+<td style="text-align:right;">
+0.9984901
+</td>
+<td style="text-align:left;">
+L3
+</td>
+<td style="text-align:right;">
+3.394975
+</td>
+<td style="text-align:right;">
+2.1257680
+</td>
+<td style="text-align:right;">
+3.896043
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top5
+</td>
+<td style="text-align:right;">
+0.9999799
+</td>
+<td style="text-align:right;">
+479
+</td>
+<td style="text-align:right;">
+0.9999799
+</td>
+<td style="text-align:left;">
+L4
+</td>
+<td style="text-align:right;">
+3.809129
+</td>
+<td style="text-align:right;">
+0.8034604
+</td>
+<td style="text-align:right;">
+3.896043
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top5
+</td>
+<td style="text-align:right;">
+0.9811354
+</td>
+<td style="text-align:right;">
+773
+</td>
+<td style="text-align:right;">
+0.9811354
+</td>
+<td style="text-align:left;">
+L5
+</td>
+<td style="text-align:right;">
+5.051019
+</td>
+<td style="text-align:right;">
+0.7841456
+</td>
+<td style="text-align:right;">
+3.896043
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>fit_summary_tbl(fit10, &#39;top10&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything())) %&gt;% kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+<th style="text-align:left;">
+L
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+lbf_component
+</th>
+<th style="text-align:right;">
+lbf_model
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+top10
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+197
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L2
+</td>
+<td style="text-align:right;">
+34.433998
+</td>
+<td style="text-align:right;">
+5.0669857
+</td>
+<td style="text-align:right;">
+2.562625
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top10
+</td>
+<td style="text-align:right;">
+0.9999955
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0.9999955
+</td>
+<td style="text-align:left;">
+L3
+</td>
+<td style="text-align:right;">
+1.705086
+</td>
+<td style="text-align:right;">
+1.0136142
+</td>
+<td style="text-align:right;">
+2.562625
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top10
+</td>
+<td style="text-align:right;">
+0.9804274
+</td>
+<td style="text-align:right;">
+773
+</td>
+<td style="text-align:right;">
+0.9804274
+</td>
+<td style="text-align:left;">
+L4
+</td>
+<td style="text-align:right;">
+5.104987
+</td>
+<td style="text-align:right;">
+0.8057629
+</td>
+<td style="text-align:right;">
+2.562625
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top10
+</td>
+<td style="text-align:right;">
+0.9999829
+</td>
+<td style="text-align:right;">
+479
+</td>
+<td style="text-align:right;">
+0.9999829
+</td>
+<td style="text-align:left;">
+L5
+</td>
+<td style="text-align:right;">
+3.920028
+</td>
+<td style="text-align:right;">
+-1.1506547
+</td>
+<td style="text-align:right;">
+2.562625
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top10
+</td>
+<td style="text-align:right;">
+0.9981110
+</td>
+<td style="text-align:right;">
+193
+</td>
+<td style="text-align:right;">
+0.9981110
+</td>
+<td style="text-align:left;">
+L6
+</td>
+<td style="text-align:right;">
+3.337498
+</td>
+<td style="text-align:right;">
+-1.2020404
+</td>
+<td style="text-align:right;">
+2.562625
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>fit_summary_tbl(fit20, &#39;top20&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything())) %&gt;% kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+<th style="text-align:left;">
+L
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+lbf_component
+</th>
+<th style="text-align:right;">
+lbf_model
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+top20
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+197
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L2
+</td>
+<td style="text-align:right;">
+31.523943
+</td>
+<td style="text-align:right;">
+-0.0978065
+</td>
+<td style="text-align:right;">
+-4.983675
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top20
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+860
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L3
+</td>
+<td style="text-align:right;">
+20.816488
+</td>
+<td style="text-align:right;">
+-0.1341506
+</td>
+<td style="text-align:right;">
+-4.983675
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top20
+</td>
+<td style="text-align:right;">
+0.9999912
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0.9999912
+</td>
+<td style="text-align:left;">
+L4
+</td>
+<td style="text-align:right;">
+1.659963
+</td>
+<td style="text-align:right;">
+-1.5465872
+</td>
+<td style="text-align:right;">
+-4.983675
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top20
+</td>
+<td style="text-align:right;">
+0.9999824
+</td>
+<td style="text-align:right;">
+479
+</td>
+<td style="text-align:right;">
+0.9999824
+</td>
+<td style="text-align:left;">
+L5
+</td>
+<td style="text-align:right;">
+3.904411
+</td>
+<td style="text-align:right;">
+-2.1178359
+</td>
+<td style="text-align:right;">
+-4.983675
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top20
+</td>
+<td style="text-align:right;">
+0.9802911
+</td>
+<td style="text-align:right;">
+773
+</td>
+<td style="text-align:right;">
+0.9802911
+</td>
+<td style="text-align:left;">
+L6
+</td>
+<td style="text-align:right;">
+5.088693
+</td>
+<td style="text-align:right;">
+-1.0956006
+</td>
+<td style="text-align:right;">
+-4.983675
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top20
+</td>
+<td style="text-align:right;">
+0.9980807
+</td>
+<td style="text-align:right;">
+193
+</td>
+<td style="text-align:right;">
+0.9980807
+</td>
+<td style="text-align:left;">
+L7
+</td>
+<td style="text-align:right;">
+3.326746
+</td>
+<td style="text-align:right;">
+-1.3989800
+</td>
+<td style="text-align:right;">
+-4.983675
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top20
+</td>
+<td style="text-align:right;">
+0.9958356
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+0.9958356
+</td>
+<td style="text-align:left;">
+L8
+</td>
+<td style="text-align:right;">
+4.188964
+</td>
+<td style="text-align:right;">
+-2.4715687
+</td>
+<td style="text-align:right;">
+-4.983675
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>fit_summary_tbl(fit50, &#39;top50&#39;) %&gt;% select(-c(size, requested_coverage)) %&gt;% select(c(name, everything())) %&gt;% kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+<th style="text-align:left;">
+L
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+lbf_component
+</th>
+<th style="text-align:right;">
+lbf_model
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+0.9998640
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0.9998640
+</td>
+<td style="text-align:left;">
+L1
+</td>
+<td style="text-align:right;">
+1.431768
+</td>
+<td style="text-align:right;">
+1.6007490
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+197
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L2
+</td>
+<td style="text-align:right;">
+12.935933
+</td>
+<td style="text-align:right;">
+-0.6957896
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+860
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L3
+</td>
+<td style="text-align:right;">
+21.288600
+</td>
+<td style="text-align:right;">
+-7.4491317
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+332
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L4
+</td>
+<td style="text-align:right;">
+14.723669
+</td>
+<td style="text-align:right;">
+-8.1012910
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+582
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L5
+</td>
+<td style="text-align:right;">
+13.016000
+</td>
+<td style="text-align:right;">
+-8.4954238
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L6
+</td>
+<td style="text-align:right;">
+17.275133
+</td>
+<td style="text-align:right;">
+-7.9244134
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+779
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:left;">
+L7
+</td>
+<td style="text-align:right;">
+10.774081
+</td>
+<td style="text-align:right;">
+-8.6786796
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+0.9998337
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+0.9998337
+</td>
+<td style="text-align:left;">
+L9
+</td>
+<td style="text-align:right;">
+3.144541
+</td>
+<td style="text-align:right;">
+-7.6073493
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+top50
+</td>
+<td style="text-align:right;">
+0.9999724
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0.9999724
+</td>
+<td style="text-align:left;">
+L10
+</td>
+<td style="text-align:right;">
+3.375233
+</td>
+<td style="text-align:right;">
+-9.3502987
+</td>
+<td style="text-align:right;">
+-41.91326
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>unlist(fit1$sets$cs)</code></pre>
 <pre><code> L2 
 197 </code></pre>
