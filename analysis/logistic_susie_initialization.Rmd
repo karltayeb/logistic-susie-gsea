@@ -175,7 +175,10 @@ sort(ser.default$pip, decreasing = T) %>% head(10)
 plot(log10(ser.default$pip), -log10(ora$pFishersExact))
 
 # prior variances shrunk towards 0
-ser.default2$V
+ser.default$V
+
+get_elbo(ser.default)
+get_elbo(ser.default2)
 ```
 
 ### Fit at many fixed values of $\sigma_0^2$
@@ -601,12 +604,12 @@ fit_summary_tbl <- function(fit, name){
     select(-c(cs, prob))
 }
 
-fit_summary_tbl(fit1, 'top1') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
-fit_summary_tbl(fit3, 'top3') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
-fit_summary_tbl(fit5, 'top5') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
-fit_summary_tbl(fit10, 'top10') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
-fit_summary_tbl(fit20, 'top20') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
-fit_summary_tbl(fit50, 'top50') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
+fit_summary_tbl(fit1, 'top1') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything())) %>% kbl() %>% kable_styling()
+fit_summary_tbl(fit3, 'top3') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything())) %>% kbl() %>% kable_styling()
+fit_summary_tbl(fit5, 'top5') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything())) %>% kbl() %>% kable_styling()
+fit_summary_tbl(fit10, 'top10') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything())) %>% kbl() %>% kable_styling()
+fit_summary_tbl(fit20, 'top20') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything())) %>% kbl() %>% kable_styling()
+fit_summary_tbl(fit50, 'top50') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything())) %>% kbl() %>% kable_styling()
 ```
 
 
