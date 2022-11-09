@@ -622,29 +622,6 @@ unlist(fit50$sets$cs)
 order(desc(uvb_ser$BF)) %>% head(50)
 ```
 
-
-```{r decompose_elbo}
-decompose_elbo <- function(fit){
-  n <- length(fit$params$xi)
-  jj <- drop(jj_bound2.binsusie(fit))
-  xi_kl <- pg_kl(rep(1, n), fit$params$xi)
-  
-  alpha_kl <- map_dbl(1:fit$hypers$L, ~categorical_kl(
-    fit$params$alpha[.x,], fit$hypers$pi[.x,]))
-  b_kl <- map_dbl(1:fit$hypers$L, ~ sum(fit$params$alpha[.x,] * normal_kl(
-    fit$params$mu[.x,], fit$params$var[.x,], 0, fit$hypers$prior_variance[.x])))
-  res <- list(
-    likelihood = jj + xi_kl,
-    xi_kl = xi_kl,
-    b_kl = b_kl,
-    alpha_kl = alpha_kl
-  )
-  return(res)
-}
-decompose_elbo(fit5)
-```
-
-
 For a fixed $\xi$ and $\mathbb E x_i^Tb$, reducing the variance of the linear predictor improves the likelihood bound. Of course, this also increases $D_{{KL}(q(b) || p(b))}$...
 
 ```{r check_xi_modes}
@@ -793,6 +770,29 @@ get_elbo(res) - get_elbo(fit.null)
 ```{r}
 get_elbo(fit50) - get_elbo(fit.null)
 get_elbo(res_centered) - get_elbo(fit.null)
+```
+
+
+
+```{r decompose_elbo}
+decompose_elbo <- function(fit){
+  n <- length(fit$params$xi)
+  jj <- drop(jj_bound2.binsusie(fit))
+  xi_kl <- pg_kl(rep(1, n), fit$params$xi)
+  
+  alpha_kl <- map_dbl(1:fit$hypers$L, ~categorical_kl(
+    fit$params$alpha[.x,], fit$hypers$pi[.x,]))
+  b_kl <- map_dbl(1:fit$hypers$L, ~ sum(fit$params$alpha[.x,] * normal_kl(
+    fit$params$mu[.x,], fit$params$var[.x,], 0, fit$hypers$prior_variance[.x])))
+  res <- list(
+    likelihood = jj + xi_kl,
+    xi_kl = xi_kl,
+    b_kl = b_kl,
+    alpha_kl = alpha_kl
+  )
+  return(res)
+}
+#decompose_elbo(fit5)
 ```
 
 
