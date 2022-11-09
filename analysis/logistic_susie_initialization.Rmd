@@ -84,10 +84,17 @@ get_lbf_ser <- function(fit){
 
 We know the default initialization does not work well because although there are several independent marginal association signals logistic SuSiE does not identify any of them. There are several independent enrichment signals, here we show the correlation among all enrichments at a FDR of 5% (BH, Fisher's exact test).
 
-```{r marginal-results}
+
+```{r marginal-results-bf}
 ora <- with(bindata, gseasusie::fit_ora(X, y))
+marginal_idx <- which(p.adjust(ora$pFishersExact, method='bonferroni') < 0.05)
+heatmap(cor(as.matrix(bindata$X[, marginal_idx])), scale='none', main='Marginally enriched gene sets, p.bonferroni < 0.05')
+```
+
+```{r marginal-results-bh}
 marginal_idx <- which(p.adjust(ora$pFishersExact, method='BH') < 0.05)
-heatmap(cor(as.matrix(bindata$X[, marginal_idx])), scale='none', main='Marginally enriched gene sets, p.BH < 0.05')
+heatmap(cor(as.matrix(bindata$X[, marginal_idx])),
+        scale='none', main='Marginally enriched gene sets, p.BH < 0.05')
 ```
 
 
@@ -144,7 +151,7 @@ get_cs(ser.default$pip)
 
 The default initialization with a fixed prior variance puts a little weight on the top marginal enrichments, but the ELBO is not better than the null model, consequently when we optimize the prior variance we move towards the null model.
 
-```{r}
+```{r pip_v_p}
 par(mfrow=c(1,1))
 sort(fit.default$pip, decreasing = T) %>% head(10)
 plot(log10(fit.default$pip), -log10(ora$pFishersExact))
@@ -153,13 +160,28 @@ plot(log10(fit.default$pip), -log10(ora$pFishersExact))
 fit.default2$V
 ```
 
-```{r}
+```{r pip_v_p2}
 par(mfrow=c(1,1))
 sort(ser.default$pip, decreasing = T) %>% head(10)
 plot(log10(ser.default$pip), -log10(ora$pFishersExact))
 
 # prior variances shrunk towards 0
 ser.default2$V
+```
+
+### Fit at many fixed values of $\sigma_0^2$
+
+```{r prior_variance_variance_grid}
+tic('SER, prior variance grid')
+prior_variance_grid <- c(0.01, 0.1, 0.2, 0.5, 1, 2, 5, 10)
+ser.grid <- cache_rds(with(bindata, map(
+  prior_variance_grid, ~binsusie(X, y, L = 1, prior_variance = .x, estimate_prior_variance = F))), file='ser.vary_sigma0')
+toc()
+
+plot(prior_variance_grid, map_dbl(ser.grid, get_elbo), type='l',
+     xlab='Fixed prior variance', ylab='ELBO',
+     main='Default initialization optimized to ELBO')
+abline(v=0, col='red', lty=2)
 ```
 
 ### VB-SER
@@ -178,29 +200,59 @@ The logistic SER does not necessarily benefit as much from this effect-- in the 
 
 ```{r vb-ser}
 tic('Fitting VB SER')
-vb_ser <- cache_rds(with(bindata, fit_vb_ser(scale(X, scale=F), y, prior_variance = 10)), file='vb_ser')
+uvb_ser <- cache_rds(with(bindata, fit_uvb_ser(
+  X, y, prior_variance = 10)), file='uvb_ser')
+uvb_ser_centered <- cache_rds(with(bindata, fit_uvb_ser(
+  scale(X, scale=F), y, prior_variance = 10)), file='uvb_ser_centered')
 toc()
 
-vb_cs <- get_cs(vb_ser$PIP)
+vb_cs <- get_cs(uvb_ser$alpha)
 vb_cs$cs
 
 intersection <- intersect(marginal_idx, vb_cs$cs)
 paste0(length(intersection), '/', length(marginal_idx), ' CS gene sets are significant at FDR < 0.05')
 
-sort(vb_ser$PIP, decreasing = T) %>% head(10)
+sort(uvb_ser$alpha, decreasing = T) %>% head(10)
 
 par(mfrow=c(1,1))
-plot(-log10(ora$pFishersExact), log10(vb_ser$PIP), xlab='-log10(p)', ylab='log10(PIP)')
+plot(-log10(ora$pFishersExact), log10(uvb_ser$alpha), xlab='-log10(p)', ylab='log10(PIP)')
 ```
 
-```{r}
+```{r bf_uvb}
 # BF
-p <- length(vb_ser$BF)
+p <- length(uvb_ser$lbf)
 pi <- rep(1/p, p)
-exp(matrixStats::logSumExp(vb_ser$BF + log(pi)))
+exp(matrixStats::logSumExp(uvb_ser$lbf + log(pi)))
+```
 
+
+```{r bf_uvb2}
 # equivalently
-exp(sum(vb_ser$BF * vb_ser$PIP) - categorical_kl(vb_ser$PIP, pi))
+exp(sum(uvb_ser$lbf * uvb_ser$alpha) - categorical_kl(uvb_ser$alpha, pi))
+```
+
+
+```{r bf_vb}
+exp(get_elbo(ser.default) - get_elbo(ser.null))
+```
+
+
+Here we take the UVB solution and optimize $\xi$ while holding $q(\beta)$ fixed...
+
+```{r}
+vb_elbo_uvb_fit <- ser.null
+
+vb_elbo_uvb_fit$params$mu[1,] <- uvb_ser$mu
+vb_elbo_uvb_fit$params$var[1,] <- uvb_ser$var
+vb_elbo_uvb_fit$params$alpha[1,] <- uvb_ser$alpha
+vb_elbo_uvb_fit$params$delta[1,1] <- sum(uvb_ser$intercept * uvb_ser$alpha)
+vb_elbo_uvb_fit$hypers$prior_variance <- uvb_ser$prior_variance
+vb_elbo_uvb_fit <- set_xi(vb_elbo_uvb_fit, update_xi.binsusie(vb_elbo_uvb_fit))
+vb_elbo_uvb_fit <- fit.binsusie(vb_elbo_uvb_fit, fit_prior_variance = F, fit_xi=T, fit_alpha = F)
+get_cs(vb_elbo_uvb_fit$alpha)
+
+compute_elbo.binsusie(vb_elbo_uvb_fit) - get_elbo(fit.null)
+uvb_ser$lbf_model
 ```
 
 
@@ -212,10 +264,12 @@ We say that the uni-variate VB SER detects lots of strong signal. What if we ini
 
 ```{r null_ser}
 # indices with large positive log BFs
-bf_order <- order(desc(vb_ser$BF))
+bf_order <- order(desc(uvb_ser$lbf))
 
 # all the gene sets in the VB SER credible set have strong evidence of association
-tibble(geneSet = gs_names[vb_cs$cs], idx=vb_cs$cs, BF = exp(vb_ser$BF[vb_cs$cs])) %>% left_join(ora)
+tibble(geneSet = gs_names[vb_cs$cs], idx=vb_cs$cs, BF = exp(uvb_ser$lbf[vb_cs$cs])) %>% 
+  left_join(ora) %>%
+  kbl(caption='Marginal Enrichments') %>% kable_styling()
 
 # use ELBO - null_elbo is an approximate BF. Not much variation to model in the null elbo so it is tight.
 null_elbo <- with(bindata, tail(fit_univariate_vb(X[, 1], y, tau0=1e10)$elbos, 1))
@@ -242,20 +296,30 @@ $$
 What's the point of this? We see that we can "recover" the logistic SER. With a specific initialization we can fit the ELBO to a local optima that is better than what we found with the default initialization (`fixed_vs_default > 0` gives the difference in ELBOs) for the top 10 marginal enrichments. Furthermore, the new SER fits give favorable BFs for the top 4 marginal enrichments
 
 ```{r fixed_xi_ser}
+#' Take a binsusie fit with L=1 and flatten to an SER fit
+flatten_binsusie <- function(fit){
+  fit$params$alpha <- fit$params$alpha[1,]
+  fit$params$mu <- fit$params$mu[1,]
+  fit$params$var <- fit$params$var[1,]
+  fit$params$delta <- fit$params$delta[1,1]
+  return(fit)
+}
+
 fixed_xi_ser <- function(idx){
+  uvb <- with(bindata, fit_univariate_vb(X[, idx], y, 0, tau=1/10))
   fit.init <- with(bindata, binsusie_init(X, y, L = 1, center = T, prior_variance = 10))
-  fit.init <- set_xi(fit.init, vb_ser$xi[[idx]])
-  fit <- fit.binsusie(fit.init, fit_xi = F, fit_prior_variance = F) %>% binsusie_wrapup()
-  get_cs(fit$pip)
-  get_bf(fit)
+  fit.init <- set_xi(fit.init, uvb$xi)
+  fit <- fit.binsusie(fit.init, fit_xi = F, fit_prior_variance = F, fast_elbo = F) %>% binsusie_wrapup()
   
+  lbf <- fit %>% flatten_binsusie() %>% compute_elbo_idx(idx=idx) %>% {. - null_elbo}
+
   res <- list(
     geneSet = gs_names[idx],
-    elbo_ser = tail(fit$elbo, 1),
-    logSER_BF = get_bf(fit),
-    logVB_BF = tail(vb_ser$BF[[idx]]),
+    vb_lbf_model = get_bf(fit),
+    vb_lbf_var = lbf,
+    uvb_lbf_model = uvb_ser$lbf_model,
+    uvb_lbf_var = uvb_ser$lbf[[idx]],
     fixed_vs_default = tail(fit$elbo, 1) - null_ser_elbo,
-    V = fit$V,
     init_idx = idx
   )
   res <- c(res, get_cs(fit$pip))
@@ -263,11 +327,15 @@ fixed_xi_ser <- function(idx){
 }
 
 res <- cache_rds({
-  map(bf_order[1:15], fixed_xi_ser) %>%
+  map(bf_order[1:20], fixed_xi_ser) %>%
       tibble() %>%
       unnest_wider(1)
   }, file='fixed_xi')
-res %>% kbl() %>% kable_styling()
+res %>% 
+  rowwise() %>%
+  mutate(cs_size = length(cs)) %>%
+  mutate(cs = list(head(cs, 5)), prob=list(head(prob, 5))) %>%
+  kbl(caption='Fixed at optimal xi') %>% kable_styling()
 ```
 
 
@@ -277,18 +345,21 @@ Next we take these fits initialized at each $\xi^{(i)}$ and allow them to optimi
 
 ```{r init_xi_ser}
 init_xi_ser <- function(idx){
+  uvb <- with(bindata, fit_univariate_vb(X[, idx], y, 0, tau=1/10))
   fit.init <- with(bindata, binsusie_init(X, y, L = 1, center = T, prior_variance = 10))
-  fit.init <- set_xi(fit.init, vb_ser$xi[[idx]])
-  fit <- fit.binsusie(fit.init, fit_xi=F, fit_prior_variance = F)
-  fit <- fit.binsusie(fit, fit_xi=T, fit_prior_variance = T) %>% binsusie_wrapup()
-  
+  fit.init <- set_xi(fit.init, uvb$xi)
+  fit <- fit.binsusie(fit.init, fit_xi = F, fit_prior_variance = F, fast_elbo = F)
+  fit <- fit.binsusie(fit, fit_xi=T, fit_prior_variance = T, maxiter = 100, fast_elbo = F) %>% binsusie_wrapup()
+
+  lbf <- fit %>% flatten_binsusie() %>% compute_elbo_idx(idx=idx) %>% {. - null_elbo}
+
   res <- list(
     geneSet = gs_names[idx],
-    elbo_ser = tail(fit$elbo, 1),
-    logSER_BF = get_bf(fit),
-    logVB_BF = tail(vb_ser$BF[[idx]]),
+    vb_lbf_model = get_bf(fit),
+    vb_lbf_var = lbf,
+    uvb_lbf_model = uvb_ser$lbf_model,
+    uvb_lbf_var = uvb_ser$lbf[[idx]],
     fixed_vs_default = tail(fit$elbo, 1) - null_ser_elbo,
-    V = fit$V,
     init_idx = idx
   )
   res <- c(res, get_cs(fit$pip))
@@ -296,39 +367,36 @@ init_xi_ser <- function(idx){
 }
 
 res2 <- cache_rds({
-  map(bf_order[1:15], init_xi_ser) %>%
+  map(bf_order[1:20], init_xi_ser) %>%
     tibble() %>%
     unnest_wider(1)
   }, file='init_xi')
-res2 %>% kbl() %>% kable_styling()
+res2 %>% 
+  rowwise() %>%
+  mutate(cs_size = length(cs)) %>%
+  mutate(cs = list(head(cs, 5)), prob=list(head(prob, 5))) %>%
+  kbl(caption='Initialize with optimal xi') %>% kable_styling()
 ```
-
-
-```{r}
-res2 %>% head(9) %>% unnest(cs, prob)
-```
-
 
 ### Initializing with good predictions
 
 #### Fix $\xi$
 
-Here we take the top few marginal enrichment and fit a a multivariate regression using `glm`, we use the predictions + standard errors to initialize $\xi$. If we fit the model holding $\xi$ fixed we see that logistic SuSiE identifies a few of the strong marginal enrichments, however the ELBO is worse than the null model.
+Here we take the top few marginal enrichment and fit a a multivariate regression using `glm`, we use the predictions + standard errors to initialize $\xi$. If we fit the model holding $\xi$ fixed we see that logistic SuSiE identifies a few of the strong marginal enrichment, however the ELBO is worse than the null model.
 
 Next we continue to fit the model, allowing updates for $\xi$ and estimation of the prior variance parameters. Now we beat the null model!
 
 ```{r init_xi_glm}
-fit_init_xi <- cache_rds({
-  top_bf <- order(desc(vb_ser$BF))[1:10]
-  heatmap(cor(as.matrix(bindata$X[, top_bf])), scale='none')
+top_bf <- order(desc(uvb_ser$lbf))[1:10]
+heatmap(cor(as.matrix(bindata$X[, top_bf])), scale='none')
   
+fit_init_xi <- cache_rds({
   glm_fit <- with(bindata, glm(y ~ as.matrix(X[, top_bf]), family = 'binomial'))
   pred <- predict(glm_fit, se.fit = T)
   
   xi <- sqrt(pred$fit^2 + pred$se.fit^2)
   xi[xi > 10] <- 10  # truncate
-  hist(xi)
-  
+
   fit.init <- with(bindata, binsusie_init(X, y, L = 10, center = T, prior_variance = 10))
   fit.init <- set_xi(fit.init, xi)  # set the predictions
   fit <- fit.binsusie(fit.init, fit_xi = F, fit_prior_variance = F, fast_elbo = F) %>% binsusie_wrapup()
@@ -349,8 +417,7 @@ An alternative approach would be the fix $\alpha$
 fit_init_alpha <- cache_rds({
   p <- dim(bindata$X)[2]
   L <- 10
-  
-  top_bf <- order(desc(vb_ser$BF))[1:L]
+  top_bf <- order(desc(uvb_ser$lbf))[1:L]
   alpha_init <- matrix(rep(0, p*L), nrow= L)
   for (l in 1:L){
     alpha_init[l, top_bf[l]] <- 1
@@ -358,15 +425,21 @@ fit_init_alpha <- cache_rds({
   
   fit.init <- with(bindata, binsusie_init(X, y, L = 10, center = T, prior_variance = 10))
   fit.init$params$alpha <- alpha_init
-  fit <- fit.binsusie(fit.init, fit_xi = T, fit_prior_variance = F, fast_elbo = T, fit_alpha = F) %>% binsusie_wrapup()
-  fit <- fit.binsusie(fit, fit_prior_variance = T, maxiter = 100, tol = 1e-3) %>% binsusie_wrapup()
+  fit <- fit.binsusie(
+    fit.init, fit_xi = T, fit_prior_variance = F, fast_elbo = T, fit_alpha = F)
+  .monotone(fit$elbo)
+
+  fit <- fit.binsusie(fit, fit_prior_variance = T, fast_elbo = T, maxiter = 100, tol = 1e-3) %>% 
+    binsusie_wrapup()
+  .monotone(fit$elbo)
+  
   fit
 }, file='init_alpha_glm')
 
 
 fit <- fit_init_alpha
 .monotone(fit$elbo)
-tail(fit$elbo, 1) - tail(fit.null$elbo, 1)
+compute_elbo2.binsusie(fit) - null_elbo
 unlist(fit$sets$cs)
 ```
 
@@ -382,13 +455,16 @@ tail(fit_init_alpha$elbo, 1) - tail(fit.null$elbo, 1)
 tail(fit_init_xi$elbo, 1) - tail(fit.null$elbo, 1)
 ```
 
+
 ```{r}
 par(mfrow=c(1,3))
-plot(fit_init_xi$params$xi, fit_init_alpha$params$xi, main='xi')
-plot(compute_Xb.binsusie(fit_init_xi), compute_Xb.binsusie(fit_init_alpha), main='predictions')
-plot(fit_init_xi$params$tau, fit_init_alpha$params$tau, main='tau')
 
-top_bf <- order(desc(vb_ser$BF))[1:10]
+this_plot <- partial(plot, xlab='init xi', ylab='init alpha')
+this_plot(fit_init_xi$params$xi, fit_init_alpha$params$xi, main='xi')
+this_plot(compute_Xb.binsusie(fit_init_xi), compute_Xb.binsusie(fit_init_alpha), main='predictions')
+this_plot(fit_init_xi$params$tau, fit_init_alpha$params$tau, main='tau')
+
+top_bf <- order(desc(uvb_ser$lbf))[1:10]
 
 heatmap(cor(
   as.matrix(bindata$X[, unlist(fit_init_xi$sets$cs)]),
@@ -441,6 +517,7 @@ binsusie_fit_xi_init <- function(X, y, marginal_scores, n_features=50, L=10, cen
   # warmup 
   fit <- fit.binsusie(
     fit.init, fit_xi = F, fit_prior_variance = F, fast_elbo = F)
+
   # final fit
   fit <- fit.binsusie(fit, fit_xi = T, fit_prior_variance = T, maxiter = 100, tol = 1e-3) %>% binsusie_wrapup()
   .monotone(fit$elbo)
@@ -451,22 +528,85 @@ binsusie_fit_xi_init <- function(X, y, marginal_scores, n_features=50, L=10, cen
 
 
 ```{r init_xi_glm3}
-fit1 <- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=1)), file='init_xi_top1')
-fit3 <- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=3)), file='init_xi_top3')
-fit5 <- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=5)), file='init_xi_top5')
-fit10 <- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=10)), file='init_xi_top10')
-fit20 <- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=20)), file='init_xi_top20')
-fit50 <- cache_rds(with(bindata, binsusie_fit_xi_init(X, y, marginal_scores=vb_ser$BF, n_features=50)), file='init_xi_top50')
+fit1 <- cache_rds(with(bindata, binsusie_fit_xi_init(
+  X, y, marginal_scores=uvb_ser$lbf, n_features=1)), file='init_xi_top1')
+fit3 <- cache_rds(with(bindata, binsusie_fit_xi_init(
+  X, y, marginal_scores=uvb_ser$lbf, n_features=3)), file='init_xi_top3')
+fit5 <- cache_rds(with(bindata, binsusie_fit_xi_init(
+  X, y, marginal_scores=uvb_ser$lbf, n_features=5)), file='init_xi_top5')
+fit10 <- cache_rds(with(bindata, binsusie_fit_xi_init(
+  X, y, marginal_scores=uvb_ser$lbf, n_features=10)), file='init_xi_top10')
+fit20 <- cache_rds(with(bindata, binsusie_fit_xi_init(
+  X, y, marginal_scores=uvb_ser$lbf, n_features=20)), file='init_xi_top20')
+fit50 <- cache_rds(with(bindata, binsusie_fit_xi_init(
+  X, y, marginal_scores=uvb_ser$lbf, n_features=50)), file='init_xi_top50')
 ```
 
 
 ```{r}
-get_elbo(fit1) - get_elbo(fit.null)
-get_elbo(fit3) - get_elbo(fit.null)
-get_elbo(fit5) - get_elbo(fit.null)
-get_elbo(fit10) - get_elbo(fit.null)
-get_elbo(fit20) - get_elbo(fit.null)
-get_elbo(fit50) - get_elbo(fit.null)
+#' remove the lth effect from a susie fit
+#' useful for computing the ELBO of the alternative nodel where b_l=0
+remove_effect <- function(fit, l=1){
+  fit2 <- fit
+  fit2$params$alpha <- fit2$params$alpha[-l,]
+  fit2$params$mu <- fit2$params$mu[-l,]
+  fit2$params$var <- fit2$params$var[-l,]
+  fit2$params$delta <- matrix(fit2$params$delta[-l,], ncol = 1)
+  
+  fit2$hypers$L <- fit2$hypers$L - 1
+  fit2$hypers$pi <- fit2$hypers$pi[-l,]
+  fit2$hypers$prior_mean <- fit2$hypers$prior_mean[-l]
+  fit2$hypers$prior_variance <- fit2$hypers$prior_variance[-l]
+  
+  return(fit2)
+}
+
+#' compute ElBO - ELBO_{-l}
+#' where ELBO_{-l} is the model with b_l=0
+compute_component_lbfs <- function(fit){
+  lbfs <- rep(0, fit$hypers$L)
+  for(l in 1:fit$hypers$L){
+    if(fit$hypers$prior_variance[l] > 0.01){
+      elbo_null <- remove_effect(fit, l) %>% fit.binsusie(fit_prior_variance = F) %>% compute_elbo.binsusie()
+      lbfs[l] <- get_elbo(fit) - elbo_null
+    }
+  }
+  return(lbfs)
+}
+
+
+tic()
+fit1$lbf_component <- cache_rds(compute_component_lbfs(fit1), file='fit1_lbf_component.rds')
+fit3$lbf_component <- cache_rds(compute_component_lbfs(fit3), file='fit3_lbf_component.rds')
+fit5$lbf_component <- cache_rds(compute_component_lbfs(fit5), file='fit5_lbf_component.rds')
+fit10$lbf_component <- cache_rds(compute_component_lbfs(fit10), file='fit10_lbf_component.rds')
+fit20$lbf_component <- cache_rds(compute_component_lbfs(fit20), file='fit20_lbf_component.rds')
+fit50$lbf_component <- cache_rds(compute_component_lbfs(fit50), file='fit50_lbf_component.rds')
+toc()
+
+
+# convenient table of CSs
+cs_tbl <- function(fit){
+  fit %>% get_all_cs() %>% tibble() %>% 
+    unnest_wider(1) %>%
+    rowwise() %>%
+    mutate(top_feaure = cs[1], top_feature_alpha = prob[1])#%>% unnest_longer(c(cs, prob))
+}
+
+fit_summary_tbl <- function(fit, name){
+  fit %>% cs_tbl %>%
+    ungroup() %>%
+    mutate(L=paste0('L', 1:fit$hypers$L), V=fit$V, lbf_component = fit$lbf_component, name=name, lbf_model=get_bf(fit)) %>% 
+    filter(V > 0.05) %>%
+    select(-c(cs, prob))
+}
+
+fit_summary_tbl(fit1, 'top1') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
+fit_summary_tbl(fit3, 'top3') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
+fit_summary_tbl(fit5, 'top5') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
+fit_summary_tbl(fit10, 'top10') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
+fit_summary_tbl(fit20, 'top20') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
+fit_summary_tbl(fit50, 'top50') %>% select(-c(size, requested_coverage)) %>% select(c(name, everything()))
 ```
 
 
@@ -479,7 +619,70 @@ unlist(fit20$sets$cs)
 unlist(fit50$sets$cs)
 
 # rank of BFs
-order(desc(vb_ser$BF)) %>% head(50)
+order(desc(uvb_ser$BF)) %>% head(50)
+```
+
+
+```{r decompose_elbo}
+decompose_elbo <- function(fit){
+  n <- length(fit$params$xi)
+  jj <- drop(jj_bound2.binsusie(fit))
+  xi_kl <- pg_kl(rep(1, n), fit$params$xi)
+  
+  alpha_kl <- map_dbl(1:fit$hypers$L, ~categorical_kl(
+    fit$params$alpha[.x,], fit$hypers$pi[.x,]))
+  b_kl <- map_dbl(1:fit$hypers$L, ~ sum(fit$params$alpha[.x,] * normal_kl(
+    fit$params$mu[.x,], fit$params$var[.x,], 0, fit$hypers$prior_variance[.x])))
+  res <- list(
+    likelihood = jj + xi_kl,
+    xi_kl = xi_kl,
+    b_kl = b_kl,
+    alpha_kl = alpha_kl
+  )
+  return(res)
+}
+decompose_elbo(fit5)
+```
+
+
+For a fixed $\xi$ and $\mathbb E x_i^Tb$, reducing the variance of the linear predictor improves the likelihood bound. Of course, this also increases $D_{{KL}(q(b) || p(b))}$...
+
+```{r check_xi_modes}
+Xb <- compute_Xb.binsusie(fit)
+kappa <- compute_kappa(fit)
+n <- .get_N(fit)
+Xb2 <- drop(compute_Xb2.binsusie(fit))
+Xi <- fit$params$xi
+
+jj_xi <- function(xi, idx, xb2){
+  omega <- pg_mean(n[idx], xi)
+  bound <- n[idx] * log(sigmoid(xi)) + (kappa[idx] * Xb[idx]) - (0.5 * n[idx] * xi) + 0.5 * omega * (xi^2 - xb2)
+  return(bound)
+}
+
+plot_jj_xi <- function(idx){
+  xb <- Xb[idx]
+  xb2 <- Xb2[idx]
+  xi <- Xi[idx]
+  xi_grid <- seq(xi-1, xi+1, by=0.1)
+  xb2_grid <- c(seq(xb^2, xb2, by = 0.01), xb2)
+  
+  jj <- crossing(xi=xi_grid, xb2=xb2_grid) %>%
+    rowwise() %>%
+    mutate(jj = jj_xi(xi, idx, xb2))
+  jj %>% filter(xi == Xi[idx]) %>% pull(jj)
+  
+  plot(xi_grid, jj %>% filter(xb2 == Xb2[idx]) %>% pull(jj), ylim = range(jj$jj), type='l', ylab='jj_bound')
+  lines(xi_grid, jj %>% filter(xb2 == xb^2) %>% pull(jj), ylim = range(jj$jj), type='l', col='blue')
+  for(.xb2 in head(xb2_grid, -1)){
+      lines(xi_grid, jj %>% filter(xb2 == .xb2) %>% pull(jj), ylim = range(jj$jj), lty=2)
+  }
+  abline(v=sqrt(xb2), col='red')
+}
+
+check_idx <- which((Xb2 - Xb^2) > 0.04)
+par(mfrow=c(1,1))
+plot_jj_xi(check_idx[1])
 ```
 
 
@@ -488,8 +691,8 @@ order(desc(vb_ser$BF)) %>% head(50)
 All the fits are identifying a subset of the effects with positive BFs. Here we plot the correlation of the selected variables with all gene sets with positive marginal BF (ordered by marginal BF largest-smallest left-right)
 
 ```{r xi_glm_heatmaps}
-n_pos <- sum(vb_ser$BF > 0)
-top_bf <- order(desc(vb_ser$BF)) %>% head(n_pos)
+n_pos <- sum(uvb_ser$lbf > 0)
+top_bf <- order(desc(uvb_ser$lbf)) %>% head(n_pos)
 
 heatmap(cor(
   as.matrix(bindata$X[, unlist(fit5$sets$cs)]),
@@ -516,10 +719,11 @@ heatmap(cor(
 )
 ```
 
+
 Again, with hierarchical clustering applied to marginally enriched gene sets
 ```{r xi_glm_heatmaps2}
-n_pos <- sum(vb_ser$BF > 1)
-top_bf <- order(desc(vb_ser$BF)) %>% head(n_pos)
+n_pos <- sum(uvb_ser$lbf > 1)
+top_bf <- order(desc(uvb_ser$lbf)) %>% head(n_pos)
 
 heatmap(cor(
   as.matrix(bindata$X[, unlist(fit5$sets$cs)]),
@@ -547,9 +751,13 @@ heatmap(cor(
 ```
 
 ```{r}
-order(desc(vb_ser$BF)) %>% head(20)
+order(desc(uvb_ser$BF)) %>% head(20)
 ```
 
+
+```{r}
+knitr::knit_exit()
+```
 
 ### Centered vs non-centered
 
@@ -588,10 +796,6 @@ get_elbo(res_centered) - get_elbo(fit.null)
 ```
 
 
-```{r}
-knitr::knit_exit()
-```
-
 #### Ridge
 
 The setting of $\xi$ is quite important for the optima we end up in. Here we take the gene sets that have marginal evidence of association (BF > 2)
@@ -604,7 +808,7 @@ The setting of $\xi$ is quite important for the optima we end up in. Here we tak
 library(glmnet)
 
 # fit ridge with the strong marginal enrichments
-positive_bfs <- which(exp(vb_ser$BF) > 5)
+positive_bfs <- which(exp(uvb_ser$BF) > 5)
 glm_fit <- with(bindata, cv.glmnet(as.matrix(X[, positive_bfs]), y, family='binomial', alpha=0))
 predictions <- with(bindata, drop(predict(object = glm_fit, newx=as.matrix(X[, positive_bfs]), s = "lambda.min")))
 ```
@@ -635,7 +839,7 @@ tail(fit3$elbo, 1) - tail(fit.default$elbo, 1)
 library(glmnet)
 
 # fit ridge with the strong marginal enrichments
-positive_bfs <- which(exp(vb_ser$BF) > 5)
+positive_bfs <- which(exp(uvb_ser$BF) > 5)
 glm_fit <- with(bindata, cv.glmnet(as.matrix(X[, positive_bfs]), y, family='binomial', alpha=1))
 predictions <- with(bindata, drop(predict(object = glm_fit, newx=as.matrix(X[, positive_bfs]), s = "lambda.min")))
 
@@ -669,11 +873,11 @@ library(glmnet)
 res <- list()
 offset <- 0
 
-pos_bf <- which(vb_ser$BF > 0)
+pos_bf <- which(uvb_ser$BF > 0)
 
 for(i in 1:5){
   tic()
-  vb <- with(bindata, fit_vb_ser(X[, pos_bf], y, offset = offset, prior_variance = 10))
+  vb <- with(bindata, fit_uvb_ser(X[, pos_bf], y, offset = offset, prior_variance = 10))
   toc()
   
   idx <- which.max(vb$BF)
@@ -686,7 +890,7 @@ for(i in 1:5){
 pos_bf[map_dbl(res, ~which.max(.x$vb$PIP))]
 
 # fit ridge with the strong marginal enrichments
-positive_bfs <- which(exp(vb_ser$BF) > 5)
+positive_bfs <- which(exp(uvb_ser$BF) > 5)
 glm_fit <- with(bindata, cv.glmnet(as.matrix(X[, positive_bfs]), y, family='binomial', alpha=1))
 predictions <- with(bindata, drop(predict(object = glm_fit, newx=as.matrix(X[, positive_bfs]), s = "lambda.min")))
 
@@ -698,7 +902,7 @@ plot(glm_fit)
 #### Fix $\alpha$
 
 ```{r}
-top_bf <- order(desc(vb_ser$BF))[1:10]
+top_bf <- order(desc(uvb_ser$BF))[1:10]
 heatmap(cor(as.matrix(bindata$X[, top_bf])), scale='none')
 
 p <- dim(bindata$X)[2]
@@ -841,7 +1045,7 @@ get_bf(ser.default)
 ```{r}
 for(idx in vb_cs$cs){
   fit.init <- with(bindata, binsusie_init(X, y, L = 1, center = T, prior_variance = 10))
-  fit.init <- set_xi(fit.init, vb_ser$xi[[idx]])
+  fit.init <- set_xi(fit.init, uvb_ser$xi[[idx]])
   fit <- with(bindata, binsusie(X, y, 1, L=1, s_init = fit.init, estimate_xi = F, estimate_prior_variance = F))
   print(c(idx, head(get_cs(fit$pip)$cs), length(get_cs(fit$pip)$cs)))
 }
@@ -850,7 +1054,7 @@ for(idx in vb_cs$cs){
 ```{r}
 for(idx in vb_cs$cs){
   fit.init <- with(bindata, binsusie_init(X, y, L = 1, center = T, prior_variance = 10))
-  fit.init <- set_xi(fit.init, vb_ser$xi[[idx]])
+  fit.init <- set_xi(fit.init, uvb_ser$xi[[idx]])
   fit <- with(bindata, binsusie(X, y, 1, L=1, s_init = fit.init, estimate_xi = F, estimate_prior_variance = F))
   fit <- with(bindata, binsusie(X, y, 1, L=1, s_init = fit, estimate_xi = T, estimate_prior_variance = F))
   print(c(idx, head(get_cs(fit$pip)$cs), length(get_cs(fit$pip)$cs)))
@@ -890,28 +1094,28 @@ compute_elbo3(
 
 
 compute_elbo(
-  vb_ser$x[[197]],
-  vb_ser$y[[197]],
-  vb_ser$mu[[197]],
-  vb_ser$tau[[197]],
-  vb_ser$xi[[197]],
-  vb_ser$delta[[197]],
-  vb_ser$tau0[[197]]
+  uvb_ser$x[[197]],
+  uvb_ser$y[[197]],
+  uvb_ser$mu[[197]],
+  uvb_ser$tau[[197]],
+  uvb_ser$xi[[197]],
+  uvb_ser$delta[[197]],
+  uvb_ser$tau0[[197]]
 )
 
-all.equal(vb_ser$x[[197]], fit$data$X[, 197])
-all.equal(fit$data$y, vb_ser$y[[197]])
-all.equal(fit$params$xi, vb_ser$xi[[197]])
-fit$params$mu[197] - vb_ser$mu[[197]]
-fit$params$var[197] - 1/vb_ser$tau[[197]]
-fit$params$delta[1, 1] - vb_ser$delta[[197]]
+all.equal(uvb_ser$x[[197]], fit$data$X[, 197])
+all.equal(fit$data$y, uvb_ser$y[[197]])
+all.equal(fit$params$xi, uvb_ser$xi[[197]])
+fit$params$mu[197] - uvb_ser$mu[[197]]
+fit$params$var[197] - 1/uvb_ser$tau[[197]]
+fit$params$delta[1, 1] - uvb_ser$delta[[197]]
 ```
 
 
 ```{r}
 report <- function(idx){
   fit.init <- with(bindata, binsusie_init(X, y, L=1, center = F, prior_variance = 10))
-  fit.init$params$xi <- vb_ser$xi[[idx]]
+  fit.init$params$xi <- uvb_ser$xi[[idx]]
   fit <- binsusie(0, 0, 1, s_init = fit.init, estimate_xi = F, estimate_prior_variance = F)
   diff <- tail(fit$elbo, 1) - tail(ser.default$elbo, 1)
   print('Fixed xi:')
@@ -931,7 +1135,7 @@ walk(vb_cs$cs, report)
 
 ```{r}
 fit.init <- with(bindata, binsusie_init(X, y, center = F))
-fit.init$params$xi <- vb_ser$xi[[vb_cs$cs[[2]]]]
+fit.init$params$xi <- uvb_ser$xi[[vb_cs$cs[[2]]]]
 fit <- binsusie(0, 0, 1, s_init = fit.init)
 fit$sets
 tail(fit$elbo, 1) - tail(fit.default$elbo, 1)
@@ -940,7 +1144,7 @@ tail(fit$elbo, 1) - tail(fit.default$elbo, 1)
 
 ```{r}
 fit.init <- with(bindata, binsusie_init(X, y, L=1, center = F))
-fit.init$params$xi <- vb_ser$xi[[vb_cs$cs[[12]]]]
+fit.init$params$xi <- uvb_ser$xi[[vb_cs$cs[[12]]]]
 fit <- binsusie(0, 0, 1, s_init = fit.init, estimate_xi = F)
 fit$sets
 tail(fit$elbo, 1) - tail(fit.default$elbo, 1)
