@@ -78,6 +78,15 @@ get_lbf_ser <- function(fit){
   lbf <- get_elbo(fit) - tail(null_fit$elbos, 1)
   return(lbf)
 }
+
+
+# convenient table of CSs
+cs_tbl <- function(fit){
+  fit %>% get_all_cs() %>% tibble() %>% 
+    unnest_wider(1) %>%
+    rowwise() %>%
+    mutate(top_feaure = cs[1], top_feature_alpha = prob[1])#%>% unnest_longer(c(cs, prob))
+}
 ```
 
 ### There are marginal enrichments
@@ -144,8 +153,8 @@ ser.null <- cache_rds(with(bindata, binsusie(X, y, L = 1, prior_variance = 1e-10
 toc()
 get_elbo(ser.null)
 
-get_all_cs(fit.default)$L1
-get_cs(ser.default$pip)
+cs_tbl(fit.default)
+cs_tbl(ser.default)
 ```
 
 
@@ -249,7 +258,7 @@ vb_elbo_uvb_fit$params$delta[1,1] <- sum(uvb_ser$intercept * uvb_ser$alpha)
 vb_elbo_uvb_fit$hypers$prior_variance <- uvb_ser$prior_variance
 vb_elbo_uvb_fit <- set_xi(vb_elbo_uvb_fit, update_xi.binsusie(vb_elbo_uvb_fit))
 vb_elbo_uvb_fit <- fit.binsusie(vb_elbo_uvb_fit, fit_prior_variance = F, fit_xi=T, fit_alpha = F)
-get_cs(vb_elbo_uvb_fit$alpha)
+cs_tbl(vb_elbo_uvb_fit)
 
 compute_elbo.binsusie(vb_elbo_uvb_fit) - get_elbo(fit.null)
 uvb_ser$lbf_model
@@ -583,15 +592,6 @@ fit10$lbf_component <- cache_rds(compute_component_lbfs(fit10), file='fit10_lbf_
 fit20$lbf_component <- cache_rds(compute_component_lbfs(fit20), file='fit20_lbf_component.rds')
 fit50$lbf_component <- cache_rds(compute_component_lbfs(fit50), file='fit50_lbf_component.rds')
 toc()
-
-
-# convenient table of CSs
-cs_tbl <- function(fit){
-  fit %>% get_all_cs() %>% tibble() %>% 
-    unnest_wider(1) %>%
-    rowwise() %>%
-    mutate(top_feaure = cs[1], top_feature_alpha = prob[1])#%>% unnest_longer(c(cs, prob))
-}
 
 fit_summary_tbl <- function(fit, name){
   fit %>% cs_tbl %>%
