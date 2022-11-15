@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Karl Tayeb" />
+
+<meta name="date" content="2022-11-15" />
+
+<title>ser_susie</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">ser_susie</h1>
+<h4 class="author">Karl Tayeb</h4>
+<h4 class="date">2022-11-15</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2022-11-15
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree954c65157470cbab9d26eb452d425a588ee36e07targetblank954c651a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/954c65157470cbab9d26eb452d425a588ee36e07" target="_blank">954c651</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree954c65157470cbab9d26eb452d425a588ee36e07targetblank954c651a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/954c65157470cbab9d26eb452d425a588ee36e07" target="_blank">954c651</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    _targets.R
+    Ignored:    _targets.html
+    Ignored:    _targets.md
+    Ignored:    _targets/objects/
+    Ignored:    _targets/test/
+    Ignored:    _targets/user/
+    Ignored:    _targets/workspaces/
+    Ignored:    cache/
+    Ignored:    data/.DS_Store
+    Ignored:    data/adipose_2yr_topsnp.txt
+    Ignored:    data/anthony/
+    Ignored:    data/bohan_example/
+    Ignored:    data/de-droplet/
+    Ignored:    data/de-microplastics/
+    Ignored:    data/deng/
+    Ignored:    data/fetal_reference_cellid_gene_sets.RData
+    Ignored:    data/human_chimp_eb/
+    Ignored:    data/pbmc-purified/
+    Ignored:    data/wenhe_baboon_diet/
+    Ignored:    data/yusha_sc_tumor/
+    Ignored:    library/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Master's Paper.pdf
+    Untracked:  R/
+    Untracked:  VEB_Boost_Proposal_Write_Up (1).pdf
+    Untracked:  _targets/meta/
+    Untracked:  additive.l5.gonr.aggregate.scores
+    Untracked:  analysis/2022_09_22_pdac_example.Rmd
+    Untracked:  analysis/alpha_ash_v_point_normal.Rmd
+    Untracked:  analysis/bohan_troubleshoot.Rmd
+    Untracked:  analysis/compare_w_post_hoc_clustering.Rmd
+    Untracked:  analysis/compute_exact_BFs.Rmd
+    Untracked:  analysis/constrained_q_alpha_update.Rmd
+    Untracked:  analysis/de_droplet_noshrink.Rmd
+    Untracked:  analysis/de_droplet_noshrink_logistic_susie.Rmd
+    Untracked:  analysis/detection_problem.Rmd
+    Untracked:  analysis/exact_logistic_ser.Rmd
+    Untracked:  analysis/expected_condition_bfs.Rmd
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/gsea_made_simple.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/linear_v_logistic_pbmc.Rmd
+    Untracked:  analysis/logistic_susie_rss.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/logistic_variational_bound.Rmd
+    Untracked:  analysis/logsitic_susie_template.Rmd
+    Untracked:  analysis/normal_means.Rmd
+    Untracked:  analysis/pcb_scratch.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/roadmap.Rmd
+    Untracked:  analysis/sc_tumor_followup.Rmd
+    Untracked:  analysis/ser_detection_threshold.Rmd
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/simulations_l1.Rmd
+    Untracked:  analysis/tccm_vs_logistic_susie.Rmd
+    Untracked:  analysis/template.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  analysis/univariate_laplace_approximation.Rmd
+    Untracked:  analysis/vb_ser_susie.Rmd
+    Untracked:  analysis/vb_susie.Rmd
+    Untracked:  analysis/z_score_vs_threshold.Rmd
+    Untracked:  build_site.R
+    Untracked:  code/binromial_ser.R
+    Untracked:  code/html_tables.R
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/point_normal.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  code/susie_gsea_queries.R
+    Untracked:  docs.zip
+    Untracked:  export/
+    Untracked:  figure/
+    Untracked:  l1.sim.aggregate.scores
+    Untracked:  pbmc_cd19_symbol.txt
+    Untracked:  pbmc_cd19b_0.1_background.csv
+    Untracked:  pbmc_cd19b_0.1_david_annotation_clusters.txt
+    Untracked:  pbmc_cd19b_0.1_david_results.txt
+    Untracked:  pbmc_cd19b_0.1_list.csv
+    Untracked:  pipelines/
+    Untracked:  presentations/
+    Untracked:  references.bib
+    Untracked:  run.R
+    Untracked:  run.sh
+
+Unstaged changes:
+    Modified:   _targets.Rmd
+    Modified:   _targets.yaml
+    Modified:   analysis/approximate_bayes_factors.Rmd
+    Modified:   analysis/example_pbmc.Rmd
+    Modified:   analysis/logistic_ser_undercovers.Rmd
+    Modified:   analysis/logistic_susie_initialization.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/ser_susie.Rmd</code>) and HTML
+(<code>docs/ser_susie.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/954c65157470cbab9d26eb452d425a588ee36e07/analysis/ser_susie.Rmd" target="_blank">954c651</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-15
+</td>
+<td>
+wflow_publish("analysis/ser_susie.Rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+✔ tibble  3.1.8      ✔ dplyr   1.0.10
+✔ tidyr   1.2.1      ✔ stringr 1.4.0 
+✔ readr   2.1.2      ✔ forcats 0.5.2 </code></pre>
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(kableExtra)</code></pre>
+<pre><code>
+Attaching package: &#39;kableExtra&#39;</code></pre>
+<pre><code>The following object is masked from &#39;package:dplyr&#39;:
+
+    group_rows</code></pre>
+<pre class="r"><code>library(targets)
+devtools::load_all(&#39;~/R/logisticsusie/&#39;)</code></pre>
+<pre><code>ℹ Loading logisticsusie</code></pre>
+<pre class="r"><code>example &lt;- readRDS(&#39;data/yusha_sc_tumor/pdac_example.rds&#39;)
+bindata &lt;- with(example, gseasusie::prep_binary_data(genesets, data, thresh = 0.01))
+gs_names &lt;- colnames(bindata$X)
+n_gene_sets &lt;- dim(bindata$X)[2]</code></pre>
+<div id="l5-n500" class="section level3">
+<h3><span class="math inline">\(L=5\)</span>, <span
+class="math inline">\(n=500\)</span></h3>
+<pre class="r"><code>tar_load(yusha_ibss_l5_n500)
+fits &lt;- yusha_ibss_l5_n500
+
+fits$fit$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 20, 17, 9, 8
+</td>
+<td style="text-align:left;">
+0.03811651, 0.03370047, 0.02275503, 0.01836962, 0.01699316, 0.01287059,
+0.01256318, 0.01182272, 0.01141634, 0.01135991
+</td>
+<td style="text-align:right;">
+432
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9505146
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0381165
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 20, 17, 9, 8
+</td>
+<td style="text-align:left;">
+0.03812275, 0.03370386, 0.02275520, 0.01837016, 0.01699448, 0.01287181,
+0.01256304, 0.01182269, 0.01141746, 0.01136135
+</td>
+<td style="text-align:right;">
+432
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9505158
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0381228
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 20, 17, 9, 8
+</td>
+<td style="text-align:left;">
+0.03811070, 0.03368991, 0.02275326, 0.01836855, 0.01698903, 0.01287019,
+0.01256381, 0.01182277, 0.01141592, 0.01135865
+</td>
+<td style="text-align:right;">
+432
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9505129
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0381107
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 20, 17, 9, 8
+</td>
+<td style="text-align:left;">
+0.03809685, 0.03367389, 0.02275148, 0.01836670, 0.01698277, 0.01286832,
+0.01256469, 0.01182294, 0.01141415, 0.01135555
+</td>
+<td style="text-align:right;">
+432
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9505097
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0380968
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 20, 17, 9, 8
+</td>
+<td style="text-align:left;">
+0.03808093, 0.03365549, 0.02274991, 0.01836456, 0.01697556, 0.01286615,
+0.01256571, 0.01182322, 0.01141211, 0.01135199
+</td>
+<td style="text-align:right;">
+432
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9505060
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0380809
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ibss_monitor_convergence(fits$ibss_vb)</code></pre>
+<pre><code>[1] 0.0597559186 0.0034727848 0.0007735950 0.0001246167</code></pre>
+<pre class="r"><code>fits$ibss_vb$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+33
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 9, 20, 8, 17
+</td>
+<td style="text-align:left;">
+0.04189154, 0.03572903, 0.02262264, 0.01889174, 0.01767910, 0.01397875,
+0.01339948, 0.01284339, 0.01227721, 0.01207781
+</td>
+<td style="text-align:right;">
+428
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9501674
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0418915
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 9, 20, 8, 17
+</td>
+<td style="text-align:left;">
+0.04187942, 0.03572905, 0.02262380, 0.01889206, 0.01767918, 0.01397659,
+0.01339750, 0.01284377, 0.01227462, 0.01207827
+</td>
+<td style="text-align:right;">
+428
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9501661
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0418794
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 9, 20, 8, 17
+</td>
+<td style="text-align:left;">
+0.04188479, 0.03572640, 0.02262355, 0.01889143, 0.01767808, 0.01397758,
+0.01339842, 0.01284368, 0.01227579, 0.01207817
+</td>
+<td style="text-align:right;">
+428
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9501664
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0418848
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 12, 9, 20, 8, 17
+</td>
+<td style="text-align:left;">
+0.04189070, 0.03572531, 0.02262310, 0.01889108, 0.01767760, 0.01397865,
+0.01339940, 0.01284353, 0.01227706, 0.01207798
+</td>
+<td style="text-align:right;">
+428
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9501669
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0418907
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ibss_monitor_convergence(fits$ibss_uvb)</code></pre>
+<pre><code> [1] 0.2446894414 0.2933387801 0.2746144462 0.0565728487 0.0220316181
+ [6] 0.0124812191 0.0081116495 0.0075603152 0.0108713959 0.0163508717
+[11] 0.0262039144 0.0453984435 0.0852257433 0.1606786684 0.2105755187
+[16] 0.1128858673 0.0277785354 0.0060235614 0.0054441606 0.0056685747
+[21] 0.0062903464 0.0072467421 0.0085799887 0.0104303435 0.0130306155
+[26] 0.0167758496 0.0223483869 0.0309790610 0.0448665419 0.0681699706
+[31] 0.1048884220 0.1507889072 0.1633291137 0.1249092633 0.1453026520
+[36] 0.1245213166 0.0691999846 0.0279720712 0.0104651739 0.0044305820
+[41] 0.0017721168 0.0007124296</code></pre>
+<pre class="r"><code>fits$ibss_uvb$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1, 6, 10, 15, 13, 7, 21, 23, 22, 14
+</td>
+<td style="text-align:left;">
+0.734798766, 0.086072698, 0.007996351, 0.007043600, 0.005995822,
+0.003691254, 0.003634254, 0.003230366, 0.003164314, 0.003015214
+</td>
+<td style="text-align:right;">
+191
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9501352
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.7347988
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3, 2, 11, 15, 14, 13, 21, 7, 20, 22
+</td>
+<td style="text-align:left;">
+0.431189614, 0.296362911, 0.020198555, 0.010837042, 0.007877312,
+0.007205646, 0.006047975, 0.005210295, 0.004122088, 0.003341875
+</td>
+<td style="text-align:right;">
+273
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9501331
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.4311896
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5, 15, 13, 17, 27, 7, 21, 14, 20, 30
+</td>
+<td style="text-align:left;">
+0.613193572, 0.017974571, 0.016090059, 0.011588822, 0.007929260,
+0.007308446, 0.007090958, 0.006422298, 0.006283764, 0.004911382
+</td>
+<td style="text-align:right;">
+328
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9502075
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.6131936
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 8, 9, 15, 12, 16, 13, 19, 18, 7
+</td>
+<td style="text-align:left;">
+0.480980374, 0.087869408, 0.035928339, 0.018381934, 0.015590897,
+0.013041035, 0.011381956, 0.009006550, 0.008215405, 0.007685852
+</td>
+<td style="text-align:right;">
+329
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9503333
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.4809804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7, 15, 13, 21, 14, 20, 22, 24, 35, 34
+</td>
+<td style="text-align:left;">
+0.305848938, 0.042081451, 0.030320698, 0.016509399, 0.012320306,
+0.012165710, 0.008642997, 0.006928759, 0.006653263, 0.006485894
+</td>
+<td style="text-align:right;">
+398
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9504410
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.3058489
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="l5-n100" class="section level3">
+<h3><span class="math inline">\(L=5\)</span>, <span
+class="math inline">\(n=100\)</span></h3>
+<pre class="r"><code>tar_load(yusha_ibss_l5_n100)
+fits &lt;- yusha_ibss_l5_n100
+
+fits$fit$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 20, 17, 12, 15, 9
+</td>
+<td style="text-align:left;">
+0.06436079, 0.06038328, 0.04704624, 0.03763815, 0.03185474, 0.03030152,
+0.02637381, 0.02430296, 0.02426453, 0.02228582
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9503822
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0643608
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 20, 17, 12, 15, 9
+</td>
+<td style="text-align:left;">
+0.06438734, 0.06041155, 0.04704175, 0.03764085, 0.03186599, 0.03029724,
+0.02637066, 0.02430724, 0.02426101, 0.02229007
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9503896
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0643873
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 20, 17, 12, 15, 9
+</td>
+<td style="text-align:left;">
+0.06436432, 0.06037795, 0.04703820, 0.03763872, 0.03185284, 0.03030261,
+0.02637282, 0.02430508, 0.02426467, 0.02228770
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9503821
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0643643
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 20, 17, 12, 15, 9
+</td>
+<td style="text-align:left;">
+0.06433747, 0.06032943, 0.04703806, 0.03763475, 0.03183353, 0.03030947,
+0.02637647, 0.02430272, 0.02426966, 0.02228511
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9503728
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0643375
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 10, 6, 20, 17, 12, 15, 9
+</td>
+<td style="text-align:left;">
+0.06430823, 0.06025807, 0.04704314, 0.03762765, 0.03180475, 0.03031826,
+0.02638223, 0.02430063, 0.02427639, 0.02228274
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9503609
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0643082
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ibss_monitor_convergence(fits$ibss_vb)</code></pre>
+<pre><code>[1] 0.079857582 0.003718792 0.000117766</code></pre>
+<pre class="r"><code>fits$ibss_vb$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+33
+</td>
+<td style="text-align:left;">
+0.9999999
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9999999
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+0.9999999
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 8
+</td>
+<td style="text-align:left;">
+0.9492759, 0.0493977
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9986736
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9492759
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+0.997024
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9970240
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.9970240
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0.999782
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9997820
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.9997820
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+20, 15, 7, 34, 35, 38, 28, 66, 54, 80
+</td>
+<td style="text-align:left;">
+0.06080300, 0.05938289, 0.03437438, 0.03042845, 0.02832715, 0.02610225,
+0.02427713, 0.02029162, 0.01969759, 0.01866376
+</td>
+<td style="text-align:right;">
+82
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9505900
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+0.0608030
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ibss_monitor_convergence(fits$ibss_uvb)</code></pre>
+<pre><code> [1] 0.2635796602 0.3790049948 0.2959520814 0.0552621287 0.0328106926
+ [6] 0.0317016059 0.0471725480 0.0809075246 0.1504688127 0.2691769270
+[11] 0.3270291827 0.3834331477 0.1468816357 0.0199917771 0.0025636250
+[16] 0.0002719394</code></pre>
+<pre class="r"><code>fits$ibss_uvb$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1, 6, 10, 15, 13, 21, 22, 23, 25, 20
+</td>
+<td style="text-align:left;">
+0.812433816, 0.094477905, 0.008229936, 0.006713196, 0.005541108,
+0.003663060, 0.003484595, 0.003454720, 0.002996974, 0.002855420
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9514290
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.8124338
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5, 15, 13, 17, 27, 21, 20, 14, 26, 30
+</td>
+<td style="text-align:left;">
+0.795676140, 0.017995434, 0.016588401, 0.013511923, 0.009156580,
+0.007164116, 0.007047247, 0.005729344, 0.005715340, 0.005565380
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9500166
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.7956761
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 8, 9, 12, 15, 16, 19, 13, 18, 21
+</td>
+<td style="text-align:left;">
+0.621928281, 0.113269172, 0.045803372, 0.018928270, 0.018560413,
+0.015843911, 0.010416171, 0.010041079, 0.009586529, 0.007646240
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9501804
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.6219283
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3, 2, 11, 15, 14, 13, 21, 20, 22, 31
+</td>
+<td style="text-align:left;">
+0.485613677, 0.347912972, 0.024443892, 0.012328651, 0.007559080,
+0.007517894, 0.007209821, 0.005163774, 0.004036424, 0.003236622
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9510002
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.4856137
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+7, 15, 13, 21, 20, 14, 22, 35, 34, 24
+</td>
+<td style="text-align:left;">
+0.529535254, 0.065076420, 0.043390216, 0.024959115, 0.017814908,
+0.014738048, 0.012123025, 0.009704618, 0.009504222, 0.009151511
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9517062
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.5295353
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="l3-n500" class="section level3">
+<h3><span class="math inline">\(L=3\)</span>, <span
+class="math inline">\(n=500\)</span></h3>
+<pre class="r"><code>tar_load(yusha_ibss_l3_n500)
+fits &lt;- yusha_ibss_l3_n500
+
+fits$fit$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 6, 10, 12, 8, 9, 16, 20
+</td>
+<td style="text-align:left;">
+0.05040885, 0.04356514, 0.02481253, 0.02073699, 0.01993335, 0.01501461,
+0.01390104, 0.01319655, 0.01253507, 0.01218804
+</td>
+<td style="text-align:right;">
+429
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9507380
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0504088
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 6, 10, 12, 8, 9, 16, 20
+</td>
+<td style="text-align:left;">
+0.05040134, 0.04355050, 0.02481265, 0.02073162, 0.01993222, 0.01501423,
+0.01389958, 0.01319617, 0.01253473, 0.01218872
+</td>
+<td style="text-align:right;">
+429
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9507360
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0504013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 6, 10, 12, 8, 9, 16, 20
+</td>
+<td style="text-align:left;">
+0.05036531, 0.04351030, 0.02481344, 0.02071691, 0.01992904, 0.01501032,
+0.01389222, 0.01319257, 0.01253143, 0.01219079
+</td>
+<td style="text-align:right;">
+429
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9507283
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0503653
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ibss_monitor_convergence(fits$ibss_vb)</code></pre>
+<pre><code>[1] 0.0294102133 0.0023595265 0.0002309057</code></pre>
+<pre class="r"><code>fits$ibss_vb$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+33
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 6, 10, 12, 9, 8, 16, 20
+</td>
+<td style="text-align:left;">
+0.05761340, 0.04612803, 0.02388847, 0.02156107, 0.02039732, 0.01665854,
+0.01581841, 0.01538928, 0.01387951, 0.01228464
+</td>
+<td style="text-align:right;">
+424
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9502365
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0576134
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 6, 10, 12, 9, 8, 16, 20
+</td>
+<td style="text-align:left;">
+0.05758966, 0.04613616, 0.02388974, 0.02156432, 0.02039905, 0.01665514,
+0.01581528, 0.01538461, 0.01387671, 0.01228509
+</td>
+<td style="text-align:right;">
+424
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9502348
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0575897
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ibss_monitor_convergence(fits$ibss_uvb)</code></pre>
+<pre><code> [1] 0.2161518481 0.1705528939 0.1585602931 0.1748477138 0.1254697942
+ [6] 0.1021961928 0.1698323903 0.2465694419 0.2055670719 0.2747524896
+[11] 0.1775830718 0.1512474845 0.1438001425 0.1184816834 0.0791498119
+[16] 0.0450931979 0.0247860439 0.0139756546 0.0081492092 0.0048707749
+[21] 0.0029491395 0.0018003374 0.0011042395 0.0006791826</code></pre>
+<pre class="r"><code>fits$ibss_uvb$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1, 6, 7, 4, 15, 13, 10, 5, 14, 21
+</td>
+<td style="text-align:left;">
+0.683383639, 0.078199233, 0.032874721, 0.011628906, 0.009109787,
+0.008958112, 0.007714447, 0.005382141, 0.004601607, 0.004072823
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9500511
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.6833836
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3, 2, 7, 4, 11, 15, 14, 13, 8, 5
+</td>
+<td style="text-align:left;">
+0.429494898, 0.271467435, 0.038501836, 0.021235853, 0.017061747,
+0.010529552, 0.010180578, 0.008328997, 0.006456500, 0.006183112
+</td>
+<td style="text-align:right;">
+218
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9502175
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.4294949
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5, 4, 7, 8, 9, 15, 13, 12, 16, 17
+</td>
+<td style="text-align:left;">
+0.350762026, 0.232941008, 0.061348412, 0.044217927, 0.019881602,
+0.016226687, 0.014434042, 0.009140840, 0.007627219, 0.007354173
+</td>
+<td style="text-align:right;">
+268
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9500870
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.3507620
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="l3-n100" class="section level3">
+<h3><span class="math inline">\(L=3\)</span>, <span
+class="math inline">\(n=100\)</span></h3>
+<pre class="r"><code>tar_load(yusha_ibss_l3_n100)
+fits &lt;- yusha_ibss_l3_n100
+
+fits$fit$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 6, 10, 12, 20, 8, 9, 17
+</td>
+<td style="text-align:left;">
+0.08909093, 0.08579648, 0.05196302, 0.04119328, 0.04006495, 0.02822469,
+0.02662297, 0.02647358, 0.02562413, 0.02554594
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9516349
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0890909
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 6, 10, 12, 8, 20, 9, 17
+</td>
+<td style="text-align:left;">
+0.09026843, 0.08439486, 0.05198045, 0.04065023, 0.03986898, 0.02842011,
+0.02675404, 0.02662926, 0.02580851, 0.02555280
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9516246
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0902684
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 1, 5, 6, 10, 12, 8, 20, 9, 17
+</td>
+<td style="text-align:left;">
+0.09114430, 0.08303978, 0.05205271, 0.04012884, 0.03969662, 0.02857599,
+0.02696652, 0.02665431, 0.02595510, 0.02558089
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9515843
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.0911443
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ibss_monitor_convergence(fits$ibss_vb)</code></pre>
+<pre><code>[1] 5.655415e-02 1.347211e-03 8.487620e-06</code></pre>
+<pre class="r"><code>fits$ibss_vb$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+33
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4, 8
+</td>
+<td style="text-align:left;">
+0.94662519, 0.05155208
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9981773
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.9466252
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+0.996294
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9962940
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.9962940
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>ibss_monitor_convergence(fits$ibss_uvb)</code></pre>
+<pre><code> [1] 0.2430492023 0.2261783103 0.2188143590 0.2082133619 0.2155174180
+ [6] 0.3569766277 0.2166772693 0.1035110717 0.0876856702 0.0822496762
+[11] 0.0800779514 0.0735802257 0.0599535211 0.0428068988 0.0273898192
+[16] 0.0162367663 0.0091819308 0.0050524995 0.0027371214 0.0014696481
+[21] 0.0007851074</code></pre>
+<pre class="r"><code>fits$ibss_uvb$alpha  %&gt;%
+  cs_tbl2() %&gt;% 
+  rowwise() %&gt;% 
+  mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
+  kbl() %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cs
+</th>
+<th style="text-align:left;">
+prob
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+requested_coverage
+</th>
+<th style="text-align:right;">
+coverage
+</th>
+<th style="text-align:right;">
+top_feaure
+</th>
+<th style="text-align:right;">
+top_feature_alpha
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1, 6, 7, 15, 13, 10, 4, 14, 21, 5
+</td>
+<td style="text-align:left;">
+0.750368377, 0.085566250, 0.034594159, 0.009900507, 0.009599600,
+0.008442468, 0.008281296, 0.004664250, 0.004434527, 0.003523548
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9507672
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.7503684
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5, 4, 7, 8, 9, 15, 13, 12, 16, 17
+</td>
+<td style="text-align:left;">
+0.407119411, 0.278276872, 0.060634958, 0.051772982, 0.022518986,
+0.017559625, 0.015159745, 0.010270824, 0.008574084, 0.008046177
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9512904
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.4071194
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3, 2, 7, 11, 4, 15, 14, 13, 21, 9
+</td>
+<td style="text-align:left;">
+0.474693012, 0.304188568, 0.043564649, 0.019324237, 0.015910405,
+0.012193969, 0.010975471, 0.009239901, 0.006074849, 0.005447009
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+0.95
+</td>
+<td style="text-align:right;">
+0.9509808
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.4746930
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.2 (2021-11-01)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] logisticsusie_0.0.0.9001 testthat_3.1.4           targets_0.14.0          
+ [4] kableExtra_1.3.4         forcats_0.5.2            stringr_1.4.0           
+ [7] dplyr_1.0.10             purrr_0.3.4              readr_2.1.2             
+[10] tidyr_1.2.1              tibble_3.1.8             ggplot2_3.3.6           
+[13] tidyverse_1.3.1         
+
+loaded via a namespace (and not attached):
+ [1] matrixStats_0.62.0   fs_1.5.2             usethis_2.1.6       
+ [4] lubridate_1.8.0      devtools_2.4.5       webshot_0.5.3       
+ [7] httr_1.4.4           rprojroot_2.0.3      profvis_0.3.7       
+[10] tools_4.1.2          backports_1.4.1      bslib_0.4.0         
+[13] utf8_1.2.2           R6_2.5.1             BiocGenerics_0.40.0 
+[16] DBI_1.1.3            colorspace_2.0-3     urlchecker_1.0.1    
+[19] withr_2.5.0          prettyunits_1.1.1    tidyselect_1.1.2    
+[22] processx_3.7.0       compiler_4.1.2       git2r_0.30.1        
+[25] cli_3.4.1            rvest_1.0.2          xml2_1.3.3          
+[28] desc_1.4.2           sass_0.4.1           scales_1.2.1        
+[31] callr_3.7.2          systemfonts_1.0.4    digest_0.6.30       
+[34] rmarkdown_2.14       svglite_2.1.0        pkgconfig_2.0.3     
+[37] htmltools_0.5.3      sessioninfo_1.2.2    highr_0.9           
+[40] dbplyr_2.2.1         fastmap_1.1.0        htmlwidgets_1.5.4   
+[43] rlang_1.0.6          readxl_1.4.0         rstudioapi_0.13     
+[46] shiny_1.7.1          jquerylib_0.1.4      generics_0.1.3      
+[49] jsonlite_1.8.2       gseasusie_0.0.0.9000 magrittr_2.0.3      
+[52] Matrix_1.5-1         Rcpp_1.0.9           munsell_0.5.0       
+[55] fansi_1.0.3          lifecycle_1.0.3      stringi_1.7.8       
+[58] whisker_0.4          yaml_2.3.5           brio_1.1.3          
+[61] pkgbuild_1.3.1       grid_4.1.2           promises_1.2.0.1    
+[64] crayon_1.5.2         lattice_0.20-45      miniUI_0.1.1.1      
+[67] haven_2.5.1          hms_1.1.2            knitr_1.40          
+[70] ps_1.7.0             pillar_1.8.1         igraph_1.3.5        
+[73] base64url_1.4        pkgload_1.3.0        codetools_0.2-18    
+[76] reprex_2.0.1         glue_1.6.2           evaluate_0.17       
+[79] remotes_2.4.2        data.table_1.14.4    modelr_0.1.9        
+[82] vctrs_0.4.1          tzdb_0.3.0           httpuv_1.6.6        
+[85] cellranger_1.1.0     gtable_0.3.1         assertthat_0.2.1    
+[88] cachem_1.0.6         xfun_0.31            mime_0.12           
+[91] xtable_1.8-4         broom_1.0.1          later_1.3.0         
+[94] viridisLite_0.4.1    memoise_2.0.1        workflowr_1.7.0     
+[97] ellipsis_0.3.2      </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
