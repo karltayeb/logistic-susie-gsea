@@ -526,15 +526,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree954c65157470cbab9d26eb452d425a588ee36e07targetblank954c651a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree250357c4bdb6bba7d5338dc4252afff6e570f4d7targetblank250357ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/954c65157470cbab9d26eb452d425a588ee36e07" target="_blank">954c651</a>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/250357c4bdb6bba7d5338dc4252afff6e570f4d7" target="_blank">250357c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree954c65157470cbab9d26eb452d425a588ee36e07targetblank954c651a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree250357c4bdb6bba7d5338dc4252afff6e570f4d7targetblank250357ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -544,7 +544,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/954c65157470cbab9d26eb452d425a588ee36e07" target="_blank">954c651</a>.
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/250357c4bdb6bba7d5338dc4252afff6e570f4d7" target="_blank">250357c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -712,6 +712,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/250357c4bdb6bba7d5338dc4252afff6e570f4d7/analysis/ser_susie.Rmd" target="_blank">250357c</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-15
+</td>
+<td>
+wflow_publish("analysis/ser_susie.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/karltayeb/logistic-susie-gsea/093f45b8411d287c02b2f608dfaa2a94c923c77f/docs/ser_susie.html" target="_blank">093f45b</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2022-11-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/karltayeb/logistic-susie-gsea/blob/954c65157470cbab9d26eb452d425a588ee36e07/analysis/ser_susie.Rmd" target="_blank">954c651</a>
 </td>
 <td>
@@ -755,13 +789,15 @@ devtools::load_all(&#39;~/R/logisticsusie/&#39;)</code></pre>
 bindata &lt;- with(example, gseasusie::prep_binary_data(genesets, data, thresh = 0.01))
 gs_names &lt;- colnames(bindata$X)
 n_gene_sets &lt;- dim(bindata$X)[2]</code></pre>
-<div id="l5-n500" class="section level3">
-<h3><span class="math inline">\(L=5\)</span>, <span
-class="math inline">\(n=500\)</span></h3>
+</div>
+<div id="l5-n500" class="section level2">
+<h2><span class="math inline">\(L=5\)</span>, <span
+class="math inline">\(n=500\)</span></h2>
 <pre class="r"><code>tar_load(yusha_ibss_l5_n500)
-fits &lt;- yusha_ibss_l5_n500
-
-fits$fit$alpha  %&gt;%
+fits &lt;- yusha_ibss_l5_n500</code></pre>
+<div id="binsusie" class="section level3">
+<h3>BinSuSiE</h3>
+<pre class="r"><code>fits$fit$alpha  %&gt;%
   cs_tbl2() %&gt;% 
   rowwise() %&gt;% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
@@ -915,6 +951,9 @@ top_feature_alpha
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ibss-vb-ser" class="section level3">
+<h3>IBSS VB-SER</h3>
 <pre class="r"><code>ibss_monitor_convergence(fits$ibss_vb)</code></pre>
 <pre><code>[1] 0.0597559186 0.0034727848 0.0007735950 0.0001246167</code></pre>
 <pre class="r"><code>fits$ibss_vb$alpha  %&gt;%
@@ -1070,6 +1109,9 @@ top_feature_alpha
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ibss-uvb-ser" class="section level3">
+<h3>IBSS UVB-SER</h3>
 <pre class="r"><code>ibss_monitor_convergence(fits$ibss_uvb)</code></pre>
 <pre><code> [1] 0.2446894414 0.2933387801 0.2746144462 0.0565728487 0.0220316181
  [6] 0.0124812191 0.0081116495 0.0075603152 0.0108713959 0.0163508717
@@ -1235,13 +1277,15 @@ top_feature_alpha
 </tbody>
 </table>
 </div>
-<div id="l5-n100" class="section level3">
-<h3><span class="math inline">\(L=5\)</span>, <span
-class="math inline">\(n=100\)</span></h3>
+</div>
+<div id="l5-n100" class="section level2">
+<h2><span class="math inline">\(L=5\)</span>, <span
+class="math inline">\(n=100\)</span></h2>
 <pre class="r"><code>tar_load(yusha_ibss_l5_n100)
-fits &lt;- yusha_ibss_l5_n100
-
-fits$fit$alpha  %&gt;%
+fits &lt;- yusha_ibss_l5_n100</code></pre>
+<div id="binsusie-1" class="section level3">
+<h3>BinSuSiE</h3>
+<pre class="r"><code>fits$fit$alpha  %&gt;%
   cs_tbl2() %&gt;% 
   rowwise() %&gt;% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
@@ -1395,6 +1439,9 @@ top_feature_alpha
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ibss-vb-ser-1" class="section level3">
+<h3>IBSS VB-SER</h3>
 <pre class="r"><code>ibss_monitor_convergence(fits$ibss_vb)</code></pre>
 <pre><code>[1] 0.079857582 0.003718792 0.000117766</code></pre>
 <pre class="r"><code>fits$ibss_vb$alpha  %&gt;%
@@ -1547,6 +1594,9 @@ top_feature_alpha
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ibss-uvb-ser-1" class="section level3">
+<h3>IBSS UVB-SER</h3>
 <pre class="r"><code>ibss_monitor_convergence(fits$ibss_uvb)</code></pre>
 <pre><code> [1] 0.2635796602 0.3790049948 0.2959520814 0.0552621287 0.0328106926
  [6] 0.0317016059 0.0471725480 0.0809075246 0.1504688127 0.2691769270
@@ -1707,13 +1757,15 @@ top_feature_alpha
 </tbody>
 </table>
 </div>
-<div id="l3-n500" class="section level3">
-<h3><span class="math inline">\(L=3\)</span>, <span
-class="math inline">\(n=500\)</span></h3>
+</div>
+<div id="l3-n500" class="section level2">
+<h2><span class="math inline">\(L=3\)</span>, <span
+class="math inline">\(n=500\)</span></h2>
 <pre class="r"><code>tar_load(yusha_ibss_l3_n500)
-fits &lt;- yusha_ibss_l3_n500
-
-fits$fit$alpha  %&gt;%
+fits &lt;- yusha_ibss_l3_n500</code></pre>
+<div id="binsusie-2" class="section level3">
+<h3>BinSuSiE</h3>
+<pre class="r"><code>fits$fit$alpha  %&gt;%
   cs_tbl2() %&gt;% 
   rowwise() %&gt;% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
@@ -1819,6 +1871,9 @@ top_feature_alpha
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ibss-vb-ser-2" class="section level3">
+<h3>IBSS VB-SER</h3>
 <pre class="r"><code>ibss_monitor_convergence(fits$ibss_vb)</code></pre>
 <pre><code>[1] 0.0294102133 0.0023595265 0.0002309057</code></pre>
 <pre class="r"><code>fits$ibss_vb$alpha  %&gt;%
@@ -1926,6 +1981,9 @@ top_feature_alpha
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ibss-uvb-ser-2" class="section level3">
+<h3>IBSS UVB-SER</h3>
 <pre class="r"><code>ibss_monitor_convergence(fits$ibss_uvb)</code></pre>
 <pre><code> [1] 0.2161518481 0.1705528939 0.1585602931 0.1748477138 0.1254697942
  [6] 0.1021961928 0.1698323903 0.2465694419 0.2055670719 0.2747524896
@@ -2039,13 +2097,15 @@ top_feature_alpha
 </tbody>
 </table>
 </div>
-<div id="l3-n100" class="section level3">
-<h3><span class="math inline">\(L=3\)</span>, <span
-class="math inline">\(n=100\)</span></h3>
+</div>
+<div id="l3-n100" class="section level2">
+<h2><span class="math inline">\(L=3\)</span>, <span
+class="math inline">\(n=100\)</span></h2>
 <pre class="r"><code>tar_load(yusha_ibss_l3_n100)
-fits &lt;- yusha_ibss_l3_n100
-
-fits$fit$alpha  %&gt;%
+fits &lt;- yusha_ibss_l3_n100</code></pre>
+<div id="binsusie-3" class="section level3">
+<h3>BinSuSiE</h3>
+<pre class="r"><code>fits$fit$alpha  %&gt;%
   cs_tbl2() %&gt;% 
   rowwise() %&gt;% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %&gt;%
@@ -2151,6 +2211,9 @@ top_feature_alpha
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ibss-vb-ser-3" class="section level3">
+<h3>IBSS VB-SER</h3>
 <pre class="r"><code>ibss_monitor_convergence(fits$ibss_vb)</code></pre>
 <pre><code>[1] 5.655415e-02 1.347211e-03 8.487620e-06</code></pre>
 <pre class="r"><code>fits$ibss_vb$alpha  %&gt;%
@@ -2256,6 +2319,9 @@ top_feature_alpha
 </tr>
 </tbody>
 </table>
+</div>
+<div id="ibss-uvb-ser-3" class="section level3">
+<h3>IBSS UVB-SER</h3>
 <pre class="r"><code>ibss_monitor_convergence(fits$ibss_uvb)</code></pre>
 <pre><code> [1] 0.2430492023 0.2261783103 0.2188143590 0.2082133619 0.2155174180
  [6] 0.3569766277 0.2166772693 0.1035110717 0.0876856702 0.0822496762
