@@ -22,26 +22,35 @@ n_gene_sets <- dim(bindata$X)[2]
 ```
 
 
-### $L=5$, $n=500$
+## $L=5$, $n=500$
 ```{r fitting_l5n500}
 tar_load(yusha_ibss_l5_n500)
 fits <- yusha_ibss_l5_n500
+```
 
+### BinSuSiE
+```{r}
 fits$fit$alpha  %>%
   cs_tbl2() %>% 
   rowwise() %>% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
+```
 
+### IBSS VB-SER
 
+```{r}
 ibss_monitor_convergence(fits$ibss_vb)
 fits$ibss_vb$alpha  %>%
   cs_tbl2() %>% 
   rowwise() %>% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
+```
 
+### IBSS UVB-SER
 
+```{r}
 ibss_monitor_convergence(fits$ibss_uvb)
 fits$ibss_uvb$alpha  %>%
   cs_tbl2() %>% 
@@ -50,27 +59,37 @@ fits$ibss_uvb$alpha  %>%
   kbl() %>% kable_styling()
 ```
 
-### $L=5$, $n=100$
+## $L=5$, $n=100$
 
 ```{r fitting_l5n100}
 tar_load(yusha_ibss_l5_n100)
 fits <- yusha_ibss_l5_n100
+```
 
+
+### BinSuSiE
+```{r}
 fits$fit$alpha  %>%
   cs_tbl2() %>% 
   rowwise() %>% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
+```
 
+### IBSS VB-SER
 
+```{r}
 ibss_monitor_convergence(fits$ibss_vb)
 fits$ibss_vb$alpha  %>%
   cs_tbl2() %>% 
   rowwise() %>% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
+```
 
+### IBSS UVB-SER
 
+```{r}
 ibss_monitor_convergence(fits$ibss_uvb)
 fits$ibss_uvb$alpha  %>%
   cs_tbl2() %>% 
@@ -79,27 +98,37 @@ fits$ibss_uvb$alpha  %>%
   kbl() %>% kable_styling()
 ```
 
-### $L=3$, $n=500$
+
+## $L=3$, $n=500$
 
 ```{r fitting l3n500}
 tar_load(yusha_ibss_l3_n500)
 fits <- yusha_ibss_l3_n500
+```
 
+### BinSuSiE
+```{r}
 fits$fit$alpha  %>%
   cs_tbl2() %>% 
   rowwise() %>% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
+```
 
+### IBSS VB-SER
 
+```{r}
 ibss_monitor_convergence(fits$ibss_vb)
 fits$ibss_vb$alpha  %>%
   cs_tbl2() %>% 
   rowwise() %>% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
+```
 
+### IBSS UVB-SER
 
+```{r}
 ibss_monitor_convergence(fits$ibss_uvb)
 fits$ibss_uvb$alpha  %>%
   cs_tbl2() %>% 
@@ -108,27 +137,36 @@ fits$ibss_uvb$alpha  %>%
   kbl() %>% kable_styling()
 ```
 
-### $L=3$, $n=100$
+## $L=3$, $n=100$
 
 ```{r fitting l3n100}
 tar_load(yusha_ibss_l3_n100)
 fits <- yusha_ibss_l3_n100
+```
 
+### BinSuSiE
+```{r}
 fits$fit$alpha  %>%
   cs_tbl2() %>% 
   rowwise() %>% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
+```
 
+### IBSS VB-SER
 
+```{r}
 ibss_monitor_convergence(fits$ibss_vb)
 fits$ibss_vb$alpha  %>%
   cs_tbl2() %>% 
   rowwise() %>% 
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
+```
 
+### IBSS UVB-SER
 
+```{r}
 ibss_monitor_convergence(fits$ibss_uvb)
 fits$ibss_uvb$alpha  %>%
   cs_tbl2() %>% 
@@ -136,4 +174,3 @@ fits$ibss_uvb$alpha  %>%
   mutate(cs = list(head(cs, 10)), prob = list(head(prob, 10))) %>%
   kbl() %>% kable_styling()
 ```
-
