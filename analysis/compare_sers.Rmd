@@ -1,0 +1,235 @@
+---
+title: "compare_sers"
+author: "Karl Tayeb"
+date: "2022-11-10"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+We have been thinking about different ways to do the logistic Single Effect Regression. This is an important building block of SuSiE. While it is not so hard to perform the logistic SER exactly (which amounts to computing the posterior distribution for $p$ univariate Bayesian logistic regressions, possibly estimation of the prior variance) we want a fast and accurate approximation that can be run iteratively in SuSiE.
+
+## Logistic SERs
+
+In the `logisticsusie` package we have prototyped a few logistic SERs:
+
+- VB-SER: this is the "VB Single Effect Regression". This is the SER that the entire logistic SuSiE package was originally built around. To conform to the output format of the prototyped SERs we `fit_bin_ser(X, y, ...)`
+
+- VB-SER Corrected: this is the "Corrected VB Single Effect Regression". We fit the VB-SER, but to estimate the PIPs, we compute the BFs using the optimal setting of $q(\omega)$ for each column of `X` seperately. The resulting BFs are often close to those achieved in UVB-SER, but is much cheaper to compute. The quality of this approximation, of course, depends on how close the approximate conditional effect posterior of the VB approximation is to the posterior effect in the corresponding UVB $D_{KL}(q_{VB}(b | \phi = j) || q_{j, UVB}(b))$. To conform to the output format of the prototyped SERs we `fit_bin_ser_corrected(X, y, ...)`
+
+- UVB-SER: this is the "Univariate VB Single Effect Regression" which can be fit with `fit_uvb_ser(X, y, ...)`. We use the Jaakola-Jordan/Polya-Gamma variational approximation to fit a univariate regression for each column of `X`. In practice we find that the BFs from this approximation are close to the exact BFs computed via quadrature.
+
+- GLM-SER: performs a call to `glm` for each column of `X` and uses Wakefields ABFs to compute Bayes factors, and approximates the posterior distribution of each effect with the implied posterior distributions. `fit_glm_ser(X, y, ....)`
+
+- Exact-SER: We can compute the exact BFs via quadrature. We should also be able to get good estimates of the posterior moments via a simple MCMC scheme (`greta` seems promising for this?). `fit_quad_ser(X, y, ...)`
+
+
+## Evaluation of the SERs
+
+Through a range of simulations we will aim to answer the questions:
+
+### Overivew 
+- Can we identify single effects? We should assess the size and empirical coverage of our the credible sets produced.
+- Can we evaluate the single effect model? In the case of the exact SER how confidently can we identify the presence of a single effect (compared against the null model). For the approximate SERs how to our approximate SER BFs compare to the exact BF?
+- How well do we estimate the conditional effects? Our various approximations return normal approximations of the posterior effect distribution for each feature. How far are these estimates from the true (simulated) effects?
+
+### Simulations
+
+We will simulate design matrix `X` in two ways
+
+1. Binary `X` with varying proportion of $1$s and overlap between features (pending)
+1. Dense `X` with varying correlation structure
+
+We will vary the sample size $n$ and the number of covariates $p$
+
+In the extreme, when there is no overlap/correlation we should hope to make a comparison with multiple testing procedures that assume independence. In particular I'm interested in the comparison to $\text{1-FWER}$ control procedures. We can also make a comparison with other variable selection techniques which are designed to achieve good predictive performance, but not necessarily accurately quantify uncertainty.
+
+As the correlation/overlap increases we can evaluate the ability of each of the SERs to accurately quantify uncertainty in which variable is selected.
+
+The binary response `y` will be controlled by two parameters: (1) a fixed intercept which gives a "background" rate when you marginalize over $X$ (we'll assume the columns of $X$ are mean centered). (2) the effect of the causal feature
+
+
+```{r eval=FALSE}
+# R/sim_sers.R
+library(tidyverse)
+devtools::load_all('~/R/logisticsusie/')
+
+simulate_y <- function(X, b0, b, idx=NULL){
+  X <- scale(X)
+  p <- ncol(X)
+  # select a random index if not provied
+  if(is.null(idx)){
+    idx <- sample(1:p, 1)
+  }
+  logits <- b0 + X[, idx] * b
+  y <- rbinom(length(logits), 1, sigmoid(logits))
+  return(list(y=y, logits=logits, b0=b0, b=b, idx=idx))
+}
+
+# simulate X
+X <- logisticsusie:::sim_X(n=200, p=50)
+X <- scale(X)
+
+# simulate y
+b0 <- c(-4, -2, -1, -0.5, 0)
+b <- c(0.1, 0.2, 0.5, 1, 2, 4)
+b <- sort(c(-b, b))
+reps <- 1:10
+
+sim <- tidyr::crossing(b0, b, rep=reps) %>%
+  rowwise() %>%
+  mutate(
+    sim = list(simulate_y(X, b0, b))
+  )
+
+# fit SERs
+fit <- sim %>% 
+  rowwise() %>%
+  mutate(
+    vb_ser = list(fit_bin_ser(X, sim$y, prior_variance=1)),
+    vb_ser_corrected = list(fit_bin_ser_corrected(X, sim$y, prior_variance=1)),
+    uvb_ser = list(fit_uvb_ser(X, sim$y, prior_variance = 1)),
+    veb_ser = list(fit_veb_ser(X, sim$y, prior_variance = 1)),
+    quad_ser = list(fit_quad_ser(X, sim$y, prior_variance = 1))
+  )
+
+
+
+```
+
+
+```{r load_targets}
+library(tidyverse)
+library(kableExtra)
+library(targets)
+devtools::load_all('~/R/logisticsusie')
+
+tar_load('Xs_dense', store = '_targets/test')
+
+tar_load('fits_dense_quad_ser', store = '_targets/test')
+tar_load('fits_dense_vb_ser', store = '_targets/test')
+tar_load('fits_dense_veb_ser', store = '_targets/test')
+tar_load('fits_dense_uvb_ser', store = '_targets/test')
+tar_load('fits_dense_vb_ser_corrected', store = '_targets/test')
+
+fits <- dplyr::bind_rows(
+  fits_dense_quad_ser,
+  fits_dense_vb_ser,
+  fits_dense_veb_ser,
+  fits_dense_uvb_ser,
+  fits_dense_vb_ser_corrected
+)
+```
+
+We simulate 4 sets of features with varying degree of correlation structure.
+There are $p=50$ features and $n=200$ observations.
+
+```{r plot_corX}
+par(mfrow=c(2,2))
+for(i in 1:length(Xs_dense)){
+  Xs_dense[[i]] %>% cor() %>% image(., main=names(Xs_dense)[i])
+}
+```
+
+### Credible Sets
+
+We look at the 90% credible sets. We see that as the features become more correlated, the undercoverage issue becomes more apparent for `vb_ser`. Note that `veb_ser` performs a bit better-- this is the only method that is not using a fixed prior effect variance. We see that the `vb_ser_corrected` gets similar results to `quad_ser` and `uvb_ser`. It also only tends to widen the credible set by a little bit-- so we are not paying such a high price for the correction in these simulations.
+
+```{r score_cs}
+score_cs <- function(fit, sim){
+  cs <- get_cs(fit$alpha, requested_coverage = 0.9)
+  cs$covered <- sim$idx %in% cs$cs
+  return(cs)
+}
+
+cs_res <- fits %>%
+  rowwise() %>%
+  mutate(cs = list(score_cs(fit, sim))) %>%
+  unnest_wider(cs)
+
+
+cs_res %>% 
+  group_by(method, X) %>% 
+  summarise(coverage = mean(covered)) %>%
+  pivot_wider(names_from = method, values_from=coverage) %>%
+  kbl() %>% kable_styling()
+
+# cs size
+cs_res %>% 
+  group_by(method, b, X) %>% 
+  summarise(cs_size = median(size)) %>%
+  pivot_wider(names_from = method, values_from=cs_size) %>%
+  kbl() %>% kable_styling()
+
+# cs size
+cs_res %>% 
+  group_by(method, b, X) %>% 
+  filter(b > 0.5) %>%
+  ggplot(aes(x=factor(X), y= size, fill=method)) + 
+    geom_boxplot(position='dodge', outlier.shape = NA) + facet_wrap(vars(b))
+```
+
+
+### Model-level Bayes Factors
+
+In these simulations there's overall good agreement between the BFs for the entire SER model. In real examples we've observed that the UVB-SER provides a much better fit than not.
+
+```{r modelBFs}
+cs_res %>%
+  rowwise() %>%
+  mutate(lbf_model = fit$lbf_model) %>%
+  filter(method != 'veb_ser') %>%
+  group_by(b, X, method) %>% summarise(lbf_model = mean(lbf_model)) %>%
+  ggplot(aes(x=b, y=lbf_model, col=method)) + geom_line() + facet_wrap(vars(X))
+```
+
+
+Here is an example from Yusha's work where the model BFs disagree strongly.
+
+```{r yusha_modelBF}
+example <- readRDS('data/yusha_sc_tumor/pdac_example.rds')
+bindata <- with(example, gseasusie::prep_binary_data(genesets, data, thresh = 0.01))
+gs_names <- colnames(bindata$X)
+n_gene_sets <- dim(bindata$X)[2]
+
+pdac_vb_ser <- with(bindata, fit_bin_ser(X, y))
+pdac_uvb_ser <- with(bindata, fit_uvb_ser(X, y))
+
+print(paste('VB SER BF = ',exp(pdac_vb_ser$lbf_model)))
+print(paste('UVB SER BF = ',exp(pdac_uvb_ser$lbf_model)))
+```
+
+
+### Conditional posterior effects
+
+```{r effects}
+fits %>%
+  filter(method %in% c('uvb_ser', 'vb_ser')) %>%
+  rowwise() %>%
+  mutate(posterior_mean = fit$mu[sim$idx], posterior_var = fit$var[sim$idx]) %>%
+  group_by(method, b, X) %>%
+  summarise(mse = mean((b-posterior_mean)^2)) %>%
+  ggplot(aes(x=method, y=factor(b), fill=mse)) + geom_tile() + facet_wrap(vars(X))
+
+# plot mse using the posterior mean *at the causal feature* as an estimate of b.
+fits %>%
+  filter(method %in% c('uvb_ser', 'vb_ser')) %>%
+  rowwise() %>%
+  mutate(posterior_mean = fit$mu[sim$idx], posterior_var = fit$var[sim$idx]) %>%
+  group_by(method, b, X) %>%
+  summarise(mse = mean((b-posterior_mean)^2)) %>%
+  pivot_wider(names_from = method, values_from=mse) %>%
+  mutate(vb_over_uvb = vb_ser / uvb_ser)
+
+# plot mse using the posterior mean *at the causal feature* as an estimate of b.
+fits %>%
+  filter(method %in% c('uvb_ser', 'vb_ser_corrected')) %>%
+  pivot_wider(names_from = method, values_from=fit) %>%
+  rowwise() %>%
+  mutate(lbf_uvb_vs_corrected = mean(exp(uvb_ser$lbf - vb_ser_corrected$lbf))) %>%
+  select(b0, b, X, lbf_uvb_vs_corrected) %>%
+  group_by(b0, b, X) %>% summarise(lbf_uvb_vs_corrected = mean(lbf_uvb_vs_corrected))
+```
+
