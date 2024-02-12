@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2024-02-12" />
+
+<title>Minimal working example for GSEA SuSiE</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">logistic-susie-gsea</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/karltayeb/logistic-susie-gsea">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Minimal working example for GSEA SuSiE</h1>
+<h4 class="date">2024-02-12</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-02-12
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>logistic-susie-gsea/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.0). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20220105code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20220105)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20220105code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20220105)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree82d74c6fefbb7cf87038481a4f6145aee520cc90targetblank82d74c6a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/82d74c6fefbb7cf87038481a4f6145aee520cc90" target="_blank">82d74c6</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomkarltayeblogisticsusiegseatree82d74c6fefbb7cf87038481a4f6145aee520cc90targetblank82d74c6a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/karltayeb/logistic-susie-gsea/tree/82d74c6fefbb7cf87038481a4f6145aee520cc90" target="_blank">82d74c6</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    _targets.R
+    Ignored:    _targets.html
+    Ignored:    _targets.md
+    Ignored:    _targets/objects/
+    Ignored:    _targets/test/
+    Ignored:    _targets/user/
+    Ignored:    _targets/workspaces/
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/cache/
+    Ignored:    cache/
+    Ignored:    data/.DS_Store
+    Ignored:    data/adipose_2yr_topsnp.txt
+    Ignored:    data/anthony/
+    Ignored:    data/bohan_example/
+    Ignored:    data/de-droplet/
+    Ignored:    data/de-microplastics/
+    Ignored:    data/deng/
+    Ignored:    data/enformer_epistasis_sai/
+    Ignored:    data/fetal_reference_cellid_gene_sets.RData
+    Ignored:    data/human_chimp_eb/
+    Ignored:    data/pbmc-purified/
+    Ignored:    data/wenhe_baboon_diet/
+    Ignored:    data/yusha_sc_tumor/
+    Ignored:    library/
+    Ignored:    renv/
+
+Untracked files:
+    Untracked:  .ipynb_checkpoints/
+    Untracked:  Master's Paper.pdf
+    Untracked:  R/
+    Untracked:  VEB_Boost_Proposal_Write_Up (1).pdf
+    Untracked:  _targets/meta/
+    Untracked:  additive.l5.gonr.aggregate.scores
+    Untracked:  analysis/2023_05_31_yusha_example.Rmd
+    Untracked:  analysis/alpha_ash_v_point_normal.Rmd
+    Untracked:  analysis/bohan_troubleshoot.Rmd
+    Untracked:  analysis/comarison_to_idea.Rmd
+    Untracked:  analysis/compare_w_post_hoc_clustering.Rmd
+    Untracked:  analysis/compute_exact_BFs.Rmd
+    Untracked:  analysis/constrained_q_alpha_update.Rmd
+    Untracked:  analysis/de_droplet_noshrink.Rmd
+    Untracked:  analysis/de_droplet_noshrink_logistic_susie.Rmd
+    Untracked:  analysis/detection_problem.Rmd
+    Untracked:  analysis/enformer_epistasis_enrichment.Rds
+    Untracked:  analysis/exact_logistic_ser.Rmd
+    Untracked:  analysis/example_enformer_epistsis.Rmd
+    Untracked:  analysis/expected_condition_bfs.Rmd
+    Untracked:  analysis/fetal_reference_cellid_gsea.Rmd
+    Untracked:  analysis/fixed_intercept.Rmd
+    Untracked:  analysis/gsea_made_simple.Rmd
+    Untracked:  analysis/iDEA_examples.Rmd
+    Untracked:  analysis/latent_gene_list.Rmd
+    Untracked:  analysis/linear_method_failure_modes.Rmd
+    Untracked:  analysis/linear_regression_failure_regime.Rmd
+    Untracked:  analysis/linear_v_logistic_pbmc.Rmd
+    Untracked:  analysis/logistic_susie_rss.Rmd
+    Untracked:  analysis/logistic_susie_veb_boost_vs_vb.Rmd
+    Untracked:  analysis/logistic_susie_vis.Rmd
+    Untracked:  analysis/logistic_variational_bound.Rmd
+    Untracked:  analysis/logsitic_susie_template.Rmd
+    Untracked:  analysis/normal_means.Rmd
+    Untracked:  analysis/pcb_scratch.Rmd
+    Untracked:  analysis/redundancy_c2.Rmd
+    Untracked:  analysis/references.bib
+    Untracked:  analysis/roadmap.Rmd
+    Untracked:  analysis/sc_tumor_followup.Rmd
+    Untracked:  analysis/ser_detection_threshold.Rmd
+    Untracked:  analysis/simulations.Rmd
+    Untracked:  analysis/simulations_l1.Rmd
+    Untracked:  analysis/tccm_vs_logistic_susie.Rmd
+    Untracked:  analysis/template.Rmd
+    Untracked:  analysis/test.Rmd
+    Untracked:  analysis/univariate_laplace_approximation.Rmd
+    Untracked:  analysis/vb_ser_susie.Rmd
+    Untracked:  analysis/vb_susie.Rmd
+    Untracked:  analysis/z_score_vs_threshold.Rmd
+    Untracked:  build_site.R
+    Untracked:  cd19pb.pdf
+    Untracked:  cd19pb.png
+    Untracked:  code/binromial_ser.R
+    Untracked:  code/html_tables.R
+    Untracked:  code/latent_logistic_susie.R
+    Untracked:  code/logistic_susie_data_driver.R
+    Untracked:  code/marginal_sumstat_gsea_collapsed.R
+    Untracked:  code/point_normal.R
+    Untracked:  code/sumstat_gsea.py
+    Untracked:  code/susie_gsea_queries.R
+    Untracked:  docs.zip
+    Untracked:  export/
+    Untracked:  figure/
+    Untracked:  l1.sim.aggregate.scores
+    Untracked:  pbmc_cd19_symbol.txt
+    Untracked:  pbmc_cd19b_0.1_background.csv
+    Untracked:  pbmc_cd19b_0.1_david_annotation_clusters.txt
+    Untracked:  pbmc_cd19b_0.1_david_results.txt
+    Untracked:  pbmc_cd19b_0.1_list.csv
+    Untracked:  pipelines/
+    Untracked:  poster_figure.pdf
+    Untracked:  presentations/
+    Untracked:  redundancy.png
+    Untracked:  redundancy.svg
+    Untracked:  references.bib
+    Untracked:  run.R
+    Untracked:  run.sh
+
+Unstaged changes:
+    Modified:   .Rprofile
+    Modified:   _targets.Rmd
+    Modified:   _targets.yaml
+    Modified:   analysis/approximate_bayes_factors.Rmd
+    Modified:   analysis/example_pbmc.Rmd
+    Modified:   analysis/logistic_ser_undercovers.Rmd
+    Modified:   analysis/logistic_susie_initialization.Rmd
+    Modified:   analysis/redundancy_is_a_problem.Rmd
+    Modified:   renv.lock
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/c1_sim_example.Rmd</code>) and
+HTML (<code>docs/c1_sim_example.html</code>) files. If you’ve configured
+a remote Git repository (see <code>?wflow_git_remote</code>), click on
+the hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/82d74c6fefbb7cf87038481a4f6145aee520cc90/analysis/c1_sim_example.Rmd" target="_blank">82d74c6</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2024-02-12
+</td>
+<td>
+wflow_publish("analysis/c1_sim_example.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/karltayeb/logistic-susie-gsea/blob/aa72f3a68f73edf8fd2fdf4a1ad27d357f1c82b4/analysis/c1_sim_example.Rmd" target="_blank">aa72f3a</a>
+</td>
+<td>
+Karl Tayeb
+</td>
+<td>
+2024-02-12
+</td>
+<td>
+add c1 example
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>This was supposed to be a minimal working example, but when Matthew
+ran it he got different results than me. When I ran it again this
+morning I got results that agreed with his. So now this document is
+meant to diagnose what went wrong!</p>
+<p>The MLE for the univariate doesn’t exist when the observations. When
+<span class="math inline">\(X\)</span> is binary (e.g. in GSEA) if all
+of the genes in the gene set are in the gene list we can always improve
+the likelihood by increasing the effect size. Similarly if none of the
+genes in the gene set are in the gene list, we can always improve the
+likelihood by decreasing the effect size. When we fit the GLM in these
+cases using <code>fastglm</code> it will return a large effect size
+(e.g. <span class="math inline">\(\hat \beta = 14\)</span>) and very
+large standard error <span class="math inline">\(\hat s \approx
+20,000\)</span>. Consequently we get a <span
+class="math inline">\(z\)</span>-score close to zero, but the reported
+likelihood ratio (LR) can be very large, and may depends on the stopping
+criteria from the GLM fitting procedure. Also note that when <span
+class="math inline">\(y_i = 0 \;\forall i \text{ s.t. } x_i=0\)</span>
+the data are completely separable and the LR becomes unbounded. However,
+more often in our setting we will have that there is a limiting value
+for the LR given by the likelihood of the data in the intercept only
+model <em>excluding</em> the data where <span
+class="math inline">\(x_i=1\)</span> and <em>including</em> the
+observations where <span class="math inline">\(x_i = 1\)</span> (I
+thinks this is correct, but I need to check).</p>
+<div id="failing-example" class="section level3">
+<h3>Failing example</h3>
+<pre class="r"><code>library(tictoc)
+
+# devtools::install_github(&#39;karltayeb/logisticsusie&#39;)
+# devtools::install_github(&#39;karltayeb/gseasusie&#39;)
+
+##### Minimal working example
+
+f &lt;- paste0(&#39;&#39;, Sys.glob(&#39;cache/resources/C1*&#39;)) # clear cash so it can knit
+if(file.exists(f)){file.remove(f)}</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>c1 &lt;- gseasusie::load_msigdb_geneset_x(&#39;C1&#39;)</code></pre>
+<pre><code>loading gene set from msigdbr: C1</code></pre>
+<pre><code>Adding missing grouping variables: `geneSet`</code></pre>
+<pre class="r"><code># sample random 5k background genes
+set.seed(0)
+background &lt;- sample(rownames(c1$X), 5000)
+
+# sample GSs to enrich, picked b0 so list is ~ 500 genes
+enriched_gs &lt;- sample(colnames(c1$X), 3)
+b0 &lt;- -2.2
+b &lt;- 3 *abs(rnorm(length(enriched_gs)))
+logit &lt;- b0 + (c1$X[background, enriched_gs] %*% b)[,1]
+y1 &lt;- rbinom(length(logit), 1, 1/(1 + exp(-logit)))
+list1 &lt;- background[y1==1]
+
+# gene set matrix restricted to background, keep non-empty gene sets
+X &lt;- c1$X[background,]
+X &lt;- X[, Matrix::colSums(X) &gt; 1]</code></pre>
+<pre class="r"><code># GIBSS fit
+tic()
+fit &lt;- logisticsusie::generalized_ibss(X, y1, L=10, estimate_prior_variance = F, maxit=10)</code></pre>
+<pre><code>50.575 sec elapsed</code></pre>
+<pre class="r"><code>toc()</code></pre>
+<pre><code>50.59 sec elapsed</code></pre>
+<pre class="r"><code>fit$prior_variance</code></pre>
+<pre><code> L1  L2  L3  L4  L5  L6  L7  L8  L9 L10 
+  1   1   1   1   1   1   1   1   1   1 </code></pre>
+<pre class="r"><code>fit$cs</code></pre>
+<pre><code>$L1
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L2
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L3
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L4
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L5
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L6
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L7
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L8
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L9
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L10
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95</code></pre>
+</div>
+<div id="data-augmenation" class="section level3">
+<h3>Data augmenation</h3>
+<p>We append <span class="math inline">\((1, 0, 1, 0)\)</span> to the
+end of <span class="math inline">\(y\)</span> and <span
+class="math inline">\((a, a, 0, 0)\)</span> to each column of <span
+class="math inline">\(X\)</span>. We show the augmentation strategy for
+<span class="math inline">\(a = 1, 10\)</span>. Perhaps a better
+alternative is to add a very small <span
+class="math inline">\(l_2\)</span> penalty to the effect size <span
+class="math inline">\(\beta\)</span>. It turns out in this simulation 2
+of the causal gene sets are <em>completely enriched</em>.</p>
+<pre class="r"><code>augment_binary_data &lt;- function(X, y, xval=1){
+  p &lt;- ncol(X)
+
+  Xaug &lt;- rbind(X, matrix(rep(c(xval, xval, 0, 0), p), nrow=4))
+  yaug &lt;- c(y, c(1, 0, 1, 0))
+  return(list(X=Xaug, y = yaug))
+}
+
+par(mfrow=c(1, 3))
+
+causal_idx &lt;- which(colnames(X) %in% enriched_gs)
+bad_points &lt;- (Matrix::t(X) %*% y1)[, 1] == 0 #(z &lt; 0.001) &amp; (serfit$lr &gt; 1)
+good_points &lt;- !bad_points
+
+serfit &lt;- logisticsusie::fit_glm_ser(X, y1, estimate_prior_variance = T)
+labf &lt;- with(serfit, logisticsusie:::compute_log_labf(betahat, shat2, lr, 1.))
+z &lt;- serfit$betahat/sqrt(serfit$shat2)^2
+
+plot(labf[good_points], z[good_points], xlim=range(labf), ylim=range(z), 
+     xlab=&#39;logBF (Laplace Approximation)&#39;, ylab = &#39;z-score&#39;, main=&#39;Original Data&#39;)
+points(labf[bad_points], z[bad_points], col=&#39;red&#39;)
+points(labf[causal_idx], z[causal_idx], col=&#39;blue&#39;, pch = 22)
+
+
+augmented_data &lt;- augment_binary_data(X, y1, 1.)
+serfitaug &lt;- with(augmented_data, logisticsusie::fit_glm_ser(X, y, estimate_prior_variance=T))
+labf &lt;- with(serfitaug, logisticsusie:::compute_log_labf(betahat, shat2, lr, 1.))
+z &lt;- with(serfitaug, betahat/sqrt(shat2)^2)
+plot(labf[good_points], z[good_points], xlim=range(labf), ylim=range(z), 
+     xlab=&#39;logBF (Laplace Approximation)&#39;, ylab = &#39;z-score&#39;, main=&#39;Augmented Data, a=1&#39;)
+points(labf[bad_points], z[bad_points], col=&#39;red&#39;)
+points(labf[causal_idx], z[causal_idx], col=&#39;blue&#39;, pch = 22)
+
+
+augmented_data &lt;- augment_binary_data(X, y1, 10.)
+serfitaug &lt;- with(augmented_data, logisticsusie::fit_glm_ser(X, y, estimate_prior_variance=T))
+labf &lt;- with(serfitaug, logisticsusie:::compute_log_labf(betahat, shat2, lr, 1.))
+z &lt;- with(serfitaug, betahat/sqrt(shat2)^2)
+plot(labf[good_points], z[good_points], xlim=range(labf), ylim=range(z), 
+     xlab=&#39;logBF (Laplace Approximation)&#39;, ylab = &#39;z-score&#39;, main=&#39;Augmented Data, a=10&#39;)
+points(labf[bad_points], z[bad_points], col=&#39;red&#39;)
+points(labf[causal_idx], z[causal_idx], col=&#39;blue&#39;, pch = 22)</code></pre>
+<p><img src="figure/c1_sim_example.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gibss-with-data-augmentation" class="section level3">
+<h3>GIBSS with data augmentation</h3>
+<pre class="r"><code># GIBSS fit
+tic()
+augmented_data &lt;- augment_binary_data(X, y1, 1.)
+fit &lt;- with(augmented_data, logisticsusie::generalized_ibss(X, y, L=5, estimate_prior_variance=T, maxit=10))</code></pre>
+<pre><code>Warning in ibss_from_ser(X, y, L = L, ser_function = ser_fun, ...): Maximum
+number of iterations reached</code></pre>
+<pre><code>105.987 sec elapsed</code></pre>
+<pre class="r"><code>fit$prior_variance</code></pre>
+<pre><code>      L1       L2       L3       L4       L5 
+38.32500 28.67109 81.14890  0.00000  0.00000 </code></pre>
+<pre class="r"><code>toc()</code></pre>
+<pre><code>105.994 sec elapsed</code></pre>
+<pre class="r"><code>causal_idx &lt;- which(colnames(X) %in% enriched_gs)
+print(causal_idx)</code></pre>
+<pre><code>[1]  16  66 194</code></pre>
+<pre class="r"><code>fit$cs</code></pre>
+<pre><code>$L1
+CS = {66} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L2
+CS = {16} 
+ alpha = {1} 
+ size = 1, coverage = 1, requested = 0.95
+$L3
+CS = {67, 68, 75, 239, 106, 14, ...} 
+ alpha = {0.11, 0.09, 0.04, 0.04, 0.03, 0.03, ...} 
+ size = 62, coverage = 0.95, requested = 0.95
+$L4
+CS = {107, 9, 133, 131, 75, 239, ...} 
+ alpha = {0.01, 0, 0, 0, 0, 0, ...} 
+ size = 275, coverage = 0.952, requested = 0.95
+$L5
+CS = {107, 9, 133, 131, 75, 239, ...} 
+ alpha = {0.01, 0, 0, 0, 0, 0, ...} 
+ size = 275, coverage = 0.952, requested = 0.95</code></pre>
+<pre class="r"><code>all(fit$cs$L3$cs %in% which(bad_points))</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<ul>
+<li>When the estimated prior variance is <span
+class="math inline">\(0\)</span> the Laplace approximation of the BF
+reduced to the LR, so the variables are just ranked by their LR.</li>
+<li>We estimate a very large prior variance of the third effect, but the
+CS is very diffuse. The 3rd effect includes all of the other
+<em>completely enriched</em> gene sets.</li>
+</ul>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.2 (2021-11-01)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+[1] tictoc_1.1
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.0         xfun_0.38                bslib_0.4.2             
+ [4] purrr_1.0.1              lattice_0.20-45          vctrs_0.6.1             
+ [7] generics_0.1.3           htmltools_0.5.5          yaml_2.3.7              
+[10] utf8_1.2.3               rlang_1.1.0              jquerylib_0.1.4         
+[13] later_1.3.0              pillar_1.9.0             glue_1.6.2              
+[16] withr_2.5.0              gseasusie_0.0.0.9000     uuid_1.1-0              
+[19] matrixStats_0.63.0       lifecycle_1.0.3          stringr_1.5.0           
+[22] workflowr_1.7.0          fastglm_0.0.3            evaluate_0.20           
+[25] knitr_1.42               fastmap_1.1.1            httpuv_1.6.9            
+[28] msigdbr_7.5.1            fansi_1.0.4              highr_0.10              
+[31] Rcpp_1.0.10              renv_0.16.0              promises_1.2.0.1        
+[34] cachem_1.0.7             jsonlite_1.8.4           fs_1.6.1                
+[37] babelgene_22.9           digest_0.6.31            stringi_1.7.12          
+[40] dplyr_1.1.1              rprojroot_2.0.3          grid_4.1.2              
+[43] cli_3.6.1                tools_4.1.2              magrittr_2.0.3          
+[46] sass_0.4.5               tibble_3.2.1             whisker_0.4.1           
+[49] tidyr_1.3.0              bigmemory_4.6.1          bigmemory.sri_0.1.6     
+[52] pkgconfig_2.0.3          Matrix_1.5-3             rmarkdown_2.20          
+[55] rstudioapi_0.14          R6_2.5.1                 logisticsusie_0.0.0.9001
+[58] git2r_0.32.0             compiler_4.1.2          </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
