@@ -1,0 +1,134 @@
+---
+title: Minimal working example for GSEA SuSiE
+date: 2024-02-12
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+This was supposed to be a minimal working example, but when Matthew ran it he got different results than me.
+When I ran it again this morning I got results that agreed with his. So now this document is meant to diagnose 
+what went wrong!
+
+The MLE for the univariate doesn't exist when the observations. When $X$ is binary (e.g. in GSEA) if all of the genes in the gene set are in the gene list we can always improve the likelihood by increasing the effect size. Similarly if none of the genes in the gene set are in the gene list, we can always improve the likelihood by decreasing the effect size. When we fit the GLM in these cases using `fastglm` it will return a large effect size (e.g. $\hat \beta = 14$) and very large standard error $\hat s \approx 20,000$. Consequently we get a $z$-score close to zero, but the reported likelihood ratio (LR) can be very large, and may depends on the stopping criteria from the GLM fitting procedure. Also note that when $y_i = 0 \;\forall i \text{ s.t. } x_i=0$ the data are completely separable and the LR becomes unbounded. However, more often in our setting we will have that there is a limiting value for the LR given by the likelihood of the data in the intercept only model *excluding* the data where $x_i=1$ and *including* the observations where $x_i = 1$ (I thinks this is correct, but I need to check).
+
+
+### Failing example
+
+```{r setup}
+library(tictoc)
+
+# devtools::install_github('karltayeb/logisticsusie')
+# devtools::install_github('karltayeb/gseasusie')
+
+##### Minimal working example
+c1 <- gseasusie::load_msigdb_geneset_x('C1')
+
+# sample random 5k background genes
+set.seed(0)
+background <- sample(rownames(c1$X), 5000)
+
+# sample GSs to enrich, picked b0 so list is ~ 500 genes
+enriched_gs <- sample(colnames(c1$X), 3)
+b0 <- -2.2
+b <- 3 *abs(rnorm(length(enriched_gs)))
+logit <- b0 + (c1$X[background, enriched_gs] %*% b)[,1]
+y1 <- rbinom(length(logit), 1, 1/(1 + exp(-logit)))
+list1 <- background[y1==1]
+
+# gene set matrix restricted to background, keep non-empty gene sets
+X <- c1$X[background,]
+X <- X[, Matrix::colSums(X) > 1]
+```
+
+
+```{r fit-gibss}
+# GIBSS fit
+tic()
+fit <- logisticsusie::generalized_ibss(X, y1, L=10, estimate_prior_variance = F, maxit=10)
+toc()
+```
+
+```{r}
+fit$prior_variance
+fit$cs
+```
+
+
+### Data augmenation
+
+We append $(1, 0, 1, 0)$ to the end of $y$ and $(a, a, 0, 0)$ to each column of $X$. We show the augmentation strategy for $a = 1, 10$.
+Perhaps a better alternative is to add a very small $l_2$ penalty to the effect size $\beta$.
+It turns out in this simulation 2 of the causal gene sets are *completely enriched*.
+
+```{r}
+augment_binary_data <- function(X, y, xval=1){
+  p <- ncol(X)
+
+  Xaug <- rbind(X, matrix(rep(c(xval, xval, 0, 0), p), nrow=4))
+  yaug <- c(y, c(1, 0, 1, 0))
+  return(list(X=Xaug, y = yaug))
+}
+
+par(mfrow=c(1, 3))
+
+causal_idx <- which(colnames(X) %in% enriched_gs)
+bad_points <- (Matrix::t(X) %*% y1)[, 1] == 0 #(z < 0.001) & (serfit$lr > 1)
+good_points <- !bad_points
+
+serfit <- logisticsusie::fit_glm_ser(X, y1, estimate_prior_variance = T)
+labf <- with(serfit, logisticsusie:::compute_log_labf(betahat, shat2, lr, 1.))
+z <- serfit$betahat/sqrt(serfit$shat2)^2
+
+plot(labf[good_points], z[good_points], xlim=range(labf), ylim=range(z), 
+     xlab='logBF (Laplace Approximation)', ylab = 'z-score', main='Original Data')
+points(labf[bad_points], z[bad_points], col='red')
+points(labf[causal_idx], z[causal_idx], col='blue', pch = 22)
+
+
+augmented_data <- augment_binary_data(X, y1, 1.)
+serfitaug <- with(augmented_data, logisticsusie::fit_glm_ser(X, y, estimate_prior_variance=T))
+labf <- with(serfitaug, logisticsusie:::compute_log_labf(betahat, shat2, lr, 1.))
+z <- with(serfitaug, betahat/sqrt(shat2)^2)
+plot(labf[good_points], z[good_points], xlim=range(labf), ylim=range(z), 
+     xlab='logBF (Laplace Approximation)', ylab = 'z-score', main='Augmented Data, a=1')
+points(labf[bad_points], z[bad_points], col='red')
+points(labf[causal_idx], z[causal_idx], col='blue', pch = 22)
+
+
+augmented_data <- augment_binary_data(X, y1, 10.)
+serfitaug <- with(augmented_data, logisticsusie::fit_glm_ser(X, y, estimate_prior_variance=T))
+labf <- with(serfitaug, logisticsusie:::compute_log_labf(betahat, shat2, lr, 1.))
+z <- with(serfitaug, betahat/sqrt(shat2)^2)
+plot(labf[good_points], z[good_points], xlim=range(labf), ylim=range(z), 
+     xlab='logBF (Laplace Approximation)', ylab = 'z-score', main='Augmented Data, a=10')
+points(labf[bad_points], z[bad_points], col='red')
+points(labf[causal_idx], z[causal_idx], col='blue', pch = 22)
+```
+
+### GIBSS with data augmentation
+
+```{r fit-agumented-model}
+# GIBSS fit
+tic()
+augmented_data <- augment_binary_data(X, y1, 1.)
+fit <- with(augmented_data, logisticsusie::generalized_ibss(X, y, L=5, estimate_prior_variance=T, maxit=10))
+fit$prior_variance
+toc()
+```
+
+
+```{r augmented-cs}
+causal_idx <- which(colnames(X) %in% enriched_gs)
+print(causal_idx)
+fit$cs
+```
+
+```{r L3-cs}
+all(fit$cs$L3$cs %in% which(bad_points))
+```
+
+
+- When the estimated prior variance is $0$ the Laplace approximation of the BF reduced to the LR, so the variables are just ranked by their LR. 
+- We estimate a very large prior variance of the third effect, but the CS is very diffuse. The 3rd effect includes all of the other *completely enriched* gene sets.
+
