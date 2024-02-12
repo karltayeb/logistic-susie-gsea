@@ -22,6 +22,10 @@ library(tictoc)
 # devtools::install_github('karltayeb/gseasusie')
 
 ##### Minimal working example
+
+f <- paste0('', Sys.glob('cache/resources/C1*')) # clear cash so it can knit
+if(file.exists(f)){file.remove(f)}
+
 c1 <- gseasusie::load_msigdb_geneset_x('C1')
 
 # sample random 5k background genes
@@ -108,7 +112,7 @@ points(labf[causal_idx], z[causal_idx], col='blue', pch = 22)
 
 ### GIBSS with data augmentation
 
-```{r fit-agumented-model}
+```{r fit-gibss-augmented}
 # GIBSS fit
 tic()
 augmented_data <- augment_binary_data(X, y1, 1.)
@@ -118,17 +122,16 @@ toc()
 ```
 
 
-```{r augmented-cs}
+```{r}
 causal_idx <- which(colnames(X) %in% enriched_gs)
 print(causal_idx)
 fit$cs
 ```
 
-```{r L3-cs}
+```{r}
 all(fit$cs$L3$cs %in% which(bad_points))
 ```
 
 
 - When the estimated prior variance is $0$ the Laplace approximation of the BF reduced to the LR, so the variables are just ranked by their LR. 
 - We estimate a very large prior variance of the third effect, but the CS is very diffuse. The 3rd effect includes all of the other *completely enriched* gene sets.
-
